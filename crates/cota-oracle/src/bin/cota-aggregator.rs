@@ -70,6 +70,8 @@ fn main() -> Result<()> {
     let catalog: Vec<_> = cota_ingest::config::load(&args.config)?.into_iter().map(|s| (s.id, s.source)).collect();
     let limits = Limits::load(&args.limits)?;
     let mut outcome = quality::evaluate(&args.ledger.join("quality-state.json"), &limits, &catalog, &agg)?;
+    // O lote já está na cadeia: registra antes de qualquer outra transação poder falhar.
+    ledger::write_entry(&args.ledger, &agg, account.to_string(), sig.clone(), &args.cluster, &outcome)?;
     let authority = match &args.authority {
         Some(p) => keys::load_keypair(p)?,
         None => payer.insecure_clone(),

@@ -5,6 +5,8 @@
 #     do ledger e dos dados do dashboard (a Vercel republica a cada push).
 #
 # Secrets: NODE_1_KEY, NODE_2_KEY, NODE_3_KEY e OPERATOR_KEY (conteúdo dos keypairs JSON).
+# Trava: só roda com a variável de repositório COTA_LIVE_ENABLED = true (ligar depois de
+# configurar os secrets e passar a autoridade do comitê para o operador).
 name: Cota ao vivo
 
 on:
@@ -26,6 +28,7 @@ env:
 
 jobs:
   plan:
+    if: vars.COTA_LIVE_ENABLED == 'true'
     runs-on: ubuntu-latest
     outputs:
       day: ${{ steps.next.outputs.day }}
