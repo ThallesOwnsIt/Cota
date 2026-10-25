@@ -947,3 +947,10 @@ a.ghost {
 .guide[open] > .guide-summary {
   margin-bottom: 8px;
 }
+
+/* no celular, o botão de tema fica só com o ícone para os controles caberem numa linha */
+@media (max-width: 560px) {
+  #theme span {
+    display: none !important;
+  }
+}
