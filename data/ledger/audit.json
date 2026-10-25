@@ -1986,6 +1986,22 @@
       "problems": []
     }
   ],
+  "vaults": [
+    {
+      "name": "ao-vivo",
+      "vault": "9wH1roKtdDsnFajPqaCnkEVTDnXvgHH3zEva4WKe5nFz",
+      "payouts": 0,
+      "total_paid": 0,
+      "problems": []
+    },
+    {
+      "name": "replay-2024",
+      "vault": "2bNi4vNgzHPCgEdbai88ZhRBB5xTjRieChScjFF6uRff",
+      "payouts": 3,
+      "total_paid": 60000000,
+      "problems": []
+    }
+  ],
   "summary": {
     "alerts": 31,
     "alerts_recorded_before_observation": 31,
@@ -2000,6 +2016,9 @@
     "outlooks": 1,
     "outlooks_with_problems": 0,
     "public_alerts": 1,
-    "public_alerts_with_problems": 0
+    "public_alerts_with_problems": 0,
+    "vault_payouts": 3,
+    "vaults": 2,
+    "vaults_with_problems": 0
   }
 }

@@ -42,4 +42,18 @@ pub enum CotaError {
     InvalidPublicAlert,
     #[msg("Perspectiva de chuva inválida: emissão fora do último lote, janela diferente da regra ou modelos insuficientes")]
     InvalidOutlook,
+    #[msg("Cofre inválido: gatilho desconhecido, valor nulo ou vencimento no passado")]
+    InvalidVault,
+    #[msg("A conta apresentada não é um gatilho deste cofre (tipo, assunto ou regra não disparada)")]
+    TriggerMismatch,
+    #[msg("O gatilho foi registrado antes de o cofre aceitar gatilhos")]
+    TriggerTooEarly,
+    #[msg("Ainda dentro da carência do último pagamento")]
+    CooldownActive,
+    #[msg("Cofre sem saldo além do mínimo de aluguel")]
+    VaultEmpty,
+    #[msg("Cofre vencido: não paga mais")]
+    VaultExpired,
+    #[msg("Cofre ainda vigente: o criador só recupera o saldo depois do vencimento")]
+    VaultActive,
 }

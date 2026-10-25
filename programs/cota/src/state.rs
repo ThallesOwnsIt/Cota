@@ -253,3 +253,45 @@ pub struct OutlookRecord {
     pub submitter: Pubkey,
     pub bump: u8,
 }
+
+/// Cofre paramétrico: guarda SOL e paga `payout_lamports` ao beneficiário quando o Cota
+/// registra um gatilho, sem aprovação de ninguém. PDA `["vault", creator, vault_id (u64 LE)]`.
+#[account]
+#[derive(InitSpace)]
+pub struct Vault {
+    pub creator: Pubkey,
+    pub vault_id: u64,
+    pub beneficiary: Pubkey,
+    /// `TRIGGER_EARLY_WARNING` ou `TRIGGER_FLOW_ALERT`.
+    pub kind: u8,
+    /// Região (alerta antecipado) ou estação (alerta de vazão).
+    #[max_len(MAX_STATION_ID_LEN)]
+    pub subject: String,
+    pub payout_lamports: u64,
+    /// Intervalo mínimo entre os eventos pagos (pelo `issued_at` do gatilho): um evento de
+    /// vários dias seguidos paga uma vez.
+    pub cooldown_secs: i64,
+    /// Só valem gatilhos gravados on-chain a partir deste instante.
+    pub accept_from: i64,
+    pub expires_at: i64,
+    pub last_event_at: i64,
+    pub payouts: u32,
+    pub total_paid: u64,
+    pub created_at: i64,
+    pub bump: u8,
+}
+
+/// Recibo de pagamento: um por (cofre, gatilho). PDA `["payout", vault, trigger]`.
+#[account]
+#[derive(InitSpace)]
+pub struct Payout {
+    pub vault: Pubkey,
+    pub trigger: Pubkey,
+    pub event_at: i64,
+    pub amount: u64,
+    pub beneficiary: Pubkey,
+    pub slot: u64,
+    pub paid_at: i64,
+    pub submitter: Pubkey,
+    pub bump: u8,
+}

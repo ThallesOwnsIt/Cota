@@ -137,3 +137,31 @@ pub struct EarlyWarning {
     pub rain_mean_milli: i64,
     pub threshold_milli: i64,
 }
+
+#[event]
+pub struct VaultCreated {
+    pub vault: Pubkey,
+    pub creator: Pubkey,
+    pub beneficiary: Pubkey,
+    pub kind: u8,
+    pub subject: String,
+    pub payout_lamports: u64,
+    pub cooldown_secs: i64,
+    pub accept_from: i64,
+    pub expires_at: i64,
+}
+
+#[event]
+pub struct PayoutReleased {
+    pub vault: Pubkey,
+    pub trigger: Pubkey,
+    pub beneficiary: Pubkey,
+    pub amount: u64,
+    pub event_at: i64,
+}
+
+#[event]
+pub struct VaultClosed {
+    pub vault: Pubkey,
+    pub returned: u64,
+}

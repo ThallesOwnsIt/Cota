@@ -8,6 +8,7 @@ pub mod register_station;
 pub mod report_degradation;
 pub mod rotate_member;
 pub mod set_authority;
+pub mod vault;
 
 pub use alerts::*;
 pub use commit_batch::*;
@@ -19,3 +20,4 @@ pub use register_station::*;
 pub use report_degradation::*;
 pub use rotate_member::*;
 pub use set_authority::*;
+pub use vault::*;

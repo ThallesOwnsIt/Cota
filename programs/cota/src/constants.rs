@@ -53,3 +53,14 @@ pub const OUTLOOK_SEED: &[u8] = b"outlook";
 pub const OUTLOOK_DOMAIN: &[u8] = b"COTA-OUTLOOK-v1";
 
 pub const MAX_REGION_LEN: usize = 16;
+
+#[constant]
+pub const VAULT_SEED: &[u8] = b"vault";
+
+#[constant]
+pub const PAYOUT_SEED: &[u8] = b"payout";
+
+/// Gatilhos de cofre: alerta antecipado (`OutlookRecord` com `triggered`, assunto = região)
+/// ou alerta do modelo de vazão (`AlertReceipt`, assunto = estação).
+pub const TRIGGER_EARLY_WARNING: u8 = 0;
+pub const TRIGGER_FLOW_ALERT: u8 = 1;

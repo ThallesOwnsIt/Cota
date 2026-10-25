@@ -142,7 +142,7 @@ export async function fetchAccount(rpc, address) {
   const v = body.result.value;
   if (!v) throw new Error("conta não encontrada na rede");
   const data = Uint8Array.from(atob(v.data[0]), (c) => c.charCodeAt(0));
-  return { owner: v.owner, data, slot: body.result.context.slot };
+  return { owner: v.owner, data, lamports: v.lamports, slot: body.result.context.slot };
 }
 
 class Reader {
@@ -261,6 +261,73 @@ export function decodeOutlook(data) {
     triggered: r.u8() === 1,
     signers: r.u8(),
     signer_count: r.u8(),
+    slot: r.u64(),
+    committed_at: r.i64(),
+  };
+}
+
+const B58 = "123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz";
+
+/** Base58 (alfabeto do Bitcoin/Solana), para comparar chaves lidas das contas. */
+export function base58(bytes) {
+  let n = BigInt("0x" + (toHex(bytes) || "0"));
+  let out = "";
+  while (n > 0n) {
+    out = B58[Number(n % 58n)] + out;
+    n /= 58n;
+  }
+  for (const b of bytes) {
+    if (b !== 0) break;
+    out = "1" + out;
+  }
+  return out;
+}
+
+/** Layout de `Vault`. */
+export function decodeVault(data) {
+  const r = new Reader(data);
+  return {
+    creator: base58(r.bytes(32)),
+    vault_id: r.u64(),
+    beneficiary: base58(r.bytes(32)),
+    kind: r.u8(),
+    subject: r.str(),
+    payout_lamports: r.u64(),
+    cooldown_secs: r.i64(),
+    accept_from: r.i64(),
+    expires_at: r.i64(),
+    last_event_at: r.i64(),
+    payouts: r.u32(),
+    total_paid: r.u64(),
+    created_at: r.i64(),
+  };
+}
+
+/** Layout de `Payout`. */
+export function decodePayout(data) {
+  const r = new Reader(data);
+  return {
+    vault: base58(r.bytes(32)),
+    trigger: base58(r.bytes(32)),
+    event_at: r.i64(),
+    amount: r.u64(),
+    beneficiary: base58(r.bytes(32)),
+    slot: r.u64(),
+    paid_at: r.i64(),
+  };
+}
+
+/** Layout de `AlertReceipt`. */
+export function decodeAlertReceipt(data) {
+  const r = new Reader(data);
+  return {
+    forecast: base58(r.bytes(32)),
+    station_id: r.str(),
+    issued_at: r.i64(),
+    target_ts: r.i64(),
+    p90: r.i64(),
+    threshold_milli: r.i64(),
+    level: r.u8(),
     slot: r.u64(),
     committed_at: r.i64(),
   };

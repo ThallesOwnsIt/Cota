@@ -2,7 +2,7 @@
 
 use anchor_lang::{prelude::Pubkey, solana_program::instruction::Instruction, AccountDeserialize, InstructionData, ToAccountMetas};
 use anyhow::{Context, Result};
-use cota::state::{AlertReceipt, AlertRule, BatchCommitment, Committee, ForecastCommitment, OutlookRecord, OutlookRule, PublicAlertRecord};
+use cota::state::{AlertReceipt, AlertRule, BatchCommitment, Committee, ForecastCommitment, OutlookRecord, OutlookRule, Payout, PublicAlertRecord, Vault};
 use cota_core::precompile::ed25519_instruction_data;
 use cota_ingest::config::StationConfig;
 
@@ -316,4 +316,54 @@ pub fn decode_outlook_rule(data: &[u8]) -> Result<OutlookRule> {
 
 pub fn decode_outlook(data: &[u8]) -> Result<OutlookRecord> {
     OutlookRecord::try_deserialize(&mut &data[..]).context("conta de perspectiva inválida")
+}
+
+pub fn vault_pda(creator: &Pubkey, vault_id: u64) -> Pubkey {
+    Pubkey::find_program_address(&[cota::VAULT_SEED, creator.as_ref(), &vault_id.to_le_bytes()], &PROGRAM_ID).0
+}
+
+pub fn payout_pda(vault: &Pubkey, trigger: &Pubkey) -> Pubkey {
+    Pubkey::find_program_address(&[cota::PAYOUT_SEED, vault.as_ref(), trigger.as_ref()], &PROGRAM_ID).0
+}
+
+pub fn create_vault_instruction(creator: Pubkey, args: cota::VaultArgs) -> Instruction {
+    let vault = vault_pda(&creator, args.vault_id);
+    Instruction::new_with_bytes(
+        PROGRAM_ID,
+        &cota::instruction::CreateVault { args }.data(),
+        cota::accounts::CreateVault { creator, vault, system_program: anchor_lang::solana_program::system_program::ID }
+            .to_account_metas(None),
+    )
+}
+
+pub fn trigger_payout_instruction(submitter: Pubkey, vault: Pubkey, trigger: Pubkey, beneficiary: Pubkey) -> Instruction {
+    Instruction::new_with_bytes(
+        PROGRAM_ID,
+        &cota::instruction::TriggerPayout {}.data(),
+        cota::accounts::TriggerPayout {
+            submitter,
+            vault,
+            trigger,
+            beneficiary,
+            payout: payout_pda(&vault, &trigger),
+            system_program: anchor_lang::solana_program::system_program::ID,
+        }
+        .to_account_metas(None),
+    )
+}
+
+pub fn close_vault_instruction(creator: Pubkey, vault: Pubkey) -> Instruction {
+    Instruction::new_with_bytes(
+        PROGRAM_ID,
+        &cota::instruction::CloseVault {}.data(),
+        cota::accounts::CloseVault { creator, vault }.to_account_metas(None),
+    )
+}
+
+pub fn decode_vault(data: &[u8]) -> Result<Vault> {
+    Vault::try_deserialize(&mut &data[..]).context("conta de cofre inválida")
+}
+
+pub fn decode_payout(data: &[u8]) -> Result<Payout> {
+    Payout::try_deserialize(&mut &data[..]).context("conta de pagamento inválida")
 }

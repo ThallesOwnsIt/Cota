@@ -1,0 +1,56 @@
+{
+  "cluster": "devnet",
+  "created_explorer": "https://explorer.solana.com/tx/2CEQRe2xDDGsJ3PFx666D1gXoMu8vcqCnzEVLtYRZPR4xHtBF5oYF58CXUNaEvWvU76EB6eUpL4fGFs7HPmFJxDF?cluster=devnet",
+  "created_tx": "2CEQRe2xDDGsJ3PFx666D1gXoMu8vcqCnzEVLtYRZPR4xHtBF5oYF58CXUNaEvWvU76EB6eUpL4fGFs7HPmFJxDF",
+  "description": "Demonstração: paga a cada evento de cheia previsto pelo modelo de vazão, inclusive os alertas do replay de 2024",
+  "name": "replay-2024",
+  "payouts": [
+    {
+      "amount": 20000000,
+      "event_at": 1714694400,
+      "explorer": "https://explorer.solana.com/tx/5qJ1S9YhQ7HuyLvoJrSgLLQM4cw6EeKmbJvum78vV5MA6R3R6acRgrGozLe5MC9QyEJKr7ZhMp7T9sLq7aF882Fq?cluster=devnet",
+      "paid_at": 1792934415,
+      "payout": "3GZSYPSgyBC193mhGRHz2c5XXAR6ycgBnsz2SjShFsni",
+      "slot": 514983239,
+      "trigger": "HC3RHM6jD5276qwYiRaZ7pNApQXnZ9pTHfRNmyTvFs5s",
+      "tx_signature": "5qJ1S9YhQ7HuyLvoJrSgLLQM4cw6EeKmbJvum78vV5MA6R3R6acRgrGozLe5MC9QyEJKr7ZhMp7T9sLq7aF882Fq"
+    },
+    {
+      "amount": 20000000,
+      "event_at": 1715299200,
+      "explorer": "https://explorer.solana.com/tx/3qUm7k6F2pw4HL6oHjyWnCv9MdjmPVQLTs9jbwDatRXVvUEHHJMmpJ7qbrm5TKwTHHzbLYVxwCFqmCschSUE2SR3?cluster=devnet",
+      "paid_at": 1792934420,
+      "payout": "8tiw6eFGNcDPg1aujD9EQyPhLAq4pwNVXcpCUcBy2uru",
+      "slot": 514983257,
+      "trigger": "CVJB2CGDarNkNURGAuz45ZTSbc4UZQ6VQZysRxMwkLX1",
+      "tx_signature": "3qUm7k6F2pw4HL6oHjyWnCv9MdjmPVQLTs9jbwDatRXVvUEHHJMmpJ7qbrm5TKwTHHzbLYVxwCFqmCschSUE2SR3"
+    },
+    {
+      "amount": 20000000,
+      "event_at": 1715904000,
+      "explorer": "https://explorer.solana.com/tx/614hAwii2V4emmVxmmgSDJLYVgvyHZjvLhqYPfJUNrj42Hxw5fimQFHR9NDD3ztLJEQVpR9GhywPwNHAARwgu6RH?cluster=devnet",
+      "paid_at": 1792934427,
+      "payout": "E2dGfaYkPGDKJHEiLNEBPeoA9gXMgLaHQX15KKicrstA",
+      "slot": 514983287,
+      "trigger": "2f4HnxAY7GpwYtMobaZLu8Z2T7EboTiipCvgvEc1fF2G",
+      "tx_signature": "614hAwii2V4emmVxmmgSDJLYVgvyHZjvLhqYPfJUNrj42Hxw5fimQFHR9NDD3ztLJEQVpR9GhywPwNHAARwgu6RH"
+    }
+  ],
+  "state": {
+    "accept_from": 0,
+    "balance": 41554480,
+    "beneficiary": "cETyw8BecDDiiCgFhK93AqQo3Q56G8AcyQjDeSBwfPo",
+    "cooldown_secs": 604800,
+    "created_at": 1792934409,
+    "creator": "28JccEpdZqoKJhhURpDC4XGkZv4QADxoBtm7idrLVHo4",
+    "expires_at": 1824470409,
+    "kind": 1,
+    "last_event_at": 1715904000,
+    "payout_lamports": 20000000,
+    "payouts": 3,
+    "subject": "GLOFAS-GUAIBA",
+    "total_paid": 60000000,
+    "vault_id": 1
+  },
+  "vault": "2bNi4vNgzHPCgEdbai88ZhRBB5xTjRieChScjFF6uRff"
+}

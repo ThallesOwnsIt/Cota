@@ -4,7 +4,8 @@
 #     chuva prevista para os 5 dias seguintes (rodada 00Z do dia, Open-Meteo);
 #   - 1 agregador: leva à cadeia o que tem ≥ 2 de 3 assinaturas (o programa aplica a regra
 #     do alerta antecipado à chuva prevista), prevê a vazão, audita e faz commit
-#     do ledger e dos dados do dashboard (a Vercel republica a cada push).
+#     do ledger e dos dados do dashboard (a Vercel republica a cada push); aciona os cofres
+#     paramétricos diante de gatilhos novos.
 #
 # Secrets: NODE_1_KEY, NODE_2_KEY, NODE_3_KEY e OPERATOR_KEY (conteúdo dos keypairs JSON).
 # Trava: só roda com a variável de repositório COTA_LIVE_ENABLED = true (ligar depois de
@@ -116,6 +117,10 @@ jobs:
             target/release/cota-admin --rpc "$RPC" --payer keys/operator.json \
               commit-forecast --file "data/forecasts/$day.json" --cluster "$CLUSTER"
           fi
+      # Cofres paramétricos: o programa decide; o operador só paga a taxa do acionamento.
+      - name: Cofres
+        continue-on-error: true
+        run: target/release/cota-vault --rpc "$RPC" --cluster "$CLUSTER" --payer keys/operator.json crank
       - run: rm -f keys/operator.json
         if: always()
       # Rodam mesmo se o lote falhar: um aviso oficial já ancorado não pode ficar sem registro.

@@ -8,6 +8,7 @@ Saída em dashboard/data/:
 - batches/NNNNN.json leituras de cada lote, carregadas sob demanda para a prova Merkle
 - public_alerts/<sha>.txt conteúdo canônico de cada aviso oficial (o navegador refaz o SHA-256)
 - outlooks/<sha>.txt  conteúdo canônico de cada perspectiva de chuva (idem)
+(os cofres paramétricos vão no próprio bundle)
 
 Os lotes de 2024 são o replay da cheia; os de 2025 em diante, o modo ao vivo.
 """
@@ -176,6 +177,12 @@ def main() -> None:
     alerts.sort(key=lambda a: a["slot"], reverse=True)
 
     outlook = export_outlook(audit)
+    audited_vaults = {v["vault"]: v for v in audit.get("vaults", [])}
+    vaults = []
+    for path in sorted((LEDGER / "vaults").glob("*.json")) if (LEDGER / "vaults").exists() else []:
+        e = json.loads(path.read_text())
+        a = audited_vaults.get(e["vault"], {})
+        vaults.append({**{k: e[k] for k in ("name", "description", "vault", "created_explorer", "state", "payouts")}, "audit_ok": not a.get("problems", ["não auditado"])})
 
     replay_days = [d for d in days if d["day"] < LIVE_FROM]
     live_days = [d for d in days if d["day"] >= LIVE_FROM]
@@ -212,12 +219,13 @@ def main() -> None:
         "issues": replay_issues,
         "live": {"days": live_days, "issues": live_issues, "public_alerts": alerts},
         "outlook": outlook,
+        "vaults": vaults,
     }
     (OUT / "bundle.json").write_text(json.dumps(bundle, separators=(",", ":"), ensure_ascii=False))
     size = sum(p.stat().st_size for p in OUT.rglob("*") if p.is_file())
     print(
         f"replay: {len(replay_days)} lotes, {len(replay_issues)} previsões · ao vivo: {len(live_days)} lotes, "
-        f"{len(live_issues)} previsões, {len(alerts)} avisos oficiais, {len(outlook['live'])} perspectivas de chuva "
+        f"{len(live_issues)} previsões, {len(alerts)} avisos oficiais, {len(outlook['live'])} perspectivas de chuva, {len(vaults)} cofres "
         f"→ {OUT} ({size / 1024:.0f} KiB)"
     )
 

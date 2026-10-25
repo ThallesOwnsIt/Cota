@@ -1,0 +1,25 @@
+{
+  "cluster": "devnet",
+  "created_explorer": "https://explorer.solana.com/tx/64itJyPNsMi7fRvCALhUAzGvVrtAPBXYQmLEfptT69JyeMTDtRThsNdFUDuf2RzqCTYTSMswmPgtcno9ma5Y6pTQ?cluster=devnet",
+  "created_tx": "64itJyPNsMi7fRvCALhUAzGvVrtAPBXYQmLEfptT69JyeMTDtRThsNdFUDuf2RzqCTYTSMswmPgtcno9ma5Y6pTQ",
+  "description": "Paga quando a chuva prevista na bacia dispara o alerta antecipado; só gatilhos gravados depois da criação",
+  "name": "ao-vivo",
+  "payouts": [],
+  "state": {
+    "accept_from": 1792934412,
+    "balance": 201554480,
+    "beneficiary": "cETyw8BecDDiiCgFhK93AqQo3Q56G8AcyQjDeSBwfPo",
+    "cooldown_secs": 604800,
+    "created_at": 1792934412,
+    "creator": "28JccEpdZqoKJhhURpDC4XGkZv4QADxoBtm7idrLVHo4",
+    "expires_at": 1824470412,
+    "kind": 0,
+    "last_event_at": 0,
+    "payout_lamports": 50000000,
+    "payouts": 0,
+    "subject": "guaiba",
+    "total_paid": 0,
+    "vault_id": 2
+  },
+  "vault": "9wH1roKtdDsnFajPqaCnkEVTDnXvgHH3zEva4WKe5nFz"
+}

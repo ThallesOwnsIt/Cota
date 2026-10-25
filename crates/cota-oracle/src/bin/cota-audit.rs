@@ -8,6 +8,8 @@
 //! Para cada perspectiva de chuva: o conteúdo guardado reproduz o cabeçalho pela regra
 //! publicada, o hash e o resultado da regra batem com a conta, e ela foi gravada antes de o
 //! primeiro dia da janela ser ancorado.
+//! Para cada cofre: cada pagamento existe on-chain, aponta para um gatilho válido do tipo e
+//! assunto do cofre, e os totais do cofre batem com a soma dos pagamentos.
 
 use std::collections::BTreeMap;
 use std::path::PathBuf;
@@ -93,12 +95,22 @@ struct OutlookAudit {
 }
 
 #[derive(Serialize)]
+struct VaultAudit {
+    name: String,
+    vault: String,
+    payouts: usize,
+    total_paid: u64,
+    problems: Vec<String>,
+}
+
+#[derive(Serialize)]
 struct Report {
     program: String,
     batches: Vec<BatchAudit>,
     forecasts: Vec<ForecastAudit>,
     public_alerts: Vec<PublicAlertAudit>,
     outlooks: Vec<OutlookAudit>,
+    vaults: Vec<VaultAudit>,
     summary: BTreeMap<&'static str, usize>,
 }
 
@@ -314,6 +326,41 @@ fn main() -> Result<()> {
         });
     }
 
+    // Cofres paramétricos.
+    let mut vaults = Vec::new();
+    let v_dir = args.ledger.join("vaults");
+    for e in if v_dir.exists() { read_dir_sorted(&v_dir)? } else { vec![] } {
+        let name = e["name"].as_str().unwrap_or_default().to_string();
+        let addr: Pubkey = e["vault"].as_str().context("vault")?.parse()?;
+        let mut problems = Vec::new();
+        let Some(data) = rpc.account_data(&addr)? else {
+            problems.push("cofre não está on-chain".into());
+            vaults.push(VaultAudit { name, vault: addr.to_string(), payouts: 0, total_paid: 0, problems });
+            continue;
+        };
+        let v = chain::decode_vault(&data)?;
+        let mut sum = 0;
+        let payouts = e["payouts"].as_array().cloned().unwrap_or_default();
+        for p in &payouts {
+            let trigger: Pubkey = p["trigger"].as_str().context("trigger")?.parse()?;
+            let Some(pd) = rpc.account_data(&chain::payout_pda(&addr, &trigger))? else {
+                problems.push(format!("pagamento por {trigger} não está on-chain"));
+                continue;
+            };
+            let rec = chain::decode_payout(&pd)?;
+            sum += rec.amount;
+            check(&mut problems, rec.amount == p["amount"].as_u64().unwrap_or_default() && rec.beneficiary == v.beneficiary, "valor ou beneficiário diferem");
+            let td = rpc.account_data(&trigger)?.unwrap_or_default();
+            let valid = match v.kind {
+                cota::TRIGGER_EARLY_WARNING => chain::decode_outlook(&td).is_ok_and(|o| o.triggered && o.region == v.subject && o.issued_at == rec.event_at),
+                _ => chain::decode_alert(&td).is_ok_and(|a| a.station_id == v.subject && a.issued_at == rec.event_at),
+            };
+            check(&mut problems, valid, "gatilho inválido para o cofre");
+        }
+        check(&mut problems, v.payouts as usize == payouts.len() && v.total_paid == sum, "totais do cofre não batem com os pagamentos");
+        vaults.push(VaultAudit { name, vault: addr.to_string(), payouts: payouts.len(), total_paid: sum, problems });
+    }
+
     let count = |p: &dyn Fn(&ForecastAudit) -> bool| forecasts.iter().filter(|f| p(f)).count();
     let summary = BTreeMap::from([
         ("batches", batches.len()),
@@ -329,10 +376,14 @@ fn main() -> Result<()> {
         ("outlooks", outlooks.len()),
         ("outlooks_with_problems", outlooks.iter().filter(|o| !o.problems.is_empty()).count()),
         ("early_warnings", outlooks.iter().filter(|o| o.triggered).count()),
+        ("vaults", vaults.len()),
+        ("vault_payouts", vaults.iter().map(|v| v.payouts).sum()),
+        ("vaults_with_problems", vaults.iter().filter(|v| !v.problems.is_empty()).count()),
         ("alerts_recorded_before_observation", count(&|f| f.alert.as_ref().is_some_and(|a| a.recorded_before_observation == Some(true)))),
     ]);
     let ok = summary["batches_with_problems"] == 0 && summary["forecasts_with_problems"] == 0 && summary["public_alerts_with_problems"] == 0
-        && summary["outlooks_with_problems"] == 0;
+        && summary["outlooks_with_problems"] == 0
+        && summary["vaults_with_problems"] == 0;
     for b in batches.iter().filter(|b| !b.problems.is_empty()) {
         eprintln!("lote {}: {:?}", b.batch_id, b.problems);
     }
@@ -349,7 +400,10 @@ fn main() -> Result<()> {
     for o in outlooks.iter().filter(|o| !o.problems.is_empty()) {
         eprintln!("perspectiva {}: {:?}", o.day, o.problems);
     }
-    let report = Report { program: chain::PROGRAM_ID.to_string(), batches, forecasts, public_alerts, outlooks, summary };
+    for v in vaults.iter().filter(|v| !v.problems.is_empty()) {
+        eprintln!("cofre {}: {:?}", v.name, v.problems);
+    }
+    let report = Report { program: chain::PROGRAM_ID.to_string(), batches, forecasts, public_alerts, outlooks, vaults, summary };
     std::fs::write(args.ledger.join("audit.json"), serde_json::to_string_pretty(&report)?)?;
     anyhow::ensure!(ok, "a auditoria encontrou divergências");
     eprintln!("auditoria OK: {}", args.ledger.join("audit.json").display());

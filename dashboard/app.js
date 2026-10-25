@@ -10,6 +10,9 @@ import {
   sha256Hex,
   decodePublicAlert,
   decodeOutlook,
+  decodeVault,
+  decodePayout,
+  decodeAlertReceipt,
   toHex,
   verifyInclusion,
 } from "./verify.js";
@@ -1035,6 +1038,98 @@ async function verifyOutlook(o) {
   }
 }
 
+// ---- cofres paramétricos ----------------------------------------------------
+
+const sol = (lamports) => `${new Intl.NumberFormat("pt-BR", { maximumFractionDigits: 3 }).format(lamports / 1e9)} SOL`;
+const TRIGGER = { 0: "alerta antecipado (chuva prevista)", 1: "alerta do modelo de vazão" };
+const endOf = (ts) => dmy(new Date((ts - 1) * 1000).toISOString().slice(0, 10));
+
+function renderVaults() {
+  const list = $("#vault-list");
+  if (!B.vaults?.length) {
+    list.innerHTML = `<div class="empty-note">Nenhum cofre criado.</div>`;
+    return;
+  }
+  list.innerHTML = B.vaults
+    .map((v, vi) => {
+      const st = v.state;
+      const tiles = [
+        ["Saldo", sol(st.balance), `vence em ${dmy(new Date(st.expires_at * 1000).toISOString().slice(0, 10))}`],
+        ["Paga por evento", sol(st.payout_lamports), `carência de ${nf0.format(st.cooldown_secs / 86400)} dias entre eventos`],
+        ["Pagamentos", `${st.payouts}`, `${sol(st.total_paid)} ao beneficiário`],
+        ["Gatilho", st.subject, `${TRIGGER[st.kind]}${st.accept_from > 0 ? ` · só gravados desde ${br(st.accept_from)}` : " · aceita os já registrados"}`],
+      ];
+      const rows = v.payouts
+        .map(
+          (p, pi) => `<tr><td>fim de ${endOf(p.event_at)}</td>
+          <td><a href="${explorerAddr(p.trigger)}" target="_blank" rel="noopener" class="hash">${short(p.trigger)}</a></td>
+          <td class="num">${sol(p.amount)}</td>
+          <td>${br(p.paid_at)}<br><span class="hash">slot ${nf0.format(p.slot)}</span></td>
+          <td><button type="button" class="link-btn" data-v="${vi}" data-p="${pi}">verificar</button>${p.explorer ? ` · <a href="${p.explorer}" target="_blank" rel="noopener">tx</a>` : ""}</td></tr>`,
+        )
+        .join("");
+      return `<div class="vault">
+        <div class="readings-head"><h3>${esc(v.name)}</h3></div>
+        <p class="sub">${esc(v.description.replace(/\.?$/, "."))} Cofre <a href="${explorerAddr(v.vault)}" target="_blank" rel="noopener">${short(v.vault)}</a> ·
+          beneficiário <a href="${explorerAddr(st.beneficiary)}" target="_blank" rel="noopener">${short(st.beneficiary)}</a> ·
+          <a href="${v.created_explorer}" target="_blank" rel="noopener">criação</a></p>
+        <div class="kpis">${tiles
+          .map(([l, val, n]) => `<div class="kpi"><div class="label">${l}</div><div class="value">${esc(val)}</div><div class="note">${n}</div></div>`)
+          .join("")}</div>
+        <div class="table-wrap">${
+          rows
+            ? `<table class="data"><thead><tr><th>Evento do gatilho</th><th>Gatilho</th><th class="num">Valor</th><th>Pago on-chain</th><th></th></tr></thead><tbody>${rows}</tbody></table>`
+            : `<div class="empty-note">Nenhum pagamento ainda: o cofre espera o próximo gatilho.</div>`
+        }</div></div>`;
+    })
+    .join("");
+  list.querySelectorAll("[data-v]").forEach((b) => b.addEventListener("click", () => verifyPayout(B.vaults[+b.dataset.v], +b.dataset.p)));
+}
+
+async function verifyPayout(v, pi) {
+  const p = v.payouts[pi];
+  panel("", `<h3>Verificando o pagamento do cofre ${esc(v.name)}…</h3>`, "#vault-verify");
+  try {
+    const [pa, va, ta] = await Promise.all([p.payout, v.vault, p.trigger].map((a) => fetchAccount(B.meta.rpc, a)));
+    const pay = decodePayout(pa.data);
+    const vault = decodeVault(va.data);
+    let trig, kindOk;
+    if (vault.kind === 0) {
+      trig = decodeOutlook(ta.data);
+      kindOk = trig.triggered && trig.region === vault.subject;
+    } else {
+      trig = decodeAlertReceipt(ta.data);
+      kindOk = trig.station_id === vault.subject;
+    }
+    const checks = [
+      ["Pagamento, cofre e gatilho são contas do programa do Cota", [pa, va, ta].every((a) => a.owner === B.meta.program)],
+      ["O recibo aponta para este cofre e este gatilho", pay.vault === v.vault && pay.trigger === p.trigger],
+      [`O gatilho é um ${TRIGGER[vault.kind]} de ${esc(vault.subject)}${vault.kind === 0 ? " que disparou a regra" : ""}`, kindOk],
+      [`Evento do gatilho = fim de ${endOf(pay.event_at)}`, trig.issued_at === pay.event_at],
+      [
+        vault.accept_from > 0 ? `Gatilho gravado (${br(trig.committed_at)}) depois de o cofre passar a aceitar` : "O cofre aceita gatilhos já registrados",
+        trig.committed_at >= vault.accept_from,
+      ],
+      [`Pago ${sol(pay.amount)} (até ${sol(vault.payout_lamports)}) ao beneficiário gravado no cofre`, pay.amount <= vault.payout_lamports && pay.beneficiary === vault.beneficiary],
+      [`Pago no slot ${nf0.format(pay.slot)}, depois do gatilho (slot ${nf0.format(trig.slot)})`, pay.slot >= trig.slot],
+      [`Totais do cofre: ${vault.payouts} pagamento(s), ${sol(vault.total_paid)}; saldo atual ${sol(va.lamports)}`, vault.payouts >= v.payouts.length],
+    ];
+    const ok = checks.every(([, x]) => x);
+    panel(
+      ok ? "ok" : "fail",
+      `<h3>Pagamento conferido contra a devnet (slot atual ${nf0.format(pa.slot)})</h3><ol>${checks
+        .map(([t, x]) => `<li>${x ? '<span class="good-text">✓</span>' : '<span class="crit-text">✕</span>'} ${t}</li>`)
+        .join("")}</ol>
+      <div class="verdict ${ok ? "good-text" : "crit-text"}">${
+        ok ? `✓ O programa liberou ${sol(pay.amount)} em ${br(pay.paid_at)} só porque o gatilho existia on-chain.` : "✕ Divergência encontrada."
+      }</div>`,
+      "#vault-verify",
+    );
+  } catch (e) {
+    panel("fail", `<h3>Não foi possível verificar</h3><p>${esc(e.message)}</p>`, "#vault-verify");
+  }
+}
+
 // ---- tema e inicialização -------------------------------------------------
 
 function initTheme() {
@@ -1070,6 +1165,7 @@ async function main() {
 
   renderLive();
   renderOutlook();
+  renderVaults();
   renderKpis();
   renderRain();
   renderQuality();

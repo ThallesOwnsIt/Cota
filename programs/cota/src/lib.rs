@@ -78,6 +78,21 @@ pub mod cota {
         crate::instructions::outlook::handle_commit_outlook(ctx, header)
     }
 
+    /// Cria um cofre paramétrico que paga um beneficiário quando o Cota registra um gatilho.
+    pub fn create_vault(ctx: Context<CreateVault>, args: VaultArgs) -> Result<()> {
+        crate::instructions::vault::handle_create_vault(ctx, args)
+    }
+
+    /// Libera o pagamento de um cofre diante de um gatilho (qualquer conta pode acionar).
+    pub fn trigger_payout(ctx: Context<TriggerPayout>) -> Result<()> {
+        crate::instructions::vault::handle_trigger_payout(ctx)
+    }
+
+    /// Fecha um cofre vencido e devolve o saldo ao criador.
+    pub fn close_vault(ctx: Context<CloseVault>) -> Result<()> {
+        crate::instructions::vault::handle_close_vault(ctx)
+    }
+
     /// Emite o recibo de alerta de uma previsão cuja P90 cruzou o limiar.
     pub fn issue_alert(ctx: Context<IssueAlert>) -> Result<()> {
         crate::instructions::alerts::handle_issue_alert(ctx)
