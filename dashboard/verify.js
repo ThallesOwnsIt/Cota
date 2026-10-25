@@ -243,3 +243,25 @@ export function decodePublicAlert(data) {
     committed_at: r.i64(),
   };
 }
+
+/** Layout de `OutlookRecord`. */
+export function decodeOutlook(data) {
+  const r = new Reader(data);
+  return {
+    region: r.str(),
+    based_on_batch_id: r.u64(),
+    issued_at: r.i64(),
+    window_end: r.i64(),
+    models: r.u8(),
+    rain_mean_milli: r.i64(),
+    rain_min_milli: r.i64(),
+    rain_max_milli: r.i64(),
+    content_sha256: toHex(r.bytes(32)),
+    threshold_milli: r.i64(),
+    triggered: r.u8() === 1,
+    signers: r.u8(),
+    signer_count: r.u8(),
+    slot: r.u64(),
+    committed_at: r.i64(),
+  };
+}

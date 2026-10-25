@@ -186,3 +186,70 @@ pub struct PublicAlertRecord {
     pub submitter: Pubkey,
     pub bump: u8,
 }
+
+/// Regra do alerta antecipado de uma região. Imutável. PDA `["outlook_rule", region]`.
+#[account]
+#[derive(InitSpace)]
+pub struct OutlookRule {
+    #[max_len(MAX_REGION_LEN)]
+    pub region: String,
+    /// Chuva média prevista na janela (milésimos de mm) a partir da qual o alerta dispara.
+    pub threshold_milli: i64,
+    pub window_secs: i64,
+    pub min_models: u8,
+    /// SHA-256 da especificação completa (pontos, modelos, calibração), publicada fora da cadeia.
+    pub rule_sha256: [u8; 32],
+    pub set_at: i64,
+    pub bump: u8,
+}
+
+/// O que os oráculos assinam sobre a chuva prevista de uma região. O conteúdo completo (por
+/// modelo, ponto e dia) fica fora da cadeia; `content_sha256` é o hash do JSON canônico.
+#[derive(AnchorSerialize, AnchorDeserialize, Clone, Debug, PartialEq, Eq)]
+pub struct OutlookHeader {
+    pub region: String,
+    /// Fim do último dia ancorado: a perspectiva só usa o que existia até ali.
+    pub issued_at: i64,
+    pub window_end: i64,
+    pub models: u8,
+    /// Chuva acumulada na janela, média dos pontos, em milésimos de mm: média, mínimo e
+    /// máximo entre os modelos.
+    pub rain_mean_milli: i64,
+    pub rain_min_milli: i64,
+    pub rain_max_milli: i64,
+    pub content_sha256: [u8; 32],
+}
+
+impl OutlookHeader {
+    pub fn signing_message(&self) -> Vec<u8> {
+        let mut msg = OUTLOOK_DOMAIN.to_vec();
+        self.serialize(&mut msg).expect("serialização de OutlookHeader em Vec não falha");
+        msg
+    }
+}
+
+/// Chuva prevista atestada pelo comitê e avaliada pela regra no próprio programa.
+/// PDA `["outlook", region, issued_at (i64 LE)]`.
+#[account]
+#[derive(InitSpace)]
+pub struct OutlookRecord {
+    #[max_len(MAX_REGION_LEN)]
+    pub region: String,
+    pub based_on_batch_id: u64,
+    pub issued_at: i64,
+    pub window_end: i64,
+    pub models: u8,
+    pub rain_mean_milli: i64,
+    pub rain_min_milli: i64,
+    pub rain_max_milli: i64,
+    pub content_sha256: [u8; 32],
+    /// Limiar da regra no momento do registro e o resultado: o alerta antecipado.
+    pub threshold_milli: i64,
+    pub triggered: bool,
+    pub signers: u8,
+    pub signer_count: u8,
+    pub slot: u64,
+    pub committed_at: i64,
+    pub submitter: Pubkey,
+    pub bump: u8,
+}

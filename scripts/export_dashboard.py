@@ -7,6 +7,7 @@ Saída em dashboard/data/:
 - bundle.json        tudo o que a página desenha (dias, previsões, qualidade, métricas)
 - batches/NNNNN.json leituras de cada lote, carregadas sob demanda para a prova Merkle
 - public_alerts/<sha>.txt conteúdo canônico de cada aviso oficial (o navegador refaz o SHA-256)
+- outlooks/<sha>.txt  conteúdo canônico de cada perspectiva de chuva (idem)
 
 Os lotes de 2024 são o replay da cheia; os de 2025 em diante, o modo ao vivo.
 """
@@ -174,6 +175,8 @@ def main() -> None:
         )
     alerts.sort(key=lambda a: a["slot"], reverse=True)
 
+    outlook = export_outlook(audit)
+
     replay_days = [d for d in days if d["day"] < LIVE_FROM]
     live_days = [d for d in days if d["day"] >= LIVE_FROM]
     replay_issues = [i for i in issues if i["issue_day"] < LIVE_FROM]
@@ -208,13 +211,73 @@ def main() -> None:
         "days": replay_days,
         "issues": replay_issues,
         "live": {"days": live_days, "issues": live_issues, "public_alerts": alerts},
+        "outlook": outlook,
     }
     (OUT / "bundle.json").write_text(json.dumps(bundle, separators=(",", ":"), ensure_ascii=False))
     size = sum(p.stat().st_size for p in OUT.rglob("*") if p.is_file())
     print(
         f"replay: {len(replay_days)} lotes, {len(replay_issues)} previsões · ao vivo: {len(live_days)} lotes, "
-        f"{len(live_issues)} previsões, {len(alerts)} avisos oficiais → {OUT} ({size / 1024:.0f} KiB)"
+        f"{len(live_issues)} previsões, {len(alerts)} avisos oficiais, {len(outlook['live'])} perspectivas de chuva "
+        f"→ {OUT} ({size / 1024:.0f} KiB)"
     )
+
+
+def export_outlook(audit: dict) -> dict:
+    """Regra do alerta antecipado, backtest fora da amostra e perspectivas ancoradas."""
+    rule = json.loads((ROOT / "ml/models/outlook-rule.json").read_text())
+    bt = json.loads((ROOT / "ml/reports/outlook-backtest.json").read_text())
+    spec = rule["spec"]
+    audited = {o["record"]: o for o in audit.get("outlooks", [])}
+    (OUT / "outlooks").mkdir(parents=True, exist_ok=True)
+    live = []
+    for path in sorted((LEDGER / "outlooks").glob("*.json")) if (LEDGER / "outlooks").exists() else []:
+        e = json.loads(path.read_text())
+        h = e["header"]
+        (OUT / "outlooks" / f"{h['content_sha256']}.txt").write_text(e["content"], encoding="utf-8")
+        a = audited.get(e["record"], {})
+        live.append(
+            {
+                "day": e["day"],
+                "record": e["record"],
+                **{k: h[k] for k in ("issued_at", "window_end", "models", "rain_mean_milli", "rain_min_milli", "rain_max_milli", "content_sha256")},
+                "threshold_milli": e["threshold_milli"],
+                "triggered": e["triggered"],
+                "slot": e["slot"],
+                "committed_at": e["committed_at"],
+                "signers": e["signers"],
+                "based_on_batch_id": e["based_on_batch_id"],
+                "explorer": e["explorer"],
+                "next_batch_slot": a.get("next_batch_slot"),
+                "audit_ok": not a.get("problems", ["não auditado"]),
+            }
+        )
+    live.sort(key=lambda o: o["day"], reverse=True)
+    rule_account = next((json.loads(p.read_text())["rule"] for p in (LEDGER / "outlooks").glob("*.json")), None) if live else None
+    return {
+        "rule": {
+            "sha256": rule["rule_sha256"],
+            "account": rule_account,
+            "region": spec["region"],
+            "threshold_mm": spec["threshold_mm"],
+            "window_days": spec["window_days"],
+            "min_models": spec["min_models"],
+            "models": spec["models"],
+            "points": [p["id"] for p in spec["points"]],
+            "target": spec["target"],
+            "calibration": spec["calibration"],
+        },
+        "backtest": {
+            "period": bt["period"],
+            "contingency": bt["contingency"],
+            "floods": bt["floods"],
+            "false_alarm_runs": bt["false_alarm_runs"],
+            "days": [
+                {"day": d["day"], "rain": d["rain_mm"], "models": d["models"], "q": None if d["q"] is None else round(d["q"]), "alert": d["alert"], "flood": d["flood_ahead"]}
+                for d in bt["days"]
+            ],
+        },
+        "live": live,
+    }
 
 
 if __name__ == "__main__":

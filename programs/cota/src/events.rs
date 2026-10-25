@@ -106,3 +106,34 @@ pub struct AuthorityChanged {
     pub old: Pubkey,
     pub new: Pubkey,
 }
+
+#[event]
+pub struct OutlookRuleSet {
+    pub region: String,
+    pub threshold_milli: i64,
+    pub window_secs: i64,
+    pub min_models: u8,
+    pub rule_sha256: [u8; 32],
+}
+
+#[event]
+pub struct OutlookCommitted {
+    pub outlook: Pubkey,
+    pub region: String,
+    pub issued_at: i64,
+    pub window_end: i64,
+    pub rain_mean_milli: i64,
+    pub content_sha256: [u8; 32],
+    pub signers: u8,
+}
+
+/// A chuva prevista cruzou o limiar da regra: alerta antecipado.
+#[event]
+pub struct EarlyWarning {
+    pub outlook: Pubkey,
+    pub region: String,
+    pub issued_at: i64,
+    pub window_end: i64,
+    pub rain_mean_milli: i64,
+    pub threshold_milli: i64,
+}

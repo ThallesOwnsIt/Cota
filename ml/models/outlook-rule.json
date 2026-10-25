@@ -1,0 +1,67 @@
+{
+  "rule_sha256": "cf517e266d9491bf323f06cd9b4badf646d847885dc6b3da9628d543de1b860d",
+  "spec": {
+    "region": "guaiba",
+    "points": [
+      {
+        "id": "A801",
+        "lat": -30.05361111,
+        "lon": -51.17472221
+      },
+      {
+        "id": "B807",
+        "lat": -30.1861111,
+        "lon": -51.17805554
+      },
+      {
+        "id": "A840",
+        "lat": -29.164581,
+        "lon": -51.534202
+      },
+      {
+        "id": "A879",
+        "lat": -29.36888888,
+        "lon": -50.82722221
+      },
+      {
+        "id": "A882",
+        "lat": -29.44916666,
+        "lon": -51.82333332
+      },
+      {
+        "id": "A837",
+        "lat": -28.859211,
+        "lon": -52.542387
+      }
+    ],
+    "models": [
+      "ecmwf_ifs025",
+      "gfs_global",
+      "icon_global"
+    ],
+    "min_models": 2,
+    "run_hour_utc": 0,
+    "window_days": 5,
+    "aggregation": "por modelo: soma horária de D+1..D+5 (UTC) em cada ponto, arredondada a 0,1 mm por dia; média dos pontos; depois média dos modelos",
+    "threshold_mm": 90,
+    "target": {
+      "station_id": "GLOFAS-GUAIBA",
+      "threshold_m3s": 9353.06,
+      "within_days": 7
+    },
+    "calibration": {
+      "years": [
+        2015,
+        2023
+      ],
+      "data": "chuva observada INMET + vazão GloFAS",
+      "threshold_mm": 90,
+      "csi": 0.2,
+      "hits": 30,
+      "false_alarms": 82,
+      "misses": 38,
+      "days": 3242,
+      "flood_days": 68
+    }
+  }
+}

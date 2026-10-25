@@ -356,6 +356,26 @@ button {
   background: var(--band);
   border-radius: 2px;
 }
+.swatch-flood {
+  width: 18px;
+  height: 10px;
+  background: color-mix(in srgb, var(--critical) 18%, transparent);
+  border-radius: 2px;
+}
+.dot-key {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+}
+.table-details {
+  margin: 4px 0 8px;
+}
+.table-details summary {
+  cursor: pointer;
+  color: var(--text-2);
+  font-size: 13.5px;
+  padding: 6px 0;
+}
 
 .tooltip {
   position: fixed;

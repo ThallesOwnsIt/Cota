@@ -40,4 +40,6 @@ pub enum CotaError {
     BelowAlertThreshold,
     #[msg("Aviso oficial com vigência inválida")]
     InvalidPublicAlert,
+    #[msg("Perspectiva de chuva inválida: emissão fora do último lote, janela diferente da regra ou modelos insuficientes")]
+    InvalidOutlook,
 }

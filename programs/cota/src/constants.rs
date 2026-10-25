@@ -41,3 +41,15 @@ pub const PUBLIC_ALERT_DOMAIN: &[u8] = b"COTA-PUBALERT-v1";
 
 pub const MAX_ISSUER_LEN: usize = 16;
 pub const MAX_ALERT_ID_LEN: usize = 64;
+
+#[constant]
+pub const OUTLOOK_RULE_SEED: &[u8] = b"outlook_rule";
+
+#[constant]
+pub const OUTLOOK_SEED: &[u8] = b"outlook";
+
+/// Prefixo da mensagem que os oráculos assinam ao atestar a chuva prevista.
+#[constant]
+pub const OUTLOOK_DOMAIN: &[u8] = b"COTA-OUTLOOK-v1";
+
+pub const MAX_REGION_LEN: usize = 16;

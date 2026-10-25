@@ -57,6 +57,35 @@
         <div id="live-verify" class="verify" hidden aria-live="polite"></div>
       </section>
 
+      <section class="card" aria-labelledby="outlook-title" id="outlook">
+        <div class="card-head">
+          <div>
+            <h2 id="outlook-title">Alerta antecipado: chuva prevista na bacia</h2>
+            <p class="sub" id="outlook-sub"></p>
+          </div>
+        </div>
+        <div id="outlook-kpis" class="kpis"></div>
+        <div class="readings-head">
+          <h3>A regra contra fev/2024 – out/2026, fora da amostra de calibração</h3>
+        </div>
+        <p class="sub" id="outlook-bt-sub"></p>
+        <div id="outlook-legend" class="legend"></div>
+        <div id="outlook-chart" class="chart" role="img" aria-label="Chuva prevista para os 5 dias seguintes e vazão do Guaíba, fevereiro de 2024 a outubro de 2026"></div>
+        <details class="table-details">
+          <summary>Cheias e alarmes falsos do backtest</summary>
+          <div id="outlook-bt-table" class="table-wrap"></div>
+        </details>
+        <div class="readings-head">
+          <h3>Perspectivas registradas pelo comitê</h3>
+        </div>
+        <p class="sub">
+          Logo depois de ancorar o lote do dia D, cada nó baixa a rodada 00Z de D de cada modelo, soma a chuva de D+1 a D+5 nos 6 pontos e assina.
+          O programa só aceita o registro enquanto D for o último dia ancorado, e decide sozinho se a regra disparou.
+        </p>
+        <div id="outlook-live" class="table-wrap"></div>
+        <div id="outlook-verify" class="verify" hidden aria-live="polite"></div>
+      </section>
+
       <h2 class="section-title">Replay da cheia de abril–maio de 2024</h2>
 
       <section aria-labelledby="kpi-title">

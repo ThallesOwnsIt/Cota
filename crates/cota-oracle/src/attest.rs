@@ -1,5 +1,5 @@
-//! Atestação de avisos oficiais: cada nó assina o que viu; o agregador só leva à cadeia
-//! a versão que ≥ k membros viram com conteúdo idêntico.
+//! Atestação de dados externos (avisos oficiais, chuva prevista): cada nó assina o que viu;
+//! o agregador só leva à cadeia a versão que ≥ k membros viram com conteúdo idêntico.
 
 use std::collections::BTreeMap;
 
@@ -40,37 +40,67 @@ pub fn sign(key: &SigningKey, a: &ObservedAlert, seen_at: i64) -> SignedAlert {
     }
 }
 
-/// Uma versão de aviso pronta para a cadeia.
-#[derive(Debug, Clone)]
-pub struct Attested {
-    pub header: PublicAlertHeader,
-    pub signatures: Vec<([u8; 32], [u8; 64])>,
-    /// Submissões dos membros que assinaram (para o ledger).
-    pub observations: Vec<SignedAlert>,
+/// Algo que um nó assina e publica junto com o conteúdo de que o cabeçalho é o hash.
+pub trait Attestation: Clone {
+    type Header: Clone;
+    fn node(&self) -> &str;
+    fn signature(&self) -> &[u8; 64];
+    fn header(&self) -> &Self::Header;
+    fn message(&self) -> Vec<u8>;
+    /// O conteúdo publicado é o que o hash do cabeçalho diz.
+    fn content_matches(&self) -> bool;
 }
 
-/// Agrupa por cabeçalho e devolve os que têm ≥ `threshold` membros distintos com
+impl Attestation for SignedAlert {
+    type Header = PublicAlertHeader;
+    fn node(&self) -> &str {
+        &self.node
+    }
+    fn signature(&self) -> &[u8; 64] {
+        &self.signature
+    }
+    fn header(&self) -> &PublicAlertHeader {
+        &self.header
+    }
+    fn message(&self) -> Vec<u8> {
+        self.header.signing_message()
+    }
+    fn content_matches(&self) -> bool {
+        content_hash(&self.content) == self.header.content_sha256
+    }
+}
+
+/// Um cabeçalho pronto para a cadeia.
+#[derive(Debug, Clone)]
+pub struct Attested<S: Attestation> {
+    pub header: S::Header,
+    pub signatures: Vec<([u8; 32], [u8; 64])>,
+    /// Submissões dos membros que assinaram (para o ledger).
+    pub observations: Vec<S>,
+}
+
+/// Agrupa por mensagem assinada e devolve as que têm ≥ `threshold` membros distintos com
 /// assinatura válida e conteúdo que bate com o hash.
-pub fn select(members: &[[u8; 32]], threshold: usize, subs: &[SignedAlert]) -> Result<Vec<Attested>> {
-    let mut groups: BTreeMap<Vec<u8>, Attested> = BTreeMap::new();
+pub fn select<S: Attestation>(members: &[[u8; 32]], threshold: usize, subs: &[S]) -> Result<Vec<Attested<S>>> {
+    let mut groups: BTreeMap<Vec<u8>, Attested<S>> = BTreeMap::new();
     for s in subs {
-        let pk: [u8; 32] = match bs58::decode(&s.node).into_vec().map(<[u8; 32]>::try_from) {
+        let pk: [u8; 32] = match bs58::decode(s.node()).into_vec().map(<[u8; 32]>::try_from) {
             Ok(Ok(pk)) => pk,
             _ => continue,
         };
-        if !members.contains(&pk) || content_hash(&s.content) != s.header.content_sha256 {
+        if !members.contains(&pk) || !s.content_matches() {
             continue;
         }
-        let msg = s.header.signing_message();
+        let msg = s.message();
         let valid = VerifyingKey::from_bytes(&pk)
-            .map(|vk| vk.verify_strict(&msg, &Signature::from_bytes(&s.signature)).is_ok())
+            .map(|vk| vk.verify_strict(&msg, &Signature::from_bytes(s.signature())).is_ok())
             .unwrap_or(false);
         if !valid {
             continue;
         }
-        let g = groups.entry(msg).or_insert_with(|| Attested { header: s.header.clone(), signatures: vec![], observations: vec![] });
+        let g = groups.entry(msg).or_insert_with(|| Attested { header: s.header().clone(), signatures: vec![], observations: vec![] });
         if !g.signatures.iter().any(|(k, _)| *k == pk) {
-            g.signatures.push((pk, s.signature));
+            g.signatures.push((pk, *s.signature()));
             g.observations.push(s.clone());
         }
     }

@@ -7,5 +7,6 @@ pub mod inmet_alerts;
 pub mod keys;
 pub mod ledger;
 pub mod node;
+pub mod outlook;
 pub mod quality;
 pub mod rpc;

@@ -1,7 +1,9 @@
 # Modo ao vivo do Cota, a cada 30 minutos:
 #   - 3 jobs de nó, um por chave (cada um só enxerga o próprio secret): consultam os avisos
-#     do INMET e, se houver um dia UTC encerrado ainda não ancorado, assinam o lote dele;
-#   - 1 agregador: leva à cadeia o que tem ≥ 2 de 3 assinaturas, prevê, audita e faz commit
+#     do INMET e, se houver um dia UTC encerrado ainda não ancorado, assinam o lote dele e a
+#     chuva prevista para os 5 dias seguintes (rodada 00Z do dia, Open-Meteo);
+#   - 1 agregador: leva à cadeia o que tem ≥ 2 de 3 assinaturas (o programa aplica a regra
+#     do alerta antecipado à chuva prevista), prevê a vazão, audita e faz commit
 #     do ledger e dos dados do dashboard (a Vercel republica a cada push).
 #
 # Secrets: NODE_1_KEY, NODE_2_KEY, NODE_3_KEY e OPERATOR_KEY (conteúdo dos keypairs JSON).
@@ -49,7 +51,7 @@ jobs:
       - uses: Swatinem/rust-cache@v2
         with:
           shared-key: cota
-      - run: cargo build --release -p cota-oracle --bin cota-node --bin cota-alerts
+      - run: cargo build --release -p cota-oracle --bin cota-node --bin cota-alerts --bin cota-outlook
       - name: Chave do nó
         env:
           KEY: ${{ secrets[format('NODE_{0}_KEY', matrix.node)] }}
@@ -63,6 +65,11 @@ jobs:
         run: >
           target/release/cota-node --key keys/node.json --day "${{ needs.plan.outputs.day }}"
           --rpc "$RPC" --config config/stations-live.toml --out out
+      - name: Chuva prevista após ${{ needs.plan.outputs.day }}
+        if: needs.plan.outputs.day != ''
+        # Sem a previsão, o lote do nó ainda vale.
+        continue-on-error: true
+        run: target/release/cota-outlook observe --key keys/node.json --day "${{ needs.plan.outputs.day }}" --out out/outlook
       - run: rm -f keys/node.json
         if: always()
       - uses: actions/upload-artifact@v4
@@ -103,6 +110,7 @@ jobs:
           day="${{ needs.plan.outputs.day }}"
           target/release/cota-aggregator --rpc "$RPC" --cluster "$CLUSTER" --payer keys/operator.json \
             --config config/stations-live.toml
+          target/release/cota-outlook anchor --rpc "$RPC" --cluster "$CLUSTER" --payer keys/operator.json || true
           (cd ml && uv run python -m cota_ml.forecast --day "$day")
           if [[ -f "data/forecasts/$day.json" ]]; then
             target/release/cota-admin --rpc "$RPC" --payer keys/operator.json \

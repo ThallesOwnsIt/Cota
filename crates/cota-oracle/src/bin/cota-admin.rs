@@ -5,7 +5,7 @@ use std::path::PathBuf;
 use anchor_lang::prelude::Pubkey;
 use anyhow::{bail, Context, Result};
 use clap::{Parser, Subcommand};
-use cota_oracle::{chain, keys, rpc::{explorer_tx, Rpc}};
+use cota_oracle::{chain, keys, outlook, rpc::{explorer_tx, Rpc}};
 use serde::Deserialize;
 use serde_json::json;
 use solana_signer::Signer;
@@ -59,6 +59,11 @@ enum Cmd {
         new: String,
     },
     /// Mostra o estado do comitê e o saldo da carteira.
+    /// Fixa (uma vez) a regra do alerta antecipado a partir de `ml/models/outlook-rule.json`.
+    SetOutlookRule {
+        #[arg(long, default_value = "ml/models/outlook-rule.json")]
+        rule: PathBuf,
+    },
     Status,
 }
 
@@ -189,6 +194,26 @@ fn main() -> Result<()> {
             let sig = rpc.send_and_confirm(&[chain::set_authority_instruction(payer.pubkey(), new_pk)], &payer)?;
             eprintln!("autoridade do comitê: {} → {new_pk}\n  tx {sig}", payer.pubkey());
         }
+        Cmd::SetOutlookRule { rule } => {
+            let r = outlook::load_rule(&rule)?;
+            let args = cota::OutlookRuleArgs {
+                region: r.spec.region.clone(),
+                threshold_milli: r.threshold_milli(),
+                window_secs: r.window_secs(),
+                min_models: r.spec.min_models,
+                rule_sha256: r.sha256,
+            };
+            let sig = rpc.send_and_confirm(&[chain::set_outlook_rule_instruction(payer.pubkey(), args)], &payer)?;
+            eprintln!(
+                "regra de alerta antecipado {}: chuva ≥ {} mm em {} dias (≥ {} modelos), rule_sha256 {}\n  conta {}\n  tx {sig}",
+                r.spec.region,
+                r.spec.threshold_mm,
+                r.spec.window_days,
+                r.spec.min_models,
+                hex::encode(r.sha256),
+                chain::outlook_rule_pda(&r.spec.region),
+            );
+        }
         Cmd::Status => {
             println!("programa   {}", chain::PROGRAM_ID);
             println!("carteira   {} ({:.4} SOL)", payer.pubkey(), rpc.balance(&payer.pubkey())? as f64 / 1e9);
@@ -206,6 +231,10 @@ fn main() -> Result<()> {
                     if let Some(rule) = rpc.account_data(&chain::alert_rule_pda("GLOFAS-GUAIBA"))? {
                         let r = chain::decode_alert_rule(&rule)?;
                         println!("alerta     {} P90 ≥ {:.0}", r.station_id, r.threshold_milli as f64 / 1000.0);
+                    }
+                    if let Some(rule) = rpc.account_data(&chain::outlook_rule_pda("guaiba"))? {
+                        let r = chain::decode_outlook_rule(&rule)?;
+                        println!("antecipado {} chuva ≥ {:.0} mm em {} d", r.region, r.threshold_milli as f64 / 1000.0, r.window_secs / 86_400);
                     }
                 }
             }

@@ -2,7 +2,7 @@
 
 use anchor_lang::{prelude::Pubkey, solana_program::instruction::Instruction, AccountDeserialize, InstructionData, ToAccountMetas};
 use anyhow::{Context, Result};
-use cota::state::{AlertReceipt, AlertRule, BatchCommitment, Committee, ForecastCommitment, PublicAlertRecord};
+use cota::state::{AlertReceipt, AlertRule, BatchCommitment, Committee, ForecastCommitment, OutlookRecord, OutlookRule, PublicAlertRecord};
 use cota_core::precompile::ed25519_instruction_data;
 use cota_ingest::config::StationConfig;
 
@@ -245,4 +245,75 @@ pub fn set_authority_instruction(authority: Pubkey, new_authority: Pubkey) -> In
         &cota::instruction::SetAuthority { new_authority }.data(),
         cota::accounts::SetAuthority { authority, committee: committee_pda() }.to_account_metas(None),
     )
+}
+
+pub fn outlook_rule_pda(region: &str) -> Pubkey {
+    Pubkey::find_program_address(&[cota::OUTLOOK_RULE_SEED, region.as_bytes()], &PROGRAM_ID).0
+}
+
+pub fn outlook_pda(region: &str, issued_at: i64) -> Pubkey {
+    Pubkey::find_program_address(&[cota::OUTLOOK_SEED, region.as_bytes(), &issued_at.to_le_bytes()], &PROGRAM_ID).0
+}
+
+pub fn set_outlook_rule_instruction(authority: Pubkey, args: cota::OutlookRuleArgs) -> Instruction {
+    let rule = outlook_rule_pda(&args.region);
+    Instruction::new_with_bytes(
+        PROGRAM_ID,
+        &cota::instruction::SetOutlookRule { args }.data(),
+        cota::accounts::SetOutlookRule {
+            authority,
+            committee: committee_pda(),
+            rule,
+            system_program: anchor_lang::solana_program::system_program::ID,
+        }
+        .to_account_metas(None),
+    )
+}
+
+pub fn to_program_outlook_header(h: &cota_core::OutlookHeader) -> cota::OutlookHeader {
+    cota::OutlookHeader {
+        region: h.region.clone(),
+        issued_at: h.issued_at,
+        window_end: h.window_end,
+        models: h.models,
+        rain_mean_milli: h.rain_mean_milli,
+        rain_min_milli: h.rain_min_milli,
+        rain_max_milli: h.rain_max_milli,
+        content_sha256: h.content_sha256,
+    }
+}
+
+/// `[precompile Ed25519, commit_outlook(header)]`, nessa ordem.
+pub fn commit_outlook_instructions(
+    submitter: Pubkey,
+    header: &cota_core::OutlookHeader,
+    signatures: &[([u8; 32], [u8; 64])],
+) -> [Instruction; 2] {
+    let ed25519 = Instruction::new_with_bytes(
+        solana_sdk_ids::ed25519_program::ID,
+        &ed25519_instruction_data(&header.signing_message(), signatures),
+        vec![],
+    );
+    let commit = Instruction::new_with_bytes(
+        PROGRAM_ID,
+        &cota::instruction::CommitOutlook { header: to_program_outlook_header(header) }.data(),
+        cota::accounts::CommitOutlook {
+            submitter,
+            committee: committee_pda(),
+            rule: outlook_rule_pda(&header.region),
+            outlook: outlook_pda(&header.region, header.issued_at),
+            instructions: solana_instructions_sysvar::ID,
+            system_program: anchor_lang::solana_program::system_program::ID,
+        }
+        .to_account_metas(None),
+    );
+    [ed25519, commit]
+}
+
+pub fn decode_outlook_rule(data: &[u8]) -> Result<OutlookRule> {
+    OutlookRule::try_deserialize(&mut &data[..]).context("conta de regra de perspectiva inválida")
+}
+
+pub fn decode_outlook(data: &[u8]) -> Result<OutlookRecord> {
+    OutlookRecord::try_deserialize(&mut &data[..]).context("conta de perspectiva inválida")
 }

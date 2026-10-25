@@ -68,6 +68,16 @@ pub mod cota {
         crate::instructions::record_public_alert::handle_record_public_alert(ctx, header)
     }
 
+    /// Fixa (uma única vez) a regra do alerta antecipado por chuva prevista de uma região.
+    pub fn set_outlook_rule(ctx: Context<SetOutlookRule>, args: OutlookRuleArgs) -> Result<()> {
+        crate::instructions::outlook::handle_set_outlook_rule(ctx, args)
+    }
+
+    /// Registra a chuva prevista atestada por ≥ k oráculos e emite `EarlyWarning` se cruzar a regra.
+    pub fn commit_outlook(ctx: Context<CommitOutlook>, header: OutlookHeader) -> Result<()> {
+        crate::instructions::outlook::handle_commit_outlook(ctx, header)
+    }
+
     /// Emite o recibo de alerta de uma previsão cuja P90 cruzou o limiar.
     pub fn issue_alert(ctx: Context<IssueAlert>) -> Result<()> {
         crate::instructions::alerts::handle_issue_alert(ctx)

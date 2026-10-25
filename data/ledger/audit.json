@@ -1975,16 +1975,30 @@
       "problems": []
     }
   ],
+  "outlooks": [
+    {
+      "day": "2026-10-24",
+      "record": "DkZsBLgCwXB9erKuShQ6uPz1T6vFFcRTkFXNumFR2Hnu",
+      "rain_mean_milli": 12655,
+      "triggered": false,
+      "slot": 514979482,
+      "next_batch_slot": null,
+      "problems": []
+    }
+  ],
   "summary": {
     "alerts": 31,
     "alerts_recorded_before_observation": 31,
     "batches": 43,
     "batches_with_problems": 0,
+    "early_warnings": 0,
     "forecasts": 86,
     "forecasts_inside_p10_p90": 54,
     "forecasts_observed": 80,
     "forecasts_recorded_before_observation": 80,
     "forecasts_with_problems": 0,
+    "outlooks": 1,
+    "outlooks_with_problems": 0,
     "public_alerts": 1,
     "public_alerts_with_problems": 0
   }

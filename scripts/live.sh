@@ -2,7 +2,8 @@
 # Modo ao vivo do Cota.
 #
 #   scripts/live.sh alerts    3 nós consultam os avisos do INMET; o agregador ancora os novos
-#   scripts/live.sh daily     ancora cada dia UTC encerrado que falta, prevê e emite alertas
+#   scripts/live.sh daily     ancora cada dia UTC encerrado que falta, atesta a chuva prevista,
+#                             prevê a vazão e emite alertas
 #   scripts/live.sh publish   audita contra a cadeia, gera os dados do dashboard e publica
 #   scripts/live.sh all       os três, nessa ordem
 #
@@ -37,7 +38,7 @@ daily() {
     echo "nada a ancorar: o ledger está em dia"
     return
   fi
-  CONFIG=config/stations-live.toml FAULTS=/dev/null scripts/replay.sh "${days[0]}" "${days[-1]}"
+  OUTLOOK=1 CONFIG=config/stations-live.toml FAULTS=/dev/null scripts/replay.sh "${days[0]}" "${days[-1]}"
 }
 
 publish() {

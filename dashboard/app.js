@@ -9,6 +9,7 @@ import {
   rootFromLeaves,
   sha256Hex,
   decodePublicAlert,
+  decodeOutlook,
   toHex,
   verifyInclusion,
 } from "./verify.js";
@@ -798,6 +799,242 @@ async function verifyPublicAlert(a) {
   }
 }
 
+// ---- alerta antecipado (chuva prevista) -----------------------------------
+
+const mm = (milli) => nf1.format(milli / 1000);
+const MONTHS = ["jan", "fev", "mar", "abr", "mai", "jun", "jul", "ago", "set", "out", "nov", "dez"];
+const monthLabel = (iso) => `${MONTHS[+iso.slice(5, 7) - 1]}/${iso.slice(2, 4)}`;
+
+function renderOutlook() {
+  const O = B.outlook;
+  const R = O.rule;
+  const bt = O.backtest;
+  const cal = R.calibration;
+  const last = O.live[0];
+  const leads = bt.floods.map((f) => f.lead_days).filter((x) => x != null);
+  const warned = bt.floods.filter((f) => f.first_alert).length;
+  const faDays = bt.contingency.false_alarms;
+
+  $("#outlook-sub").innerHTML =
+    `Regra fixada on-chain antes de qualquer registro ao vivo: se a chuva prevista para os ${R.window_days} dias seguintes, média dos ` +
+    `${R.points.length} pontos da bacia e dos modelos ${R.models.join(", ")}, chegar a <strong>${R.threshold_mm} mm</strong>, ` +
+    `o Guaíba pode cruzar ${nf0.format(R.target.threshold_m3s)} m³/s em até ${R.target.within_days} dias. ` +
+    `Calibrada só com ${cal.years[0]}–${cal.years[1]} (chuva observada, CSI ${nf2.format(cal.csi)}). ` +
+    (R.account ? `Conta <a href="${explorerAddr(R.account)}" target="_blank" rel="noopener">${short(R.account)}</a> · ` : "") +
+    `<span class="hash" title="rule_sha256">${short(R.sha256, 12)}</span>`;
+
+  const tiles = [
+    last
+      ? [
+          `Chuva prevista ${dm(addDays(last.day, 1))}–${dm(addDays(last.day, R.window_days))}`,
+          `${mm(last.rain_mean_milli)} mm`,
+          `modelos: ${mm(last.rain_min_milli)}–${mm(last.rain_max_milli)} mm · ${last.triggered ? "▲ alerta antecipado" : `abaixo de ${R.threshold_mm} mm`}`,
+        ]
+      : ["Chuva prevista", "—", "nenhuma perspectiva registrada ainda"],
+    ["Cheias com alerta prévio", `${warned} de ${bt.floods.length}`, leads.length ? `antecedência de ${leads.join(", ")} dias` : "—"],
+    ["Dias com alarme falso", `${faDays}`, `${bt.false_alarm_runs.length} episódios em ${nf0.format(bt.contingency.days)} dias avaliados`],
+    ["CSI fora da amostra", nf2.format(bt.contingency.csi), `calibração: ${nf2.format(cal.csi)} · acertos ${bt.contingency.hits}, falhas ${bt.contingency.misses}`],
+  ];
+  $("#outlook-kpis").innerHTML = tiles
+    .map(([l, v, n]) => `<div class="kpi"><div class="label">${l}</div><div class="value">${v}</div><div class="note">${n}</div></div>`)
+    .join("");
+
+  $("#outlook-bt-sub").textContent =
+    `Para cada dia, a chuva que os modelos previam no fim daquele dia (Open-Meteo Previous Runs). Para o dia alvo D+k usa-se a previsão ` +
+    `feita (k+1)×24 h antes: só rodadas já publicadas, um dia mais velhas que as do modo ao vivo. Vazão: GloFAS. ` +
+    `Um alerta conta como acerto se a vazão cruzar o limiar em até ${R.target.within_days} dias.`;
+
+  const fl = bt.floods
+    .map(
+      (f) => `<tr><td>${dmy(f.first_day)} – ${dmy(f.last_day)}</td><td class="num">${nf0.format(f.peak_m3s)}</td>
+      <td>${f.first_alert ? dmy(f.first_alert) : "sem alerta"}</td><td class="num">${f.lead_days ?? "—"}</td></tr>`,
+    )
+    .join("");
+  const fa = bt.false_alarm_runs.map(([a, b]) => (a === b ? dmy(a) : `${dmy(a)} – ${dmy(b)}`)).join(" · ");
+  $("#outlook-bt-table").innerHTML =
+    `<table class="data"><thead><tr><th>Cheia (vazão ≥ ${nf0.format(R.target.threshold_m3s)} m³/s)</th><th class="num">Pico (m³/s)</th>` +
+    `<th>Primeiro alerta</th><th class="num">Antecedência (d)</th></tr></thead><tbody>${fl}</tbody></table>` +
+    `<p class="sub">Alarmes falsos (alerta sem cheia em ${R.target.within_days} dias): ${fa}</p>`;
+
+  renderOutlookChart();
+
+  if (!O.live.length) {
+    $("#outlook-live").innerHTML = `<div class="empty-note">Nenhuma perspectiva registrada até agora.</div>`;
+    return;
+  }
+  const rows = O.live
+    .map((o, i) => {
+      const n = o.signers.toString(2).split("").filter((b) => b === "1").length;
+      const res = o.triggered
+        ? `<span class="sev"><span class="dot" style="background:var(--serious)">▲</span>alerta antecipado</span>`
+        : `<span class="sev"><span class="dot" style="background:var(--good)">✓</span>abaixo da regra</span>`;
+      return `<tr><td>fim de ${dmy(o.day)}<br><span class="hash">janela ${dm(addDays(o.day, 1))}–${dm(addDays(o.day, R.window_days))}</span></td>
+        <td class="num">${mm(o.rain_mean_milli)} mm<br><span class="hash">${mm(o.rain_min_milli)}–${mm(o.rain_max_milli)} · ${o.models} modelos</span></td>
+        <td>${res}</td>
+        <td>${br(o.committed_at)}<br><span class="hash">slot ${nf0.format(o.slot)}</span></td>
+        <td class="num">${n}/${B.meta.members.length}</td>
+        <td><button type="button" class="link-btn" data-o="${i}">verificar</button>${o.explorer ? ` · <a href="${o.explorer}" target="_blank" rel="noopener">tx</a>` : ""}</td></tr>`;
+    })
+    .join("");
+  $("#outlook-live").innerHTML =
+    `<table class="data"><thead><tr><th>Emissão</th><th class="num">Chuva prevista em ${R.window_days} d</th><th>Regra</th><th>Gravado on-chain</th><th class="num">Nós</th><th></th></tr></thead><tbody>${rows}</tbody></table>`;
+  $("#outlook-live").querySelectorAll("[data-o]").forEach((b) => b.addEventListener("click", () => verifyOutlook(O.live[+b.dataset.o])));
+}
+
+function renderOutlookChart() {
+  const O = B.outlook;
+  const data = O.backtest.days;
+  const R = O.rule;
+  const box = $("#outlook-chart");
+  const W = Math.max(320, box.clientWidth);
+  const hA = W < 560 ? 130 : 160;
+  const hB = W < 560 ? 110 : 130;
+  const m = { l: 52, r: 18, t: 22, b: 24, gap: 30 };
+  const H = m.t + hA + m.gap + hB + m.b;
+  const n = data.length;
+  const x = (i) => m.l + (i / (n - 1)) * (W - m.l - m.r);
+  const rmax = niceMax(Math.max(R.threshold_mm * 1.3, ...data.map((d) => d.rain ?? 0)));
+  const qmax = niceMax(Math.max(R.target.threshold_m3s * 1.2, ...data.map((d) => d.q ?? 0)));
+  const yA0 = m.t + hA;
+  const yA = (v) => yA0 - (v / rmax) * hA;
+  const yB0 = m.t + hA + m.gap + hB;
+  const yB = (v) => yB0 - (v / qmax) * hB;
+  const svg = el("svg", { viewBox: `0 0 ${W} ${H}`, width: W, height: H });
+
+  // cheias (vazão ≥ limiar): faixa nos dois painéis
+  const idx = new Map(data.map((d, i) => [d.day, i]));
+  for (const f of O.backtest.floods) {
+    const a = idx.get(f.first_day), b = idx.get(f.last_day);
+    if (a == null || b == null) continue;
+    el("rect", { x: x(a), y: m.t, width: Math.max(3, x(b) - x(a)), height: yB0 - m.t, fill: "var(--critical)", "fill-opacity": 0.14 }, svg);
+  }
+
+  // eixos e grades
+  el("text", { x: m.l, y: 12, class: "tick-label", fill: "var(--text-2)" }, svg).textContent =
+    `Chuva prevista para os ${R.window_days} dias seguintes (mm, média dos modelos)`;
+  for (const v of [0, rmax / 2, rmax]) {
+    el("line", { x1: m.l, x2: W - m.r, y1: yA(v), y2: yA(v), class: v === 0 ? "baseline" : "gridline" }, svg);
+    el("text", { x: m.l - 6, y: yA(v) + 4, "text-anchor": "end", class: "tick-label" }, svg).textContent = nf0.format(v);
+  }
+  el("text", { x: m.l, y: yA0 + m.gap - 8, class: "tick-label", fill: "var(--text-2)" }, svg).textContent = "Vazão do Guaíba (GloFAS, m³/s)";
+  for (const v of [0, qmax / 2, qmax]) {
+    el("line", { x1: m.l, x2: W - m.r, y1: yB(v), y2: yB(v), class: v === 0 ? "baseline" : "gridline" }, svg);
+    el("text", { x: m.l - 6, y: yB(v) + 4, "text-anchor": "end", class: "tick-label" }, svg).textContent = nf0.format(v);
+  }
+  const step = W < 560 ? 6 : 3;
+  data.forEach((d, i) => {
+    if (d.day.slice(8) === "01" && (+d.day.slice(5, 7) - 1) % step === 0)
+      el("text", { x: x(i), y: H - 6, "text-anchor": "middle", class: "tick-label" }, svg).textContent = monthLabel(d.day);
+  });
+
+  // limiares
+  el("line", { x1: m.l, x2: W - m.r, y1: yA(R.threshold_mm), y2: yA(R.threshold_mm), stroke: "var(--serious)", "stroke-width": 1, "stroke-dasharray": "2 3" }, svg);
+  el("text", { x: m.l + 6, y: yA(R.threshold_mm) - 5, class: "tick-label" }, svg).textContent = `regra · ${R.threshold_mm} mm`;
+  el("line", { x1: m.l, x2: W - m.r, y1: yB(R.target.threshold_m3s), y2: yB(R.target.threshold_m3s), stroke: "var(--critical)", "stroke-width": 1, "stroke-dasharray": "2 3" }, svg);
+  el("text", { x: W - m.r, y: yB(R.target.threshold_m3s) - 5, "text-anchor": "end", class: "tick-label" }, svg).textContent =
+    `limiar · ${nf0.format(R.target.threshold_m3s)} m³/s`;
+
+  // séries (quebram onde falta dado)
+  const line = (key, y, color) => {
+    let seg = [];
+    const flush = () => {
+      if (seg.length > 1) el("polyline", { points: seg.join(" "), fill: "none", stroke: color, "stroke-width": 1.5, "stroke-linejoin": "round" }, svg);
+      seg = [];
+    };
+    data.forEach((d, i) => (d[key] == null ? flush() : seg.push(`${x(i)},${y(d[key])}`)));
+    flush();
+  };
+  line("rain", yA, "var(--text-2)");
+  line("q", yB, "var(--observed)");
+  data.forEach((d, i) => {
+    if (d.alert) el("circle", { cx: x(i), cy: yA(d.rain), r: 4, fill: "var(--serious)", stroke: "var(--surface)", "stroke-width": 1.5 }, svg);
+  });
+
+  // interação
+  const hover = el("g", { "pointer-events": "none" }, svg);
+  const overlay = el("rect", { x: m.l, y: m.t, width: W - m.l - m.r, height: yB0 - m.t, fill: "transparent" }, svg);
+  overlay.addEventListener("pointermove", (ev) => {
+    const r = svg.getBoundingClientRect();
+    const px = ((ev.clientX - r.left) / r.width) * W;
+    const i = Math.max(0, Math.min(n - 1, Math.round(((px - m.l) / (W - m.l - m.r)) * (n - 1))));
+    const d = data[i];
+    hover.replaceChildren();
+    el("line", { x1: x(i), x2: x(i), y1: m.t, y2: yB0, stroke: "var(--axis)", "stroke-width": 1 }, hover);
+    if (d.rain != null) el("circle", { cx: x(i), cy: yA(d.rain), r: 4.5, fill: d.alert ? "var(--serious)" : "var(--text-2)", stroke: "var(--surface)", "stroke-width": 2 }, hover);
+    if (d.q != null) el("circle", { cx: x(i), cy: yB(d.q), r: 4.5, fill: "var(--observed)", stroke: "var(--surface)", "stroke-width": 2 }, hover);
+    showTip(
+      `<div class="t-title">Fim de ${dmy(d.day)}</div>` +
+        row(`Chuva prevista ${dm(addDays(d.day, 1))}–${dm(addDays(d.day, R.window_days))}`, d.rain == null ? "sem dados" : `${nf1.format(d.rain)} mm`) +
+        Object.entries(d.models).map(([k, v]) => row(`&nbsp;&nbsp;${k}`, `${nf1.format(v)} mm`)).join("") +
+        row("Regra", d.alert ? "▲ alerta antecipado" : "sem alerta") +
+        row("Vazão no dia", d.q == null ? "—" : `${nf0.format(d.q)} m³/s`) +
+        row(`Cheia em até ${R.target.within_days} dias`, d.flood ? "sim" : "não"),
+      ev.clientX,
+      ev.clientY,
+    );
+  });
+  overlay.addEventListener("pointerleave", () => {
+    hover.replaceChildren();
+    hideTip();
+  });
+  box.replaceChildren(svg);
+
+  $("#outlook-legend").innerHTML =
+    `<span class="key" style="color:var(--text-2)"><span class="swatch-line"></span>Chuva prevista (5 d)</span>` +
+    `<span class="key"><span class="dot-key" style="background:var(--serious)"></span>Alerta antecipado (≥ ${R.threshold_mm} mm)</span>` +
+    `<span class="key" style="color:var(--observed)"><span class="swatch-line"></span><span style="color:var(--text-2)">Vazão GloFAS</span></span>` +
+    `<span class="key"><span class="swatch-flood"></span>Cheia (vazão ≥ limiar)</span>`;
+}
+
+async function verifyOutlook(o) {
+  const R = B.outlook.rule;
+  panel("", `<h3>Verificando a perspectiva de ${dmy(o.day)}…</h3>`, "#outlook-verify");
+  try {
+    const text = await (await fetch(`data/outlooks/${o.content_sha256}.txt`)).text();
+    const local = await sha256Hex(text);
+    const acc = await fetchAccount(B.meta.rpc, o.record);
+    const r = decodeOutlook(acc.data);
+    const c = JSON.parse(text);
+    // Refaz o resumo a partir dos totais por modelo e ponto (mesma aritmética inteira do nó).
+    const perModel = Object.values(c.models).map((pts) => Math.floor((Object.values(pts).flat().reduce((a, b) => a + b, 0) * 100) / R.points.length));
+    const mean = Math.floor(perModel.reduce((a, b) => a + b, 0) / perModel.length);
+    const checks = [
+      ["A conta pertence ao programa do Cota", acc.owner === B.meta.program],
+      ["SHA-256 do conteúdo guardado, calculado no navegador = hash on-chain", local === r.content_sha256],
+      ["O conteúdo usa a regra fixada on-chain (rule_sha256)", c.rule_sha256 === R.sha256],
+      [
+        `Refazendo a conta: média ${mm(mean)} mm (modelos ${mm(Math.min(...perModel))}–${mm(Math.max(...perModel))}) = valores on-chain`,
+        mean === r.rain_mean_milli && Math.min(...perModel) === r.rain_min_milli && Math.max(...perModel) === r.rain_max_milli && perModel.length === r.models,
+      ],
+      [
+        `Regra aplicada pelo programa: ${mm(r.rain_mean_milli)} ${r.triggered ? "≥" : "<"} ${mm(r.threshold_milli)} mm → ${r.triggered ? "alerta" : "sem alerta"}`,
+        r.triggered === r.rain_mean_milli >= r.threshold_milli && r.threshold_milli === R.threshold_mm * 1000,
+      ],
+      [`Emitida no fim de ${dmy(o.day)} (lote ${r.based_on_batch_id}), janela até ${utc(r.window_end)}`, r.issued_at === c.issued_at && r.issued_at === o.issued_at],
+      [`Atestada por ${r.signer_count} de ${B.meta.members.length} nós (limiar ${B.meta.threshold})`, r.signer_count >= B.meta.threshold],
+    ];
+    const next = [...B.live.days].find((d) => d.batch_id === r.based_on_batch_id + 1);
+    if (next) {
+      const nb = decodeBatch((await fetchAccount(B.meta.rpc, next.batch_account)).data);
+      checks.push([`Gravada (slot ${nf0.format(r.slot)}) antes do lote de ${dmy(next.day)} (slot ${nf0.format(nb.slot)}), o 1º dia da janela`, r.slot < nb.slot]);
+    }
+    const ok = checks.every(([, v]) => v);
+    panel(
+      ok ? "ok" : "fail",
+      `<h3>Perspectiva de ${dmy(o.day)}: conferida contra a devnet (slot atual ${nf0.format(acc.slot)})</h3><ol>${checks
+        .map(([t, v]) => `<li>${v ? '<span class="good-text">✓</span>' : '<span class="crit-text">✕</span>'} ${t}</li>`)
+        .join("")}</ol>
+      <div class="verdict ${ok ? "good-text" : "crit-text"}">${
+        ok ? `✓ No slot ${nf0.format(r.slot)} (${br(r.committed_at)}) o comitê já registrava ${mm(r.rain_mean_milli)} mm previstos até ${dmy(addDays(o.day, R.window_days))}.` : "✕ Divergência encontrada."
+      }</div>
+      <details><summary>Conteúdo guardado (décimos de mm por dia, por modelo e ponto)</summary><pre class="hash" style="white-space:pre-wrap">${esc(text)}</pre></details>`,
+      "#outlook-verify",
+    );
+  } catch (e) {
+    panel("fail", `<h3>Não foi possível verificar</h3><p>${esc(e.message)}</p>`, "#outlook-verify");
+  }
+}
+
 // ---- tema e inicialização -------------------------------------------------
 
 function initTheme() {
@@ -832,6 +1069,7 @@ async function main() {
   if (state.sel > 0) state.sel -= 2; // dois dias antes: quando o primeiro alerta saiu
 
   renderLive();
+  renderOutlook();
   renderKpis();
   renderRain();
   renderQuality();
@@ -863,6 +1101,7 @@ async function main() {
       renderFlow();
       renderRain();
       renderLiveChart();
+      renderOutlookChart();
     }, 150);
   });
 }

@@ -56,3 +56,18 @@ def test_tampered_model_is_rejected(tmp_path):
     target.write_bytes(target.read_bytes().replace(b"learning_rate", b"learning_ratf", 1))
     with pytest.raises(ValueError):
         model.load(tmp_path)
+
+
+def test_outlook_rule_hash_and_no_lookahead():
+    """O hash publicado é o do JSON canônico da regra, e o backtest só usa rodadas ≥ (k+1) dias antes."""
+    import hashlib
+    import inspect
+    import json
+
+    from cota_ml import outlook
+
+    rule = json.loads((outlook.ROOT / "ml/models/outlook-rule.json").read_text())
+    assert hashlib.sha256(outlook.canonical(rule["spec"])).hexdigest() == rule["rule_sha256"]
+    assert rule["spec"]["calibration"]["years"][1] < 2024, "a calibração não pode ver o período do backtest"
+    src = inspect.getsource(outlook.archived_forecasts)
+    assert 'precipitation_previous_day{k + 1}' in src and "range(2, WINDOW_DAYS + 2)" in src
