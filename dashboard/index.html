@@ -13,45 +13,330 @@
       <div class="wrap">
         <div class="brand">
           <h1>Cota</h1>
-          <p class="tagline">Quem sabia o quê, e quando — cheia do Guaíba, abril–maio de 2024</p>
+          <p class="tagline">
+            <span data-lang="pt">Quem sabia o quê, e quando — cheia do Guaíba, abril–maio de 2024</span>
+            <span data-lang="en">Who knew what, and when — the Guaíba flood, April–May 2024</span>
+          </p>
         </div>
-        <button id="theme" class="ghost" type="button" aria-label="Alternar tema claro/escuro">◐ Tema</button>
+        <div class="controls">
+          <a class="ghost" href="#guide"><span data-lang="pt">Como ler</span><span data-lang="en">How to read</span></a>
+          <div class="seg" id="lang" role="radiogroup" aria-label="Idioma / Language">
+            <button type="button" role="radio" data-set-lang="pt" lang="pt-BR" aria-label="Português" aria-checked="true">PT</button>
+            <button type="button" role="radio" data-set-lang="en" lang="en" aria-label="English" aria-checked="false">EN</button>
+          </div>
+          <button id="theme" class="ghost" type="button" aria-label="Alternar tema claro/escuro" data-label-en="Toggle light/dark theme">
+            ◐ <span data-lang="pt">Tema</span><span data-lang="en">Theme</span>
+          </button>
+        </div>
       </div>
     </header>
 
     <main class="wrap">
       <div class="notice" role="note">
         <span class="notice-icon" aria-hidden="true">!</span>
-        <p>
+        <p data-lang="pt">
           <strong>Replay histórico / protótipo de pesquisa.</strong> O Cota não emite alertas oficiais.
           Alertas oficiais: <strong>SMS 40199</strong>, Defesa Civil.
+        </p>
+        <p data-lang="en">
+          <strong>Historical replay / research prototype.</strong> Cota does not issue official warnings.
+          Official alerts in Brazil: <strong>SMS 40199</strong>, Defesa Civil (civil protection).
         </p>
       </div>
 
       <p class="lede">
-        Cada leitura de chuva e vazão, cada previsão do modelo, cada alerta e cada aviso oficial abaixo foi assinado por um comitê de
-        3 oráculos (limiar 2-de-3) e ancorado no programa
-        <a id="program-link" target="_blank" rel="noopener"></a> da Solana <span id="cluster"></span>.
-        A ordem dos registros na cadeia prova que as previsões e os alertas existiam <em>antes</em> das observações.
-        Tudo aqui pode ser conferido no seu navegador.
+        <span data-lang="pt">
+          Cada leitura de chuva e vazão, cada previsão do modelo, cada alerta e cada aviso oficial abaixo foi assinado por um comitê de
+          3 oráculos (limiar 2-de-3) e ancorado no programa
+        </span>
+        <span data-lang="en">
+          Every rain and river-flow reading, every model forecast, every alert and every official warning below was signed by a committee of
+          3 oracles (2-of-3 threshold) and anchored in the program
+        </span>
+        <a id="program-link" target="_blank" rel="noopener"></a>
+        <span data-lang="pt">da Solana</span><span data-lang="en">on Solana</span> <span id="cluster"></span>.
+        <span data-lang="pt">
+          A ordem dos registros na cadeia prova que as previsões e os alertas existiam <em>antes</em> das observações.
+          Tudo aqui pode ser conferido no seu navegador.
+        </span>
+        <span data-lang="en">
+          The order of the records on the chain proves that the forecasts and alerts existed <em>before</em> the observations.
+          You can check all of it in your own browser.
+        </span>
       </p>
+
+      <section class="card guide" aria-labelledby="guide-title" id="guide">
+        <h2 id="guide-title"><span data-lang="pt">Como ler este painel</span><span data-lang="en">How to read this page</span></h2>
+
+        <div data-lang="pt">
+          <p class="guide-intro">
+            Tem bastante número, hash e termo técnico por aqui. Esta parte explica o que cada bloco mostra e por onde começar.
+            Não precisa entender de blockchain: dá para ler o painel como um boletim sobre o rio. A parte técnica existe para quem
+            quiser conferir que ninguém mexeu nos números depois.
+          </p>
+          <p class="guide-big">
+            A ideia: o Cota anota, com data e hora que ninguém consegue apagar, o que se sabia sobre o Guaíba a cada dia. Quanto choveu,
+            quanta água passava no rio, o que o modelo previa e quais alertas saíram. Depois de uma enchente, dá para provar quem avisou
+            o quê, e quando.
+          </p>
+        </div>
+        <div data-lang="en">
+          <p class="guide-intro">
+            There are a lot of numbers, hashes and jargon on this page. This part explains what each block shows and where to start.
+            You don't need to know anything about blockchains: you can read the page as a bulletin about the river. The technical layer
+            is there for anyone who wants to check that nobody changed the numbers afterwards.
+          </p>
+          <p class="guide-big">
+            The idea: Cota writes down, with a timestamp nobody can erase, what was known about the Guaíba river each day. How much it
+            rained, how much water was flowing, what the model predicted and which alerts went out. After a flood, you can prove who
+            warned what, and when.
+          </p>
+        </div>
+
+        <details class="guide-item" open>
+          <summary><span data-lang="pt">Como ler o gráfico do rio</span><span data-lang="en">How to read the river chart</span></summary>
+          <div class="guide-legend">
+            <div><span class="key" style="color:var(--observed)"><span class="swatch-line"></span></span>
+              <span data-lang="pt"><strong>Linha azul:</strong> o que o rio fez de verdade (vazão observada).</span>
+              <span data-lang="en"><strong>Blue line:</strong> what the river actually did (observed flow).</span></div>
+            <div><span class="key" style="color:var(--forecast)"><span class="swatch-dash"></span></span>
+              <span data-lang="pt"><strong>Linha laranja tracejada:</strong> o palpite do meio do modelo (P50), feito 1 ou 2 dias antes.</span>
+              <span data-lang="en"><strong>Dashed orange line:</strong> the model's middle guess (P50), made 1 or 2 days earlier.</span></div>
+            <div><span class="key"><span class="swatch-band"></span></span>
+              <span data-lang="pt"><strong>Faixa laranja clara:</strong> onde o modelo achava que o rio ia estar (entre P10 e P90).</span>
+              <span data-lang="en"><strong>Light orange band:</strong> where the model expected the river to be (between P10 and P90).</span></div>
+            <div><span class="key"><span class="swatch-threshold"></span></span>
+              <span data-lang="pt"><strong>Linha vermelha pontilhada:</strong> o limiar de cheia, 9.353 m³/s.</span>
+              <span data-lang="en"><strong>Dotted red line:</strong> the flood threshold, 9,353 m³/s.</span></div>
+            <div><span class="key" style="color:var(--critical)">▼</span>
+              <span data-lang="pt"><strong>Triângulo vermelho:</strong> dia para o qual o modelo emitiu alerta.</span>
+              <span data-lang="en"><strong>Red triangle:</strong> a day the model issued an alert for.</span></div>
+          </div>
+          <p data-lang="pt">
+            Uma previsão boa é a linha azul passando por dentro da faixa. Um alerta bom é o triângulo aparecer antes de a linha azul
+            cruzar a vermelha. Passe o mouse (ou toque) em qualquer dia para ver os números. No replay, clicar num dia abre os detalhes
+            dele mais abaixo.
+          </p>
+          <p data-lang="en">
+            A good forecast is the blue line running inside the band. A good alert is the triangle showing up before the blue line
+            crosses the red one. Hover (or tap) any day to see the numbers. In the replay, clicking a day opens its details further down.
+          </p>
+        </details>
+
+        <details class="guide-item">
+          <summary><span data-lang="pt">Palavras que aparecem o tempo todo</span><span data-lang="en">Words you'll see everywhere</span></summary>
+          <dl class="glossary" data-lang="pt">
+            <dt>Vazão (m³/s)</dt>
+            <dd>
+              Quanta água passa pelo rio a cada segundo. Não é a altura da régua no cais: é uma estimativa do GloFAS, um modelo europeu
+              que calcula a vazão de rios do mundo inteiro. Quando a vazão dispara, o nível sobe junto.
+            </dd>
+            <dt>Limiar</dt>
+            <dd>
+              A linha que separa "rio alto" de "cheia" neste painel: 9.353 m³/s no Guaíba. Em 2024 a vazão passou dela no dia 4 de maio
+              e chegou a 15.559 m³/s no dia 14.
+            </dd>
+            <dt>P10, P50 e P90</dt>
+            <dd>
+              A previsão não é um número só, é uma faixa. O P50 é o palpite do meio. Abaixo do P10 o rio só deveria ficar 1 vez em 10, e
+              acima do P90 também. Se o P90, o lado pessimista, passa do limiar, sai um alerta.
+            </dd>
+            <dt>Oráculo, ou nó</dt>
+            <dd>
+              Um programa que vai buscar dados fora da blockchain (INMET, GloFAS, Open-Meteo) e assina o que viu. São três, rodando
+              separados. Um registro só entra se pelo menos dois assinaram exatamente a mesma coisa.
+            </dd>
+            <dt>Lote</dt>
+            <dd>O pacote com todas as leituras de um dia. Cada dia vira um lote, encadeado no anterior.</dd>
+            <dt>On-chain, devnet e slot</dt>
+            <dd>
+              On-chain quer dizer gravado na Solana, uma blockchain pública. A devnet é a rede de testes dela: funciona igual, mas o
+              dinheiro não vale nada. O slot é o relógio da Solana, que avança mais ou menos duas vezes por segundo. Slot menor quer
+              dizer que aconteceu antes.
+            </dd>
+            <dt>Hash (SHA-256)</dt>
+            <dd>
+              Uma impressão digital de um arquivo. Mudou uma vírgula, a impressão muda inteira. Por isso basta gravar o hash na cadeia
+              para provar depois que o arquivo é o mesmo.
+            </dd>
+          </dl>
+          <dl class="glossary" data-lang="en">
+            <dt>Flow, or discharge (m³/s)</dt>
+            <dd>
+              How much water passes through the river every second. It isn't the height on a river gauge: it's an estimate from GloFAS,
+              a European model that computes flow for rivers worldwide. When flow shoots up, the water level rises with it.
+            </dd>
+            <dt>Threshold</dt>
+            <dd>
+              The line that separates "high river" from "flood" on this page: 9,353 m³/s on the Guaíba. In 2024 the flow crossed it on
+              May 4 and peaked at 15,559 m³/s on May 14.
+            </dd>
+            <dt>P10, P50 and P90</dt>
+            <dd>
+              A forecast isn't a single number, it's a range. P50 is the middle guess. The river should end up below P10 only 1 time in
+              10, and above P90 also 1 in 10. If P90, the pessimistic side, goes over the threshold, an alert goes out.
+            </dd>
+            <dt>Oracle, or node</dt>
+            <dd>
+              A program that fetches data from outside the blockchain (INMET, GloFAS, Open-Meteo) and signs what it saw. There are three
+              of them, running separately. A record only goes in if at least two signed exactly the same thing.
+            </dd>
+            <dt>Batch</dt>
+            <dd>The bundle with all readings from one day. Each day becomes a batch, chained to the previous one.</dd>
+            <dt>On-chain, devnet and slot</dt>
+            <dd>
+              On-chain means written to Solana, a public blockchain. Devnet is its test network: it works the same way, but the money is
+              worthless. A slot is Solana's clock, ticking roughly twice per second. A lower slot means it happened earlier.
+            </dd>
+            <dt>Hash (SHA-256)</dt>
+            <dd>
+              A fingerprint of a file. Change one comma and the whole fingerprint changes. That's why storing just the hash on the chain
+              is enough to prove later that the file is the same.
+            </dd>
+          </dl>
+        </details>
+
+        <details class="guide-item">
+          <summary><span data-lang="pt">O que cada parte do painel mostra</span><span data-lang="en">What each part of the page shows</span></summary>
+          <div data-lang="pt" class="guide-sections">
+            <h3><a href="#live">Ao vivo</a></h3>
+            <p>
+              O rio nos últimos dias e a previsão para amanhã e depois de amanhã. Os quadros de cima resumem tudo: a vazão do último dia,
+              as duas previsões e se o modelo está em alerta. Embaixo ficam os avisos oficiais do INMET para o RS que os nós viram e
+              registraram. O INMET tira o aviso do ar quando ele vence; aqui fica a cópia, com a hora em que foi visto.
+            </p>
+            <h3><a href="#outlook">Alerta antecipado</a></h3>
+            <p>
+              Olha mais longe, de 5 a 7 dias. Três modelos de previsão do tempo dizem quanto vai chover nos próximos 5 dias em 6 pontos
+              da bacia. Se a média passar de 90 mm, acende o alerta. O gráfico mostra como essa regra teria se saído de fevereiro de 2024
+              até hoje: em cima a chuva prevista, embaixo a vazão, e as faixas vermelhas são as cheias. Os pontos laranja são os dias de
+              alerta. A regra é simples e erra bastante (a tabela de alarmes falsos mostra onde), mas avisou todas as cheias do período,
+              com 4 a 7 dias de antecedência.
+            </p>
+            <h3><a href="#vaults">Cofres</a></h3>
+            <p>
+              Dinheiro travado com regras fixas, por exemplo: "se sair alerta antecipado para o Guaíba, pague 0,05 SOL para esta
+              carteira". Ninguém aprova o pagamento. O programa confere se o alerta existe e paga sozinho, uma vez por evento. É a lógica
+              de um seguro que paga pelo evento, sem vistoria. Aqui é tudo com SOL de teste.
+            </p>
+            <h3><a href="#replay">Replay de 2024</a></h3>
+            <p>
+              O sistema rodado sobre os dados de 20 de abril a 25 de maio de 2024, dia por dia, como se já estivesse no ar naquela época.
+              Os registros foram gravados em ordem, então a previsão para cada dia ficou registrada antes de o dado real daquele dia entrar.
+            </p>
+            <ul>
+              <li><strong>Vazão observada × prevista:</strong> o gráfico principal. Os botões "1 dia antes" e "2 dias antes" trocam a antecedência da previsão. As barras embaixo são a chuva média nas estações do INMET.</li>
+              <li><strong>Linha do tempo:</strong> uma coluna por dia. ✓ é nó que assinou, – é nó que ficou fora, ✕ é nó que discordou dos outros. ▼ é dia em que saiu alerta, ! é estação com problema.</li>
+              <li><strong>Dia:</strong> tudo sobre um dia. O que já se previa para ele, o que se previu no fim dele e a lista de leituras do lote, cada uma com o botão verificar.</li>
+              <li><strong>Qualidade das fontes:</strong> cada quadradinho é uma estação num dia. Claro é tudo certo; quanto mais escuro, pior. Com "!" e borda vermelha, a estação foi marcada como degradada (falhou, travou ou deu um salto impossível), e isso também ficou registrado.</li>
+              <li><strong>Como verificar:</strong> o resumo técnico das provas e a nota do modelo.</li>
+            </ul>
+          </div>
+          <div data-lang="en" class="guide-sections">
+            <h3><a href="#live">Live</a></h3>
+            <p>
+              The river over the last few days and the forecast for tomorrow and the day after. The tiles at the top sum it up: the latest
+              day's flow, both forecasts and whether the model is on alert. Below are the official INMET warnings for Rio Grande do Sul
+              that the nodes saw and recorded. INMET (Brazil's weather service) takes a warning down once it expires; this page keeps a
+              copy, with the time it was seen.
+            </p>
+            <h3><a href="#outlook">Early warning</a></h3>
+            <p>
+              Looks further ahead, 5 to 7 days. Three weather models say how much rain will fall over the next 5 days at 6 points in the
+              basin. If the average goes over 90 mm, the alert turns on. The chart shows how this rule would have done from February 2024
+              to today: forecast rain on top, river flow below, and the red bands are the floods. Orange dots are alert days. The rule is
+              simple and gets it wrong quite often (the false-alarm table shows where), but it warned of every flood in the period, 4 to 7
+              days ahead.
+            </p>
+            <h3><a href="#vaults">Vaults</a></h3>
+            <p>
+              Money locked with fixed rules, for example: "if an early warning goes out for the Guaíba, pay 0.05 SOL to this wallet".
+              Nobody approves the payment. The program checks that the alert exists and pays on its own, once per event. It's the logic of
+              insurance that pays on the event, with no claims adjuster. Everything here uses test SOL.
+            </p>
+            <h3><a href="#replay">2024 replay</a></h3>
+            <p>
+              The system run over the data from April 20 to May 25, 2024, day by day, as if it had already been live back then. The records
+              were written in order, so each day's forecast was on record before that day's real data came in.
+            </p>
+            <ul>
+              <li><strong>Observed × forecast flow:</strong> the main chart. The "1 day ahead" and "2 days ahead" buttons switch the forecast lead time. The bars below are the average rain at INMET stations.</li>
+              <li><strong>Timeline:</strong> one column per day. ✓ is a node that signed, – a node that was missing, ✕ a node that disagreed with the others. ▼ is a day an alert went out, ! a station with a problem.</li>
+              <li><strong>Day:</strong> everything about one day. What had already been forecast for it, what was forecast at the end of it and the list of readings in the batch, each with a verify button.</li>
+              <li><strong>Source quality:</strong> each little square is one station on one day. Light means all good; the darker, the worse. With "!" and a red border, the station was flagged as degraded (it failed, got stuck or made an impossible jump), and that was recorded too.</li>
+              <li><strong>How to verify:</strong> the technical summary of the proofs and the model's scores.</li>
+            </ul>
+          </div>
+        </details>
+
+        <details class="guide-item">
+          <summary><span data-lang="pt">O que o botão "verificar" faz</span><span data-lang="en">What the "verify" button does</span></summary>
+          <div data-lang="pt">
+            <p>
+              Ele não confia neste site. O seu navegador baixa o dado original, recalcula a impressão digital (o hash) e vai direto na
+              Solana ler o que foi gravado. Se as duas coisas batem, aparece ✓. Dá para ver o contrário acontecer: na verificação de uma
+              leitura, marque "Simular adulteração" e a prova falha com uma mudança de 0,001 no valor.
+            </p>
+            <p>
+              A verificação garante duas coisas: que o dado é o mesmo que o comitê assinou, e quando ele foi gravado. Ela não garante que a
+              fonte estava certa. Se um sensor do INMET mediu errado, o Cota registra o erro fielmente. É para isso que existe o índice de
+              qualidade.
+            </p>
+          </div>
+          <div data-lang="en">
+            <p>
+              It doesn't trust this website. Your browser downloads the original data, recomputes its fingerprint (the hash) and goes
+              straight to Solana to read what was recorded. If the two match, you get a ✓. You can watch the opposite happen: when
+              verifying a reading, tick "Simulate tampering" and the proof fails with a 0.001 change in the value.
+            </p>
+            <p>
+              Verification guarantees two things: that the data is the same one the committee signed, and when it was recorded. It doesn't
+              guarantee the source was right. If an INMET sensor measured wrong, Cota faithfully records the error. That's what the
+              quality index is for.
+            </p>
+          </div>
+        </details>
+
+        <details class="guide-item">
+          <summary><span data-lang="pt">Cuidados</span><span data-lang="en">Caveats</span></summary>
+          <ul data-lang="pt">
+            <li>Não é alerta oficial. Para isso: SMS 40199 e Defesa Civil.</li>
+            <li>A vazão é calculada por modelo, não medida na régua do Cais Mauá.</li>
+            <li>Tudo roda na devnet. Os valores em SOL são de teste.</li>
+            <li>Os dados de chuva das estações do INMET saem com cerca de um mês de atraso. No modo ao vivo, o rio vem do GloFAS e a chuva prevista, do Open-Meteo.</li>
+          </ul>
+          <ul data-lang="en">
+            <li>This is not an official warning service. For that, in Brazil: SMS 40199 and Defesa Civil.</li>
+            <li>The flow is computed by a model, not measured at the Cais Mauá river gauge in Porto Alegre.</li>
+            <li>Everything runs on devnet. SOL amounts are test money.</li>
+            <li>Rain data from INMET stations is published about a month late. In live mode, the river comes from GloFAS and the forecast rain from Open-Meteo.</li>
+          </ul>
+        </details>
+      </section>
 
       <section class="card" aria-labelledby="live-title" id="live">
         <div class="card-head">
           <div>
-            <h2 id="live-title">Ao vivo</h2>
+            <h2 id="live-title"><span data-lang="pt">Ao vivo</span><span data-lang="en">Live</span></h2>
             <p class="sub" id="live-sub"></p>
           </div>
         </div>
         <div id="live-kpis" class="kpis"></div>
         <div id="live-legend" class="legend"></div>
-        <div id="live-chart" class="chart" role="img" aria-label="Vazão recente do Guaíba e previsão"></div>
+        <div id="live-chart" class="chart" role="img" aria-label="Vazão recente do Guaíba e previsão" data-label-en="Recent Guaíba river flow and forecast"></div>
         <div class="readings-head">
-          <h3>Avisos oficiais do INMET para o RS registrados pelo comitê</h3>
+          <h3>
+            <span data-lang="pt">Avisos oficiais do INMET para o RS registrados pelo comitê</span>
+            <span data-lang="en">Official INMET warnings for Rio Grande do Sul recorded by the committee</span>
+          </h3>
         </div>
-        <p class="sub">
+        <p class="sub" data-lang="pt">
           A API do INMET só mostra avisos vigentes. Cada versão de aviso vista por ≥ 2 dos 3 nós é gravada na devnet com o SHA-256
           do conteúdo: o slot prova que ela existia, no máximo, naquele momento.
+        </p>
+        <p class="sub" data-lang="en">
+          INMET's API only shows warnings that are currently in force. Every version of a warning seen by ≥ 2 of the 3 nodes is written to
+          devnet with the SHA-256 of its content: the slot proves it existed by that moment at the latest.
         </p>
         <div id="live-alerts" class="table-wrap"></div>
         <div id="live-verify" class="verify" hidden aria-live="polite"></div>
@@ -60,27 +345,37 @@
       <section class="card" aria-labelledby="outlook-title" id="outlook">
         <div class="card-head">
           <div>
-            <h2 id="outlook-title">Alerta antecipado: chuva prevista na bacia</h2>
+            <h2 id="outlook-title">
+              <span data-lang="pt">Alerta antecipado: chuva prevista na bacia</span>
+              <span data-lang="en">Early warning: forecast rain in the basin</span>
+            </h2>
             <p class="sub" id="outlook-sub"></p>
           </div>
         </div>
         <div id="outlook-kpis" class="kpis"></div>
         <div class="readings-head">
-          <h3>A regra contra fev/2024 – out/2026, fora da amostra de calibração</h3>
+          <h3>
+            <span data-lang="pt">A regra contra fev/2024 – out/2026, fora da amostra de calibração</span>
+            <span data-lang="en">The rule against Feb 2024 – Oct 2026, outside the calibration sample</span>
+          </h3>
         </div>
         <p class="sub" id="outlook-bt-sub"></p>
         <div id="outlook-legend" class="legend"></div>
-        <div id="outlook-chart" class="chart" role="img" aria-label="Chuva prevista para os 5 dias seguintes e vazão do Guaíba, fevereiro de 2024 a outubro de 2026"></div>
+        <div id="outlook-chart" class="chart" role="img" aria-label="Chuva prevista para os 5 dias seguintes e vazão do Guaíba, fevereiro de 2024 a outubro de 2026" data-label-en="Forecast rain for the next 5 days and Guaíba river flow, February 2024 to October 2026"></div>
         <details class="table-details">
-          <summary>Cheias e alarmes falsos do backtest</summary>
+          <summary><span data-lang="pt">Cheias e alarmes falsos do backtest</span><span data-lang="en">Floods and false alarms in the backtest</span></summary>
           <div id="outlook-bt-table" class="table-wrap"></div>
         </details>
         <div class="readings-head">
-          <h3>Perspectivas registradas pelo comitê</h3>
+          <h3><span data-lang="pt">Perspectivas registradas pelo comitê</span><span data-lang="en">Outlooks recorded by the committee</span></h3>
         </div>
-        <p class="sub">
+        <p class="sub" data-lang="pt">
           Logo depois de ancorar o lote do dia D, cada nó baixa a rodada 00Z de D de cada modelo, soma a chuva de D+1 a D+5 nos 6 pontos e assina.
           O programa só aceita o registro enquanto D for o último dia ancorado, e decide sozinho se a regra disparou.
+        </p>
+        <p class="sub" data-lang="en">
+          Right after day D's batch is anchored, each node downloads every model's 00Z run for D, adds up the rain from D+1 to D+5 at the 6
+          points and signs it. The program only accepts the record while D is the last anchored day, and decides on its own whether the rule fired.
         </p>
         <div id="outlook-live" class="table-wrap"></div>
         <div id="outlook-verify" class="verify" hidden aria-live="polite"></div>
@@ -89,11 +384,19 @@
       <section class="card" aria-labelledby="vault-title" id="vaults">
         <div class="card-head">
           <div>
-            <h2 id="vault-title">Gatilho paramétrico: cofres que pagam sozinhos</h2>
-            <p class="sub">
+            <h2 id="vault-title">
+              <span data-lang="pt">Gatilho paramétrico: cofres que pagam sozinhos</span>
+              <span data-lang="en">Parametric trigger: vaults that pay out on their own</span>
+            </h2>
+            <p class="sub" data-lang="pt">
               Qualquer carteira pode travar SOL num cofre do programa com condições fixas: beneficiário, tipo de gatilho, valor por evento,
               carência e vencimento. Quando o Cota registra um gatilho, qualquer conta pode acionar o cofre; o programa confere o gatilho
               e paga, uma vez por gatilho. Ninguém aprova, e o criador só recupera o saldo depois do vencimento. Na devnet, com SOL de teste.
+            </p>
+            <p class="sub" data-lang="en">
+              Any wallet can lock SOL in one of the program's vaults with fixed terms: beneficiary, trigger type, amount per event, cooldown
+              and expiry. When Cota records a trigger, any account can poke the vault; the program checks the trigger and pays, once per
+              trigger. Nobody approves it, and the creator only gets the balance back after expiry. On devnet, with test SOL.
             </p>
           </div>
         </div>
@@ -101,38 +404,46 @@
         <div id="vault-verify" class="verify" hidden aria-live="polite"></div>
       </section>
 
-      <h2 class="section-title">Replay da cheia de abril–maio de 2024</h2>
+      <h2 class="section-title" id="replay">
+        <span data-lang="pt">Replay da cheia de abril–maio de 2024</span>
+        <span data-lang="en">Replay of the April–May 2024 flood</span>
+      </h2>
 
       <section aria-labelledby="kpi-title">
-        <h2 id="kpi-title" class="visually-hidden">Resumo do replay</h2>
+        <h2 id="kpi-title" class="visually-hidden"><span data-lang="pt">Resumo do replay</span><span data-lang="en">Replay summary</span></h2>
         <div id="kpis" class="kpis"></div>
       </section>
 
       <section class="card" aria-labelledby="flow-title">
         <div class="card-head">
           <div>
-            <h2 id="flow-title">Vazão do Guaíba: observada × prevista</h2>
-            <p class="sub">Vazão diária modelada pelo GloFAS (m³/s), não nível de régua. Clique em um dia para ver os detalhes.</p>
+            <h2 id="flow-title">
+              <span data-lang="pt">Vazão do Guaíba: observada × prevista</span>
+              <span data-lang="en">Guaíba river flow: observed × forecast</span>
+            </h2>
+            <p class="sub" data-lang="pt">Vazão diária modelada pelo GloFAS (m³/s), não nível de régua. Clique em um dia para ver os detalhes.</p>
+            <p class="sub" data-lang="en">Daily flow modelled by GloFAS (m³/s), not gauge level. Click a day to see its details.</p>
           </div>
           <div class="controls">
-            <div class="seg" role="radiogroup" aria-label="Horizonte da previsão">
-              <button type="button" role="radio" data-h="24" aria-checked="true">1 dia antes</button>
-              <button type="button" role="radio" data-h="48" aria-checked="false">2 dias antes</button>
+            <div class="seg" id="horizon" role="radiogroup" aria-label="Horizonte da previsão" data-label-en="Forecast lead time">
+              <button type="button" role="radio" data-h="24" aria-checked="true"><span data-lang="pt">1 dia antes</span><span data-lang="en">1 day ahead</span></button>
+              <button type="button" role="radio" data-h="48" aria-checked="false"><span data-lang="pt">2 dias antes</span><span data-lang="en">2 days ahead</span></button>
             </div>
-            <button type="button" class="ghost" id="flow-table-toggle" aria-expanded="false">Tabela</button>
+            <button type="button" class="ghost" id="flow-table-toggle" aria-expanded="false"><span data-lang="pt">Tabela</span><span data-lang="en">Table</span></button>
           </div>
         </div>
         <div id="flow-legend" class="legend"></div>
-        <div id="flow-chart" class="chart" role="img" aria-label="Gráfico da vazão do Guaíba com faixa de previsão"></div>
+        <div id="flow-chart" class="chart" role="img" aria-label="Gráfico da vazão do Guaíba com faixa de previsão" data-label-en="Guaíba river flow chart with forecast band"></div>
         <div id="flow-table" class="table-wrap" hidden></div>
-        <div id="rain-chart" class="chart chart-small" role="img" aria-label="Chuva média diária nas estações do INMET"></div>
+        <div id="rain-chart" class="chart chart-small" role="img" aria-label="Chuva média diária nas estações do INMET" data-label-en="Average daily rain at INMET stations"></div>
       </section>
 
       <section class="card" aria-labelledby="timeline-title">
         <div class="card-head">
           <div>
-            <h2 id="timeline-title">Linha do tempo</h2>
-            <p class="sub">Um lote por dia (UTC). Assinaturas dos nós, alertas emitidos e fontes degradadas.</p>
+            <h2 id="timeline-title"><span data-lang="pt">Linha do tempo</span><span data-lang="en">Timeline</span></h2>
+            <p class="sub" data-lang="pt">Um lote por dia (UTC). Assinaturas dos nós, alertas emitidos e fontes degradadas.</p>
+            <p class="sub" data-lang="en">One batch per day (UTC). Node signatures, alerts issued and degraded sources.</p>
           </div>
         </div>
         <div id="timeline" class="timeline"></div>
@@ -142,12 +453,12 @@
       <section class="card" aria-labelledby="day-title" id="day-section">
         <div class="card-head">
           <div>
-            <h2 id="day-title">Dia</h2>
+            <h2 id="day-title"></h2>
             <p class="sub" id="day-sub"></p>
           </div>
           <div class="controls">
-            <button type="button" class="ghost" id="prev-day" aria-label="Dia anterior">←</button>
-            <button type="button" class="ghost" id="next-day" aria-label="Próximo dia">→</button>
+            <button type="button" class="ghost" id="prev-day" aria-label="Dia anterior" data-label-en="Previous day">←</button>
+            <button type="button" class="ghost" id="next-day" aria-label="Próximo dia" data-label-en="Next day">→</button>
           </div>
         </div>
         <div class="day-grid">
@@ -156,8 +467,8 @@
         </div>
         <div id="verify-panel" class="verify" hidden aria-live="polite"></div>
         <div class="readings-head">
-          <h3>Leituras ancoradas neste lote</h3>
-          <label class="select">Estação <select id="station-filter"></select></label>
+          <h3><span data-lang="pt">Leituras ancoradas neste lote</span><span data-lang="en">Readings anchored in this batch</span></h3>
+          <label class="select"><span data-lang="pt">Estação</span><span data-lang="en">Station</span> <select id="station-filter"></select></label>
         </div>
         <div id="readings" class="table-wrap"></div>
       </section>
@@ -165,10 +476,14 @@
       <section class="card" aria-labelledby="quality-title">
         <div class="card-head">
           <div>
-            <h2 id="quality-title">Qualidade das fontes</h2>
-            <p class="sub">
+            <h2 id="quality-title"><span data-lang="pt">Qualidade das fontes</span><span data-lang="en">Source quality</span></h2>
+            <p class="sub" data-lang="pt">
               Índice de confiança C<sub>s</sub> por estação e dia (disponibilidade, flags de sensor, concordância entre nós,
               frescor). Abaixo de 0,6 o agregador grava <code>SourceDegraded</code> on-chain.
+            </p>
+            <p class="sub" data-lang="en">
+              Confidence index C<sub>s</sub> per station and day (availability, sensor flags, agreement between nodes,
+              freshness). Below 0.6 the aggregator writes <code>SourceDegraded</code> on-chain.
             </p>
           </div>
         </div>
@@ -177,8 +492,8 @@
       </section>
 
       <section class="card" aria-labelledby="method-title">
-        <h2 id="method-title">Como verificar</h2>
-        <ol class="method">
+        <h2 id="method-title"><span data-lang="pt">Como verificar</span><span data-lang="en">How to verify</span></h2>
+        <ol class="method" data-lang="pt">
           <li>
             <strong>Leitura → lote.</strong> Cada leitura vira uma folha SHA-256 (bytes Borsh, prefixo 0x00) de uma árvore
             Merkle RFC 9162. O botão <em>verificar</em> recalcula a folha e a prova de inclusão aqui no navegador e compara com a
@@ -194,7 +509,26 @@
           </li>
           <li>
             <strong>Modelo → reprodutível.</strong> LightGBM quantílico treinado em 1997–2023 de forma determinística;
-            <code id="model-sha"></code> identifica os arquivos do modelo e a calibração.
+            <code class="model-sha"></code> identifica os arquivos do modelo e a calibração.
+          </li>
+        </ol>
+        <ol class="method" data-lang="en">
+          <li>
+            <strong>Reading → batch.</strong> Each reading becomes a SHA-256 leaf (Borsh bytes, 0x00 prefix) of an RFC 9162 Merkle
+            tree. The <em>verify</em> button recomputes the leaf and the inclusion proof right here in the browser and compares it with
+            the root read from devnet at that moment.
+          </li>
+          <li>
+            <strong>Batch → committee.</strong> The program only accepts a batch with ≥ 2 distinct Ed25519 signatures from committee
+            members, checked by Solana's precompile in the same transaction, and chained to the previous root.
+          </li>
+          <li>
+            <strong>Forecast → before.</strong> The program rejects forecasts whose target is already in an anchored batch. The
+            forecast's slot is lower than the slot of the batch holding the observation.
+          </li>
+          <li>
+            <strong>Model → reproducible.</strong> Quantile LightGBM trained deterministically on 1997–2023;
+            <code class="model-sha"></code> identifies the model files and the calibration.
           </li>
         </ol>
         <div id="metrics" class="table-wrap"></div>
@@ -204,11 +538,13 @@
     <footer class="wrap foot">
       <p>
         <a href="https://open-meteo.com/" target="_blank" rel="noopener">Weather data by Open-Meteo.com</a> (CC BY 4.0) ·
-        Vazão: GloFAS / Copernicus Emergency Management Service, via Open-Meteo Flood API ·
-        Chuva: <a href="https://portal.inmet.gov.br/dadoshistoricos" target="_blank" rel="noopener">INMET, dados históricos</a>.
+        <span data-lang="pt">Vazão</span><span data-lang="en">River flow</span>: GloFAS / Copernicus Emergency Management Service, via Open-Meteo Flood API ·
+        <span data-lang="pt">Chuva</span><span data-lang="en">Rain</span>:
+        <a href="https://portal.inmet.gov.br/dadoshistoricos" target="_blank" rel="noopener">INMET, <span data-lang="pt">dados históricos</span><span data-lang="en">historical data</span></a>.
       </p>
       <p>
-        Replay histórico / protótipo de pesquisa. Alertas oficiais: SMS 40199, Defesa Civil.
+        <span data-lang="pt">Replay histórico / protótipo de pesquisa. Alertas oficiais: SMS 40199, Defesa Civil.</span>
+        <span data-lang="en">Historical replay / research prototype. Official alerts in Brazil: SMS 40199, Defesa Civil.</span>
         <span id="generated"></span>
       </p>
     </footer>

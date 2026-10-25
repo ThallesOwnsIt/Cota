@@ -104,7 +104,7 @@ export async function verifyInclusion(leaf, index, size, path) {
     if (sn === 0) return { ok: false, root: r, steps };
     if (fn % 2 === 1 || fn === sn) {
       r = await hashNode(p, r);
-      steps.push({ side: "esquerda", sibling: p, result: r });
+      steps.push({ side: "left", sibling: p, result: r });
       if (fn % 2 === 0) {
         while (fn % 2 === 0 && fn !== 0) {
           fn >>= 1;
@@ -113,7 +113,7 @@ export async function verifyInclusion(leaf, index, size, path) {
       }
     } else {
       r = await hashNode(r, p);
-      steps.push({ side: "direita", sibling: p, result: r });
+      steps.push({ side: "right", sibling: p, result: r });
     }
     fn >>= 1;
     sn >>= 1;

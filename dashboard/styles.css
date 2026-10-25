@@ -761,3 +761,104 @@ table.data tr.active td {
     flex-wrap: wrap;
   }
 }
+
+/* idioma: o bloco da outra língua fica fora da página */
+:root[lang="en"] [data-lang="pt"],
+:root:not([lang="en"]) [data-lang="en"] {
+  display: none !important;
+}
+a.ghost {
+  text-decoration: none;
+  white-space: nowrap;
+}
+.seg button[data-set-lang] {
+  padding: 6px 10px;
+  font-size: 13px;
+  letter-spacing: 0.04em;
+}
+
+/* guia de leitura */
+.guide h2 {
+  margin-bottom: 6px;
+}
+.guide-intro,
+.guide-big {
+  max-width: 78ch;
+  margin: 6px 0;
+}
+.guide-intro {
+  color: var(--text-2);
+}
+.guide-big {
+  font-size: 16px;
+}
+.guide-item {
+  border-top: 1px solid var(--border);
+  max-width: 85ch;
+}
+.guide-item:first-of-type {
+  margin-top: 12px;
+}
+.guide-item summary {
+  cursor: pointer;
+  font-weight: 600;
+  padding: 10px 0;
+}
+.guide-item > p,
+.guide-item ul,
+.guide-sections p {
+  color: var(--text-2);
+}
+.guide-item ul {
+  padding-left: 20px;
+}
+.guide-item li {
+  margin: 4px 0;
+}
+.guide-item li strong,
+.guide-legend strong {
+  color: var(--text);
+}
+.guide-sections h3 {
+  margin-top: 12px;
+}
+.guide-sections h3 a {
+  color: var(--text);
+  text-decoration: none;
+}
+.guide-sections h3 a:hover {
+  text-decoration: underline;
+}
+.guide-legend {
+  display: grid;
+  gap: 6px;
+  color: var(--text-2);
+}
+.guide-legend > div {
+  display: flex;
+  gap: 10px;
+  align-items: baseline;
+}
+.guide-legend .key {
+  flex: none;
+  width: 22px;
+  display: inline-flex;
+  justify-content: center;
+  align-self: center;
+}
+.swatch-threshold {
+  width: 18px;
+  height: 0;
+  border-top: 2px dotted var(--critical);
+}
+.glossary {
+  margin: 0 0 12px;
+}
+.glossary dt {
+  font-weight: 600;
+  margin-top: 10px;
+}
+.glossary dd {
+  margin: 2px 0 0;
+  color: var(--text-2);
+}

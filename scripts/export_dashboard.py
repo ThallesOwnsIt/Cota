@@ -182,7 +182,13 @@ def main() -> None:
     for path in sorted((LEDGER / "vaults").glob("*.json")) if (LEDGER / "vaults").exists() else []:
         e = json.loads(path.read_text())
         a = audited_vaults.get(e["vault"], {})
-        vaults.append({**{k: e[k] for k in ("name", "description", "vault", "created_explorer", "state", "payouts")}, "audit_ok": not a.get("problems", ["não auditado"])})
+        vaults.append(
+            {
+                **{k: e[k] for k in ("name", "description", "vault", "created_explorer", "state", "payouts")},
+                "description_en": e.get("description_en", ""),
+                "audit_ok": not a.get("problems", ["não auditado"]),
+            }
+        )
 
     replay_days = [d for d in days if d["day"] < LIVE_FROM]
     live_days = [d for d in days if d["day"] >= LIVE_FROM]

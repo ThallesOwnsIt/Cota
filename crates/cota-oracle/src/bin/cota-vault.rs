@@ -68,6 +68,9 @@ enum Cmd {
         deposit_sol: f64,
         #[arg(long, default_value = "")]
         description: String,
+        /// A mesma descrição em inglês, para o painel.
+        #[arg(long, default_value = "")]
+        description_en: String,
     },
     Crank,
 }
@@ -78,7 +81,7 @@ fn main() -> Result<()> {
     let payer = keys::load_keypair(&args.payer)?;
     let dir = args.ledger.join("vaults");
     match args.cmd {
-        Cmd::Create { name, id, kind, subject, beneficiary, payout_sol, cooldown_days, accept_from, expires_days, deposit_sol, description } => {
+        Cmd::Create { name, id, kind, subject, beneficiary, payout_sol, cooldown_days, accept_from, expires_days, deposit_sol, description, description_en } => {
             let beneficiary: Pubkey = match beneficiary.parse() {
                 Ok(pk) => pk,
                 Err(_) => keys::load_keypair(Path::new(&beneficiary))?.pubkey(),
@@ -110,6 +113,7 @@ fn main() -> Result<()> {
             let entry = json!({
                 "name": name,
                 "description": description,
+            "description_en": description_en,
                 "vault": vault.to_string(),
                 "created_tx": sig,
                 "created_explorer": explorer_tx(&sig, &args.cluster),

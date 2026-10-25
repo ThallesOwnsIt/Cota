@@ -3,6 +3,7 @@
   "created_explorer": "https://explorer.solana.com/tx/64itJyPNsMi7fRvCALhUAzGvVrtAPBXYQmLEfptT69JyeMTDtRThsNdFUDuf2RzqCTYTSMswmPgtcno9ma5Y6pTQ?cluster=devnet",
   "created_tx": "64itJyPNsMi7fRvCALhUAzGvVrtAPBXYQmLEfptT69JyeMTDtRThsNdFUDuf2RzqCTYTSMswmPgtcno9ma5Y6pTQ",
   "description": "Paga quando a chuva prevista na bacia dispara o alerta antecipado; só gatilhos gravados depois da criação",
+  "description_en": "Pays when the forecast rain in the basin fires the early warning; only triggers recorded after the vault was created",
   "name": "ao-vivo",
   "payouts": [],
   "state": {

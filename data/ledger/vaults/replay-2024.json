@@ -3,6 +3,7 @@
   "created_explorer": "https://explorer.solana.com/tx/2CEQRe2xDDGsJ3PFx666D1gXoMu8vcqCnzEVLtYRZPR4xHtBF5oYF58CXUNaEvWvU76EB6eUpL4fGFs7HPmFJxDF?cluster=devnet",
   "created_tx": "2CEQRe2xDDGsJ3PFx666D1gXoMu8vcqCnzEVLtYRZPR4xHtBF5oYF58CXUNaEvWvU76EB6eUpL4fGFs7HPmFJxDF",
   "description": "Demonstração: paga a cada evento de cheia previsto pelo modelo de vazão, inclusive os alertas do replay de 2024",
+  "description_en": "Demo: pays on every flood event forecast by the flow model, including the alerts from the 2024 replay",
   "name": "replay-2024",
   "payouts": [
     {
