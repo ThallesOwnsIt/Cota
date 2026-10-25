@@ -12,7 +12,7 @@
     <header class="top">
       <div class="wrap">
         <div class="brand">
-          <h1>Cota</h1>
+          <h1><img class="logo" src="logo.png" width="112" height="56" alt="Cota" /></h1>
           <p class="tagline">
             <span data-lang="pt">Quem sabia o quê, e quando — cheia do Guaíba, abril–maio de 2024</span>
             <span data-lang="en">Who knew what, and when — the Guaíba flood, April–May 2024</span>
@@ -44,29 +44,74 @@
         </p>
       </div>
 
-      <p class="lede">
-        <span data-lang="pt">
-          Cada leitura de chuva e vazão, cada previsão do modelo, cada alerta e cada aviso oficial abaixo foi assinado por um comitê de
-          3 oráculos (limiar 2-de-3) e ancorado no programa
-        </span>
-        <span data-lang="en">
-          Every rain and river-flow reading, every model forecast, every alert and every official warning below was signed by a committee of
-          3 oracles (2-of-3 threshold) and anchored in the program
-        </span>
-        <a id="program-link" target="_blank" rel="noopener"></a>
-        <span data-lang="pt">da Solana</span><span data-lang="en">on Solana</span> <span id="cluster"></span>.
-        <span data-lang="pt">
-          A ordem dos registros na cadeia prova que as previsões e os alertas existiam <em>antes</em> das observações.
-          Tudo aqui pode ser conferido no seu navegador.
-        </span>
-        <span data-lang="en">
-          The order of the records on the chain proves that the forecasts and alerts existed <em>before</em> the observations.
-          You can check all of it in your own browser.
-        </span>
-      </p>
+      <section class="about" aria-labelledby="about-title">
+        <h2 id="about-title" class="visually-hidden"><span data-lang="pt">Sobre o Cota</span><span data-lang="en">About Cota</span></h2>
+        <div data-lang="pt">
+          <p class="about-lead">
+            Em maio de 2024 o Guaíba subiu mais do que em qualquer registro e Porto Alegre ficou debaixo d'água. Mais de 180 pessoas
+            morreram no Rio Grande do Sul. Depois, todo mundo fez as mesmas perguntas: quem sabia? Quem avisou, e quando?
+          </p>
+          <p>
+            Era difícil responder. Sites de previsão sobrescrevem as previsões antigas, avisos oficiais saem do ar quando vencem e planilhas
+            podem ser editadas depois. Sem um registro confiável, cada um conta a história do seu jeito. O Cota é esse registro: um diário do
+            rio que ninguém consegue apagar. Todo dia ele grava na blockchain Solana o que se sabia sobre o Guaíba, num lugar onde qualquer
+            pessoa pode ler e ninguém pode alterar.
+          </p>
+        </div>
+        <div data-lang="en">
+          <p class="about-lead">
+            In May 2024 the Guaíba river in southern Brazil rose higher than ever recorded and Porto Alegre went underwater. More than 180
+            people died in Rio Grande do Sul. Afterwards, everyone asked the same questions: who knew? Who warned us, and when?
+          </p>
+          <p>
+            Those questions were hard to answer. Forecast websites overwrite old forecasts, official warnings go offline when they expire, and
+            spreadsheets can be edited later. Without a trustworthy record, everyone tells the story their own way. Cota is that record: a river
+            diary nobody can erase. Every day it writes what was known about the Guaíba to the Solana blockchain, where anyone can read it and
+            nobody can change it.
+          </p>
+        </div>
+        <ul class="pillars">
+          <li>
+            <strong><span data-lang="pt">3 oráculos, 2 assinaturas</span><span data-lang="en">3 oracles, 2 signatures</span></strong>
+            <span data-lang="pt">Cada um busca os dados sozinho no INMET, GloFAS e Open-Meteo. Um valor só é gravado se pelo menos dois assinaram exatamente o mesmo.</span>
+            <span data-lang="en">Each one fetches data on its own from INMET, GloFAS and Open-Meteo. A value is only recorded if at least two signed exactly the same thing.</span>
+          </li>
+          <li>
+            <strong><span data-lang="pt">Previsão gravada antes</span><span data-lang="en">Forecasts on record first</span></strong>
+            <span data-lang="pt">No replay de 2024, o primeiro alerta ficou registrado dois dias antes de o rio passar do limite de cheia.</span>
+            <span data-lang="en">In the 2024 replay, the first alert was on record two days before the river crossed the flood limit.</span>
+          </li>
+          <li>
+            <strong><span data-lang="pt">Aviso com 4 a 7 dias</span><span data-lang="en">4 to 7 days of warning</span></strong>
+            <span data-lang="pt">Uma regra de chuva prevista, fixada na blockchain antes de rodar, avisou as três cheias desde 2024. Os alarmes falsos estão à mostra.</span>
+            <span data-lang="en">A forecast-rain rule, fixed on-chain before it ran, warned of all three floods since 2024. Its false alarms are shown too.</span>
+          </li>
+          <li>
+            <strong><span data-lang="pt">Confira você mesmo</span><span data-lang="en">Check it yourself</span></strong>
+            <span data-lang="pt">O botão verificar refaz as contas no seu navegador e compara com a blockchain. Mude um número e a prova falha.</span>
+            <span data-lang="en">The verify button redoes the math in your browser and compares it with the blockchain. Change one number and the proof fails.</span>
+          </li>
+        </ul>
+        <p class="about-tech">
+          <span data-lang="pt">Programa</span><span data-lang="en">Program</span>
+          <a id="program-link" target="_blank" rel="noopener"></a> · Solana <span id="cluster"></span> ·
+          <span data-lang="pt">
+            O Cota não substitui a Defesa Civil e não prova que um sensor mediu certo. Ele prova que ninguém mexeu no dado, e quando o dado existia.
+          </span>
+          <span data-lang="en">
+            Cota does not replace civil defense, and it doesn't prove a sensor measured correctly. It proves nobody changed the data, and when the data existed.
+          </span>
+        </p>
+      </section>
 
-      <section class="card guide" aria-labelledby="guide-title" id="guide">
-        <h2 id="guide-title"><span data-lang="pt">Como ler este painel</span><span data-lang="en">How to read this page</span></h2>
+      <details class="card guide" id="guide">
+        <summary class="guide-summary">
+          <h2><span data-lang="pt">Como ler este painel</span><span data-lang="en">How to read this page</span></h2>
+          <span class="sub">
+            <span data-lang="pt">Gráficos, termos e o que o botão verificar prova. Clique para abrir.</span>
+            <span data-lang="en">Charts, terms and what the verify button proves. Click to open.</span>
+          </span>
+        </summary>
 
         <div data-lang="pt">
           <p class="guide-intro">
@@ -93,7 +138,7 @@
           </p>
         </div>
 
-        <details class="guide-item" open>
+        <details class="guide-item">
           <summary><span data-lang="pt">Como ler o gráfico do rio</span><span data-lang="en">How to read the river chart</span></summary>
           <div class="guide-legend">
             <div><span class="key" style="color:var(--observed)"><span class="swatch-line"></span></span>
@@ -312,7 +357,7 @@
             <li>Rain data from INMET stations is published about a month late. In live mode, the river comes from GloFAS and the forecast rain from Open-Meteo.</li>
           </ul>
         </details>
-      </section>
+      </details>
 
       <section class="card" aria-labelledby="live-title" id="live">
         <div class="card-head">

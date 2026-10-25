@@ -1,7 +1,48 @@
-# Cota — alertas de enchente verificáveis
+<p align="center"><img src="docs/logo-banner.png" alt="Cota" width="640"></p>
 
-> Replay histórico / protótipo de pesquisa. O Cota **não** emite alertas oficiais.
-> Alertas oficiais: **SMS 40199**, Defesa Civil.
+<p align="center"><strong>Tamper-proof, publicly verifiable flood data, forecasts and warnings on Solana.</strong><br>
+<a href="https://cota-eight.vercel.app">cota-eight.vercel.app</a> · <a href="https://cota-eight.vercel.app/?lang=en">English</a> · <a href="https://cota-eight.vercel.app/?lang=pt">Português</a></p>
+
+> Historical replay / research prototype. Cota does **not** issue official warnings.
+> Official alerts in Brazil: **SMS 40199**, Defesa Civil.
+
+## About
+
+In May 2024 the Guaíba river in southern Brazil rose higher than ever recorded and Porto Alegre went underwater. More than 180
+people died in Rio Grande do Sul. Afterwards, everyone asked the same questions: who knew? Who warned us, and when?
+
+Those questions were hard to answer. Forecast websites overwrite old forecasts, official warnings go offline when they expire, and
+spreadsheets can be edited later. Cota is the record that was missing: a river diary nobody can erase. Every day it writes what was
+known about the river to Solana (devnet), where anyone can read it and nobody can change it.
+
+- **Three oracles, two signatures.** A blockchain can't see the weather. Each of Cota's three oracles fetches data on its own from
+  INMET rain gauges, GloFAS river discharge and Open-Meteo forecasts, and signs what it saw. The program only records a value that
+  at least 2 of the 3 signed byte for byte. If one fails or is tampered with, the other two hold.
+- **Forecasts on record before the facts.** A quantile model forecasts the Guaíba's discharge 1 and 2 days ahead with an uncertainty
+  band. The program refuses any forecast whose target day is already anchored. In the 2024 replay, the first alert was on record
+  **two days before** the river crossed the flood limit.
+- **Early warning, 4 to 7 days out.** The Guaíba fills a few days after heavy rain upstream. If three weather models forecast a
+  basin-average of 90 mm or more over the next five days, the program raises an alert. The rule was fixed on-chain before it ran,
+  so it can't be tuned afterwards. Out of sample (Feb 2024 – Oct 2026) it warned of all three floods, with false alarms that the
+  dashboard shows.
+- **Official warnings kept.** INMET warnings for Rio Grande do Sul are attested by the committee with a hash of their content, so a
+  copy survives after INMET takes them down.
+- **Verify in the browser.** The dashboard recomputes Merkle proofs and hashes and checks them against the chain. Tick "Simulate
+  tampering" and the proof fails.
+- **Parametric vaults.** Funds can be locked with a written condition ("if an early warning is issued for the Guaíba, pay this
+  wallet"). When the trigger appears on-chain, the program pays by itself, once per event. Test SOL only.
+
+Cota does not replace civil defense, and it doesn't prove a sensor measured correctly. It proves nobody changed the data, and
+when the data existed.
+
+---
+
+## Em português
+
+O Cota é um diário do rio que ninguém consegue apagar: registra na Solana o que se sabia sobre o Guaíba a cada dia, para que
+depois de uma enchente dê para provar quem avisou o quê, e quando. O painel tem as duas línguas e um guia "Como ler".
+O Cota **não** emite alertas oficiais: para isso, **SMS 40199** e Defesa Civil.
+O resto deste README é a documentação técnica.
 
 O Cota registra na Solana (devnet), de forma que qualquer pessoa possa conferir, **quem sabia o quê, e quando**:
 
@@ -61,6 +102,8 @@ não sai da máquina de quem fez o deploy.
 
 ## Limites declarados
 
+- Os três oráculos buscam e assinam os dados de forma independente, mas hoje são operados pela mesma pessoa (jobs separados no
+  GitHub Actions). O próximo passo é entregá-los a instituições diferentes (Defesa Civil, universidades, ONGs).
 - A previsão é da **vazão diária modelada pelo GloFAS**, 1 e 2 dias à frente, não do nível da régua.
 - No replay, as transações são de 2026: a prova é da **ordem** (previsão antes da observação), não do calendário de 2024.
 - A chuva das estações do INMET chega com ~1 mês de atraso; o modo ao vivo usa só a vazão até haver acesso em tempo real.

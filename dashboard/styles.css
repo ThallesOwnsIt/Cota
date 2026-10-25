@@ -211,11 +211,6 @@ button {
   font-size: 13px;
 }
 
-.lede {
-  color: var(--text-2);
-  max-width: 80ch;
-}
-
 /* indicadores */
 .kpis {
   display: grid;
@@ -861,4 +856,94 @@ a.ghost {
 .glossary dd {
   margin: 2px 0 0;
   color: var(--text-2);
+}
+
+/* logo */
+.brand h1 {
+  line-height: 0;
+}
+.logo {
+  display: block;
+  height: 56px;
+  width: auto;
+  border-radius: 10px;
+  box-shadow: 0 0 0 1px var(--border);
+}
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+/* sobre o Cota */
+.about {
+  margin: 20px 0 8px;
+}
+.about p {
+  max-width: 85ch;
+  margin: 8px 0;
+  color: var(--text-2);
+}
+.about .about-lead {
+  color: var(--text);
+  font-size: 17px;
+  line-height: 1.55;
+}
+.pillars {
+  list-style: none;
+  padding: 0;
+  margin: 16px 0 8px;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 12px;
+  max-width: none;
+}
+.pillars li {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-top: 3px solid var(--observed);
+  border-radius: var(--radius);
+  padding: 12px 14px;
+  color: var(--text-2);
+  font-size: 13.5px;
+}
+.pillars strong {
+  display: block;
+  color: var(--text);
+  font-size: 15px;
+  margin-bottom: 4px;
+}
+.about .about-tech {
+  font-size: 13px;
+}
+
+/* guia recolhido */
+.guide-summary {
+  cursor: pointer;
+  list-style: none;
+  display: grid;
+  grid-template-columns: auto 1fr;
+  column-gap: 10px;
+  align-items: baseline;
+}
+.guide-summary::-webkit-details-marker {
+  display: none;
+}
+.guide-summary::before {
+  content: "▸";
+  color: var(--text-2);
+  grid-row: span 2;
+  transition: transform 0.15s;
+}
+.guide[open] > .guide-summary::before {
+  transform: rotate(90deg);
+}
+.guide-summary h2 {
+  display: inline;
+}
+.guide-summary .sub {
+  grid-column: 2;
+}
+.guide[open] > .guide-summary {
+  margin-bottom: 8px;
 }

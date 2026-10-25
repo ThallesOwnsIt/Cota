@@ -1345,9 +1345,17 @@ function initLang() {
   );
 }
 
+// O guia fica recolhido; o link "Como ler" do topo (ou #guide na URL) abre.
+function initGuide() {
+  const g = $("#guide");
+  document.querySelectorAll('a[href="#guide"]').forEach((a) => a.addEventListener("click", () => (g.open = true)));
+  if (location.hash === "#guide") g.open = true;
+}
+
 async function main() {
   initTheme();
   initLang();
+  initGuide();
   B = await (await fetch("data/bundle.json")).json();
   derive();
   const prog = $("#program-link");
