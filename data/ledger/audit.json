@@ -1965,7 +1965,16 @@
       "problems": []
     }
   ],
-  "public_alerts": [],
+  "public_alerts": [
+    {
+      "record": "B8ghRYDZQ71hMi5euU8kSyvTEBN1yeMsm5UXyf8hGeFW",
+      "alert_id": "urn:oid:2.49.0.0.76.0.2026.28554.1",
+      "slot": 514906631,
+      "committed_at": 1792916145,
+      "signers": 7,
+      "problems": []
+    }
+  ],
   "summary": {
     "alerts": 31,
     "alerts_recorded_before_observation": 31,
@@ -1976,7 +1985,7 @@
     "forecasts_observed": 80,
     "forecasts_recorded_before_observation": 80,
     "forecasts_with_problems": 0,
-    "public_alerts": 0,
+    "public_alerts": 1,
     "public_alerts_with_problems": 0
   }
 }
