@@ -1,0 +1,58 @@
+# Cota — alertas de enchente verificáveis
+
+> Replay histórico / protótipo de pesquisa. O Cota **não** emite alertas oficiais.
+> Alertas oficiais: **SMS 40199**, Defesa Civil.
+
+O Cota registra na Solana (devnet), de forma que qualquer pessoa possa conferir, **quem sabia o quê, e quando**:
+
+- leituras de chuva (INMET) e vazão (GloFAS/Open-Meteo), assinadas por um comitê de 3 oráculos com limiar 2-de-3 e ancoradas como raízes Merkle (RFC 9162), um lote por dia;
+- previsões P10/P50/P90 da vazão do Guaíba (LightGBM quantílico, `model_sha256` fixo), que o programa só aceita **antes** de a observação ser ancorada;
+- alertas (`AlertReceipt`) quando a P90 cruza um limiar fixado antes;
+- avisos oficiais do INMET para o RS, atestados pelo comitê com o SHA-256 do conteúdo (a API do INMET só mostra avisos vigentes);
+- degradação de fontes (`SourceDegraded`): estação sem dados, sensor travado, nós discordantes.
+
+Painel: **https://cota-eight.vercel.app**: replay da cheia de abr–mai/2024 e modo ao vivo, com verificação Merkle e das contas on-chain feita no navegador.
+
+## Estrutura
+
+| Caminho | O quê |
+|---|---|
+| `programs/cota` | Programa Anchor: comitê, estações, lotes (Ed25519 via precompile), previsões, alertas, avisos oficiais |
+| `crates/cota-core` | Formatos canônicos (Borsh), Merkle, mensagem assinada |
+| `crates/cota-ingest` | Ingestão INMET (zip anual) e GloFAS (Open-Meteo) |
+| `crates/cota-quality` | Regras de sensor, MAD entre nós, índice de confiança C_s |
+| `crates/cota-oracle` | Nós, agregador, admin, avisos do INMET (`cota-alerts`), auditoria (`cota-audit`) |
+| `ml/` | Treino, avaliação e previsão (Python/uv) |
+| `dashboard/` | Painel estático (HTML/JS) |
+| `data/ledger/` | Estado: cada lote, previsão e aviso ancorado, com links do explorer |
+| `scripts/` | `replay.sh`, `live.sh`, `export_dashboard.py`, `next_day.py` |
+
+## Rodar
+
+```sh
+cargo test --workspace                     # programa (LiteSVM), oráculos, qualidade
+(cd ml && uv run pytest)                   # formatos e ausência de vazamento do futuro
+scripts/live.sh all                        # avisos + dia(s) pendente(s) + auditoria + dados do painel
+python3 -m http.server -d dashboard 8000   # painel local
+```
+
+Replay da cheia: `RPC=… CLUSTER=devnet PAYER=… scripts/replay.sh 2024-04-20 2024-05-25`.
+Modelo: `(cd ml && uv run python -m cota_ml.train)` (exige o histórico de `cota-ingest --lenient`).
+
+## Modo ao vivo (GitHub Actions)
+
+`.github/workflows/live.yml` roda a cada 30 min: três jobs de nó (um secret cada) e um agregador que só
+leva à cadeia o que tem 2 de 3 assinaturas, faz commit de `data/ledger` e `dashboard/data`.
+
+Secrets do repositório (Settings → Secrets and variables → Actions): `NODE_1_KEY`, `NODE_2_KEY`,
+`NODE_3_KEY` e `OPERATOR_KEY`, com o conteúdo de `keys/node-N.json` e `keys/operator.json`.
+O operador é a autoridade do comitê (`cota-admin set-authority`); a upgrade authority do programa
+não sai da máquina de quem fez o deploy.
+
+## Limites declarados
+
+- A previsão é da **vazão diária modelada pelo GloFAS**, 1 e 2 dias à frente, não do nível da régua.
+- No replay, as transações são de 2026: a prova é da **ordem** (previsão antes da observação), não do calendário de 2024.
+- A chuva das estações do INMET chega com ~1 mês de atraso; o modo ao vivo usa só a vazão até haver acesso em tempo real.
+
+Dados: [Weather data by Open-Meteo.com](https://open-meteo.com/) (CC BY 4.0) · GloFAS / Copernicus EMS · INMET.

@@ -1,0 +1,175 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Cota — alertas verificáveis</title>
+    <meta name="description" content="Replay verificável da cheia do Guaíba (abr–mai/2024): leituras, previsões e alertas ancorados na Solana devnet." />
+    <link rel="stylesheet" href="styles.css" />
+    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%232a78d6'/%3E%3Cpath d='M6 20c3-3 5-3 8 0s5 3 8 0 4-2 4-2' stroke='white' stroke-width='3' fill='none' stroke-linecap='round'/%3E%3C/svg%3E" />
+  </head>
+  <body>
+    <header class="top">
+      <div class="wrap">
+        <div class="brand">
+          <h1>Cota</h1>
+          <p class="tagline">Quem sabia o quê, e quando — cheia do Guaíba, abril–maio de 2024</p>
+        </div>
+        <button id="theme" class="ghost" type="button" aria-label="Alternar tema claro/escuro">◐ Tema</button>
+      </div>
+    </header>
+
+    <main class="wrap">
+      <div class="notice" role="note">
+        <span class="notice-icon" aria-hidden="true">!</span>
+        <p>
+          <strong>Replay histórico / protótipo de pesquisa.</strong> O Cota não emite alertas oficiais.
+          Alertas oficiais: <strong>SMS 40199</strong>, Defesa Civil.
+        </p>
+      </div>
+
+      <p class="lede">
+        Cada leitura de chuva e vazão, cada previsão do modelo, cada alerta e cada aviso oficial abaixo foi assinado por um comitê de
+        3 oráculos (limiar 2-de-3) e ancorado no programa
+        <a id="program-link" target="_blank" rel="noopener"></a> da Solana <span id="cluster"></span>.
+        A ordem dos registros na cadeia prova que as previsões e os alertas existiam <em>antes</em> das observações.
+        Tudo aqui pode ser conferido no seu navegador.
+      </p>
+
+      <section class="card" aria-labelledby="live-title" id="live">
+        <div class="card-head">
+          <div>
+            <h2 id="live-title">Ao vivo</h2>
+            <p class="sub" id="live-sub"></p>
+          </div>
+        </div>
+        <div id="live-kpis" class="kpis"></div>
+        <div id="live-legend" class="legend"></div>
+        <div id="live-chart" class="chart" role="img" aria-label="Vazão recente do Guaíba e previsão"></div>
+        <div class="readings-head">
+          <h3>Avisos oficiais do INMET para o RS registrados pelo comitê</h3>
+        </div>
+        <p class="sub">
+          A API do INMET só mostra avisos vigentes. Cada versão de aviso vista por ≥ 2 dos 3 nós é gravada na devnet com o SHA-256
+          do conteúdo: o slot prova que ela existia, no máximo, naquele momento.
+        </p>
+        <div id="live-alerts" class="table-wrap"></div>
+        <div id="live-verify" class="verify" hidden aria-live="polite"></div>
+      </section>
+
+      <h2 class="section-title">Replay da cheia de abril–maio de 2024</h2>
+
+      <section aria-labelledby="kpi-title">
+        <h2 id="kpi-title" class="visually-hidden">Resumo do replay</h2>
+        <div id="kpis" class="kpis"></div>
+      </section>
+
+      <section class="card" aria-labelledby="flow-title">
+        <div class="card-head">
+          <div>
+            <h2 id="flow-title">Vazão do Guaíba: observada × prevista</h2>
+            <p class="sub">Vazão diária modelada pelo GloFAS (m³/s), não nível de régua. Clique em um dia para ver os detalhes.</p>
+          </div>
+          <div class="controls">
+            <div class="seg" role="radiogroup" aria-label="Horizonte da previsão">
+              <button type="button" role="radio" data-h="24" aria-checked="true">1 dia antes</button>
+              <button type="button" role="radio" data-h="48" aria-checked="false">2 dias antes</button>
+            </div>
+            <button type="button" class="ghost" id="flow-table-toggle" aria-expanded="false">Tabela</button>
+          </div>
+        </div>
+        <div id="flow-legend" class="legend"></div>
+        <div id="flow-chart" class="chart" role="img" aria-label="Gráfico da vazão do Guaíba com faixa de previsão"></div>
+        <div id="flow-table" class="table-wrap" hidden></div>
+        <div id="rain-chart" class="chart chart-small" role="img" aria-label="Chuva média diária nas estações do INMET"></div>
+      </section>
+
+      <section class="card" aria-labelledby="timeline-title">
+        <div class="card-head">
+          <div>
+            <h2 id="timeline-title">Linha do tempo</h2>
+            <p class="sub">Um lote por dia (UTC). Assinaturas dos nós, alertas emitidos e fontes degradadas.</p>
+          </div>
+        </div>
+        <div id="timeline" class="timeline"></div>
+        <div id="timeline-legend" class="legend"></div>
+      </section>
+
+      <section class="card" aria-labelledby="day-title" id="day-section">
+        <div class="card-head">
+          <div>
+            <h2 id="day-title">Dia</h2>
+            <p class="sub" id="day-sub"></p>
+          </div>
+          <div class="controls">
+            <button type="button" class="ghost" id="prev-day" aria-label="Dia anterior">←</button>
+            <button type="button" class="ghost" id="next-day" aria-label="Próximo dia">→</button>
+          </div>
+        </div>
+        <div class="day-grid">
+          <div id="day-batch"></div>
+          <div id="day-forecast"></div>
+        </div>
+        <div id="verify-panel" class="verify" hidden aria-live="polite"></div>
+        <div class="readings-head">
+          <h3>Leituras ancoradas neste lote</h3>
+          <label class="select">Estação <select id="station-filter"></select></label>
+        </div>
+        <div id="readings" class="table-wrap"></div>
+      </section>
+
+      <section class="card" aria-labelledby="quality-title">
+        <div class="card-head">
+          <div>
+            <h2 id="quality-title">Qualidade das fontes</h2>
+            <p class="sub">
+              Índice de confiança C<sub>s</sub> por estação e dia (disponibilidade, flags de sensor, concordância entre nós,
+              frescor). Abaixo de 0,6 o agregador grava <code>SourceDegraded</code> on-chain.
+            </p>
+          </div>
+        </div>
+        <div id="quality" class="heatmap-wrap"></div>
+        <div id="quality-legend" class="legend"></div>
+      </section>
+
+      <section class="card" aria-labelledby="method-title">
+        <h2 id="method-title">Como verificar</h2>
+        <ol class="method">
+          <li>
+            <strong>Leitura → lote.</strong> Cada leitura vira uma folha SHA-256 (bytes Borsh, prefixo 0x00) de uma árvore
+            Merkle RFC 9162. O botão <em>verificar</em> recalcula a folha e a prova de inclusão aqui no navegador e compara com a
+            raiz lida da devnet naquele momento.
+          </li>
+          <li>
+            <strong>Lote → comitê.</strong> O programa só aceita o lote com ≥ 2 assinaturas Ed25519 distintas de membros do comitê,
+            verificadas pelo precompile da Solana na mesma transação, e encadeado na raiz anterior.
+          </li>
+          <li>
+            <strong>Previsão → antes.</strong> O programa recusa previsões cujo alvo já está em um lote ancorado. O slot da
+            previsão é menor que o slot do lote que contém a observação.
+          </li>
+          <li>
+            <strong>Modelo → reprodutível.</strong> LightGBM quantílico treinado em 1997–2023 de forma determinística;
+            <code id="model-sha"></code> identifica os arquivos do modelo e a calibração.
+          </li>
+        </ol>
+        <div id="metrics" class="table-wrap"></div>
+      </section>
+    </main>
+
+    <footer class="wrap foot">
+      <p>
+        <a href="https://open-meteo.com/" target="_blank" rel="noopener">Weather data by Open-Meteo.com</a> (CC BY 4.0) ·
+        Vazão: GloFAS / Copernicus Emergency Management Service, via Open-Meteo Flood API ·
+        Chuva: <a href="https://portal.inmet.gov.br/dadoshistoricos" target="_blank" rel="noopener">INMET, dados históricos</a>.
+      </p>
+      <p>
+        Replay histórico / protótipo de pesquisa. Alertas oficiais: SMS 40199, Defesa Civil.
+        <span id="generated"></span>
+      </p>
+    </footer>
+
+    <div id="tooltip" class="tooltip" role="tooltip" hidden></div>
+    <script type="module" src="app.js"></script>
+  </body>
+</html>

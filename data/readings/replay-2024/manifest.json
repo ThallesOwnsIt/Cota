@@ -1,0 +1,105 @@
+{
+  "from_utc": 1713571200,
+  "to_utc": 1716681600,
+  "reading_count": 5330,
+  "stations": [
+    {
+      "station_id": "A801",
+      "source": "inmet",
+      "readings": 861,
+      "missing": 3,
+      "expected": 864
+    },
+    {
+      "station_id": "B807",
+      "source": "inmet",
+      "readings": 864,
+      "missing": 0,
+      "expected": 864
+    },
+    {
+      "station_id": "A840",
+      "source": "inmet",
+      "readings": 864,
+      "missing": 0,
+      "expected": 864
+    },
+    {
+      "station_id": "A879",
+      "source": "inmet",
+      "readings": 862,
+      "missing": 2,
+      "expected": 864
+    },
+    {
+      "station_id": "A882",
+      "source": "inmet",
+      "readings": 799,
+      "missing": 65,
+      "expected": 864
+    },
+    {
+      "station_id": "A837",
+      "source": "inmet",
+      "readings": 864,
+      "missing": 0,
+      "expected": 864
+    },
+    {
+      "station_id": "GLOFAS-GUAIBA",
+      "source": "open_meteo_glofas",
+      "readings": 36,
+      "missing": 0,
+      "expected": 36
+    },
+    {
+      "station_id": "GLOFAS-JACUI",
+      "source": "open_meteo_glofas",
+      "readings": 36,
+      "missing": 0,
+      "expected": 36
+    },
+    {
+      "station_id": "GLOFAS-TAQUARI",
+      "source": "open_meteo_glofas",
+      "readings": 36,
+      "missing": 0,
+      "expected": 36
+    },
+    {
+      "station_id": "GLOFAS-CAI",
+      "source": "open_meteo_glofas",
+      "readings": 36,
+      "missing": 0,
+      "expected": 36
+    },
+    {
+      "station_id": "GLOFAS-SINOS",
+      "source": "open_meteo_glofas",
+      "readings": 36,
+      "missing": 0,
+      "expected": 36
+    },
+    {
+      "station_id": "GLOFAS-GRAVATAI",
+      "source": "open_meteo_glofas",
+      "readings": 36,
+      "missing": 0,
+      "expected": 36
+    }
+  ],
+  "files": [
+    [
+      "readings.jsonl",
+      "ff8de92a4ce42ab6c93dc9a6f1ec06f078adafb1baa71379f92eea3da9a229ed"
+    ],
+    [
+      "readings.csv",
+      "a05d2c06dc959b9197295791b7be5e9fa1819cb6124286fe5ccdb07fb3fc6e56"
+    ]
+  ],
+  "attribution": [
+    "INMET - Instituto Nacional de Meteorologia",
+    "Weather data by Open-Meteo.com (CC BY 4.0), GloFAS/Copernicus"
+  ]
+}

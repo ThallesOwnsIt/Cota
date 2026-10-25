@@ -1,0 +1,150 @@
+{
+  "based_on_batch_id": 19,
+  "based_on_root": "517475445066d3e9b94d8e4ad8ca105a90fb9e3ddde51b2b8827982e501c8240",
+  "cluster": "devnet",
+  "features": [
+    {
+      "name": "q0",
+      "value_milli": 13060710
+    },
+    {
+      "name": "lq0",
+      "value_milli": 9477
+    },
+    {
+      "name": "dlq1",
+      "value_milli": -154
+    },
+    {
+      "name": "dlq2",
+      "value_milli": 37
+    },
+    {
+      "name": "up_jacui_rel",
+      "value_milli": -182
+    },
+    {
+      "name": "up_taquari_rel",
+      "value_milli": -1225
+    },
+    {
+      "name": "up_cai_rel",
+      "value_milli": -2870
+    },
+    {
+      "name": "up_sinos_rel",
+      "value_milli": -3343
+    },
+    {
+      "name": "up_gravatai_rel",
+      "value_milli": -4481
+    },
+    {
+      "name": "up_jacui_d1",
+      "value_milli": -129
+    },
+    {
+      "name": "up_taquari_d1",
+      "value_milli": -332
+    },
+    {
+      "name": "up_cai_d1",
+      "value_milli": -387
+    },
+    {
+      "name": "up_sinos_d1",
+      "value_milli": -358
+    },
+    {
+      "name": "up_gravatai_d1",
+      "value_milli": -572
+    },
+    {
+      "name": "rain0",
+      "value_milli": 10967
+    },
+    {
+      "name": "rain1",
+      "value_milli": 0
+    },
+    {
+      "name": "rain3",
+      "value_milli": 11000
+    },
+    {
+      "name": "rain5",
+      "value_milli": 60500
+    },
+    {
+      "name": "rainmax0",
+      "value_milli": 15400
+    },
+    {
+      "name": "doy_sin",
+      "value_milli": 797
+    },
+    {
+      "name": "doy_cos",
+      "value_milli": -604
+    }
+  ],
+  "features_root": "8355da6055e59c1e88564de4787d449fe63f262778eb415e6925eb26561400a8",
+  "forecasts": [
+    {
+      "horizon_hours": 24,
+      "p10": 11112843,
+      "p50": 11323302,
+      "p90": 11966859,
+      "target_day": "2024-05-09",
+      "target_ts": 1715212800
+    },
+    {
+      "horizon_hours": 48,
+      "p10": 9596574,
+      "p50": 10234578,
+      "p90": 12078072,
+      "target_day": "2024-05-10",
+      "target_ts": 1715299200
+    }
+  ],
+  "issue_day": "2024-05-08",
+  "issued_at": 1715212800,
+  "model_sha256": "4e16a4b4e3a3bf3b5ac94317a15064fe12d029d5cc6557410182a7b3b42a792e",
+  "onchain": [
+    {
+      "account": "4AGryUPq1hpZM6ap28dLUyyPBxGazjw3N96cysf43dEy",
+      "alert": {
+        "account": "2PgJk8Skc9JZYMPsZFB9SpYmJGLernxjTPbD142EehN2",
+        "explorer": "https://explorer.solana.com/tx/kY5s2RBnBkH9tQHqTCNoyA7CEZQEzjfjKRagaYcDYkt1PPQz2GfRWp7qwiF1DLtXwAbxsARN6fApmup9n5sYhCu?cluster=devnet",
+        "level": 1,
+        "threshold_milli": 9353060,
+        "tx_signature": "kY5s2RBnBkH9tQHqTCNoyA7CEZQEzjfjKRagaYcDYkt1PPQz2GfRWp7qwiF1DLtXwAbxsARN6fApmup9n5sYhCu"
+      },
+      "explorer": "https://explorer.solana.com/tx/xGAy8qBAQeJGCU1MHBgkvVr6gwqUXFP7xYqJjpj48etnXxf3XtTa8aJ2bV93cWE5jM4H2oCwNuuEdJWJZPo1bct?cluster=devnet",
+      "horizon_hours": 24,
+      "p10": 11112843,
+      "p50": 11323302,
+      "p90": 11966859,
+      "target_ts": 1715212800,
+      "tx_signature": "xGAy8qBAQeJGCU1MHBgkvVr6gwqUXFP7xYqJjpj48etnXxf3XtTa8aJ2bV93cWE5jM4H2oCwNuuEdJWJZPo1bct"
+    },
+    {
+      "account": "6t27fmuLSaMQ1rQkaadYAGUw4XQYLDKjAbYyPL5cuQpB",
+      "alert": {
+        "account": "EXMZwEdtkBcagg2KHK2xriaSQjVZ2aJywZepHiFt9kiu",
+        "explorer": "https://explorer.solana.com/tx/3xQnzx9vgohYozHwLKQQetg1sFG1BnYXAPfddXfYAPyEDcazMvw6QUbwJaLzmfVrtMdBKwFVde7jT6Lxv2wu8H5G?cluster=devnet",
+        "level": 1,
+        "threshold_milli": 9353060,
+        "tx_signature": "3xQnzx9vgohYozHwLKQQetg1sFG1BnYXAPfddXfYAPyEDcazMvw6QUbwJaLzmfVrtMdBKwFVde7jT6Lxv2wu8H5G"
+      },
+      "explorer": "https://explorer.solana.com/tx/YFvRziE3fmuKxLVUcBB8cnG8oVKmdu8BmxRgm9gC5UwWxBkB4Jr3ppKx8dyYeQ8J6oNBefSFXpMmKeNuUnfsfGt?cluster=devnet",
+      "horizon_hours": 48,
+      "p10": 9596574,
+      "p50": 10234578,
+      "p90": 12078072,
+      "target_ts": 1715299200,
+      "tx_signature": "YFvRziE3fmuKxLVUcBB8cnG8oVKmdu8BmxRgm9gC5UwWxBkB4Jr3ppKx8dyYeQ8J6oNBefSFXpMmKeNuUnfsfGt"
+    }
+  ],
+  "station_id": "GLOFAS-GUAIBA"
+}

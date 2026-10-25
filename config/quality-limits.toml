@@ -1,0 +1,10 @@
+# Gerado por `uv run python -m cota_ml.train`. Não editar à mão.
+# r_max = percentil 99.9 de |Δ ln Q| diário (histórico até 2023).
+
+[jump_ln]
+"GLOFAS-GUAIBA" = 1.385
+"GLOFAS-JACUI" = 1.662
+"GLOFAS-TAQUARI" = 2.99
+"GLOFAS-CAI" = 2.044
+"GLOFAS-SINOS" = 1.773
+"GLOFAS-GRAVATAI" = 2.855

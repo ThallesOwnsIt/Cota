@@ -1,0 +1,129 @@
+# Modo ao vivo do Cota, a cada 30 minutos:
+#   - 3 jobs de nó, um por chave (cada um só enxerga o próprio secret): consultam os avisos
+#     do INMET e, se houver um dia UTC encerrado ainda não ancorado, assinam o lote dele;
+#   - 1 agregador: leva à cadeia o que tem ≥ 2 de 3 assinaturas, prevê, audita e faz commit
+#     do ledger e dos dados do dashboard (a Vercel republica a cada push).
+#
+# Secrets: NODE_1_KEY, NODE_2_KEY, NODE_3_KEY e OPERATOR_KEY (conteúdo dos keypairs JSON).
+name: Cota ao vivo
+
+on:
+  schedule:
+    - cron: "*/30 * * * *"
+  workflow_dispatch:
+
+concurrency:
+  group: cota-live
+  cancel-in-progress: false
+
+permissions:
+  contents: write
+
+env:
+  RPC: https://api.devnet.solana.com
+  CLUSTER: devnet
+  CARGO_TERM_COLOR: never
+
+jobs:
+  plan:
+    runs-on: ubuntu-latest
+    outputs:
+      day: ${{ steps.next.outputs.day }}
+    steps:
+      - uses: actions/checkout@v4
+      - id: next
+        run: echo "day=$(python3 scripts/next_day.py)" >> "$GITHUB_OUTPUT"
+
+  node:
+    needs: plan
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        node: [1, 2, 3]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: Swatinem/rust-cache@v2
+        with:
+          shared-key: cota
+      - run: cargo build --release -p cota-oracle --bin cota-node --bin cota-alerts
+      - name: Chave do nó
+        env:
+          KEY: ${{ secrets[format('NODE_{0}_KEY', matrix.node)] }}
+        run: |
+          umask 077
+          mkdir -p keys && printf '%s' "$KEY" > keys/node.json
+      - name: Avisos do INMET
+        run: target/release/cota-alerts observe --key keys/node.json --out out/alerts
+      - name: Lote de ${{ needs.plan.outputs.day }}
+        if: needs.plan.outputs.day != ''
+        run: >
+          target/release/cota-node --key keys/node.json --day "${{ needs.plan.outputs.day }}"
+          --rpc "$RPC" --config config/stations-live.toml --out out
+      - run: rm -f keys/node.json
+        if: always()
+      - uses: actions/upload-artifact@v4
+        with:
+          name: node-${{ matrix.node }}
+          path: out/
+          retention-days: 3
+          if-no-files-found: ignore
+
+  aggregate:
+    needs: [plan, node]
+    # Um nó fora do ar não pode parar o sistema: o limiar 2-de-3 decide.
+    if: always() && needs.plan.result == 'success'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: Swatinem/rust-cache@v2
+        with:
+          shared-key: cota
+      - run: cargo build --release -p cota-oracle --bins
+      - uses: astral-sh/setup-uv@v6
+      - run: uv sync --project ml
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: node-*
+          path: data/nodes
+      - name: Chave do operador
+        env:
+          KEY: ${{ secrets.OPERATOR_KEY }}
+        run: |
+          umask 077
+          mkdir -p keys && printf '%s' "$KEY" > keys/operator.json
+      - name: Avisos oficiais com quórum
+        run: target/release/cota-alerts anchor --rpc "$RPC" --cluster "$CLUSTER" --payer keys/operator.json
+      - name: Lote, qualidade, previsão e alerta de ${{ needs.plan.outputs.day }}
+        if: needs.plan.outputs.day != ''
+        run: |
+          day="${{ needs.plan.outputs.day }}"
+          target/release/cota-aggregator --rpc "$RPC" --cluster "$CLUSTER" --payer keys/operator.json \
+            --config config/stations-live.toml
+          (cd ml && uv run python -m cota_ml.forecast --day "$day")
+          if [[ -f "data/forecasts/$day.json" ]]; then
+            target/release/cota-admin --rpc "$RPC" --payer keys/operator.json \
+              commit-forecast --file "data/forecasts/$day.json" --cluster "$CLUSTER"
+          fi
+      - run: rm -f keys/operator.json
+        if: always()
+      # Rodam mesmo se o lote falhar: um aviso oficial já ancorado não pode ficar sem registro.
+      - name: Auditoria e dados do dashboard
+        if: always()
+        run: |
+          if [[ -z "$(git status --porcelain data/ledger)" ]]; then
+            echo "nada novo no ledger"
+            exit 0
+          fi
+          target/release/cota-audit --rpc "$RPC"
+          python3 scripts/export_dashboard.py
+      - name: Commit
+        if: always()
+        run: |
+          git add data/ledger dashboard/data
+          if git diff --cached --quiet; then exit 0; fi
+          git config user.name "cota-bot"
+          git config user.email "cota-bot@users.noreply.github.com"
+          git commit -q -m "ao vivo: $(date -u +%FT%H:%MZ)"
+          for i in 1 2 3; do git pull -q --rebase && git push -q && exit 0; sleep 5; done
+          exit 1

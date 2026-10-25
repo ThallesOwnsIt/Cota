@@ -1,0 +1,19 @@
+[package]
+name = "cota-ingest"
+version = "0.1.0"
+edition.workspace = true
+license.workspace = true
+rust-version.workspace = true
+
+[dependencies]
+anyhow = "1.0.104"
+chrono = "0.4.45"
+clap = { version = "4.6.7", features = ["derive"] }
+cota-core = { version = "0.1.0", path = "../cota-core" }
+hex.workspace = true
+reqwest = { version = "0.13.5", default-features = false, features = ["blocking", "json", "rustls"] }
+serde = { workspace = true, features = ["derive"] }
+serde_json = "1.0.154"
+sha2.workspace = true
+toml = "1.1.8"
+zip = { version = "9.1.0", default-features = false, features = ["deflate"] }

@@ -1,0 +1,106 @@
+{
+  "model_sha256": "4e16a4b4e3a3bf3b5ac94317a15064fe12d029d5cc6557410182a7b3b42a792e",
+  "features": [
+    "lq0",
+    "dlq1",
+    "dlq2",
+    "up_jacui_rel",
+    "up_taquari_rel",
+    "up_cai_rel",
+    "up_sinos_rel",
+    "up_gravatai_rel",
+    "up_jacui_d1",
+    "up_taquari_d1",
+    "up_cai_d1",
+    "up_sinos_d1",
+    "up_gravatai_d1",
+    "rain0",
+    "rain1",
+    "rain3",
+    "rain5",
+    "rainmax0",
+    "doy_sin",
+    "doy_cos"
+  ],
+  "horizons_days": [
+    1,
+    2
+  ],
+  "quantiles": [
+    0.1,
+    0.5,
+    0.9
+  ],
+  "params": {
+    "objective": "quantile",
+    "learning_rate": 0.03,
+    "num_leaves": 15,
+    "min_data_in_leaf": 20,
+    "feature_fraction": 0.9,
+    "lambda_l2": 1.0,
+    "deterministic": true,
+    "force_row_wise": true,
+    "num_threads": 1,
+    "seed": 7,
+    "verbose": -1,
+    "num_boost_round": 400
+  },
+  "files": [
+    {
+      "file": "h1_q10.txt",
+      "horizon_days": 1,
+      "quantile": 0.1,
+      "sha256": "3ce69e8ec002c6556b23d0489c6da41c2a8c1f915907689442bc88fc6290d6c7"
+    },
+    {
+      "file": "h1_q50.txt",
+      "horizon_days": 1,
+      "quantile": 0.5,
+      "sha256": "0cb276d048f1fd42a9bf50bc5e833feebd749e8f06951bff255f6a7115f4a760"
+    },
+    {
+      "file": "h1_q90.txt",
+      "horizon_days": 1,
+      "quantile": 0.9,
+      "sha256": "2c4496cb52db282e78dbb892e67a9f98db97ffc72e373a7f01fb703d03c64073"
+    },
+    {
+      "file": "h2_q10.txt",
+      "horizon_days": 2,
+      "quantile": 0.1,
+      "sha256": "2b8f5d285d9d7eedf2ed1ef7a2282fc4b17ef397d321d00a8a3234a6a0bfe228"
+    },
+    {
+      "file": "h2_q50.txt",
+      "horizon_days": 2,
+      "quantile": 0.5,
+      "sha256": "e311a47acd02f99455094d233b12501218a359594c852401f6187241eb7f0408"
+    },
+    {
+      "file": "h2_q90.txt",
+      "horizon_days": 2,
+      "quantile": 0.9,
+      "sha256": "a3693dcd59c2e199de834e5006a45809d472eacee0c398808d2f73dd873a4fb8"
+    },
+    {
+      "file": "calibration.json",
+      "sha256": "23237a1ffa7da06eb7d649cade447f443db034a6670790cc863b6c2d4860b045"
+    }
+  ],
+  "target": {
+    "station_id": "GLOFAS-GUAIBA",
+    "variable": "river_discharge",
+    "unit": "m3/s",
+    "note": "vazão diária modelada pelo GloFAS (Open-Meteo), não nível de régua"
+  },
+  "train_years": [
+    1997,
+    2023
+  ],
+  "alert_rule": {
+    "station_id": "GLOFAS-GUAIBA",
+    "quantile": 0.99,
+    "threshold_milli": 9353060,
+    "level": 1
+  }
+}

@@ -1,0 +1,51 @@
+# Catálogo do modo ao vivo: só fontes com dado do dia anterior disponível.
+# As estações do INMET publicam o histórico com ~1 mês de atraso (zip mensal) e a API
+# horária exige token; entram aqui quando houver acesso em tempo real.
+
+[[station]]
+id = "GLOFAS-GUAIBA"
+name = "Guaíba em Porto Alegre (GloFAS)"
+source = "open_meteo_glofas"
+variable = "river_discharge"
+lat = -30.075
+lon = -51.325
+
+[[station]]
+id = "GLOFAS-JACUI"
+name = "Jacuí em São Jerônimo (GloFAS)"
+source = "open_meteo_glofas"
+variable = "river_discharge"
+lat = -29.925
+lon = -51.625
+
+[[station]]
+id = "GLOFAS-TAQUARI"
+name = "Taquari em Bom Retiro do Sul (GloFAS)"
+source = "open_meteo_glofas"
+variable = "river_discharge"
+lat = -29.725
+lon = -51.975
+
+[[station]]
+id = "GLOFAS-CAI"
+name = "Caí em Montenegro (GloFAS)"
+source = "open_meteo_glofas"
+variable = "river_discharge"
+lat = -29.775
+lon = -51.425
+
+[[station]]
+id = "GLOFAS-SINOS"
+name = "Sinos em São Leopoldo (GloFAS)"
+source = "open_meteo_glofas"
+variable = "river_discharge"
+lat = -29.875
+lon = -51.275
+
+[[station]]
+id = "GLOFAS-GRAVATAI"
+name = "Gravataí em Cachoeirinha (GloFAS)"
+source = "open_meteo_glofas"
+variable = "river_discharge"
+lat = -29.975
+lon = -51.175

@@ -1,0 +1,5 @@
+# node,fault,from,to   (fault: silent | tamper; datas UTC inclusivas)
+# node-3 cai no auge da cheia, como a régua do Cais Mauá em 02/05/2024.
+node-3,silent,2024-05-02,2024-05-04
+# node-2 adultera a maior chuva do dia do pico do Guaíba.
+node-2,tamper,2024-05-05,2024-05-05

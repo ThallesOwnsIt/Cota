@@ -1,0 +1,102 @@
+# Estações e pontos de grade monitorados na bacia do Guaíba.
+# `id` é o station_id gravado em cada Reading e na conta Station on-chain.
+
+# --- INMET: chuva horária (mm), estações automáticas -------------------------
+[[station]]
+id = "A801"
+name = "Porto Alegre - Jardim Botânico"
+source = "inmet"
+variable = "precipitation"
+lat = -30.05361111
+lon = -51.17472221
+
+[[station]]
+id = "B807"
+name = "Porto Alegre - Belém Novo"
+source = "inmet"
+variable = "precipitation"
+lat = -30.1861111
+lon = -51.17805554
+
+[[station]]
+id = "A840"
+name = "Bento Gonçalves (serra, Taquari-Antas)"
+source = "inmet"
+variable = "precipitation"
+lat = -29.164581
+lon = -51.534202
+
+[[station]]
+id = "A879"
+name = "Canela (cabeceiras Caí/Sinos)"
+source = "inmet"
+variable = "precipitation"
+lat = -29.36888888
+lon = -50.82722221
+
+[[station]]
+id = "A882"
+name = "Teutônia (vale do Taquari)"
+source = "inmet"
+variable = "precipitation"
+lat = -29.44916666
+lon = -51.82333332
+
+[[station]]
+id = "A837"
+name = "Soledade (alto Jacuí/Taquari)"
+source = "inmet"
+variable = "precipitation"
+lat = -28.859211
+lon = -52.542387
+
+# --- Open-Meteo Flood API (GloFAS): vazão diária modelada (m³/s) -------------
+# Coordenadas = centro da célula devolvido pela API, escolhido como a célula de
+# maior vazão numa vizinhança de ±0,1° (a célula de ~5 km pode cair fora do rio).
+[[station]]
+id = "GLOFAS-GUAIBA"
+name = "Guaíba em Porto Alegre (GloFAS)"
+source = "open_meteo_glofas"
+variable = "river_discharge"
+lat = -30.075
+lon = -51.325
+
+[[station]]
+id = "GLOFAS-JACUI"
+name = "Jacuí em São Jerônimo (GloFAS)"
+source = "open_meteo_glofas"
+variable = "river_discharge"
+lat = -29.925
+lon = -51.625
+
+[[station]]
+id = "GLOFAS-TAQUARI"
+name = "Taquari em Bom Retiro do Sul (GloFAS)"
+source = "open_meteo_glofas"
+variable = "river_discharge"
+lat = -29.725
+lon = -51.975
+
+[[station]]
+id = "GLOFAS-CAI"
+name = "Caí em Montenegro (GloFAS)"
+source = "open_meteo_glofas"
+variable = "river_discharge"
+lat = -29.775
+lon = -51.425
+
+[[station]]
+id = "GLOFAS-SINOS"
+name = "Sinos em São Leopoldo (GloFAS)"
+source = "open_meteo_glofas"
+variable = "river_discharge"
+lat = -29.875
+lon = -51.275
+
+[[station]]
+id = "GLOFAS-GRAVATAI"
+name = "Gravataí em Cachoeirinha (GloFAS)"
+source = "open_meteo_glofas"
+variable = "river_discharge"
+lat = -29.975
+lon = -51.175
