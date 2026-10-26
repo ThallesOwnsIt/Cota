@@ -38,38 +38,38 @@
     },
     "GLOFAS-CAI": {
       "score": 1.0,
-      "last_ts": 1792800000,
-      "last_value": 87100,
+      "last_ts": 1792886400,
+      "last_value": 80100,
       "run": 1
     },
     "GLOFAS-GRAVATAI": {
       "score": 1.0,
-      "last_ts": 1792800000,
-      "last_value": 22230,
+      "last_ts": 1792886400,
+      "last_value": 21910,
       "run": 1
     },
     "GLOFAS-GUAIBA": {
       "score": 1.0,
-      "last_ts": 1792800000,
-      "last_value": 1998860,
+      "last_ts": 1792886400,
+      "last_value": 1752880,
       "run": 1
     },
     "GLOFAS-JACUI": {
       "score": 1.0,
-      "last_ts": 1792800000,
-      "last_value": 1666250,
+      "last_ts": 1792886400,
+      "last_value": 1526570,
       "run": 1
     },
     "GLOFAS-SINOS": {
       "score": 1.0,
-      "last_ts": 1792800000,
-      "last_value": 59950,
+      "last_ts": 1792886400,
+      "last_value": 59260,
       "run": 1
     },
     "GLOFAS-TAQUARI": {
       "score": 1.0,
-      "last_ts": 1792800000,
-      "last_value": 205540,
+      "last_ts": 1792886400,
+      "last_value": 449820,
       "run": 1
     }
   }
