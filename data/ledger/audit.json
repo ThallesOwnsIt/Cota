@@ -2009,6 +2009,14 @@
   ],
   "public_alerts": [
     {
+      "record": "BDQTwhacoiW7fnWRAV9vxCQLNrkC4cSJnEFeMBvM8psT",
+      "alert_id": "urn:oid:2.49.0.0.76.0.2026.28569.1",
+      "slot": 515407241,
+      "committed_at": 1793035912,
+      "signers": 7,
+      "problems": []
+    },
+    {
       "record": "B8ghRYDZQ71hMi5euU8kSyvTEBN1yeMsm5UXyf8hGeFW",
       "alert_id": "urn:oid:2.49.0.0.76.0.2026.28554.1",
       "slot": 514906631,
@@ -2066,7 +2074,7 @@
     "forecasts_with_problems": 0,
     "outlooks": 2,
     "outlooks_with_problems": 0,
-    "public_alerts": 1,
+    "public_alerts": 2,
     "public_alerts_with_problems": 0,
     "vault_payouts": 3,
     "vaults": 2,
