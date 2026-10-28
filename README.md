@@ -51,7 +51,7 @@ O Cota registra na Solana (devnet), de forma que qualquer pessoa possa conferir,
 - avisos oficiais do INMET para o RS, atestados pelo comitê com o SHA-256 do conteúdo (a API do INMET só mostra avisos vigentes);
 - **alerta antecipado**: a chuva prevista para os 5 dias seguintes (ECMWF, GFS, ICON; rodada 00Z do dia) nos 6 pontos da bacia,
   atestada pelo comitê logo depois de cada lote; o programa aplica uma regra imutável (≥ 90 mm, calibrada só com 2015–2023) e emite
-  `EarlyWarning`. Fora da amostra (fev/2024–out/2026) a regra alertou antes das 3 cheias do período, com 4 a 7 dias de antecedência, e teve 13 dias de alarme falso;
+  `EarlyWarning`.
 - degradação de fontes (`SourceDegraded`): estação sem dados, sensor travado, nós discordantes;
 - **gatilho paramétrico**: cofres (`create_vault`) em que qualquer carteira trava SOL com condições fixas; diante de um gatilho do
   Cota (`EarlyWarning` ou `AlertReceipt`), qualquer conta aciona `trigger_payout` e o programa paga o beneficiário, uma vez por
