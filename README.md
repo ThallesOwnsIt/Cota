@@ -23,8 +23,7 @@ known about the river to Solana (devnet), where anyone can read it and nobody ca
   **two days before** the river crossed the flood limit.
 - **Early warning, 4 to 7 days out.** The Guaíba fills a few days after heavy rain upstream. If three weather models forecast a
   basin-average of 90 mm or more over the next five days, the program raises an alert. The rule was fixed on-chain before it ran,
-  so it can't be tuned afterwards. Out of sample (Feb 2024 – Oct 2026) it warned of all three floods, with false alarms that the
-  dashboard shows.
+  so it can't be tuned afterwards. Out of sample (Feb 2024 – Oct 2026) it warned of all three floods.
 - **Official warnings kept.** INMET warnings for Rio Grande do Sul are attested by the committee with a hash of their content, so a
   copy survives after INMET takes them down.
 - **Verify in the browser.** The dashboard recomputes Merkle proofs and hashes and checks them against the chain. Tick "Simulate
