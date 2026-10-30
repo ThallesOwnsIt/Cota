@@ -55,7 +55,7 @@ const REASONS = {
 const reason = (k) => L(...(REASONS[k] ?? [k, k]));
 const UNIT = { precipitation: "mm", river_discharge: "m³/s", river_stage: "m" };
 
-const state = { h: 24, sel: 0, station: "", batches: new Map(), activeReading: null, tamper: false };
+const state = { place: null, h: 24, sel: 0, station: "", batches: new Map(), activeReading: null, tamper: false };
 let B; // bundle
 
 // ---- utilidades de data ---------------------------------------------------
@@ -945,6 +945,7 @@ function renderOutlook() {
     `<th>${L("Primeiro alerta", "First alert")}</th><th class="num">${L("Antecedência (d)", "Lead time (d)")}</th></tr></thead><tbody>${fl}</tbody></table>` +
     `<p class="sub">${L(`Alarmes falsos (alerta sem cheia em ${R.target.within_days} dias)`, `False alarms (alert with no flood within ${R.target.within_days} days)`)}: ${fa}</p>`;
 
+  renderOutlookNow();
   renderOutlookChart();
 
   if (!O.live.length) {
@@ -970,82 +971,265 @@ function renderOutlook() {
   $("#outlook-live").querySelectorAll("[data-o]").forEach((b) => b.addEventListener("click", () => verifyOutlook(O.live[+b.dataset.o])));
 }
 
+// A situação de hoje em linguagem simples; os números técnicos ficam no bloco recolhido.
+function renderOutlookNow() {
+  const O = B.outlook;
+  const R = O.rule;
+  const bt = O.backtest;
+  const last = O.live[0];
+  const leads = bt.floods.map((f) => f.lead_days).filter((x) => x != null);
+  const warned = bt.floods.filter((f) => f.first_alert).length;
+  const lastAlert = [O.live.find((o) => o.triggered)?.day, bt.days.findLast((d) => d.alert)?.day].filter(Boolean).sort().at(-1);
+
+  let status;
+  if (!last) {
+    status = `<div class="now-status"><span class="now-icon ok" aria-hidden="true">·</span><div>
+      <h3>${L("Ainda sem previsão registrada", "No forecast recorded yet")}</h3></div></div>`;
+  } else {
+    const v = last.rain_mean_milli / 1000;
+    const win = `${dm(addDays(last.day, 1))}–${dm(addDays(last.day, R.window_days))}`;
+    const max = Math.max(R.threshold_mm * 1.5, v * 1.1);
+    const at = (x) => `${Math.min(100, (x / max) * 100)}%`;
+    status = `<div class="now-status">
+        <span class="now-icon ${last.triggered ? "alert" : "ok"}" aria-hidden="true">${last.triggered ? "▲" : "✓"}</span>
+        <div>
+          <h3>${last.triggered ? L("Alerta antecipado", "Early warning") : L("Sem alerta antecipado", "No early warning")}</h3>
+          <p>${
+            last.triggered
+              ? L(
+                  `A chuva prevista para a bacia de ${win} é de ${mm(last.rain_mean_milli)} mm, acima dos ${R.threshold_mm} mm. O Guaíba pode passar do nível de cheia nos próximos ${R.target.within_days} dias.`,
+                  `The rain forecast for the basin for ${win} is ${mm(last.rain_mean_milli)} mm, above ${R.threshold_mm} mm. The Guaíba may go over flood level within the next ${R.target.within_days} days.`,
+                )
+              : L(
+                  `A chuva prevista para a bacia de ${win} é de ${mm(last.rain_mean_milli)} mm, abaixo dos ${R.threshold_mm} mm que acendem o alerta.`,
+                  `The rain forecast for the basin for ${win} is ${mm(last.rain_mean_milli)} mm, below the ${R.threshold_mm} mm that would trigger a warning.`,
+                )
+          }</p>
+          <div class="meter" role="img" aria-label="${L(`${mm(last.rain_mean_milli)} mm de ${R.threshold_mm} mm`, `${mm(last.rain_mean_milli)} mm of ${R.threshold_mm} mm`)}">
+            <div class="meter-track"><div class="meter-fill${last.triggered ? " alert" : ""}" style="width:${at(v)}"></div><span class="meter-mark" style="left:${at(R.threshold_mm)}"></span></div>
+            <div class="meter-labels"><span style="left:0">0 mm</span><span style="left:${at(R.threshold_mm)}">${L("alerta", "warning")} · ${R.threshold_mm} mm</span></div>
+          </div>
+          <p class="sub">${L(`Previsão do fim de ${dmy(last.day)}, gravada em ${br(last.committed_at)}.`, `Forecast from the end of ${dmy(last.day)}, recorded ${br(last.committed_at)}.`)}</p>
+        </div>
+      </div>`;
+  }
+  const fact = (dt, dd, small) => `<div><dt>${dt}</dt><dd>${dd}<small>${small}</small></dd></div>`;
+  $("#outlook-now").innerHTML =
+    status +
+    `<dl class="facts">${
+      fact(
+        L("Cheias avisadas com antecedência desde 2024", "Floods warned in advance since 2024"),
+        `${warned} ${L("de", "of")} ${bt.floods.length}`,
+        leads.length ? L(`de ${Math.min(...leads)} a ${Math.max(...leads)} dias antes`, `${Math.min(...leads)} to ${Math.max(...leads)} days ahead`) : "",
+      ) +
+      fact(L("Último alerta antecipado", "Latest early warning"), lastAlert ? dmy(lastAlert) : "—", L(`o alerta vale para os ${R.target.within_days} dias seguintes`, `a warning covers the next ${R.target.within_days} days`)) +
+      fact(
+        L("Alarmes falsos no teste", "False alarms in the test"),
+        L(`${bt.contingency.false_alarms} dias`, `${bt.contingency.false_alarms} days`),
+        L(`em ${bt.false_alarm_runs.length} ocasiões, de fev/2024 a out/2026`, `on ${bt.false_alarm_runs.length} occasions, Feb 2024 to Oct 2026`),
+      )
+    }</dl>`;
+}
+
+// ---- gráfico do alerta antecipado, com zoom -------------------------------
+// Janela visível [i0, i1] em índices de backtest.days. Os botões de período, os atalhos das cheias
+// e a faixa de navegação embaixo (arrastar a janela ou as bordas) mudam a janela; só o gráfico de cima é redesenhado.
+
+const ov = { i0: null, i1: null, nav: null };
+const OV_MIN = 14;
+const OV_RANGES = [
+  [30, "1M", "1M"],
+  [91, "3M", "3M"],
+  [182, "6M", "6M"],
+  [365, "1A", "1Y"],
+  [0, "Tudo", "All"],
+];
+const monthYear = (iso) =>
+  new Intl.DateTimeFormat(L("pt-BR", "en-US"), { month: "long", year: "numeric", timeZone: "UTC" }).format(new Date(iso + "T00:00:00Z"));
+
+// Cheias próximas (como as duas de maio de 2024) viram um atalho só.
+function floodGroups() {
+  const { floods } = B.outlook.backtest;
+  const groups = [];
+  for (const f of floods) {
+    const g = groups.at(-1);
+    if (g && Date.parse(f.first_day) - Date.parse(g.last_day) <= 20 * 864e5) g.last_day = f.last_day;
+    else groups.push({ first_day: f.first_day, last_day: f.last_day, first_alert: f.first_alert });
+  }
+  return groups;
+}
+
+function setOvRange(i0, i1) {
+  const n = B.outlook.backtest.days.length;
+  i0 = Math.round(i0);
+  i1 = Math.round(i1);
+  if (i1 - i0 < OV_MIN) {
+    const c = (i0 + i1) / 2;
+    i0 = Math.round(c - OV_MIN / 2);
+    i1 = i0 + OV_MIN;
+  }
+  if (i0 < 0) [i0, i1] = [0, i1 - i0];
+  if (i1 > n - 1) [i0, i1] = [Math.max(0, i0 - (i1 - (n - 1))), n - 1];
+  ov.i0 = i0;
+  ov.i1 = i1;
+  drawOutlookMain();
+  updateOvNav();
+  syncOvControls();
+}
+
+function syncOvControls() {
+  const n = B.outlook.backtest.days.length;
+  const span = ov.i1 - ov.i0;
+  document.querySelectorAll("#ov-range button").forEach((b) => {
+    const d = +b.dataset.days;
+    const on = d === 0 ? ov.i0 === 0 && ov.i1 === n - 1 : ov.i1 === n - 1 && span === Math.min(d, n - 1);
+    b.setAttribute("aria-checked", String(on));
+  });
+  document.querySelectorAll("#ov-jump [data-g]").forEach((b) => b.setAttribute("aria-pressed", String(+b.dataset.i0 === ov.i0 && +b.dataset.i1 === ov.i1)));
+}
+
 function renderOutlookChart() {
+  const data = B.outlook.backtest.days;
+  const n = data.length;
+  const idx = new Map(data.map((d, i) => [d.day, i]));
+  if (ov.i0 == null) {
+    ov.i1 = n - 1;
+    ov.i0 = Math.max(0, n - 1 - 182);
+  }
+
+  $("#ov-range").innerHTML = OV_RANGES.map(
+    ([d, pt, en]) => `<button type="button" role="radio" data-days="${d}" aria-checked="false">${L(pt, en)}</button>`,
+  ).join("");
+  $("#ov-range")
+    .querySelectorAll("button")
+    .forEach((b) =>
+      b.addEventListener("click", () => {
+        const d = +b.dataset.days;
+        setOvRange(d === 0 ? 0 : n - 1 - d, n - 1);
+      }),
+    );
+
+  $("#ov-jump").innerHTML =
+    `<span>${L("Ir para:", "Jump to:")}</span>` +
+    floodGroups()
+      .map((g) => {
+        const a = Math.max(0, (idx.get(g.first_alert ?? g.first_day) ?? 0) - 14);
+        const b = Math.min(n - 1, (idx.get(g.last_day) ?? n - 1) + 10);
+        return `<button type="button" class="jump-btn" data-g data-i0="${a}" data-i1="${b}" aria-pressed="false">${L("Cheia de", "Flood of")} ${monthYear(g.first_day)}</button>`;
+      })
+      .join("");
+  $("#ov-jump")
+    .querySelectorAll("[data-g]")
+    .forEach((b) => b.addEventListener("click", () => setOvRange(+b.dataset.i0, +b.dataset.i1)));
+
+  buildOvNav();
+  drawOutlookMain();
+  updateOvNav();
+  syncOvControls();
+
+  const R = B.outlook.rule;
+  $("#outlook-legend").innerHTML =
+    `<span class="key" style="color:var(--text-2)"><span class="swatch-line"></span>${L("Chuva prevista (5 dias)", "Forecast rain (5 days)")}</span>` +
+    `<span class="key"><span class="dot-key" style="background:var(--serious)"></span>${L("Dia de alerta antecipado", "Early-warning day")} (≥ ${R.threshold_mm} mm)</span>` +
+    `<span class="key" style="color:var(--observed)"><span class="swatch-line"></span><span style="color:var(--text-2)">${L("Vazão do rio", "River flow")}</span></span>` +
+    `<span class="key"><span class="swatch-flood"></span>${L("Cheia", "Flood")}</span>`;
+}
+
+function drawOutlookMain() {
   const O = B.outlook;
   const data = O.backtest.days;
   const R = O.rule;
+  const { i0, i1 } = ov;
+  const span = i1 - i0;
   const box = $("#outlook-chart");
   const W = Math.max(320, box.clientWidth);
-  const hA = W < 560 ? 130 : 160;
-  const hB = W < 560 ? 110 : 130;
-  const m = { l: 52, r: 18, t: 22, b: 24, gap: 30 };
+  const small = W < 560;
+  const hA = small ? 120 : 150;
+  const hB = small ? 100 : 120;
+  const m = { l: 46, r: 12, t: 22, b: 24, gap: 30 };
   const H = m.t + hA + m.gap + hB + m.b;
-  const n = data.length;
-  const x = (i) => m.l + (i / (n - 1)) * (W - m.l - m.r);
-  const rmax = niceMax(Math.max(R.threshold_mm * 1.3, ...data.map((d) => d.rain ?? 0)));
-  const qmax = niceMax(Math.max(R.target.threshold_m3s * 1.2, ...data.map((d) => d.q ?? 0)));
+  const pw = W - m.l - m.r;
+  const x = (i) => m.l + ((i - i0) / span) * pw;
+  const vis = data.slice(i0, i1 + 1);
+  const rmax = niceMax(Math.max(R.threshold_mm * 1.3, ...vis.map((d) => d.rain ?? 0)));
+  const qmax = niceMax(Math.max(R.target.threshold_m3s * 1.2, ...vis.map((d) => d.q ?? 0)));
   const yA0 = m.t + hA;
   const yA = (v) => yA0 - (v / rmax) * hA;
   const yB0 = m.t + hA + m.gap + hB;
   const yB = (v) => yB0 - (v / qmax) * hB;
   const svg = el("svg", { viewBox: `0 0 ${W} ${H}`, width: W, height: H });
+  const clip = el("clipPath", { id: "ov-clip" }, el("defs", {}, svg));
+  el("rect", { x: m.l, y: 0, width: pw, height: H }, clip);
 
-  // cheias (vazão ≥ limiar): faixa nos dois painéis
+  // cheias: faixa nos dois painéis
   const idx = new Map(data.map((d, i) => [d.day, i]));
+  const plot = el("g", { "clip-path": "url(#ov-clip)" });
   for (const f of O.backtest.floods) {
     const a = idx.get(f.first_day), b = idx.get(f.last_day);
-    if (a == null || b == null) continue;
-    el("rect", { x: x(a), y: m.t, width: Math.max(3, x(b) - x(a)), height: yB0 - m.t, fill: "var(--critical)", "fill-opacity": 0.14 }, svg);
+    if (a == null || b == null || b < i0 || a > i1) continue;
+    el("rect", { x: x(a - 0.5), y: m.t, width: Math.max(3, x(b + 0.5) - x(a - 0.5)), height: yB0 - m.t, fill: "var(--critical)", "fill-opacity": 0.14 }, plot);
   }
 
   // eixos e grades
   el("text", { x: m.l, y: 12, class: "tick-label", fill: "var(--text-2)" }, svg).textContent =
-    L(`Chuva prevista para os ${R.window_days} dias seguintes (mm, média dos modelos)`, `Rain forecast for the next ${R.window_days} days (mm, model average)`);
+    L(`Chuva prevista para os ${R.window_days} dias seguintes (mm)`, `Rain forecast for the next ${R.window_days} days (mm)`);
   for (const v of [0, rmax / 2, rmax]) {
     el("line", { x1: m.l, x2: W - m.r, y1: yA(v), y2: yA(v), class: v === 0 ? "baseline" : "gridline" }, svg);
     el("text", { x: m.l - 6, y: yA(v) + 4, "text-anchor": "end", class: "tick-label" }, svg).textContent = nf0.format(v);
   }
-  el("text", { x: m.l, y: yA0 + m.gap - 8, class: "tick-label", fill: "var(--text-2)" }, svg).textContent = L("Vazão do Guaíba (GloFAS, m³/s)", "Guaíba river flow (GloFAS, m³/s)");
+  el("text", { x: m.l, y: yA0 + m.gap - 8, class: "tick-label", fill: "var(--text-2)" }, svg).textContent = L("Vazão do Guaíba (m³/s)", "Guaíba river flow (m³/s)");
   for (const v of [0, qmax / 2, qmax]) {
     el("line", { x1: m.l, x2: W - m.r, y1: yB(v), y2: yB(v), class: v === 0 ? "baseline" : "gridline" }, svg);
     el("text", { x: m.l - 6, y: yB(v) + 4, "text-anchor": "end", class: "tick-label" }, svg).textContent = nf0.format(v);
   }
-  const step = W < 560 ? 6 : 3;
-  data.forEach((d, i) => {
-    if (d.day.slice(8) === "01" && (+d.day.slice(5, 7) - 1) % step === 0)
-      el("text", { x: x(i), y: H - 6, "text-anchor": "middle", class: "tick-label" }, svg).textContent = monthLabel(d.day);
-  });
+  svg.appendChild(plot);
+
+  // rótulos de data conforme o zoom: semanas, meses ou trimestres
+  const perLabel = span / (small ? 4 : 8);
+  const tick =
+    perLabel <= (small ? 12 : 9)
+      ? (d) => ["01", "08", "15", "22"].includes(d.day.slice(8)) && dm(d.day)
+      : (d) => {
+          if (d.day.slice(8) !== "01") return false;
+          const every = perLabel <= 35 ? 1 : perLabel <= 70 ? 2 : perLabel <= 100 ? 3 : 6;
+          return (+d.day.slice(5, 7) - 1) % every === 0 && monthLabel(d.day);
+        };
+  for (let i = i0; i <= i1; i++) {
+    const t = tick(data[i]);
+    if (t) el("text", { x: x(i), y: H - 6, "text-anchor": "middle", class: "tick-label" }, svg).textContent = t;
+  }
 
   // limiares
   el("line", { x1: m.l, x2: W - m.r, y1: yA(R.threshold_mm), y2: yA(R.threshold_mm), stroke: "var(--serious)", "stroke-width": 1, "stroke-dasharray": "2 3" }, svg);
-  el("text", { x: m.l + 6, y: yA(R.threshold_mm) - 5, class: "tick-label" }, svg).textContent = `${L("regra", "rule")} · ${R.threshold_mm} mm`;
+  el("text", { x: m.l + 6, y: yA(R.threshold_mm) - 5, class: "tick-label" }, svg).textContent = `${L("alerta", "warning")} · ${R.threshold_mm} mm`;
   el("line", { x1: m.l, x2: W - m.r, y1: yB(R.target.threshold_m3s), y2: yB(R.target.threshold_m3s), stroke: "var(--critical)", "stroke-width": 1, "stroke-dasharray": "2 3" }, svg);
   el("text", { x: W - m.r, y: yB(R.target.threshold_m3s) - 5, "text-anchor": "end", class: "tick-label" }, svg).textContent =
-    `${L("limiar", "threshold")} · ${nf0.format(R.target.threshold_m3s)} m³/s`;
+    `${L("cheia", "flood")} · ${nf0.format(R.target.threshold_m3s)} m³/s`;
 
-  // séries (quebram onde falta dado)
-  const line = (key, y, color) => {
+  // séries (quebram onde falta dado); um dia de folga em cada ponta para a linha chegar à borda
+  const lo = Math.max(0, i0 - 1), hi = Math.min(data.length - 1, i1 + 1);
+  const line = (key, y, color, width) => {
     let seg = [];
     const flush = () => {
-      if (seg.length > 1) el("polyline", { points: seg.join(" "), fill: "none", stroke: color, "stroke-width": 1.5, "stroke-linejoin": "round" }, svg);
+      if (seg.length > 1) el("polyline", { points: seg.join(" "), fill: "none", stroke: color, "stroke-width": width, "stroke-linejoin": "round" }, plot);
       seg = [];
     };
-    data.forEach((d, i) => (d[key] == null ? flush() : seg.push(`${x(i)},${y(d[key])}`)));
+    for (let i = lo; i <= hi; i++) data[i][key] == null ? flush() : seg.push(`${x(i)},${y(data[i][key])}`);
     flush();
   };
-  line("rain", yA, "var(--text-2)");
-  line("q", yB, "var(--observed)");
-  data.forEach((d, i) => {
-    if (d.alert) el("circle", { cx: x(i), cy: yA(d.rain), r: 4, fill: "var(--serious)", stroke: "var(--surface)", "stroke-width": 1.5 }, svg);
-  });
+  line("rain", yA, "var(--text-2)", span > 400 ? 1.2 : 1.6);
+  line("q", yB, "var(--observed)", span > 400 ? 1.4 : 2);
+  const r = span > 400 ? 3 : span > 120 ? 4 : 5;
+  for (let i = i0; i <= i1; i++)
+    if (data[i].alert) el("circle", { cx: x(i), cy: yA(data[i].rain), r, fill: "var(--serious)", stroke: "var(--surface)", "stroke-width": 1.5 }, plot);
 
   // interação
   const hover = el("g", { "pointer-events": "none" }, svg);
-  const overlay = el("rect", { x: m.l, y: m.t, width: W - m.l - m.r, height: yB0 - m.t, fill: "transparent" }, svg);
+  const overlay = el("rect", { x: m.l, y: m.t, width: pw, height: yB0 - m.t, fill: "transparent" }, svg);
   overlay.addEventListener("pointermove", (ev) => {
-    const r = svg.getBoundingClientRect();
-    const px = ((ev.clientX - r.left) / r.width) * W;
-    const i = Math.max(0, Math.min(n - 1, Math.round(((px - m.l) / (W - m.l - m.r)) * (n - 1))));
+    const rc = svg.getBoundingClientRect();
+    const px = ((ev.clientX - rc.left) / rc.width) * W;
+    const i = Math.max(i0, Math.min(i1, i0 + Math.round(((px - m.l) / pw) * span)));
     const d = data[i];
     hover.replaceChildren();
     el("line", { x1: x(i), x2: x(i), y1: m.t, y2: yB0, stroke: "var(--axis)", "stroke-width": 1 }, hover);
@@ -1055,7 +1239,7 @@ function renderOutlookChart() {
       `<div class="t-title">${L("Fim de", "End of")} ${dmy(d.day)}</div>` +
         row(`${L("Chuva prevista", "Forecast rain")} ${dm(addDays(d.day, 1))}–${dm(addDays(d.day, R.window_days))}`, d.rain == null ? L("sem dados", "no data") : `${nf1.format(d.rain)} mm`) +
         Object.entries(d.models).map(([k, v]) => row(`&nbsp;&nbsp;${k}`, `${nf1.format(v)} mm`)).join("") +
-        row(L("Regra", "Rule"), d.alert ? L("▲ alerta antecipado", "▲ early warning") : L("sem alerta", "no alert")) +
+        row(L("Alerta antecipado", "Early warning"), d.alert ? L("▲ sim", "▲ yes") : L("não", "no")) +
         row(L("Vazão no dia", "Flow that day"), d.q == null ? "—" : `${nf0.format(d.q)} m³/s`) +
         row(L(`Cheia em até ${R.target.within_days} dias`, `Flood within ${R.target.within_days} days`), d.flood ? L("sim", "yes") : L("não", "no")),
       ev.clientX,
@@ -1067,12 +1251,98 @@ function renderOutlookChart() {
     hideTip();
   });
   box.replaceChildren(svg);
+}
 
-  $("#outlook-legend").innerHTML =
-    `<span class="key" style="color:var(--text-2)"><span class="swatch-line"></span>${L("Chuva prevista (5 d)", "Forecast rain (5 d)")}</span>` +
-    `<span class="key"><span class="dot-key" style="background:var(--serious)"></span>${L("Alerta antecipado", "Early warning")} (≥ ${R.threshold_mm} mm)</span>` +
-    `<span class="key" style="color:var(--observed)"><span class="swatch-line"></span><span style="color:var(--text-2)">${L("Vazão GloFAS", "GloFAS flow")}</span></span>` +
-    `<span class="key"><span class="swatch-flood"></span>${L("Cheia (vazão ≥ limiar)", "Flood (flow ≥ threshold)")}</span>`;
+// Faixa de navegação: a vazão do período inteiro, com a janela visível por cima.
+function buildOvNav() {
+  const data = B.outlook.backtest.days;
+  const n = data.length;
+  const box = $("#outlook-nav");
+  const W = Math.max(320, box.clientWidth || $("#outlook-chart").clientWidth);
+  const m = { l: 46, r: 12 };
+  const H = 52;
+  const pw = W - m.l - m.r;
+  const x = (i) => m.l + (i / (n - 1)) * pw;
+  const qmax = Math.max(...data.map((d) => d.q ?? 0));
+  const y = (v) => H - 14 - (v / qmax) * (H - 20);
+  const svg = el("svg", { viewBox: `0 0 ${W} ${H}`, width: W, height: H, tabindex: 0, role: "slider" });
+  svg.setAttribute("aria-label", L("Período visível do gráfico (setas para mover)", "Visible chart period (arrow keys to move)"));
+  el("rect", { x: m.l, y: 4, width: pw, height: H - 18, rx: 6, fill: "var(--surface-2)" }, svg);
+  const idx = new Map(data.map((d, i) => [d.day, i]));
+  for (const f of B.outlook.backtest.floods) {
+    const a = idx.get(f.first_day), b = idx.get(f.last_day);
+    if (a != null && b != null) el("rect", { x: x(a), y: 4, width: Math.max(2, x(b) - x(a)), height: H - 18, fill: "var(--critical)", "fill-opacity": 0.25 }, svg);
+  }
+  const pts = data.map((d, i) => (d.q == null ? null : `${x(i)},${y(d.q)}`)).filter(Boolean);
+  el("polyline", { points: pts.join(" "), fill: "none", stroke: "var(--observed)", "stroke-width": 1, opacity: 0.8 }, svg);
+  data.forEach((d, i) => {
+    if (d.day.slice(5) === "01-01" || i === 0)
+      el("text", { x: x(i) + (i === 0 ? 0 : 0), y: H - 2, class: "tick-label", "text-anchor": i === 0 ? "start" : "middle" }, svg).textContent = d.day.slice(0, 4);
+  });
+  const shadeL = el("rect", { class: "nav-shade", y: 4, height: H - 18 }, svg);
+  const shadeR = el("rect", { class: "nav-shade", y: 4, height: H - 18 }, svg);
+  const win = el("rect", { class: "nav-window", y: 4, height: H - 18, rx: 4, "data-role": "win" }, svg);
+  const hl = el("rect", { class: "nav-handle", y: 12, width: 8, height: H - 34, rx: 3, "data-role": "l" }, svg);
+  const hr = el("rect", { class: "nav-handle", y: 12, width: 8, height: H - 34, rx: 3, "data-role": "r" }, svg);
+  ov.nav = { svg, W, m, pw, x, shadeL, shadeR, win, hl, hr };
+
+  const toI = (ev) => {
+    const rc = svg.getBoundingClientRect();
+    const px = ((ev.clientX - rc.left) / rc.width) * W;
+    return Math.max(0, Math.min(n - 1, Math.round(((px - m.l) / pw) * (n - 1))));
+  };
+  let drag = null;
+  svg.addEventListener("pointerdown", (ev) => {
+    drag = { role: ev.target.dataset?.role ?? "new", i: toI(ev), i0: ov.i0, i1: ov.i1, moved: false };
+    svg.setPointerCapture(ev.pointerId);
+    ev.preventDefault();
+  });
+  svg.addEventListener("pointermove", (ev) => {
+    if (!drag) return;
+    const i = toI(ev);
+    const d = i - drag.i;
+    if (Math.abs(d) > 1) drag.moved = true;
+    if (drag.role === "win") {
+      const s = Math.max(-drag.i0, Math.min(n - 1 - drag.i1, d));
+      setOvRange(drag.i0 + s, drag.i1 + s);
+    } else if (drag.role === "l") setOvRange(Math.min(i, ov.i1 - OV_MIN), ov.i1);
+    else if (drag.role === "r") setOvRange(ov.i0, Math.max(i, ov.i0 + OV_MIN));
+    else if (drag.moved) setOvRange(Math.min(drag.i, i), Math.max(drag.i, i));
+  });
+  const end = () => {
+    // Um clique fora da janela centraliza a janela ali, sem mudar o tamanho.
+    if (drag?.role === "new" && !drag.moved) {
+      const half = (ov.i1 - ov.i0) / 2;
+      setOvRange(drag.i - half, drag.i + half);
+    }
+    drag = null;
+  };
+  svg.addEventListener("pointerup", end);
+  svg.addEventListener("pointercancel", () => (drag = null));
+  svg.addEventListener("keydown", (ev) => {
+    const step = Math.max(1, Math.round((ov.i1 - ov.i0) / 5));
+    if (ev.key === "ArrowLeft") setOvRange(ov.i0 - step, ov.i1 - step);
+    else if (ev.key === "ArrowRight") setOvRange(ov.i0 + step, ov.i1 + step);
+    else return;
+    ev.preventDefault();
+  });
+  box.replaceChildren(svg);
+}
+
+function updateOvNav() {
+  const N = ov.nav;
+  if (!N) return;
+  const a = N.x(ov.i0), b = N.x(ov.i1);
+  N.shadeL.setAttribute("x", N.m.l);
+  N.shadeL.setAttribute("width", Math.max(0, a - N.m.l));
+  N.shadeR.setAttribute("x", b);
+  N.shadeR.setAttribute("width", Math.max(0, N.m.l + N.pw - b));
+  N.win.setAttribute("x", a);
+  N.win.setAttribute("width", Math.max(2, b - a));
+  N.hl.setAttribute("x", a - 4);
+  N.hr.setAttribute("x", b - 4);
+  const data = B.outlook.backtest.days;
+  N.svg.setAttribute("aria-valuetext", `${dmy(data[ov.i0].day)} – ${dmy(data[ov.i1].day)}`);
 }
 
 async function verifyOutlook(o) {
@@ -1148,6 +1418,7 @@ async function verifyOutlook(o) {
 const sol = (lamports) => `${nf3.format(lamports / 1e9)} SOL`;
 const TRIGGERS = { 0: ["alerta antecipado (chuva prevista)", "early warning (forecast rain)"], 1: ["alerta do modelo de vazão", "flow-model alert"] };
 const trigger = (k) => L(...TRIGGERS[k]);
+const VAULT_TITLES = { "ao-vivo": ["Cofre do Guaíba", "Guaíba vault"], "replay-2024": ["Cofre da cheia de 2024", "2024 flood vault"] };
 const endOf = (ts) => dmy(new Date((ts - 1) * 1000).toISOString().slice(0, 10));
 
 function renderVaults() {
@@ -1156,6 +1427,13 @@ function renderVaults() {
     list.innerHTML = `<div class="empty-note">${L("Nenhum cofre criado.", "No vault created.")}</div>`;
     return;
   }
+  const sum = (f) => B.vaults.reduce((a, v) => a + f(v), 0);
+  const stat = (value, label) => `<div><div class="value">${value}</div><div class="label">${label}</div></div>`;
+  $("#vault-stats").innerHTML =
+    stat(sum((v) => v.payouts.length), L("pagamentos automáticos feitos", "automatic payouts made")) +
+    stat(sol(sum((v) => v.state.total_paid)), L("pagos aos beneficiários", "paid to beneficiaries")) +
+    stat(sol(sum((v) => v.state.balance)), L("travados à espera do próximo alerta", "locked, waiting for the next warning")) +
+    stat("0", L("aprovações humanas necessárias", "human approvals needed"));
   list.innerHTML = B.vaults
     .map((v, vi) => {
       const st = v.state;
@@ -1165,8 +1443,8 @@ function renderVaults() {
         [L("Pagamentos", "Payouts"), `${st.payouts}`, `${sol(st.total_paid)} ${L("ao beneficiário", "to the beneficiary")}`],
         [
           L("Gatilho", "Trigger"),
-          st.subject,
-          `${trigger(st.kind)}${st.accept_from > 0 ? L(` · só gravados desde ${br(st.accept_from)}`, ` · only recorded since ${br(st.accept_from)}`) : L(" · aceita os já registrados", " · accepts past records")}`,
+          st.kind === 0 ? L("Alerta antecipado", "Early warning") : L("Alerta de vazão", "Flow alert"),
+          `${L("local", "location")}: ${st.subject}${st.accept_from > 0 ? L(` · só gravados desde ${br(st.accept_from)}`, ` · only recorded since ${br(st.accept_from)}`) : L(" · aceita os já registrados", " · accepts past records")}`,
         ],
       ];
       const rows = v.payouts
@@ -1179,7 +1457,9 @@ function renderVaults() {
         )
         .join("");
       return `<div class="vault">
-        <div class="readings-head"><h3>${esc(v.name)}</h3></div>
+        <div class="vault-head"><h3>${esc(VAULT_TITLES[v.name] ? L(...VAULT_TITLES[v.name]) : v.name)}</h3>${
+          st.accept_from > 0 ? `<span class="vault-tag live">${L("ao vivo", "live")}</span>` : `<span class="vault-tag">${L("demonstração com o teste de 2024", "demo with the 2024 test run")}</span>`
+        }</div>
         <p class="sub">${esc(L(v.description, v.description_en || v.description).replace(/\.?$/, "."))} ${L("Cofre", "Vault")} <a href="${explorerAddr(v.vault)}" target="_blank" rel="noopener">${short(v.vault)}</a> ·
           ${L("beneficiário", "beneficiary")} <a href="${explorerAddr(st.beneficiary)}" target="_blank" rel="noopener">${short(st.beneficiary)}</a> ·
           <a href="${v.created_explorer}" target="_blank" rel="noopener">${L("criação", "creation")}</a></p>
@@ -1301,8 +1581,8 @@ function applyLang(next) {
     .setAttribute(
       "content",
       L(
-        "Replay verificável da cheia do Guaíba (abr–mai/2024): leituras, previsões e alertas ancorados na Solana devnet.",
-        "Verifiable replay of the Guaíba flood (Apr–May 2024): readings, forecasts and alerts anchored on Solana devnet.",
+        "O diário do rio que ninguém consegue apagar: dados, previsões e alertas de cheia gravados na Solana para qualquer pessoa conferir.",
+        "A river diary nobody can erase: flood data, forecasts and warnings recorded on Solana for anyone to check.",
       ),
     );
   document.querySelectorAll("[data-label-en]").forEach((n) => {
@@ -1313,7 +1593,10 @@ function applyLang(next) {
 }
 
 function renderAll() {
+  renderPicker();
   $("#generated").textContent = L("Dados gerados em", "Data generated at") + ` ${utc(Date.parse(B.meta.generated_at) / 1000)}.`;
+  // Sem local escolhido as seções estão escondidas e os gráficos sairiam sem largura: espera a escolha.
+  if (!state.place) return;
   // Os painéis de verificação abertos ficaram na outra língua: fecha.
   document.querySelectorAll(".verify").forEach((p) => (p.hidden = true));
   renderLive();
@@ -1324,6 +1607,55 @@ function renderAll() {
   renderQuality();
   renderMetrics();
   selectDay(state.sel);
+}
+
+// ---- local ----------------------------------------------------------------
+// Por enquanto só o Guaíba é monitorado; a escolha vem antes dos dados porque cada local tem os seus.
+
+const PLACES = [
+  { id: "guaiba", short: "Guaíba", name: ["Rio Guaíba", "Guaíba river"], where: ["Porto Alegre, Rio Grande do Sul, Brasil", "Porto Alegre, Rio Grande do Sul, Brazil"] },
+];
+
+function renderPicker() {
+  const since = B?.live.days[0]?.day;
+  $("#place-list").innerHTML = PLACES.map(
+    (p) => `<button type="button" class="place-card" data-place="${p.id}" aria-pressed="${p.id === state.place}">
+      <span class="place-pin" aria-hidden="true"><svg viewBox="0 0 16 16" width="20" height="20"><path d="M8 15s5-4.6 5-8.5A5 5 0 0 0 3 6.5C3 10.4 8 15 8 15Z" fill="none" stroke="currentColor" stroke-width="1.4"/><circle cx="8" cy="6.5" r="1.8" fill="currentColor"/></svg></span>
+      <span><strong>${L(...p.name)}</strong><small>${L(...p.where)}${since ? L(` · ao vivo desde ${dmy(since)}`, ` · live since ${dmy(since)}`) : ""}</small></span>
+      <span class="place-go">${p.id === state.place ? L("Selecionado", "Selected") : L("Ver dados →", "See data →")}</span>
+    </button>`,
+  ).join("");
+  $("#place-list")
+    .querySelectorAll("[data-place]")
+    .forEach((b) => b.addEventListener("click", () => choosePlace(b.dataset.place, true)));
+}
+
+function choosePlace(id, scroll) {
+  const p = PLACES.find((x) => x.id === id);
+  if (!p) return;
+  const first = !state.place;
+  state.place = id;
+  document.body.dataset.place = id;
+  $("#place-name").textContent = p.short;
+  try {
+    localStorage.setItem("cota-place", id);
+  } catch {}
+  if (B && (first || scroll)) renderAll();
+  if (scroll) $("#how").scrollIntoView();
+}
+
+function initPlace() {
+  let id = new URLSearchParams(location.search).get("local");
+  if (!id) {
+    try {
+      id = localStorage.getItem("cota-place");
+    } catch {}
+  }
+  if (PLACES.some((p) => p.id === id)) choosePlace(id, false);
+  $("#place-chip").addEventListener("click", () => {
+    scrollTo({ top: 0 });
+    $("#place-list .place-card")?.focus();
+  });
 }
 
 function initLang() {
@@ -1345,17 +1677,27 @@ function initLang() {
   );
 }
 
-// O guia fica recolhido; o link "Como ler" do topo (ou #guide na URL) abre.
-function initGuide() {
-  const g = $("#guide");
-  document.querySelectorAll('a[href="#guide"]').forEach((a) => a.addEventListener("click", () => (g.open = true)));
-  if (location.hash === "#guide") g.open = true;
+// Blocos recolhidos (guia, teste de 2024): um link para eles, ou o #id na URL, abre.
+function initFolds() {
+  for (const id of ["guide", "replay"]) {
+    const d = $(`#${id}`);
+    document.querySelectorAll(`a[href="#${id}"]`).forEach((a) => a.addEventListener("click", () => (d.open = true)));
+    if (location.hash === `#${id}`) d.open = true;
+  }
+  // Os gráficos do teste foram desenhados com o bloco fechado, sem largura: redesenha ao abrir.
+  $("#replay").addEventListener("toggle", (e) => {
+    if (e.target.open && B && state.place) {
+      renderFlow();
+      renderRain();
+    }
+  });
 }
 
 async function main() {
   initTheme();
   initLang();
-  initGuide();
+  initFolds();
+  initPlace();
   B = await (await fetch("data/bundle.json")).json();
   derive();
   const prog = $("#program-link");
@@ -1389,6 +1731,7 @@ async function main() {
   addEventListener("resize", () => {
     clearTimeout(t);
     t = setTimeout(() => {
+      if (!state.place) return;
       renderFlow();
       renderRain();
       renderLiveChart();
@@ -1400,5 +1743,5 @@ async function main() {
 main().catch((e) => {
   document
     .querySelector("main")
-    .insertAdjacentHTML("afterbegin", `<p class="crit-text">${L("Erro ao carregar os dados", "Failed to load the data")}: ${esc(e.message)}</p>`);
+    .insertAdjacentHTML("afterbegin", `<p class="crit-text wrap">${L("Erro ao carregar os dados", "Failed to load the data")}: ${esc(e.message)}</p>`);
 });

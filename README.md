@@ -1,10 +1,10 @@
 <p align="center"><img src="docs/logo-banner.png" alt="Cota" width="640"></p>
 
 <p align="center"><strong>Tamper-proof, publicly verifiable flood data, forecasts and warnings on Solana.</strong><br>
-<a href="https://cota-eight.vercel.app">cota-eight.vercel.app</a> · <a href="https://cota-eight.vercel.app/?lang=en">English</a> · <a href="https://cota-eight.vercel.app/?lang=pt">Português</a></p>
+<a href="https://cota-eight.vercel.app/?lang=en">cota-eight.vercel.app</a></p>
 
 > Historical replay / research prototype. Cota does **not** issue official warnings.
-> Official alerts in Brazil: **SMS 40199**, Defesa Civil.
+> Official alerts in Brazil: **SMS 40199**, Defesa Civil (civil defense).
 
 ## About
 
@@ -36,81 +36,79 @@ when the data existed.
 
 ---
 
-## Em português
+## What gets recorded
 
-O Cota é um diário do rio que ninguém consegue apagar: registra na Solana o que se sabia sobre o Guaíba a cada dia, para que
-depois de uma enchente dê para provar quem avisou o quê, e quando. O painel tem as duas línguas e um guia "Como ler".
-O Cota **não** emite alertas oficiais: para isso, **SMS 40199** e Defesa Civil.
-O resto deste README é a documentação técnica.
+Cota records on Solana (devnet), so that anyone can check it, **who knew what, and when**:
 
-O Cota registra na Solana (devnet), de forma que qualquer pessoa possa conferir, **quem sabia o quê, e quando**:
+- rain readings (INMET) and river discharge (GloFAS via Open-Meteo), signed by a committee of 3 oracles with a 2-of-3 threshold and
+  anchored as Merkle roots (RFC 9162), one batch per day;
+- P10/P50/P90 forecasts of the Guaíba's discharge (quantile LightGBM, fixed `model_sha256`), which the program only accepts **before**
+  the observation is anchored;
+- alerts (`AlertReceipt`) when P90 crosses a threshold fixed in advance;
+- official INMET warnings for Rio Grande do Sul, attested by the committee with the SHA-256 of their content (INMET's API only shows
+  warnings currently in force);
+- **early warning**: the rain forecast for the next 5 days (ECMWF, GFS, ICON; the day's 00Z run) at 6 points in the basin, attested
+  by the committee right after each batch; the program applies an immutable rule (≥ 90 mm, calibrated on 2015–2023 only) and issues
+  an `EarlyWarning`;
+- source degradation (`SourceDegraded`): station without data, stuck sensor, nodes that disagree;
+- **parametric trigger**: vaults (`create_vault`) where any wallet locks SOL under fixed terms; when Cota records a trigger
+  (`EarlyWarning` or `AlertReceipt`), any account can call `trigger_payout` and the program pays the beneficiary, once per trigger
+  and respecting the cooldown. The creator only gets the balance back after expiry (`close_vault`).
 
-- leituras de chuva (INMET) e vazão (GloFAS/Open-Meteo), assinadas por um comitê de 3 oráculos com limiar 2-de-3 e ancoradas como raízes Merkle (RFC 9162), um lote por dia;
-- previsões P10/P50/P90 da vazão do Guaíba (LightGBM quantílico, `model_sha256` fixo), que o programa só aceita **antes** de a observação ser ancorada;
-- alertas (`AlertReceipt`) quando a P90 cruza um limiar fixado antes;
-- avisos oficiais do INMET para o RS, atestados pelo comitê com o SHA-256 do conteúdo (a API do INMET só mostra avisos vigentes);
-- **alerta antecipado**: a chuva prevista para os 5 dias seguintes (ECMWF, GFS, ICON; rodada 00Z do dia) nos 6 pontos da bacia,
-  atestada pelo comitê logo depois de cada lote; o programa aplica uma regra imutável (≥ 90 mm, calibrada só com 2015–2023) e emite
-  `EarlyWarning`.
-- degradação de fontes (`SourceDegraded`): estação sem dados, sensor travado, nós discordantes;
-- **gatilho paramétrico**: cofres (`create_vault`) em que qualquer carteira trava SOL com condições fixas; diante de um gatilho do
-  Cota (`EarlyWarning` ou `AlertReceipt`), qualquer conta aciona `trigger_payout` e o programa paga o beneficiário, uma vez por
-  gatilho e respeitando a carência. O criador só recupera o saldo depois do vencimento (`close_vault`).
+Dashboard: **https://cota-eight.vercel.app** (Portuguese and English): live mode, early warning, vaults and the replay of the
+April–May 2024 flood, with Merkle and on-chain account checks done in the browser.
 
-Painel: **https://cota-eight.vercel.app**: replay da cheia de abr–mai/2024 e modo ao vivo, com verificação Merkle e das contas on-chain feita no navegador.
+## Layout
 
-## Estrutura
-
-| Caminho | O quê |
+| Path | What |
 |---|---|
-| `programs/cota` | Programa Anchor: comitê, estações, lotes (Ed25519 via precompile), previsões, alertas, avisos oficiais |
-| `crates/cota-core` | Formatos canônicos (Borsh), Merkle, mensagem assinada |
-| `crates/cota-ingest` | Ingestão INMET (zip anual) e GloFAS (Open-Meteo) |
-| `crates/cota-quality` | Regras de sensor, MAD entre nós, índice de confiança C_s |
-| `crates/cota-oracle` | Nós, agregador, admin, avisos do INMET (`cota-alerts`), chuva prevista (`cota-outlook`), cofres (`cota-vault`), auditoria (`cota-audit`) |
-| `ml/` | Treino, avaliação e previsão (Python/uv); `cota_ml.outlook` calibra a regra de chuva e faz o backtest |
-| `dashboard/` | Painel estático (HTML/JS) |
-| `data/ledger/` | Estado: cada lote, previsão e aviso ancorado, com links do explorer |
+| `programs/cota` | Anchor program: committee, stations, batches (Ed25519 via precompile), forecasts, alerts, official warnings, outlooks, vaults |
+| `crates/cota-core` | Canonical formats (Borsh), Merkle tree, signed message |
+| `crates/cota-ingest` | INMET ingestion (yearly zip) and GloFAS (Open-Meteo) |
+| `crates/cota-quality` | Sensor rules, MAD between nodes, confidence index C_s |
+| `crates/cota-oracle` | Nodes, aggregator, admin, INMET warnings (`cota-alerts`), forecast rain (`cota-outlook`), vaults (`cota-vault`), audit (`cota-audit`) |
+| `ml/` | Training, evaluation and forecasting (Python/uv); `cota_ml.outlook` calibrates the rain rule and runs the backtest |
+| `dashboard/` | Static dashboard (HTML/JS) |
+| `data/ledger/` | State: every anchored batch, forecast and warning, with explorer links |
 | `scripts/` | `replay.sh`, `live.sh`, `export_dashboard.py`, `next_day.py` |
 
-## Rodar
+## Running
 
 ```sh
-cargo test --workspace                     # programa (LiteSVM), oráculos, qualidade
-(cd ml && uv run pytest)                   # formatos e ausência de vazamento do futuro
-scripts/live.sh all                        # avisos + dia(s) pendente(s) + auditoria + dados do painel
-python3 -m http.server -d dashboard 8000   # painel local
+cargo test --workspace                     # program (LiteSVM), oracles, quality
+(cd ml && uv run pytest)                   # formats and no leakage from the future
+scripts/live.sh all                        # warnings + pending day(s) + audit + dashboard data
+python3 -m http.server -d dashboard 8000   # local dashboard
 ```
 
-Replay da cheia: `RPC=… CLUSTER=devnet PAYER=… scripts/replay.sh 2024-04-20 2024-05-25`.
-Modelo: `(cd ml && uv run python -m cota_ml.train)` (exige o histórico de `cota-ingest --lenient`).
-Regra de chuva e backtest: `(cd ml && uv run python -m cota_ml.outlook)` → `ml/models/outlook-rule.json` (o `rule_sha256` é o
-que `cota-admin set-outlook-rule` fixa on-chain) e `ml/reports/outlook-backtest.json`.
-Cofre: `cota-vault --rpc … --payer <carteira> create --name … --id 1 --kind early-warning --subject guaiba --beneficiary <chave>
---payout-sol 0.05 --deposit-sol 0.2`; o workflow roda `cota-vault crank` a cada execução.
+Flood replay: `RPC=… CLUSTER=devnet PAYER=… scripts/replay.sh 2024-04-20 2024-05-25`.
+Model: `(cd ml && uv run python -m cota_ml.train)` (needs the history from `cota-ingest --lenient`).
+Rain rule and backtest: `(cd ml && uv run python -m cota_ml.outlook)` → `ml/models/outlook-rule.json` (its `rule_sha256` is what
+`cota-admin set-outlook-rule` fixes on-chain) and `ml/reports/outlook-backtest.json`.
+Vault: `cota-vault --rpc … --payer <wallet> create --name … --id 1 --kind early-warning --subject guaiba --beneficiary <key>
+--payout-sol 0.05 --deposit-sol 0.2`; the workflow runs `cota-vault crank` on every run.
 
-## Modo ao vivo (GitHub Actions)
+## Live mode (GitHub Actions)
 
-`.github/workflows/live.yml` roda a cada 30 min: três jobs de nó (um secret cada) e um agregador que só
-leva à cadeia o que tem 2 de 3 assinaturas, faz commit de `data/ledger` e `dashboard/data`.
+`.github/workflows/live.yml` runs every 30 minutes: three node jobs (one secret each) and an aggregator that only takes to the
+chain what has 2 of 3 signatures, then commits `data/ledger` and `dashboard/data`.
 
-Secrets do repositório (Settings → Secrets and variables → Actions): `NODE_1_KEY`, `NODE_2_KEY`,
-`NODE_3_KEY` e `OPERATOR_KEY`, com o conteúdo de `keys/node-N.json` e `keys/operator.json`.
-O operador é a autoridade do comitê (`cota-admin set-authority`); a upgrade authority do programa
-não sai da máquina de quem fez o deploy.
+Repository secrets (Settings → Secrets and variables → Actions): `NODE_1_KEY`, `NODE_2_KEY`, `NODE_3_KEY` and `OPERATOR_KEY`, with
+the contents of `keys/node-N.json` and `keys/operator.json`. The operator is the committee authority (`cota-admin set-authority`);
+the program's upgrade authority never leaves the deployer's machine.
 
-## Limites declarados
+## Known limits
 
-- Os três oráculos buscam e assinam os dados de forma independente, mas hoje são operados pela mesma pessoa (jobs separados no
-  GitHub Actions). O próximo passo é entregá-los a instituições diferentes (Defesa Civil, universidades, ONGs).
-- A previsão é da **vazão diária modelada pelo GloFAS**, 1 e 2 dias à frente, não do nível da régua.
-- No replay, as transações são de 2026: a prova é da **ordem** (previsão antes da observação), não do calendário de 2024.
-- A chuva das estações do INMET chega com ~1 mês de atraso; o modo ao vivo usa só a vazão até haver acesso em tempo real.
-- Cofres: na devnet, com SOL de teste. O cofre `replay-2024` aceita os alertas do replay (gravados em 2026 sobre dados de 2024)
-  para demonstrar o mecanismo; o `ao-vivo` só aceita gatilhos gravados depois de criado. O programa é compilado com
-  `opt-level = "z"` para caber na conta já alocada.
-- Alerta antecipado: a regra foi calibrada com chuva **observada** e é aplicada à chuva **prevista** nos pontos das estações. No backtest,
-  a previsão usada é um dia mais velha que a do modo ao vivo (sem olhar o futuro). Três cheias em 2,7 anos é amostra pequena: o CSI
-  de 0,25 tem incerteza grande. As previsões arquivadas são do Open-Meteo, não do serviço oficial de cada modelo.
+- The three oracles fetch and sign data independently, but today they are run by the same person (separate GitHub Actions jobs).
+  The next step is handing them to different institutions (civil defense, universities, NGOs).
+- The forecast is of the **daily discharge modelled by GloFAS**, 1 and 2 days ahead, not of the river gauge level.
+- In the replay, the transactions are from 2026: the proof is of **order** (forecast before observation), not of the 2024 calendar.
+- Rain from INMET stations arrives about a month late; live mode uses only discharge until real-time access is available.
+- Vaults run on devnet with test SOL. The `replay-2024` vault accepts the replay's alerts (recorded in 2026 over 2024 data) to
+  demonstrate the mechanism; `ao-vivo` only accepts triggers recorded after it was created. The program is built with
+  `opt-level = "z"` to fit in the account already allocated.
+- Early warning: the rule was calibrated on **observed** rain and is applied to **forecast** rain at the station points. In the
+  backtest, the forecast used is one day older than live mode's (no peeking at the future). Three floods in 2.7 years is a small
+  sample: the CSI of 0.25 is very uncertain. Archived forecasts come from Open-Meteo, not from each model's official service.
 
-Dados: [Weather data by Open-Meteo.com](https://open-meteo.com/) (CC BY 4.0) · GloFAS / Copernicus EMS · INMET.
+Data: [Weather data by Open-Meteo.com](https://open-meteo.com/) (CC BY 4.0) · GloFAS / Copernicus EMS · INMET.
