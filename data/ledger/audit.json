@@ -2275,10 +2275,26 @@
       "problems": []
     },
     {
+      "record": "AuuzxxVFNJ9BKC38WamSDuschNbmedPGSZ7Lv357hptb",
+      "alert_id": "urn:oid:2.49.0.0.76.0.2026.28595.1",
+      "slot": 517157340,
+      "committed_at": 1793455167,
+      "signers": 7,
+      "problems": []
+    },
+    {
       "record": "5WswMSEWwBy7VDXQxYfhBEKo7UFxvWqYvoKxbWET76AS",
       "alert_id": "urn:oid:2.49.0.0.76.0.2026.28588.1",
       "slot": 516787074,
       "committed_at": 1793366230,
+      "signers": 7,
+      "problems": []
+    },
+    {
+      "record": "Fdxo77MWjyav1wBzEuLuLf2fPUVFWzt4onuY85R2WhUj",
+      "alert_id": "urn:oid:2.49.0.0.76.0.2026.28593.1",
+      "slot": 517157333,
+      "committed_at": 1793455165,
       "signers": 7,
       "problems": []
     },
@@ -2393,7 +2409,7 @@
     "forecasts_with_problems": 0,
     "outlooks": 7,
     "outlooks_with_problems": 0,
-    "public_alerts": 10,
+    "public_alerts": 12,
     "public_alerts_with_problems": 0,
     "vault_payouts": 3,
     "vaults": 2,
