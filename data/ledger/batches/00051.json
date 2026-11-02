@@ -1,0 +1,185 @@
+{
+  "batch_id": 51,
+  "day": "2026-11-01",
+  "header": {
+    "batch_id": 51,
+    "t_start": 1793491200,
+    "t_end": 1793577600,
+    "leaf_count": 6,
+    "merkle_root": "7a4420c0b80451349d24e3be70f14550c08d573d277ed6843ed698d489e9bd05",
+    "station_set_hash": "c4c9d3e76e2d04cd40c1be3c6bba5c8e4a3c9765a59bc433db8768424a82f4ba",
+    "prev_batch_root": "ad5a270fdbd7af487b23e631e6629d597a7f97647500a02e600c678b83698f25"
+  },
+  "batch_account": "GgaRSpbULJjeJoT5dttCezxLTgsHz5ciLWaKWjwgzM1D",
+  "tx_signature": "34HcrbfvyQMFnvoLkAxrYRVK6uJk1CtPzBLnTv5uJB3TYVQt99R2WSHn6dhKRq4qTf8rhuY8kktr6M2qzcEGtKFD",
+  "cluster": "devnet",
+  "explorer": "https://explorer.solana.com/tx/34HcrbfvyQMFnvoLkAxrYRVK6uJk1CtPzBLnTv5uJB3TYVQt99R2WSHn6dhKRq4qTf8rhuY8kktr6M2qzcEGtKFD?cluster=devnet",
+  "members": [
+    {
+      "member": "GS3uQUPgfCDXqtbpD6vPyNpQgRcDUFj1fhF4wYGk9ist",
+      "status": "signed"
+    },
+    {
+      "member": "B4FwxN42zWyiSKU7qwvbpchy7uDD8ugnzX43B9mPd38L",
+      "status": "signed"
+    },
+    {
+      "member": "AFbz6rqf4u7pexBHadriqd9VNDh74KGqEeZG5eeQKTs3",
+      "status": "signed"
+    }
+  ],
+  "signatures": [
+    {
+      "member": "AFbz6rqf4u7pexBHadriqd9VNDh74KGqEeZG5eeQKTs3",
+      "signature": "2067d2795cbf14266e6dcf363f9e237f41176114e6cb906d7624f8c44555b40725cc4af00f076412b51062f4fe425890e7253204b8735e1bbc2c84447a2de000"
+    },
+    {
+      "member": "B4FwxN42zWyiSKU7qwvbpchy7uDD8ugnzX43B9mPd38L",
+      "signature": "8422ad4bad95f181ebe8b4efe40a51518dedf3faec06c460ab5694b9eb326df26392d24d5870ae9f39a0b943f506a624f8cec2848de5df5d9343f2718ce76f06"
+    },
+    {
+      "member": "GS3uQUPgfCDXqtbpD6vPyNpQgRcDUFj1fhF4wYGk9ist",
+      "signature": "4d099e62eafab3e7b969bcca748ce57cc82f95cfd35a1e279cf828f1db0981b3a0bf432c7ec4811e1f05a3f08b6817db4e42bfb470491f2edf94a893a187e10b"
+    }
+  ],
+  "quality": {
+    "stations": [
+      {
+        "station_id": "GLOFAS-GUAIBA",
+        "expected": 1,
+        "present": 1,
+        "availability": 1.0,
+        "flag_rate": 0.0,
+        "agreement": 1.0,
+        "freshness": 1.0,
+        "raw": 0.9999999999999999,
+        "score": 1.0,
+        "flags": [],
+        "degraded": null
+      },
+      {
+        "station_id": "GLOFAS-JACUI",
+        "expected": 1,
+        "present": 1,
+        "availability": 1.0,
+        "flag_rate": 0.0,
+        "agreement": 1.0,
+        "freshness": 1.0,
+        "raw": 0.9999999999999999,
+        "score": 1.0,
+        "flags": [],
+        "degraded": null
+      },
+      {
+        "station_id": "GLOFAS-TAQUARI",
+        "expected": 1,
+        "present": 1,
+        "availability": 1.0,
+        "flag_rate": 0.0,
+        "agreement": 1.0,
+        "freshness": 1.0,
+        "raw": 0.9999999999999999,
+        "score": 1.0,
+        "flags": [],
+        "degraded": null
+      },
+      {
+        "station_id": "GLOFAS-CAI",
+        "expected": 1,
+        "present": 1,
+        "availability": 1.0,
+        "flag_rate": 0.0,
+        "agreement": 1.0,
+        "freshness": 1.0,
+        "raw": 0.9999999999999999,
+        "score": 1.0,
+        "flags": [],
+        "degraded": null
+      },
+      {
+        "station_id": "GLOFAS-SINOS",
+        "expected": 1,
+        "present": 1,
+        "availability": 1.0,
+        "flag_rate": 0.0,
+        "agreement": 1.0,
+        "freshness": 1.0,
+        "raw": 0.9999999999999999,
+        "score": 1.0,
+        "flags": [],
+        "degraded": null
+      },
+      {
+        "station_id": "GLOFAS-GRAVATAI",
+        "expected": 1,
+        "present": 1,
+        "availability": 1.0,
+        "flag_rate": 0.0,
+        "agreement": 1.0,
+        "freshness": 1.0,
+        "raw": 0.9999999999999999,
+        "score": 1.0,
+        "flags": [],
+        "degraded": null
+      }
+    ],
+    "dissents": [],
+    "degradations": []
+  },
+  "readings": [
+    {
+      "station_id": "GLOFAS-CAI",
+      "variable": "river_discharge",
+      "ts_utc": 1793491200,
+      "source": "open_meteo_glofas",
+      "value_milli": 89990,
+      "datum_id": null,
+      "raw_payload_sha256": "01b4d55448b20ea2e0554fe005b8873711bce016f49bce0415305f2b4c92d6b5"
+    },
+    {
+      "station_id": "GLOFAS-GRAVATAI",
+      "variable": "river_discharge",
+      "ts_utc": 1793491200,
+      "source": "open_meteo_glofas",
+      "value_milli": 13260,
+      "datum_id": null,
+      "raw_payload_sha256": "50b954d26614d03d441eb449574d1f145a81cf42b0a2af06a8ab8be27161a37a"
+    },
+    {
+      "station_id": "GLOFAS-GUAIBA",
+      "variable": "river_discharge",
+      "ts_utc": 1793491200,
+      "source": "open_meteo_glofas",
+      "value_milli": 2078700,
+      "datum_id": null,
+      "raw_payload_sha256": "653733d6f754cbc18f02c9cf528f23ca7b759abace7bdae58822506f29d21ae9"
+    },
+    {
+      "station_id": "GLOFAS-JACUI",
+      "variable": "river_discharge",
+      "ts_utc": 1793491200,
+      "source": "open_meteo_glofas",
+      "value_milli": 1785490,
+      "datum_id": null,
+      "raw_payload_sha256": "3e33c5c9491d24fd49ebbd0c3b32e6b403e4d42badaca0c302bd2a4c37fe95d3"
+    },
+    {
+      "station_id": "GLOFAS-SINOS",
+      "variable": "river_discharge",
+      "ts_utc": 1793491200,
+      "source": "open_meteo_glofas",
+      "value_milli": 52460,
+      "datum_id": null,
+      "raw_payload_sha256": "f482c6a7a9e9356bb4ab6da5a72b552566a8f5778e791eedae73bc134e440a16"
+    },
+    {
+      "station_id": "GLOFAS-TAQUARI",
+      "variable": "river_discharge",
+      "ts_utc": 1793491200,
+      "source": "open_meteo_glofas",
+      "value_milli": 409200,
+      "datum_id": null,
+      "raw_payload_sha256": "b2b8a4e0ff037386217cb01f4dcc1974afb49bf3dfd8863e4ee641ed74e24515"
+    }
+  ]
+}
