@@ -2319,10 +2319,26 @@
       "problems": []
     },
     {
+      "record": "3gf9VpWx5YnRadQhzFdUtXpejgLz5pN9bpLP2m5BZvLS",
+      "alert_id": "urn:oid:2.49.0.0.76.0.2026.28604.1",
+      "slot": 517949195,
+      "committed_at": 1793645083,
+      "signers": 7,
+      "problems": []
+    },
+    {
       "record": "Egq3WUkEnL2RFSyEp23vGHrgkuC1fxM3Hq15CsVDFrbs",
       "alert_id": "urn:oid:2.49.0.0.76.0.2026.28579.1",
       "slot": 516458472,
       "committed_at": 1793287320,
+      "signers": 7,
+      "problems": []
+    },
+    {
+      "record": "GKjbiGadvBKZQz4qSbMmn83U6bLpnopNbusJtdYPyupC",
+      "alert_id": "urn:oid:2.49.0.0.76.0.2026.28606.1",
+      "slot": 517949204,
+      "committed_at": 1793645085,
       "signers": 7,
       "problems": []
     },
@@ -2339,6 +2355,22 @@
       "alert_id": "urn:oid:2.49.0.0.76.0.2026.28569.1",
       "slot": 515407241,
       "committed_at": 1793035912,
+      "signers": 7,
+      "problems": []
+    },
+    {
+      "record": "FEjUE7Uv56ijMgSuJGU8yZjQGQgwq85QpwQ83JQyKzmf",
+      "alert_id": "urn:oid:2.49.0.0.76.0.2026.28602.2",
+      "slot": 517949168,
+      "committed_at": 1793645077,
+      "signers": 7,
+      "problems": []
+    },
+    {
+      "record": "ChX3uELHsyZHE1shoKU9rftsRM5vTZis4Z1hnH5Qmzpm",
+      "alert_id": "urn:oid:2.49.0.0.76.0.2026.28603.1",
+      "slot": 517949176,
+      "committed_at": 1793645079,
       "signers": 7,
       "problems": []
     },
@@ -2379,6 +2411,14 @@
       "alert_id": "urn:oid:2.49.0.0.76.0.2026.28593.1",
       "slot": 517157333,
       "committed_at": 1793455165,
+      "signers": 7,
+      "problems": []
+    },
+    {
+      "record": "Ctpsqq4y4M6vxs2tyZT5oRN5DxfueEkZhsiFw6gyEAfg",
+      "alert_id": "urn:oid:2.49.0.0.76.0.2026.28607.1",
+      "slot": 517949212,
+      "committed_at": 1793645087,
       "signers": 7,
       "problems": []
     },
@@ -2519,7 +2559,7 @@
     "forecasts_with_problems": 0,
     "outlooks": 9,
     "outlooks_with_problems": 0,
-    "public_alerts": 13,
+    "public_alerts": 18,
     "public_alerts_with_problems": 0,
     "vault_payouts": 3,
     "vaults": 2,
