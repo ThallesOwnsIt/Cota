@@ -1,0 +1,138 @@
+{
+  "based_on_batch_id": 52,
+  "based_on_root": "0f61ad3a66f520408a9c0a2ffe0d0dce77ddd4f1a018a0251f2533a54d213651",
+  "cluster": "devnet",
+  "features": [
+    {
+      "name": "q0",
+      "value_milli": 1873990
+    },
+    {
+      "name": "lq0",
+      "value_milli": 7536
+    },
+    {
+      "name": "dlq1",
+      "value_milli": -104
+    },
+    {
+      "name": "dlq2",
+      "value_milli": -117
+    },
+    {
+      "name": "up_jacui_rel",
+      "value_milli": -117
+    },
+    {
+      "name": "up_taquari_rel",
+      "value_milli": -1379
+    },
+    {
+      "name": "up_cai_rel",
+      "value_milli": -3090
+    },
+    {
+      "name": "up_sinos_rel",
+      "value_milli": -3609
+    },
+    {
+      "name": "up_gravatai_rel",
+      "value_milli": -5034
+    },
+    {
+      "name": "up_jacui_d1",
+      "value_milli": -69
+    },
+    {
+      "name": "up_taquari_d1",
+      "value_milli": 143
+    },
+    {
+      "name": "up_cai_d1",
+      "value_milli": -54
+    },
+    {
+      "name": "up_sinos_d1",
+      "value_milli": -33
+    },
+    {
+      "name": "up_gravatai_d1",
+      "value_milli": -82
+    },
+    {
+      "name": "rain0",
+      "value_milli": null
+    },
+    {
+      "name": "rain1",
+      "value_milli": null
+    },
+    {
+      "name": "rain3",
+      "value_milli": null
+    },
+    {
+      "name": "rain5",
+      "value_milli": null
+    },
+    {
+      "name": "rainmax0",
+      "value_milli": null
+    },
+    {
+      "name": "doy_sin",
+      "value_milli": -852
+    },
+    {
+      "name": "doy_cos",
+      "value_milli": 524
+    }
+  ],
+  "features_root": "7d51fc4a91c9d8f32de1e224ee074c4d515b61270c6c61ce2f5b47eacb7facad",
+  "forecasts": [
+    {
+      "horizon_hours": 24,
+      "p10": 1737841,
+      "p50": 1760915,
+      "p90": 1987610,
+      "target_day": "2026-11-03",
+      "target_ts": 1793664000
+    },
+    {
+      "horizon_hours": 48,
+      "p10": 1589407,
+      "p50": 1718387,
+      "p90": 2337062,
+      "target_day": "2026-11-04",
+      "target_ts": 1793750400
+    }
+  ],
+  "issue_day": "2026-11-02",
+  "issued_at": 1793664000,
+  "model_sha256": "4e16a4b4e3a3bf3b5ac94317a15064fe12d029d5cc6557410182a7b3b42a792e",
+  "onchain": [
+    {
+      "account": "8QmQ1JCcSBa4Q32uGChXKAy49Ani1W6XuVs9a6Rd3RJo",
+      "alert": null,
+      "explorer": "https://explorer.solana.com/tx/3UEU2spySVEcU354e5KVzytYQbKKSTpY2JaXKiMzbdPeQW9AaRmJYfJRXoRRwEMpo4V4Zg1FBwF47RGAWEz1UFZu?cluster=devnet",
+      "horizon_hours": 24,
+      "p10": 1737841,
+      "p50": 1760915,
+      "p90": 1987610,
+      "target_ts": 1793664000,
+      "tx_signature": "3UEU2spySVEcU354e5KVzytYQbKKSTpY2JaXKiMzbdPeQW9AaRmJYfJRXoRRwEMpo4V4Zg1FBwF47RGAWEz1UFZu"
+    },
+    {
+      "account": "Ghe5RaQDp3kUjPfewyhH58cyXaj7Hyp7A8nG26K5uLiz",
+      "alert": null,
+      "explorer": "https://explorer.solana.com/tx/4Lw8YhPAMzcWqPJyUnDxx8PxpQB1YQuEnrny4GXyoFjvwnMb25FdXe2sX5uahD4Xx4zoaDHxzkrpeUH9x52V3qYB?cluster=devnet",
+      "horizon_hours": 48,
+      "p10": 1589407,
+      "p50": 1718387,
+      "p90": 2337062,
+      "target_ts": 1793750400,
+      "tx_signature": "4Lw8YhPAMzcWqPJyUnDxx8PxpQB1YQuEnrny4GXyoFjvwnMb25FdXe2sX5uahD4Xx4zoaDHxzkrpeUH9x52V3qYB"
+    }
+  ],
+  "station_id": "GLOFAS-GUAIBA"
+}
