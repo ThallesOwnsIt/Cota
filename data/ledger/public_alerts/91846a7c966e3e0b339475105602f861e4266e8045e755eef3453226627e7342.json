@@ -1,0 +1,35 @@
+{
+  "cluster": "devnet",
+  "committed_at": 1793809781,
+  "content": "{\"alterado\":false,\"aviso_cor\":\"#FFFE00\",\"codigo\":\"urn:oid:2.49.0.0.76.0.2026.28619.1\",\"created_at\":\"2026-11-04T00:00:00.000Z\",\"data_fim\":\"2026-11-05T00:00:00.000Z\",\"data_inicio\":\"2026-11-05T00:00:00.000Z\",\"descricao\":\"Ventos Costeiros\",\"encerrado\":false,\"estados\":\"Santa Catarina,Rio Grande do Sul\",\"fim\":\"2026-11-05 23:59\",\"geocodes\":\"4201208,4201307,4201406,4301057,4201950,4202057,4202008,4202073,4212809,4301636,4220000,4202107,4202305,4202453,4202909,4203204,4203709,4304630,4203956,4304671,4304713,4305454,4204608,4306551,4205407,4205704,4205803,4206009,4206504,4207007,4207106,4207205,4310330,4207304,4208203,4208302,4208450,4208807,4209102,4209409,4210001,4311775,4210407,4312443,4211207,4211306,4313508,4211900,4313656,4212254,4212304,4212502,4212650,4213500,4215455,4215653,4215703,4216206,4216305,4216354,4216404,4216602,4217253,4217709,4321436,4218004,4321501,4321600,4321667,4321832,4218707,4323804\",\"hora_fim\":\"23:59\",\"hora_inicio\":\"00:01\",\"id_aviso\":28619,\"id_condicao_severa\":37,\"id_icone\":97,\"id_sequencia\":1,\"id_severidade\":6,\"id_usuario\":108,\"inicio\":\"2026-11-05 00:01\",\"instrucoes\":[\"Contate a Defesa Civil (telefone: 199).\"],\"issuer\":\"inmet\",\"mesorregioes\":\"Grande Florianópolis,Norte Catarinense,Sul Catarinense,Metropolitana de Porto Alegre,Vale do Itajaí\",\"microrregioes\":\"Florianópolis,Joinville,Araranguá,Osório,Itajaí,Criciúma,Blumenau,Tijucas,Tubarão\",\"municipios\":\"Antônio Carlos - SC (4201208),Araquari - SC (4201307),Araranguá - SC (4201406),Arroio do Sal - RS (4301057),Balneário Arroio do Silva - SC (4201950),Balneário Barra do Sul - SC (4202057),Balneário Camboriú - SC (4202008),Balneário Gaivota - SC (4202073),Balneário Piçarras - SC (4212809),Balneário Pinhal - RS (4301636),Balneário Rincão - SC (4220000),Barra Velha - SC (4202107),Biguaçu - SC (4202305),Bombinhas - SC (4202453),Brusque - SC (4202909),Camboriú - SC (4203204),Canelinha - SC (4203709),Capão da Canoa - RS (4304630),Capivari de Baixo - SC (4203956),Capivari do Sul - RS (4304671),Caraá - RS (4304713),Cidreira - RS (4305454),Criciúma - SC (4204608),Dom Pedro de Alcântara - RS (4306551),Florianópolis - SC (4205407),Garopaba - SC (4205704),Garuva - SC (4205803),Governador Celso Ramos - SC (4206009),Guaramirim - SC (4206504),Içara - SC (4207007),Ilhota - SC (4207106),Imaruí - SC (4207205),Imbé - RS (4310330),Imbituba - SC (4207304),Itajaí - SC (4208203),Itapema - SC (4208302),Itapoá - SC (4208450),Jaguaruna - SC (4208807),Joinville - SC (4209102),Laguna - SC (4209409),Luiz Alves - SC (4210001),Maquiné - RS (4311775),Maracajá - SC (4210407),Morrinhos do Sul - RS (4312443),Morro da Fumaça - SC (4211207),Navegantes - SC (4211306),Osório - RS (4313508),Palhoça - SC (4211900),Palmares do Sul - RS (4313656),Passo de Torres - SC (4212254),Paulo Lopes - SC (4212304),Penha - SC (4212502),Pescaria Brava - SC (4212650),Porto Belo - SC (4213500),Sangão - SC (4215455),Santa Rosa do Sul - SC (4215653),Santo Amaro da Imperatriz - SC (4215703),São Francisco do Sul - SC (4216206),São João Batista - SC (4216305),São João do Itaperiú - SC (4216354),São João do Sul - SC (4216404),São José - SC (4216602),São Pedro de Alcântara - SC (4217253),Sombrio - SC (4217709),Terra de Areia - RS (4321436),Tijucas - SC (4218004),Torres - RS (4321501),Tramandaí - RS (4321600),Três Cachoeiras - RS (4321667),Três Forquilhas - RS (4321832),Tubarão - SC (4218707),Xangri-lá - RS (4323804)\",\"poligono\":\"{\\\"type\\\":\\\"Polygon\\\",\\\"coordinates\\\":[[[-48.427083,-26.035582],[-48.768826,-26.013645],[-48.866467,-26.364131],[-48.842057,-26.648121],[-48.793235,-27.040174],[-48.842057,-27.409195],[-48.724211,-27.710154],[-48.742519,-27.909879],[-48.748621,-28.087701],[-48.779134,-28.308222],[-48.937801,-28.490747],[-49.163595,-28.662248],[-49.407698,-28.838815],[-49.877595,-29.254963],[-49.999646,-29.483658],[-50.182723,-29.674728],[-50.335287,-29.891893],[-50.408518,-30.045213],[-50.41462,-30.203571],[-50.353595,-30.335341],[-50.237646,-30.361674],[-50.109492,-30.214119],[-49.926416,-29.870727],[-49.670108,-29.398622],[-49.297852,-29.063103],[-48.992724,-28.79069],[-48.681493,-28.581892],[-48.297031,-27.75877],[-48.303134,-27.277067],[-48.449596,-26.831395],[-48.443493,-26.329277],[-48.427083,-26.035582]]]}\",\"referencia\":null,\"regioes\":\"Sul\",\"riscos\":[\"Intensificação dos ventos nas regiões litorâneas, movimentando dunas de areia sobre construções na orla.\"],\"severidade\":\"Perigo Potencial\",\"updated_at\":\"2026-11-04T00:00:00.000Z\"}",
+  "description": "Ventos Costeiros",
+  "explorer": "https://explorer.solana.com/tx/4gayF24eLasHXyY5uAyt58VAVLPVVonBeGvCZBVkSPciqnBSnD9s4giMtGKUczbLK49TmH8WBJt3tvf5j2GWMGFq?cluster=devnet",
+  "header": {
+    "alert_id": "urn:oid:2.49.0.0.76.0.2026.28619.1",
+    "content_sha256": "91846a7c966e3e0b339475105602f861e4266e8045e755eef3453226627e7342",
+    "expires": 1793933940,
+    "issuer": "inmet",
+    "onset": 1793847660,
+    "severity": 1
+  },
+  "observations": [
+    {
+      "member": "AFbz6rqf4u7pexBHadriqd9VNDh74KGqEeZG5eeQKTs3",
+      "seen_at": 1793809650
+    },
+    {
+      "member": "B4FwxN42zWyiSKU7qwvbpchy7uDD8ugnzX43B9mPd38L",
+      "seen_at": 1793809633
+    },
+    {
+      "member": "GS3uQUPgfCDXqtbpD6vPyNpQgRcDUFj1fhF4wYGk9ist",
+      "seen_at": 1793809668
+    }
+  ],
+  "record": "9CuicUHGPYrEWpfsx647NTKyfKCy6p1ct1TLoiNKPkRo",
+  "severity_label": "Perigo Potencial",
+  "signers": 7,
+  "slot": 518637123,
+  "states": "Santa Catarina,Rio Grande do Sul",
+  "tx_signature": "4gayF24eLasHXyY5uAyt58VAVLPVVonBeGvCZBVkSPciqnBSnD9s4giMtGKUczbLK49TmH8WBJt3tvf5j2GWMGFq"
+}

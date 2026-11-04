@@ -2435,6 +2435,14 @@
       "problems": []
     },
     {
+      "record": "32VicxRupV9ho54xxGB3g4MgUvQvywfMrkrW9YgniGcG",
+      "alert_id": "urn:oid:2.49.0.0.76.0.2026.28614.1",
+      "slot": 518637116,
+      "committed_at": 1793809779,
+      "signers": 7,
+      "problems": []
+    },
+    {
       "record": "AdK33xDTCBQNAQYhmESvZQB8MgAAcYKC4LCXdv4MKjdD",
       "alert_id": "urn:oid:2.49.0.0.76.0.2026.28611.1",
       "slot": 518275264,
@@ -2515,6 +2523,30 @@
       "problems": []
     },
     {
+      "record": "9CuicUHGPYrEWpfsx647NTKyfKCy6p1ct1TLoiNKPkRo",
+      "alert_id": "urn:oid:2.49.0.0.76.0.2026.28619.1",
+      "slot": 518637123,
+      "committed_at": 1793809781,
+      "signers": 7,
+      "problems": []
+    },
+    {
+      "record": "hD7MUfpa47yrhXuqSWSQAXosLnb7MDrD5K54KKNvyeN",
+      "alert_id": "urn:oid:2.49.0.0.76.0.2026.28624.1",
+      "slot": 518637154,
+      "committed_at": 1793809788,
+      "signers": 7,
+      "problems": []
+    },
+    {
+      "record": "S6ZYpkYeUa11SHSMt1m4CSqqK1s5vXHRpDszAU7mvfd",
+      "alert_id": "urn:oid:2.49.0.0.76.0.2026.28623.1",
+      "slot": 518637146,
+      "committed_at": 1793809786,
+      "signers": 7,
+      "problems": []
+    },
+    {
       "record": "Fdxo77MWjyav1wBzEuLuLf2fPUVFWzt4onuY85R2WhUj",
       "alert_id": "urn:oid:2.49.0.0.76.0.2026.28593.1",
       "slot": 517157333,
@@ -2527,6 +2559,14 @@
       "alert_id": "urn:oid:2.49.0.0.76.0.2026.28609.1",
       "slot": 518275248,
       "committed_at": 1793723166,
+      "signers": 7,
+      "problems": []
+    },
+    {
+      "record": "CqiqYHyhSigGRkAMhuSdf8VHCSq2ZH6pcki7ipV2emoX",
+      "alert_id": "urn:oid:2.49.0.0.76.0.2026.28622.1",
+      "slot": 518637138,
+      "committed_at": 1793809784,
       "signers": 7,
       "problems": []
     },
@@ -2559,6 +2599,14 @@
       "alert_id": "urn:oid:2.49.0.0.76.0.2026.28598.1",
       "slot": 517517312,
       "committed_at": 1793541534,
+      "signers": 7,
+      "problems": []
+    },
+    {
+      "record": "BuUjPbBSvQVGiWsNQD6bsnQahZ9tTkGfvMSc9smqQHPC",
+      "alert_id": "urn:oid:2.49.0.0.76.0.2026.28621.1",
+      "slot": 518637131,
+      "committed_at": 1793809783,
       "signers": 7,
       "problems": []
     },
@@ -2701,7 +2749,7 @@
     "forecasts_with_problems": 0,
     "outlooks": 11,
     "outlooks_with_problems": 0,
-    "public_alerts": 23,
+    "public_alerts": 29,
     "public_alerts_with_problems": 0,
     "vault_payouts": 3,
     "vaults": 2,
