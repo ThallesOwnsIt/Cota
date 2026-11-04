@@ -768,6 +768,7 @@ function renderLive() {
   } else {
     const d = LV.days.at(-1);
     renderStage();
+    renderBasin();
     $("#live-sub").textContent = L(
       `Último lote: ${dmy(d.day)} (lote ${d.batch_id}), ancorado em ${br(d.committed_at)} (horário de Brasília). ` +
         `${LV.days.length} dia(s) desde ${dmy(LV.days[0].day)}. Nível medido nas réguas da ANA; vazão modelada pelo GloFAS; a chuva do INMET entra com ~1 mês de atraso.`,
@@ -960,6 +961,232 @@ function renderStageChart(ser) {
     `Level measured at Cais Mauá, hour by hour (last ${Math.round((t1 - t0) / 86_400)} recorded days)`,
   )}</span></span>` +
     `<span class="key" style="color:var(--critical)"><span class="swatch-dash"></span><span style="color:var(--text-2)">${L("Cota de inundação de Porto Alegre", "Porto Alegre flood level")}</span></span>`;
+}
+
+// ---- mapa da bacia ---------------------------------------------------------
+// Desenho próprio (scripts/build_map.py): contorno da bacia, rios e terra em coordenadas já
+// projetadas. As estações usam a mesma projeção. Clicar num ponto mostra o último valor gravado.
+
+const basin = { map: null, zoom: "all", sel: null, wired: false };
+// Recorte "perto de Porto Alegre" (lon/lat), onde as estações se amontoam.
+const POA_FRAME = [-52.08, -30.32, -50.72, -29.4];
+const PORTO_ALEGRE = [-51.23, -30.03];
+
+function mapXY([lon, lat]) {
+  const { frame, k, scale } = basin.map.projection;
+  return [(lon - frame[0]) * k * scale, (frame[3] - lat) * scale];
+}
+
+// Último dia ao vivo com dado da estação, e o dia imediatamente anterior.
+function lastWith(get) {
+  const days = B.live.days;
+  for (let i = days.length - 1; i >= 0; i--) {
+    const v = get(days[i]);
+    if (v != null) {
+      const prev = days.find((d) => d.day === addDays(days[i].day, -1));
+      return { day: days[i], v, prev: prev ? get(prev) : null };
+    }
+  }
+  return null;
+}
+
+function basinPoints() {
+  const pts = [];
+  // Bundles gerados antes do mapa não têm `live.stations`: usa o catálogo do replay (sem as réguas).
+  for (const s of B.live.stations ?? B.stations.filter((x) => x.source === "open_meteo_glofas")) {
+    if (s.source === "ana") {
+      const last = lastWith((d) => d.stage?.[s.id]?.last);
+      const ch = last && last.prev != null ? last.v - last.prev : null;
+      const trend = !last ? "none" : ch == null || Math.abs(ch) < 20 ? "steady" : ch > 0 ? "up" : "down";
+      pts.push({ ...s, kind: "ana", last, ch, trend });
+    } else if (s.source === "open_meteo_glofas") {
+      pts.push({ ...s, kind: "glofas", last: lastWith((d) => d.flow?.[s.id]) });
+    }
+  }
+  for (const id of B.outlook.rule.points) {
+    const s = B.stations.find((x) => x.id === id);
+    if (s) pts.push({ ...s, kind: "rain" });
+  }
+  return pts;
+}
+
+const TREND = {
+  up: { color: "var(--serious)", label: ["subindo", "rising"] },
+  down: { color: "var(--brand)", label: ["descendo", "falling"] },
+  steady: { color: "var(--muted)", label: ["estável", "steady"] },
+  none: { color: "var(--surface)", label: ["sem leitura gravada ainda", "no reading recorded yet"] },
+};
+const cleanName = (n) => {
+  const t = n.replace(/ \((ANA|GloFAS)\)$/, "");
+  return L(t, t.replace(" em ", " at "));
+};
+
+async function renderBasin() {
+  if (!basin.map) {
+    try {
+      basin.map = await (await fetch("basin-map.json")).json();
+    } catch {
+      $("#basin").hidden = true;
+      return;
+    }
+  }
+  if (!basin.wired) {
+    basin.wired = true;
+    $("#basin-zoom").querySelectorAll("button").forEach((b) =>
+      b.addEventListener("click", () => {
+        basin.zoom = b.dataset.zoom;
+        $("#basin-zoom").querySelectorAll("button").forEach((x) => x.setAttribute("aria-checked", x === b));
+        drawBasin();
+      }),
+    );
+  }
+  const pts = basinPoints();
+  basin.sel ??= pts.find((p) => p.id === B.live.stage_main && p.last)?.id ?? "GLOFAS-GUAIBA";
+  // Mesmos desenhos do mapa, em tamanho de legenda.
+  const icon = (inner) => `<svg class="mk" viewBox="-8 -8 16 16" width="16" height="16" aria-hidden="true">${inner}</svg>`;
+  const dot = (fill, stroke = "var(--surface)") => icon(`<circle r="6" fill="${fill}" stroke="${stroke}" stroke-width="2"/>`);
+  $("#basin-legend").innerHTML = [
+    [dot("var(--serious)"), L("Régua de nível (ANA), subindo", "River gauge (ANA), rising")],
+    [dot("var(--brand)"), L("Régua de nível, descendo", "River gauge, falling")],
+    [dot("var(--muted)"), L("Régua de nível, estável", "River gauge, steady")],
+    [dot("var(--surface)", "var(--muted)"), L("Régua ainda sem leitura gravada", "Gauge with no reading recorded yet")],
+    [icon('<path d="M0,-5L5,0L0,5L-5,0Z" fill="var(--text-2)"/>'), L("Vazão calculada por satélite e modelo (GloFAS)", "Flow computed from satellite and model (GloFAS)")],
+    [icon('<path d="M-5,-3L5,-3L0,5Z" fill="var(--surface)" stroke="var(--text-2)" stroke-width="1.5" stroke-linejoin="round"/>'), L("Ponto onde se lê a chuva prevista", "Point where forecast rain is read")],
+  ]
+    .map(([m, t]) => `<li>${m}${t}</li>`)
+    .join("");
+  drawBasin();
+}
+
+function drawBasin() {
+  const M = basin.map;
+  const box = $("#basin-map");
+  const W = Math.max(300, box.clientWidth);
+  let vb = [0, 0, M.width, M.height];
+  if (basin.zoom === "poa") {
+    const [x0, y0] = mapXY([POA_FRAME[0], POA_FRAME[3]]);
+    const [x1, y1] = mapXY([POA_FRAME[2], POA_FRAME[1]]);
+    vb = [x0, y0, x1 - x0, y1 - y0];
+  }
+  const H = Math.round((W * vb[3]) / vb[2]);
+  const u = vb[2] / W; // unidades do mapa por pixel de tela
+  const svg = el("svg", { viewBox: vb.join(" "), width: W, height: H, class: "basin-svg" });
+
+  el("rect", { x: vb[0], y: vb[1], width: vb[2], height: vb[3], fill: "var(--map-water)" }, svg);
+  el("path", { d: M.land, fill: "var(--map-land)" }, svg);
+  el("path", { d: M.basin, fill: "var(--map-basin)", stroke: "var(--brand)", "stroke-width": 1.2 * u, "stroke-linejoin": "round" }, svg);
+  for (const d of Object.values(M.groups)) el("path", { d, fill: "none", stroke: "var(--brand)", "stroke-opacity": 0.35, "stroke-width": u, "stroke-dasharray": `${3 * u} ${3 * u}` }, svg);
+  el("path", { d: M.state, fill: "none", stroke: "var(--axis)", "stroke-width": u, "stroke-dasharray": `${4 * u} ${3 * u}` }, svg);
+  const rw = { 1: 0.8, 2: 1.6, 3: 3 };
+  for (const [c, d] of Object.entries(M.rivers)) el("path", { d, fill: "none", stroke: "var(--map-river)", "stroke-width": rw[c] * u, "stroke-linecap": "round", "stroke-linejoin": "round" }, svg);
+  for (const l of M.labels) {
+    const t = el("text", { x: l.x, y: l.y, class: "map-label", "font-size": 12 * u }, svg);
+    t.textContent = l.name;
+  }
+  const [px, py] = mapXY(PORTO_ALEGRE);
+  el("rect", { x: px - 4 * u, y: py - 4 * u, width: 8 * u, height: 8 * u, fill: "var(--text)", stroke: "var(--surface)", "stroke-width": 1.5 * u }, svg);
+  const pl = el("text", { x: px - 9 * u, y: py + 22 * u, "text-anchor": "end", class: "map-city", "font-size": 13 * u }, svg);
+  pl.textContent = "Porto Alegre";
+
+  // Ordem de desenho: chuva, GloFAS e, por cima, as réguas.
+  const pts = basinPoints().sort((a, b) => ["rain", "glofas", "ana"].indexOf(a.kind) - ["rain", "glofas", "ana"].indexOf(b.kind));
+  for (const p of pts) {
+    const [x, y] = mapXY([p.lon, p.lat]);
+    // Fora do recorte não desenha: um ponto invisível não pode receber foco pelo teclado.
+    if (x < vb[0] || x > vb[0] + vb[2] || y < vb[1] || y > vb[1] + vb[3]) continue;
+    const g = el("g", { class: `mk-g${p.id === basin.sel ? " sel" : ""}`, tabindex: 0, role: "button", "aria-label": `${cleanName(p.name)}: ${pointSummary(p)}`, "aria-pressed": p.id === basin.sel }, svg);
+    if (p.id === basin.sel) el("circle", { cx: x, cy: y, r: 13 * u, fill: "none", stroke: "var(--text)", "stroke-width": 2 * u }, g);
+    if (p.kind === "ana") {
+      const t = TREND[p.trend];
+      el("circle", { cx: x, cy: y, r: 7 * u, fill: t.color, stroke: p.trend === "none" ? "var(--muted)" : "var(--surface)", "stroke-width": 2 * u }, g);
+    } else if (p.kind === "glofas") {
+      const r = 5 * u;
+      el("path", { d: `M${x},${y - r}L${x + r},${y}L${x},${y + r}L${x - r},${y}Z`, fill: "var(--text-2)", stroke: "var(--surface)", "stroke-width": 1.5 * u }, g);
+    } else {
+      const r = 5 * u;
+      el("path", { d: `M${x - r},${y - r * 0.6}L${x + r},${y - r * 0.6}L${x},${y + r}Z`, fill: "var(--surface)", stroke: "var(--text-2)", "stroke-width": 1.5 * u, "stroke-linejoin": "round" }, g);
+    }
+    // Área de toque maior que o desenho.
+    el("circle", { cx: x, cy: y, r: 14 * u, fill: "transparent" }, g);
+    const pick = () => {
+      basin.sel = p.id;
+      drawBasin();
+      $("#basin-map").querySelector(".mk-g.sel")?.focus();
+    };
+    g.addEventListener("click", pick);
+    g.addEventListener("keydown", (ev) => {
+      if (ev.key === "Enter" || ev.key === " ") {
+        ev.preventDefault();
+        pick();
+      }
+    });
+    g.addEventListener("pointermove", (ev) => showTip(`<strong>${esc(cleanName(p.name))}</strong><div>${pointSummary(p)}</div>`, ev.clientX, ev.clientY));
+    g.addEventListener("pointerleave", hideTip);
+  }
+  box.replaceChildren(svg);
+  renderBasinDetail(pts.find((p) => p.id === basin.sel));
+}
+
+function pointSummary(p) {
+  if (p.kind === "ana") return p.last ? `${meters(p.last.v)} m · ${L(...TREND[p.trend].label)}` : L(...TREND.none.label);
+  if (p.kind === "glofas") return p.last ? `${m3(p.last.v)} m³/s` : L("sem dado", "no data");
+  return L("chuva prevista", "forecast rain");
+}
+
+function renderBasinDetail(p) {
+  if (!p) return;
+  const kinds = {
+    ana: L("Régua de nível · ANA", "River gauge · ANA"),
+    glofas: L("Vazão calculada · GloFAS", "Computed flow · GloFAS"),
+    rain: L("Ponto da chuva prevista", "Forecast rain point"),
+  };
+  let body = "";
+  if (p.kind === "rain") {
+    const o = B.outlook.live[0];
+    const R = B.outlook.rule;
+    body = `<p>${L(
+      `Um dos ${R.points.length} pontos onde o Cota lê a chuva que três modelos meteorológicos preveem para os próximos ${R.window_days} dias. A média desses pontos é o que acende o alerta antecipado.`,
+      `One of the ${R.points.length} points where Cota reads the rain three weather models forecast for the next ${R.window_days} days. The average of these points is what triggers the early warning.`,
+    )}</p>${
+      o
+        ? `<div class="detail-value">${mm(o.rain_mean_milli)} mm</div><p class="sub">${L(
+            `média da bacia na previsão de ${dmy(o.day)}; o alerta acende a partir de ${R.threshold_mm} mm`,
+            `basin average in the forecast from ${dmy(o.day)}; the warning goes on from ${R.threshold_mm} mm`,
+          )}</p>`
+        : ""
+    }`;
+  } else if (!p.last) {
+    body = `<p>${L(
+      "Ainda não há leitura desta estação gravada na cadeia. As réguas da ANA entram nos lotes a partir de novembro de 2026.",
+      "No reading from this station has been recorded on-chain yet. ANA gauges join the batches from November 2026.",
+    )}</p>`;
+  } else {
+    const d = p.last.day;
+    const q = d.quality?.find((x) => x.station_id === p.id);
+    const value = p.kind === "ana" ? `${meters(p.last.v)} m` : `${m3(p.last.v)} m³/s`;
+    let change = "";
+    if (p.kind === "ana") change = p.ch == null ? L("sem leitura do dia anterior", "no reading from the day before") : stageChange(p.ch);
+    else if (p.last.prev) {
+      const pc = (p.last.v / p.last.prev - 1) * 100;
+      change = Math.abs(pc) < 1 ? L("estável em 24 h", "steady over 24 h") : pc > 0 ? L(`▲ ${nf0.format(pc)}% em 24 h`, `▲ ${nf0.format(pc)}% in 24 h`) : L(`▼ ${nf0.format(-pc)}% em 24 h`, `▼ ${nf0.format(-pc)}% in 24 h`);
+    }
+    const health = !q
+      ? ""
+      : q.degraded
+        ? `<p class="crit-text">⚠ ${L("Fonte com problema", "Source has a problem")}: ${reason(q.degraded)}</p>`
+        : `<p class="good-text">✓ ${L("Funcionando normalmente", "Working normally")} <span class="sub">(${L("nota de qualidade", "quality score")} ${nf2.format(q.score)})</span></p>`;
+    body = `<div class="detail-value">${value}</div><p>${change}</p>${health}
+      <p class="sub">${L(
+        p.kind === "ana" ? `Última leitura de ${dmy(d.day)}, gravada no lote ${d.batch_id}.` : `Valor do dia ${dmy(d.day)}, gravado no lote ${d.batch_id}.`,
+        p.kind === "ana" ? `Last reading of ${dmy(d.day)}, recorded in batch ${d.batch_id}.` : `Value for ${dmy(d.day)}, recorded in batch ${d.batch_id}.`,
+      )} <a href="${d.explorer}" target="_blank" rel="noopener">${L("ver transação", "view transaction")} ↗</a></p>`;
+    if (p.kind === "glofas")
+      body += `<p class="sub">${L(
+        "Vazão estimada por um modelo global a partir de satélite e previsão do tempo, não medida no rio.",
+        "Flow estimated by a global model from satellite and weather data, not measured in the river.",
+      )}</p>`;
+  }
+  $("#basin-detail").innerHTML = `<p class="detail-kind">${kinds[p.kind]}</p><h4>${esc(cleanName(p.name))}</h4>${body}`;
 }
 
 async function verifyPublicAlert(a) {
@@ -1875,6 +2102,7 @@ async function main() {
       renderRain();
       renderLiveChart();
       if (B.live.stage_series?.length) renderStageChart(B.live.stage_series);
+      if (basin.map) drawBasin();
       renderOutlookChart();
     }, 150);
   });

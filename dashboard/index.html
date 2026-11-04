@@ -132,6 +132,33 @@
               <div id="stage-chart" class="chart" role="img" aria-label="Nível do Guaíba no Cais Mauá, hora a hora" data-label-en="Guaíba level at Cais Mauá, hour by hour"></div>
             </div>
           </div>
+          <div class="basin" id="basin">
+            <div class="basin-map-card">
+              <div class="basin-toolbar">
+                <div class="seg" id="basin-zoom" role="radiogroup" aria-label="Área do mapa" data-label-en="Map area">
+                  <button type="button" role="radio" data-zoom="all" aria-checked="true"><span data-lang="pt">Bacia inteira</span><span data-lang="en">Whole basin</span></button>
+                  <button type="button" role="radio" data-zoom="poa" aria-checked="false"><span data-lang="pt">Perto de Porto Alegre</span><span data-lang="en">Near Porto Alegre</span></button>
+                </div>
+              </div>
+              <div id="basin-map" class="basin-map" role="group" aria-label="Mapa da bacia do Guaíba com as estações acompanhadas" data-label-en="Map of the Guaíba basin with the monitored stations"></div>
+            </div>
+            <div class="basin-side">
+              <h3><span data-lang="pt">Onde a água passa</span><span data-lang="en">Where the water flows</span></h3>
+              <p data-lang="pt">
+                A cheia do Guaíba começa longe de Porto Alegre. A chuva que cai na serra desce pelo Taquari, pelo Jacuí e pelos outros rios e
+                leva dias para chegar à cidade: em maio de 2024, o pico do Taquari em Estrela veio cerca de três dias antes do pico do Guaíba.
+                Por isso o Cota acompanha a bacia inteira, e não só o Cais Mauá.
+              </p>
+              <p data-lang="en">
+                A Guaíba flood starts far from Porto Alegre. Rain falling in the highlands runs down the Taquari, the Jacuí and the other rivers
+                and takes days to reach the city: in May 2024 the Taquari peaked at Estrela about three days before the Guaíba did. That is why
+                Cota watches the whole basin, not just Cais Mauá.
+              </p>
+              <ul id="basin-legend" class="basin-legend"></ul>
+              <div id="basin-detail" class="basin-detail" aria-live="polite"></div>
+              <p class="map-credit"><span data-lang="pt">Mapa:</span><span data-lang="en">Map:</span> HydroSHEDS (Lehner &amp; Grill, 2013) · Natural Earth</p>
+            </div>
+          </div>
           <div id="live-kpis" class="kpis"></div>
           <div class="chart-card">
             <div id="live-legend" class="legend"></div>

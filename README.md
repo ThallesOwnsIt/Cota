@@ -68,7 +68,7 @@ April–May 2024 flood, with Merkle and on-chain account checks done in the brow
 | `ml/` | Training, evaluation and forecasting (Python/uv); `cota_ml.outlook` calibrates the rain rule and runs the backtest |
 | `dashboard/` | Static dashboard (HTML/JS) |
 | `data/ledger/` | State: every anchored batch, forecast and warning, with explorer links |
-| `scripts/` | `replay.sh`, `live.sh`, `export_dashboard.py`, `next_day.py` |
+| `scripts/` | `replay.sh`, `live.sh`, `export_dashboard.py`, `next_day.py`, `build_map.py` (basin map, run once) |
 
 ## Running
 
@@ -114,4 +114,5 @@ the program's upgrade authority never leaves the deployer's machine.
   sample: the CSI of 0.25 is very uncertain. Archived forecasts come from Open-Meteo, not from each model's official service.
 
 Data: [Weather data by Open-Meteo.com](https://open-meteo.com/) (CC BY 4.0) · GloFAS / Copernicus EMS · INMET ·
-ANA (Agência Nacional de Águas e Saneamento Básico, HidroWebService).
+ANA (Agência Nacional de Águas e Saneamento Básico, HidroWebService) ·
+map: [HydroSHEDS](https://www.hydrosheds.org/) (Lehner & Grill, 2013) and [Natural Earth](https://www.naturalearthdata.com/).

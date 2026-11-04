@@ -59,6 +59,7 @@ def main() -> None:
         hours: dict[str, int] = {}
         guaiba = None
         stage: dict[str, list[int]] = {}
+        flow: dict[str, int] = {}
         for r in e["readings"]:
             if r["variable"] == "river_stage":
                 stage.setdefault(r["station_id"], []).append(r["value_milli"])
@@ -67,8 +68,10 @@ def main() -> None:
             elif r["variable"] == "precipitation":
                 rain[r["station_id"]] = rain.get(r["station_id"], 0) + r["value_milli"]
                 hours[r["station_id"]] = hours.get(r["station_id"], 0) + 1
-            elif r["station_id"] == TARGET:
-                guaiba = r["value_milli"]
+            elif r["variable"] == "river_discharge":
+                flow[r["station_id"]] = r["value_milli"]
+                if r["station_id"] == TARGET:
+                    guaiba = r["value_milli"]
         q = e["quality"]
         days.append(
             {
@@ -86,6 +89,7 @@ def main() -> None:
                 "signers": a["signers"],
                 "members": [{"member": m["member"], "status": m["status"]} for m in e["members"]],
                 "guaiba_milli": guaiba,
+                **({"flow": flow} if day_of(e["header"]["t_start"]) >= LIVE_FROM else {}),
                 # Nível medido (ANA): última leitura do dia, máxima e quantas horas vieram.
                 **(
                     {"stage": {sid: {"last": v[-1], "max": max(v), "hours": len(v)} for sid, v in stage.items()}}
@@ -245,6 +249,8 @@ def main() -> None:
             "issues": live_issues,
             "public_alerts": alerts,
             "stage_stations": [{"id": s["id"], "name": s["name"]} for s in live_stations if s["source"] == "ana"],
+            # Estações do modo ao vivo, para o mapa da bacia.
+            "stations": [{k: s[k] for k in ("id", "name", "source", "variable", "lat", "lon")} for s in live_stations],
             "stage_main": STAGE_MAIN,
             "stage_series": stage_series_tail(stage_series),
         },
