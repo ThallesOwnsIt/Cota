@@ -90,9 +90,9 @@ def main() -> None:
                 "members": [{"member": m["member"], "status": m["status"]} for m in e["members"]],
                 "guaiba_milli": guaiba,
                 **({"flow": flow} if day_of(e["header"]["t_start"]) >= LIVE_FROM else {}),
-                # Nível medido (ANA): última leitura do dia, máxima e quantas horas vieram.
+                # Nível medido (ANA): primeira e última leitura do dia, máxima e quantas horas vieram.
                 **(
-                    {"stage": {sid: {"last": v[-1], "max": max(v), "hours": len(v)} for sid, v in stage.items()}}
+                    {"stage": {sid: {"first": v[0], "last": v[-1], "max": max(v), "hours": len(v)} for sid, v in stage.items()}}
                     if stage
                     else {}
                 ),

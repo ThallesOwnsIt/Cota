@@ -840,9 +840,18 @@ const riverName = (sid) => {
   return L(n, n.replace(" em ", " at "));
 };
 
-function stageChange(milli) {
-  if (milli === 0) return L("estável em 24 h", "steady over 24 h");
-  return milli > 0 ? L(`▲ subiu ${cm(milli)} cm em 24 h`, `▲ up ${cm(milli)} cm in 24 h`) : L(`▼ desceu ${cm(milli)} cm em 24 h`, `▼ down ${cm(milli)} cm in 24 h`);
+// `sameDay`: sem o dia anterior, a variação é entre a primeira e a última leitura do próprio dia.
+function stageChange(milli, sameDay = false) {
+  const span = sameDay ? L("ao longo do dia", "during the day") : L("em 24 h", "in 24 h");
+  if (milli === 0) return L(`estável ${span}`, `steady ${span}`);
+  return milli > 0 ? L(`▲ subiu ${cm(milli)} cm ${span}`, `▲ up ${cm(milli)} cm ${span}`) : L(`▼ desceu ${cm(milli)} cm ${span}`, `▼ down ${cm(milli)} cm ${span}`);
+}
+
+// Variação de uma régua: contra o fim do dia anterior, ou dentro do próprio dia se ele faltar.
+function gaugeChange(cur, prev) {
+  if (prev?.last != null) return { ch: cur.last - prev.last, sameDay: false };
+  if (cur.first != null && cur.hours > 1) return { ch: cur.last - cur.first, sameDay: true };
+  return null;
 }
 
 function renderStage() {
@@ -890,8 +899,8 @@ function renderStage() {
   const rivers = Object.entries(day.stage)
     .filter(([sid]) => sid !== LV.stage_main)
     .map(([sid, s]) => {
-      const p = before?.stage?.[sid];
-      const ch = p ? stageChange(s.last - p.last) : L("sem leitura do dia anterior", "no reading from the day before");
+      const g = gaugeChange(s, before?.stage?.[sid]);
+      const ch = g ? stageChange(g.ch, g.sameDay) : L("sem leitura do dia anterior", "no reading from the day before");
       return `<div><dt>${esc(riverName(sid))}</dt><dd>${meters(s.last)} m<small>${ch}</small></dd></div>`;
     })
     .join("");
@@ -995,10 +1004,11 @@ function basinPoints() {
   // Bundles gerados antes do mapa não têm `live.stations`: usa o catálogo do replay (sem as réguas).
   for (const s of B.live.stations ?? B.stations.filter((x) => x.source === "open_meteo_glofas")) {
     if (s.source === "ana") {
-      const last = lastWith((d) => d.stage?.[s.id]?.last);
-      const ch = last && last.prev != null ? last.v - last.prev : null;
-      const trend = !last ? "none" : ch == null || Math.abs(ch) < 20 ? "steady" : ch > 0 ? "up" : "down";
-      pts.push({ ...s, kind: "ana", last, ch, trend });
+      const found = lastWith((d) => d.stage?.[s.id]);
+      const last = found && { ...found, v: found.v.last };
+      const g = found ? gaugeChange(found.v, found.prev) : null;
+      const trend = !last ? "none" : !g || Math.abs(g.ch) < 20 ? "steady" : g.ch > 0 ? "up" : "down";
+      pts.push({ ...s, kind: "ana", last, ch: g?.ch ?? null, sameDay: g?.sameDay ?? false, trend });
     } else if (s.source === "open_meteo_glofas") {
       pts.push({ ...s, kind: "glofas", last: lastWith((d) => d.flow?.[s.id]) });
     }
@@ -1165,7 +1175,7 @@ function renderBasinDetail(p) {
     const q = d.quality?.find((x) => x.station_id === p.id);
     const value = p.kind === "ana" ? `${meters(p.last.v)} m` : `${m3(p.last.v)} m³/s`;
     let change = "";
-    if (p.kind === "ana") change = p.ch == null ? L("sem leitura do dia anterior", "no reading from the day before") : stageChange(p.ch);
+    if (p.kind === "ana") change = p.ch == null ? L("sem leitura do dia anterior", "no reading from the day before") : stageChange(p.ch, p.sameDay);
     else if (p.last.prev) {
       const pc = (p.last.v / p.last.prev - 1) * 100;
       change = Math.abs(pc) < 1 ? L("estável em 24 h", "steady over 24 h") : pc > 0 ? L(`▲ ${nf0.format(pc)}% em 24 h`, `▲ ${nf0.format(pc)}% in 24 h`) : L(`▼ ${nf0.format(-pc)}% em 24 h`, `▼ ${nf0.format(-pc)}% in 24 h`);
