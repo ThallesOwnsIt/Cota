@@ -1,4 +1,4 @@
-/* Identidade da logo: azul-marinho #14151d, branco e a onda azul #6595e9. */
+/* The logo's identity: navy #14151d, white and the blue wave #6595e9. */
 :root {
   color-scheme: light;
   --navy: #14151d;
@@ -192,18 +192,18 @@ code,
   outline-offset: 2px;
 }
 
-/* idioma: o bloco da outra língua fica fora da página */
+/* language: the other language's block stays off the page */
 :root[lang="en"] [data-lang="pt"],
 :root:not([lang="en"]) [data-lang="en"] {
   display: none !important;
 }
 
-/* sem local escolhido, só o topo aparece */
+/* with no location chosen, only the top shows */
 body:not([data-place]) .needs-place {
   display: none !important;
 }
 
-/* ---- navegação ---------------------------------------------------------- */
+/* ---- navigation ---------------------------------------------------------- */
 .nav {
   position: sticky;
   top: 0;
@@ -407,7 +407,7 @@ a.ghost {
   vector-effect: non-scaling-stroke;
 }
 
-/* escolha do local */
+/* location picker */
 .picker {
   margin-top: 28px;
   width: 100%;
@@ -480,7 +480,7 @@ a.ghost {
   margin-left: 4px;
 }
 
-/* ---- seções ------------------------------------------------------------- */
+/* ---- sections ------------------------------------------------------------- */
 .band {
   padding: 96px 0;
   background: var(--page);
@@ -557,7 +557,7 @@ a.ghost {
   }
 }
 
-/* como funciona */
+/* how it works */
 .steps {
   list-style: none;
   padding: 0;
@@ -601,7 +601,7 @@ a.ghost {
   color: var(--text-2);
 }
 
-/* indicadores: números grandes separados por um fio, sem caixa */
+/* indicators: large numbers separated by a hairline, no box */
 .kpis {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
@@ -630,7 +630,7 @@ a.ghost {
   font-size: 12.5px;
 }
 
-/* gráficos */
+/* charts */
 .chart-card {
   background: var(--surface);
   border: 1px solid var(--border);
@@ -780,7 +780,7 @@ a.ghost {
   border-radius: 50%;
 }
 
-/* alerta antecipado: a situação de hoje */
+/* early warning: today's situation */
 .now {
   display: grid;
   grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr);
@@ -1209,7 +1209,7 @@ table.data tr.active td {
   color: var(--text-2);
 }
 
-/* linha do tempo */
+/* timeline */
 .timeline {
   overflow-x: auto;
   padding: 8px 0 4px;
@@ -1274,7 +1274,7 @@ table.data tr.active td {
   font-weight: 400;
 }
 
-/* dia */
+/* day */
 .day-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(min(320px, 100%), 1fr));
@@ -1371,7 +1371,7 @@ dl.kv dd {
   color: var(--critical);
 }
 
-/* verificação */
+/* verification */
 .verify {
   margin-top: 16px;
   border: 1px solid var(--border);
@@ -1534,7 +1534,7 @@ dl.kv dd {
   color: var(--text-2);
 }
 
-/* rodapé */
+/* footer */
 .foot {
   background: var(--navy);
   color: #a9b0c2;
@@ -1652,7 +1652,7 @@ dl.kv dd {
   }
 }
 
-/* ---- mapa da bacia ---- */
+/* ---- basin map ---- */
 .basin {
   display: grid;
   grid-template-columns: minmax(0, 1.55fr) minmax(0, 1fr);

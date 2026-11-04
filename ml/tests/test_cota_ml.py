@@ -34,14 +34,14 @@ def test_feature_leaf_format():
 
 @pytest.mark.skipif(not REPLAY.exists(), reason="sem leituras do replay")
 def test_features_do_not_look_ahead():
-    """As features do dia D não podem mudar quando os dados depois de D são removidos."""
+    """Day D's features must not change when the data after D is removed."""
     readings = pl.read_ndjson(REPLAY)
     day = date(2024, 5, 3)
     cutoff = 1714780800  # 2024-05-04T00:00Z
     full = feature_table(daily_table(readings)).filter(pl.col("day") == day)
     past = feature_table(daily_table(readings.filter(pl.col("ts_utc") < cutoff))).filter(pl.col("day") == day)
     assert full.select(FEATURES).rows() == past.select(FEATURES).rows()
-    # ... e os alvos de fato vêm do futuro.
+    # ... and the targets really do come from the future.
     assert full["q1"][0] is not None and past["q1"][0] is None
 
 
@@ -59,7 +59,7 @@ def test_tampered_model_is_rejected(tmp_path):
 
 
 def test_outlook_rule_hash_and_no_lookahead():
-    """O hash publicado é o do JSON canônico da regra, e o backtest só usa rodadas ≥ (k+1) dias antes."""
+    """The published hash is that of the rule's canonical JSON, and the backtest only uses runs ≥ (k+1) days earlier."""
     import hashlib
     import inspect
     import json

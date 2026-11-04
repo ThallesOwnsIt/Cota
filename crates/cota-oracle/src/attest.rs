@@ -1,5 +1,5 @@
-//! Atestação de dados externos (avisos oficiais, chuva prevista): cada nó assina o que viu;
-//! o agregador só leva à cadeia a versão que ≥ k membros viram com conteúdo idêntico.
+//! Attestation of external data (official warnings, forecast rain): each node signs what it saw;
+//! the aggregator only takes to the chain the version that ≥ k members saw with identical content.
 
 use std::collections::BTreeMap;
 
@@ -11,16 +11,17 @@ use serde::{Deserialize, Serialize};
 use crate::inmet_alerts::ObservedAlert;
 use crate::keys::pubkey_base58;
 
-/// O que um nó publica sobre uma versão de aviso.
+/// What a node publishes about one version of a warning.
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct SignedAlert {
     pub node: String,
     pub header: PublicAlertHeader,
     #[serde(with = "crate::node::hex64")]
     pub signature: [u8; 64],
-    /// Conteúdo canônico; `header.content_sha256` é o hash destes bytes.
+    /// Canonical content; `header.content_sha256` is the hash of these bytes.
     pub content: String,
-    /// Quando o nó viu o aviso (relógio local, só informativo; o "quando" que vale é o slot).
+    /// When the node saw the warning (local clock, informational only; the "when" that counts is
+    /// the slot).
     pub seen_at: i64,
     pub description: String,
     pub severity_label: String,
@@ -40,14 +41,14 @@ pub fn sign(key: &SigningKey, a: &ObservedAlert, seen_at: i64) -> SignedAlert {
     }
 }
 
-/// Algo que um nó assina e publica junto com o conteúdo de que o cabeçalho é o hash.
+/// Something a node signs and publishes together with the content the header hashes.
 pub trait Attestation: Clone {
     type Header: Clone;
     fn node(&self) -> &str;
     fn signature(&self) -> &[u8; 64];
     fn header(&self) -> &Self::Header;
     fn message(&self) -> Vec<u8>;
-    /// O conteúdo publicado é o que o hash do cabeçalho diz.
+    /// The published content is what the header's hash says.
     fn content_matches(&self) -> bool;
 }
 
@@ -70,17 +71,17 @@ impl Attestation for SignedAlert {
     }
 }
 
-/// Um cabeçalho pronto para a cadeia.
+/// A header ready for the chain.
 #[derive(Debug, Clone)]
 pub struct Attested<S: Attestation> {
     pub header: S::Header,
     pub signatures: Vec<([u8; 32], [u8; 64])>,
-    /// Submissões dos membros que assinaram (para o ledger).
+    /// Submissions from the members who signed (for the ledger).
     pub observations: Vec<S>,
 }
 
-/// Agrupa por mensagem assinada e devolve as que têm ≥ `threshold` membros distintos com
-/// assinatura válida e conteúdo que bate com o hash.
+/// Groups by signed message and returns those with ≥ `threshold` distinct members with a
+/// valid signature and content matching the hash.
 pub fn select<S: Attestation>(members: &[[u8; 32]], threshold: usize, subs: &[S]) -> Result<Vec<Attested<S>>> {
     let mut groups: BTreeMap<Vec<u8>, Attested<S>> = BTreeMap::new();
     for s in subs {
@@ -149,7 +150,7 @@ mod tests {
     fn rejects_forged_content_outsiders_and_duplicates() {
         let (k, m) = keys();
         let mut forged = sign(&k[1], &observed(0), 2);
-        forged.content.push(' '); // conteúdo não bate com o hash assinado
+        forged.content.push(' '); // content does not match the signed hash
         let outsider = sign(&SigningKey::from_bytes(&[9; 32]), &observed(0), 2);
         let subs = vec![sign(&k[0], &observed(0), 1), sign(&k[0], &observed(0), 5), forged, outsider];
         assert!(select(&m, 2, &subs).unwrap().is_empty());

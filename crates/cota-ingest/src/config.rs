@@ -1,4 +1,4 @@
-//! Catálogo de estações (`config/stations.toml`).
+//! Station catalog (`config/stations.toml`).
 
 use std::path::Path;
 
@@ -14,7 +14,7 @@ pub struct StationConfig {
     pub variable: Variable,
     pub lat: f64,
     pub lon: f64,
-    /// Referência vertical, só para nível de rio.
+    /// Vertical reference, river level only.
     #[serde(default)]
     pub datum_id: Option<String>,
 }

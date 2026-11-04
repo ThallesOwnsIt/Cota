@@ -1,6 +1,6 @@
-# Catálogo do modo ao vivo: só fontes com dado do dia anterior disponível.
-# As estações do INMET publicam o histórico com ~1 mês de atraso (zip mensal) e a API
-# horária exige token; entram aqui quando houver acesso em tempo real.
+# Live-mode catalog: only sources with the previous day's data available.
+# INMET stations publish their history about 1 month late (monthly zip) and the hourly
+# API requires a token; they come in here once real-time access is available.
 
 [[station]]
 id = "GLOFAS-GUAIBA"
@@ -50,9 +50,9 @@ variable = "river_discharge"
 lat = -29.975
 lon = -51.175
 
-# Nível medido em régua pelas estações telemétricas da ANA (HidroWebService, exige
-# ANA_IDENTIFICADOR e ANA_SENHA). Valor em metros acima do zero da régua de cada estação;
-# o Cais Mauá é a referência da Defesa Civil de Porto Alegre (inundação a partir de 3,00 m).
+# Level measured on gauges by ANA's telemetric stations (HidroWebService, requires
+# ANA_IDENTIFICADOR and ANA_SENHA). Value in metres above each station's gauge zero;
+# Cais Mauá is the reference used by Porto Alegre's civil defense (flooding from 3.00 m).
 
 [[station]]
 id = "ANA-87450004"

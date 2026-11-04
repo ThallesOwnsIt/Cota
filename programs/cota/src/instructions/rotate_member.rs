@@ -2,8 +2,8 @@ use anchor_lang::prelude::*;
 
 use crate::{constants::*, error::CotaError, events::MemberRotated, state::Committee};
 
-/// Troca a chave de um nó (chave vazada ou operador substituído). A posição no
-/// bitmap de assinantes é mantida.
+/// Replaces a node's key (leaked key or replaced operator). Its position in the
+/// signer bitmap is kept.
 #[derive(Accounts)]
 pub struct RotateMember<'info> {
     pub authority: Signer<'info>,

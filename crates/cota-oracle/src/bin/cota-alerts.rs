@@ -1,9 +1,9 @@
-//! Avisos oficiais com prova on-chain.
+//! Official warnings with on-chain proof.
 //!
-//! - `observe` (cada nó, de forma independente): consulta o INMET, assina cada versão de
-//!   aviso dos estados configurados e grava em `data/nodes/node-N/alerts/`.
-//! - `anchor` (agregador): leva à cadeia as versões vistas por ≥ k membros e registra o
-//!   conteúdo em `data/ledger/public_alerts/`.
+//! - `observe` (each node, independently): queries INMET, signs each version of the
+//!   warnings for the configured states and writes them to `data/nodes/node-N/alerts/`.
+//! - `anchor` (aggregator): takes to the chain the versions seen by ≥ k members and stores the
+//!   content in `data/ledger/public_alerts/`.
 
 use std::path::{Path, PathBuf};
 
@@ -14,7 +14,7 @@ use serde_json::json;
 use solana_signer::Signer;
 
 #[derive(Parser)]
-#[command(about = "Avisos oficiais (INMET) atestados pelo comitê do Cota")]
+#[command(about = "Official warnings (INMET) attested by Cota's committee")]
 struct Args {
     #[command(subcommand)]
     cmd: Cmd,
@@ -27,10 +27,10 @@ enum Cmd {
         key: PathBuf,
         #[arg(long)]
         out: PathBuf,
-        /// Estados por extenso, como a API do INMET escreve.
+        /// State names spelled out, as the INMET API writes them.
         #[arg(long, default_value = "Rio Grande do Sul", value_delimiter = ',')]
         states: Vec<String>,
-        /// Lê a resposta de um arquivo em vez da API (testes).
+        /// Reads the response from a file instead of the API (tests).
         #[arg(long)]
         input: Option<PathBuf>,
     },
@@ -68,7 +68,7 @@ fn observe(key: &Path, out: &Path, states: &[String], input: Option<&Path>) -> R
     for a in &alerts {
         let file = out.join(format!("{}.json", hex::encode(a.header.content_sha256)));
         if file.exists() {
-            continue; // já assinado: o primeiro "visto" do nó não muda
+            continue; // already signed: the node's first "seen" does not change
         }
         std::fs::write(&file, serde_json::to_string_pretty(&attest::sign(&key, a, now))?)?;
         new += 1;
@@ -110,7 +110,7 @@ fn anchor(rpc_url: &str, cluster: &str, payer: &Path, nodes_dir: &Path, ledger: 
             continue;
         }
         let tx = if rpc.account_data(&pda)?.is_some() {
-            None // já ancorado por outra execução; só falta o registro local
+            None // already anchored by another run; only the local record is missing
         } else {
             Some(rpc.send_and_confirm(&chain::record_public_alert_instructions(payer.pubkey(), &a.header, &a.signatures), &payer)?)
         };

@@ -1,4 +1,4 @@
-//! Registro local de cada lote ancorado: o que o dashboard lê junto com a cadeia.
+//! Local record of each anchored batch: what the dashboard reads alongside the chain.
 
 use std::path::Path;
 
@@ -31,7 +31,7 @@ pub struct LedgerEntry<'a> {
     pub readings: &'a [Reading],
 }
 
-/// Grava `{dir}/batches/{batch_id:05}.json`.
+/// Writes `{dir}/batches/{batch_id:05}.json`.
 pub fn write_entry(
     dir: &Path,
     agg: &Aggregate,

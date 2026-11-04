@@ -1,9 +1,9 @@
-//! `cota-ingest`: baixa as fontes, normaliza em `Reading`s e grava o conjunto de dados.
+//! `cota-ingest`: downloads the sources, normalizes them into `Reading`s and writes the dataset.
 //!
-//! Saída em `--out`:
-//! - `readings.jsonl`: um `Reading` por linha (o que os nós assinam)
-//! - `readings.csv`:   versão plana para análise/ML
-//! - `manifest.json`:  janela, contagens por estação e SHA-256 dos arquivos
+//! Output in `--out`:
+//! - `readings.jsonl`: one `Reading` per line (what the nodes sign)
+//! - `readings.csv`:   flat version for analysis/ML
+//! - `manifest.json`:  window, per-station counts and SHA-256 of the files
 
 use std::fmt::Write as _;
 use std::io::Write as _;
@@ -17,24 +17,24 @@ use serde::Serialize;
 use sha2::{Digest, Sha256};
 
 #[derive(Parser)]
-#[command(about = "Ingestão das fontes hidrometeorológicas do Cota")]
+#[command(about = "Ingestion of Cota's hydrometeorological sources")]
 struct Args {
-    /// Catálogo de estações.
+    /// Station catalog.
     #[arg(long, default_value = "config/stations.toml")]
     config: PathBuf,
-    /// Primeiro dia (UTC), inclusivo.
+    /// First day (UTC), inclusive.
     #[arg(long)]
     from: NaiveDate,
-    /// Último dia (UTC), inclusivo.
+    /// Last day (UTC), inclusive.
     #[arg(long)]
     to: NaiveDate,
-    /// Cache dos arquivos brutos baixados.
+    /// Cache of the downloaded raw files.
     #[arg(long, default_value = "data/raw")]
     cache: PathBuf,
-    /// Diretório de saída.
+    /// Output directory.
     #[arg(long)]
     out: PathBuf,
-    /// Aceita estações ausentes em algum ano (histórico de treino).
+    /// Accepts stations missing in some year (training history).
     #[arg(long)]
     lenient: bool,
 }

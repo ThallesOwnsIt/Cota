@@ -1,11 +1,11 @@
 #!/usr/bin/env python3
-"""Próximo dia UTC a ancorar no modo ao vivo (ou nada, se o ledger está em dia).
+"""Next UTC day to anchor in live mode (or nothing, if the ledger is up to date).
 
-    python3 scripts/next_day.py            → um dia (o próximo que falta), ou linha vazia
-    python3 scripts/next_day.py --all      → todos os que faltam, um por linha
+    python3 scripts/next_day.py            → one day (the next missing one), or an empty line
+    python3 scripts/next_day.py --all      → every missing day, one per line
 
-O dia corrente nunca entra: a janela dele ainda está aberta. Na primeira execução depois
-do replay de 2024, começa BACKFILL_DAYS (padrão 7) antes de ontem.
+The current day never goes in: its window is still open. On the first run after
+the 2024 replay, it starts BACKFILL_DAYS (default 7) before yesterday.
 """
 
 import glob

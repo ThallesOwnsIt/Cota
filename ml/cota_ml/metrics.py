@@ -1,4 +1,4 @@
-"""Métricas de avaliação (seções 6.8 e 6.10 do briefing). Todas O(n)."""
+"""Evaluation metrics (sections 6.8 and 6.10 of the briefing). All O(n)."""
 
 from __future__ import annotations
 
@@ -11,7 +11,7 @@ def pinball(y: np.ndarray, q: np.ndarray, tau: float) -> float:
 
 
 def crps_approx(y: np.ndarray, preds: dict[float, np.ndarray]) -> float:
-    """CRPS aproximado pela média das perdas pinball × 2 sobre os quantis."""
+    """CRPS approximated by the mean pinball loss × 2 over the quantiles."""
     return 2 * float(np.mean([pinball(y, q, tau) for tau, q in preds.items()]))
 
 
@@ -31,7 +31,7 @@ def kge(obs: np.ndarray, sim: np.ndarray) -> float:
 
 
 def contingency(alert: np.ndarray, event: np.ndarray) -> dict[str, float | int]:
-    """Acerto a, alarme falso b, falha c → POD, FAR, CSI."""
+    """Hits a, false alarms b, misses c → POD, FAR, CSI."""
     a = int(np.sum(alert & event))
     b = int(np.sum(alert & ~event))
     c = int(np.sum(~alert & event))

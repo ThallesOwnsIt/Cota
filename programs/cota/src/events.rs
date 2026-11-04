@@ -36,22 +36,22 @@ pub struct BatchCommitted {
     pub slot: u64,
 }
 
-/// Lote aceito pelo limiar, mas com membros do comitê que não assinaram (nó mudo ou discordante).
+/// Batch accepted by the threshold, but with committee members who did not sign (silent or dissenting node).
 #[event]
 pub struct OracleAbsent {
     pub batch_id: u64,
-    /// Bit i ligado = `committee.members[i]` não assinou.
+    /// Bit i set = `committee.members[i]` did not sign.
     pub missing: u8,
 }
 
-/// Uma fonte perdeu confiança no lote `batch_id` (índice C_s abaixo do mínimo).
+/// A source lost confidence in batch `batch_id` (confidence index C_s below the minimum).
 #[event]
 pub struct SourceDegraded {
     pub batch_id: u64,
     pub station_id: String,
-    /// Índice de confiança C_s × 1000.
+    /// Confidence index C_s × 1000.
     pub score_milli: u16,
-    /// 0 indisponível, 1 travado, 2 salto, 3 discordância entre nós, 4 sem dados recentes.
+    /// 0 unavailable, 1 stuck, 2 jump, 3 disagreement between nodes, 4 no recent data.
     pub reason: u8,
 }
 
@@ -127,7 +127,7 @@ pub struct OutlookCommitted {
     pub signers: u8,
 }
 
-/// A chuva prevista cruzou o limiar da regra: alerta antecipado.
+/// Forecast rain crossed the rule's threshold: early warning.
 #[event]
 pub struct EarlyWarning {
     pub outlook: Pubkey,

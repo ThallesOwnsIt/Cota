@@ -19,8 +19,8 @@ pub struct ForecastArgs {
     pub features_root: [u8; 32],
 }
 
-/// Grava uma previsão vinculada ao último lote ancorado. O programa garante que a leitura
-/// prevista ainda não foi ancorada: é a prova de que a previsão não foi ajustada depois.
+/// Records a forecast tied to the latest anchored batch. The program guarantees that the forecast reading has
+/// not been anchored yet: that is the proof the forecast was not adjusted afterwards.
 #[derive(Accounts)]
 #[instruction(args: ForecastArgs)]
 pub struct CommitForecast<'info> {

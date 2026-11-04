@@ -1,14 +1,14 @@
 #!/usr/bin/env bash
-# Modo ao vivo do Cota.
+# Cota live mode.
 #
-#   scripts/live.sh alerts    3 nós consultam os avisos do INMET; o agregador ancora os novos
-#   scripts/live.sh daily     ancora cada dia UTC encerrado que falta, atesta a chuva prevista,
-#                             prevê a vazão e emite alertas
-#   scripts/live.sh publish   audita contra a cadeia, gera os dados do dashboard e publica
-#   scripts/live.sh all       os três, nessa ordem
+#   scripts/live.sh alerts    3 nodes check INMET's warnings; the aggregator anchors the new ones
+#   scripts/live.sh daily     anchors each missing closed UTC day, attests the forecast rain,
+#                             forecasts discharge and issues alerts
+#   scripts/live.sh publish   audits against the chain, builds the dashboard data and publishes it
+#   scripts/live.sh all       all three, in that order
 #
-# Variáveis: RPC, CLUSTER, PAYER, BACKFILL_DAYS (dias anteriores a ancorar na 1ª execução, padrão 7),
-#            DEPLOY (1 = publicar na Vercel ao final do publish)
+# Variables: RPC, CLUSTER, PAYER, BACKFILL_DAYS (earlier days to anchor on the 1st run, default 7),
+#            DEPLOY (1 = publish to Vercel at the end of publish)
 set -euo pipefail
 cd "$(dirname "$0")/.."
 
@@ -18,8 +18,8 @@ export PAYER=${PAYER:-$HOME/.config/solana/id.json}
 BACKFILL_DAYS=${BACKFILL_DAYS:-7}
 DEPLOY=${DEPLOY:-0}
 BIN=target/release
-# Credenciais locais (ANA_IDENTIFICADOR, ANA_SENHA); no GitHub Actions vêm dos secrets.
-# Lido como CHAVE=valor literal, sem executar o arquivo: uma senha com $ ou aspas chega intacta.
+# Local credentials (ANA_IDENTIFICADOR, ANA_SENHA); in GitHub Actions they come from the secrets.
+# Read as literal KEY=value, without executing the file: a password with $ or quotes arrives intact.
 if [[ -f .env ]]; then
   while IFS='=' read -r k v; do
     [[ $k =~ ^[A-Za-z_][A-Za-z0-9_]*$ ]] && export "$k=$v"

@@ -1,10 +1,10 @@
-//! INMET: zips anuais de dados históricos das estações automáticas.
+//! INMET: yearly zips of historical data from the automatic weather stations.
 //!
-//! Formato (um CSV por estação dentro do zip, Latin-1, separador `;`, decimal com vírgula):
-//! 8 linhas de metadados (`CODIGO (WMO):;A801`, `LATITUDE:;-30,05`…), 1 linha de
-//! cabeçalho e uma linha por hora UTC. Desde 2019: `2024/05/02;0300 UTC;17,2;…`.
-//! Antes: `2018-05-02;03:00;17.2;…`. Faltantes: campo vazio ou `-9999`.
-//! A chuva de uma linha é o acumulado da hora que termina no horário indicado.
+//! Format (one CSV per station inside the zip, Latin-1, `;` separator, comma decimals):
+//! 8 metadata lines (`CODIGO (WMO):;A801`, `LATITUDE:;-30,05`…), 1 header line
+//! and one line per UTC hour. Since 2019: `2024/05/02;0300 UTC;17,2;…`.
+//! Before: `2018-05-02;03:00;17.2;…`. Missing: empty field or `-9999`.
+//! A line's rain is the total for the hour ending at the given time.
 
 use std::io::Read;
 use std::path::{Path, PathBuf};
@@ -26,7 +26,7 @@ pub struct ParseStats {
     pub missing: usize,
 }
 
-/// Baixa `{ano}.zip` para `cache_dir` se ainda não existir; retorna o caminho.
+/// Downloads `{year}.zip` into `cache_dir` if it is not there yet; returns the path.
 pub fn ensure_zip(http: &reqwest::blocking::Client, cache_dir: &Path, year: i32) -> Result<PathBuf> {
     let path = cache_dir.join(format!("{year}.zip"));
     if path.exists() {
@@ -34,7 +34,7 @@ pub fn ensure_zip(http: &reqwest::blocking::Client, cache_dir: &Path, year: i32)
     }
     std::fs::create_dir_all(cache_dir)?;
     let url = format!("{ZIP_URL}/{year}.zip");
-    // O portal do INMET derruba conexões sem User-Agent de navegador.
+    // INMET's portal drops connections without a browser User-Agent.
     let bytes = http
         .get(&url)
         .header(reqwest::header::USER_AGENT, "Mozilla/5.0 (cota-oracle)")
@@ -48,8 +48,8 @@ pub fn ensure_zip(http: &reqwest::blocking::Client, cache_dir: &Path, year: i32)
     Ok(path)
 }
 
-/// Bytes crus do CSV da estação dentro do zip anual.
-/// `None` se a estação não está no zip daquele ano (ainda não existia ou foi desativada).
+/// Raw bytes of the station's CSV inside the yearly zip.
+/// `None` if the station is not in that year's zip (it did not exist yet or was deactivated).
 pub fn read_station_csv(zip_path: &Path, station_id: &str) -> Result<Option<Vec<u8>>> {
     let file = std::fs::File::open(zip_path).with_context(|| format!("abrindo {}", zip_path.display()))?;
     let mut archive = zip::ZipArchive::new(file)?;
@@ -65,10 +65,10 @@ pub fn read_station_csv(zip_path: &Path, station_id: &str) -> Result<Option<Vec<
     Ok(None)
 }
 
-/// Converte o CSV em leituras de chuva dentro de [from, to) (segundos UTC).
+/// Converts the CSV into rain readings within [from, to) (UTC seconds).
 ///
-/// `raw_payload_sha256` = SHA-256 da linha exatamente como está no arquivo (bytes Latin-1,
-/// sem o terminador de linha). Qualquer pessoa com o zip oficial refaz o hash.
+/// `raw_payload_sha256` = SHA-256 of the line exactly as it is in the file (Latin-1 bytes,
+/// without the line terminator). Anyone with the official zip can recompute the hash.
 pub fn parse_csv(bytes: &[u8], station_id: &str, from: i64, to: i64) -> Result<(Vec<Reading>, ParseStats)> {
     let lines: Vec<&[u8]> = bytes
         .split(|&b| b == b'\n')
@@ -122,7 +122,7 @@ pub fn parse_csv(bytes: &[u8], station_id: &str, from: i64, to: i64) -> Result<(
     Ok((readings, stats))
 }
 
-/// Aceita `2024/05/02` + `0300 UTC` e `2018-05-02` + `03:00`.
+/// Accepts `2024/05/02` + `0300 UTC` and `2018-05-02` + `03:00`.
 fn parse_timestamp(date: &str, hour: &str) -> Option<i64> {
     let date = NaiveDate::parse_from_str(&date.replace('-', "/"), "%Y/%m/%d").ok()?;
     let hhmm: String = hour.trim().trim_end_matches(" UTC").chars().filter(|c| c.is_ascii_digit()).collect();

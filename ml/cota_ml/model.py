@@ -1,4 +1,4 @@
-"""Modelos LightGBM quantílicos: um por quantil e por horizonte."""
+"""Quantile LightGBM models: one per quantile and per horizon."""
 
 from __future__ import annotations
 
@@ -12,8 +12,8 @@ import polars as pl
 
 from .features import FEATURES, HORIZONS, QUANTILES
 
-# deterministic + 1 thread: o mesmo histórico gera byte a byte o mesmo modelo,
-# então `model_sha256` é reproduzível por qualquer pessoa.
+# deterministic + 1 thread: the same history produces the same model byte for byte,
+# so anyone can reproduce `model_sha256`.
 PARAMS = {
     "objective": "quantile",
     "learning_rate": 0.03,
@@ -47,9 +47,9 @@ def train(table: pl.DataFrame, horizons: list[int] = HORIZONS) -> dict[tuple[int
 
 
 def predict_ln(models: dict[tuple[int, float], lgb.Booster], table: pl.DataFrame, h: int, widen: float = 0.0) -> np.ndarray:
-    """Quantis de ln Q(D+h) − ln Q(D), linhas = QUANTILES.
+    """Quantiles of ln Q(D+h) − ln Q(D), rows = QUANTILES.
 
-    Ordena para corrigir cruzamentos e alarga P10/P90 pela margem conformal `widen`.
+    Sorts them to fix crossings and widens P10/P90 by the conformal margin `widen`.
     """
     x = table.select(FEATURES).to_numpy()
     raw = np.stack([models[(h, tau)].predict(x) for tau in QUANTILES])
@@ -60,17 +60,17 @@ def predict_ln(models: dict[tuple[int, float], lgb.Booster], table: pl.DataFrame
 
 
 def predict(models: dict[tuple[int, float], lgb.Booster], table: pl.DataFrame, h: int, widen: float = 0.0) -> dict[float, np.ndarray]:
-    """Quantis de vazão (m³/s) em D+h."""
+    """Discharge quantiles (m³/s) at D+h."""
     raw = predict_ln(models, table, h, widen)
     q0 = table["q0"].to_numpy()
     return {tau: q0 * np.exp(raw[i]) for i, tau in enumerate(QUANTILES)}
 
 
 def conformal_margin(table: pl.DataFrame, years: list[int], h: int, coverage: float, fold_years: int = 3) -> float:
-    """Margem da CQR (Romano et al., 2019) com folds por blocos de anos.
+    """CQR margin (Romano et al., 2019) with folds made of blocks of years.
 
-    Cada bloco é previsto por um modelo treinado sem ele; o escore de cada dia é
-    max(P10 − y, y − P90) em ln. A margem é o quantil que daria `coverage` fora da amostra.
+    Each block is predicted by a model trained without it; each day's score is
+    max(P10 − y, y − P90) in ln. The margin is the quantile that would give `coverage` out of sample.
     """
     scores = []
     for i in range(0, len(years), fold_years):
@@ -100,13 +100,13 @@ def save(models: dict[tuple[int, float], lgb.Booster], widen: dict[int, float], 
             (out / name).write_bytes(text)
             files.append({"file": name, "horizon_days": h, "quantile": tau, "sha256": hashlib.sha256(text).hexdigest()})
             whole.update(text)
-    # Margens conformais fazem parte do modelo: entram no mesmo hash.
+    # Conformal margins are part of the model: they go into the same hash.
     text = (json.dumps({f"h{h}": round(w, 6) for h, w in widen.items()}, sort_keys=True) + "\n").encode()
     (out / CALIBRATION_FILE).write_bytes(text)
     files.append({"file": CALIBRATION_FILE, "sha256": hashlib.sha256(text).hexdigest()})
     whole.update(text)
     manifest = {
-        # SHA-256 da concatenação dos arquivos (modelos + calibração), na ordem de `files`.
+        # SHA-256 of the concatenated files (models + calibration), in the order of `files`.
         "model_sha256": whole.hexdigest(),
         "features": FEATURES,
         "horizons_days": HORIZONS,
@@ -120,7 +120,7 @@ def save(models: dict[tuple[int, float], lgb.Booster], widen: dict[int, float], 
 
 
 def load(out: Path) -> tuple[dict[tuple[int, float], lgb.Booster], dict[int, float], dict]:
-    """Carrega e confere cada arquivo contra o manifesto e o `model_sha256`."""
+    """Loads each file and checks it against the manifest and `model_sha256`."""
     manifest = json.loads((out / "manifest.json").read_text())
     whole = hashlib.sha256()
     models, widen = {}, {}

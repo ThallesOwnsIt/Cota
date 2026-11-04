@@ -1,4 +1,4 @@
-//! Pipeline completo sem rede: nós assinam → agregador escolhe → instruções reais no LiteSVM.
+//! Full pipeline without a network: nodes sign → aggregator picks → real instructions in LiteSVM.
 
 use anchor_lang::{prelude::Pubkey, AccountDeserialize};
 use chrono::NaiveDate;
@@ -42,7 +42,7 @@ fn sign(key: &SigningKey, batch_id: u64, day: i64, prev: Hash, tamper: bool) -> 
 
 fn send(svm: &mut LiteSVM, payer: &Keypair, ixs: &[anchor_lang::solana_program::instruction::Instruction]) {
     let tx = Transaction::new_signed_with_payer(ixs, Some(&payer.pubkey()), &[payer], svm.latest_blockhash());
-    // Mesmo formato de bytes que o cliente RPC envia.
+    // Same byte format the RPC client sends.
     let wire = bincode::serialize(&tx).unwrap();
     let decoded: Transaction = bincode::deserialize(&wire).unwrap();
     svm.send_transaction(decoded).map_err(|e| format!("{:?}\n{}", e.err, e.meta.logs.join("\n"))).unwrap();
@@ -74,7 +74,7 @@ fn three_days_with_silent_and_tampering_nodes() {
     let state = std::env::temp_dir().join(format!("cota-quality-{}.json", std::process::id()));
     let _ = std::fs::remove_file(&state);
 
-    // Dia 1: todos honestos. Dia 2: nó 3 mudo. Dia 3: nó 2 adultera uma leitura.
+    // Day 1: all honest. Day 2: node 3 silent. Day 3: node 2 tampers with a reading.
     let mut prev = [0u8; 32];
     for (batch_id, day) in [(1u64, 100i64), (2, 101), (3, 102)] {
         let subs: Vec<SignedBatch> = match batch_id {
@@ -103,15 +103,16 @@ fn three_days_with_silent_and_tampering_nodes() {
             2 => {
                 assert_eq!(on_chain.signers, 0b011);
                 assert_eq!(agg.members[2].status, NodeStatus::Absent);
-                // Nó mudo não é divergência de dados: a ausência já está no OracleAbsent.
+                // A silent node is not a data disagreement: its absence is already in OracleAbsent.
                 assert!(q.stations[0].degraded.is_none());
             }
             _ => {
                 assert_eq!(on_chain.signers, 0b101);
                 assert!(matches!(agg.members[1].status, NodeStatus::Disagreed { .. }));
-                // A leitura gravada é a honesta.
+                // The recorded reading is the honest one.
                 assert_eq!(agg.batch.readings[3].value_milli, 300);
-                // A MAD aponta o nó 2, naquela leitura, e a estação é declarada em divergência.
+                // MAD points at node 2, on that reading, and the station is declared in
+                // disagreement.
                 assert_eq!(q.dissents.len(), 1);
                 assert_eq!(q.dissents[0].member, pubkey_base58(&nodes[1]));
                 assert_eq!((q.dissents[0].dissent.value_milli, q.dissents[0].dissent.median_milli), (Some(99_000), Some(300)));

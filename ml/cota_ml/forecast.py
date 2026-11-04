@@ -1,10 +1,10 @@
-"""Previsão a partir dos lotes ancorados.
+"""Forecast from the anchored batches.
 
     uv run python -m cota_ml.forecast --day 2024-05-02
 
-Lê só o ledger (`data/ledger/batches/*.json`), confere a raiz Merkle e o encadeamento
-de cada lote e exige que o último lote seja o do dia de emissão. A saída
-(`data/forecasts/{dia}.json`) é o que `cota-admin commit-forecast` grava on-chain.
+Reads only the ledger (`data/ledger/batches/*.json`), checks each batch's Merkle root and
+chaining, and requires the latest batch to be the issue day's. The output
+(`data/forecasts/{day}.json`) is what `cota-admin commit-forecast` records on-chain.
 """
 
 from __future__ import annotations
@@ -28,7 +28,7 @@ def start_of_day(d: date) -> int:
 
 
 def load_ledger(ledger: Path, until: date) -> tuple[list[dict], dict]:
-    """Leituras de todos os lotes até `until`, conferidas contra as raízes ancoradas."""
+    """Readings from every batch up to `until`, checked against the anchored roots."""
     entries = [json.loads(p.read_text()) for p in sorted((ledger / "batches").glob("*.json"))]
     entries = [e for e in entries if date.fromisoformat(e["day"]) <= until]
     if not entries or date.fromisoformat(entries[-1]["day"]) != until:
@@ -49,9 +49,9 @@ def load_ledger(ledger: Path, until: date) -> tuple[list[dict], dict]:
 def forecast(readings: list[dict], last: dict, day: date, models, widen, manifest) -> dict | None:
     table = feature_table(daily_table(pl.DataFrame(readings))).filter(pl.col("day") == day)
     if table.is_empty() or table["lq0"][0] is None:
-        return None  # sem vazão do Guaíba no dia: não há previsão honesta a fazer
+        return None  # no Guaíba discharge on that day: there is no honest forecast to make
 
-    # q0 (a leitura ancorada do dia) entra junto: é a base da conversão para m³/s.
+    # q0 (the day's anchored reading) goes along: it is the basis for converting to m³/s.
     features = [{"name": "q0", "value_milli": round(table["q0"][0] * 1000)}]
     features += [{"name": f, "value_milli": table[f"{f}_milli"][0]} for f in FEATURES]
     out = []

@@ -1,27 +1,27 @@
-//! Chuva prevista para uma região, atestada pelo comitê (camada de alerta antecipado).
+//! Forecast rain for a region, attested by the committee (early-warning layer).
 
 use borsh::{BorshDeserialize, BorshSerialize};
 use serde::{Deserialize, Serialize};
 
 use crate::merkle::Hash;
 
-/// Prefixo de domínio: uma assinatura de perspectiva não vale como lote nem como aviso.
+/// Domain prefix: an outlook signature is valid neither as a batch nor as a warning.
 pub const OUTLOOK_DOMAIN: &[u8] = b"COTA-OUTLOOK-v1";
 
-/// O que os nós assinam. Layout Borsh idêntico a `cota::OutlookHeader` no programa.
+/// What the nodes sign. Borsh layout identical to `cota::OutlookHeader` in the program.
 #[derive(Debug, Clone, PartialEq, Eq, BorshSerialize, BorshDeserialize, Serialize, Deserialize)]
 pub struct OutlookHeader {
     pub region: String,
-    /// Fim do dia D (UTC), que precisa ser o fim do último lote ancorado.
+    /// End of day D (UTC), which must be the end of the latest anchored batch.
     pub issued_at: i64,
     pub window_end: i64,
     pub models: u8,
-    /// Chuva acumulada na janela, média dos pontos, em milésimos de mm (média, mínimo e
-    /// máximo entre os modelos).
+    /// Rain accumulated over the window, averaged over the points, in thousandths of a mm (mean, minimum and
+    /// maximum across the models).
     pub rain_mean_milli: i64,
     pub rain_min_milli: i64,
     pub rain_max_milli: i64,
-    /// SHA-256 do conteúdo canônico (ver `public_alert::content_hash`).
+    /// SHA-256 of the canonical content (see `public_alert::content_hash`).
     #[serde(with = "crate::reading::hex32")]
     pub content_sha256: Hash,
 }

@@ -1,7 +1,7 @@
-"""Formatos canônicos compartilhados com o Rust (`cota-core`).
+"""Canonical formats shared with the Rust code (`cota-core`).
 
-- `reading_bytes`: Borsh de `Reading`, a folha da árvore de cada lote.
-- `merkle_root`: RFC 9162 com SHA-256, folha H(0x00‖d) e nó H(0x01‖l‖r).
+- `reading_bytes`: Borsh of `Reading`, the leaf of each batch's tree.
+- `merkle_root`: RFC 9162 with SHA-256, leaf H(0x00‖d) and node H(0x01‖l‖r).
 """
 
 from __future__ import annotations
@@ -19,7 +19,7 @@ def _borsh_str(s: str) -> bytes:
 
 
 def reading_bytes(r: dict) -> bytes:
-    """Mesmos bytes de `Reading::canonical_bytes` (ordem dos campos da struct)."""
+    """Same bytes as `Reading::canonical_bytes` (struct field order)."""
     out = _borsh_str(r["station_id"])
     out += struct.pack("<B", VARIABLES[r["variable"]])
     out += struct.pack("<q", r["ts_utc"])
@@ -44,7 +44,7 @@ def _root(leaves: list[bytes]) -> bytes:
         return hashlib.sha256(b"").digest()
     if n == 1:
         return leaves[0]
-    k = 1 << ((n - 1).bit_length() - 1)  # maior potência de 2 < n
+    k = 1 << ((n - 1).bit_length() - 1)  # largest power of 2 < n
     return hash_node(_root(leaves[:k]), _root(leaves[k:]))
 
 
@@ -53,5 +53,5 @@ def merkle_root(items: list[bytes]) -> bytes:
 
 
 def feature_leaf(name: str, value_milli: int | None) -> bytes:
-    """Folha de uma feature comprometida: `nome=valor_milli`, ou `nome=null` se faltante."""
+    """Leaf of a committed feature: `name=value_milli`, or `name=null` if missing."""
     return f"{name}={'null' if value_milli is None else value_milli}".encode()

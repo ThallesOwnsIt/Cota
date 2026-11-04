@@ -1,6 +1,6 @@
-// Verificação no navegador, sem confiar no servidor do dashboard:
-// - Borsh de `Reading` e Merkle RFC 9162 (os mesmos bytes do Rust e do Python);
-// - leitura e decodificação das contas do programa direto da devnet (JSON-RPC).
+// Verification in the browser, without trusting the dashboard's server:
+// - Borsh of `Reading` and RFC 9162 Merkle (the same bytes as Rust and Python);
+// - reading and decoding the program's accounts straight from devnet (JSON-RPC).
 
 const SOURCES = { inmet: 0, open_meteo_glofas: 1, ana: 2, cemaden: 3, public_record: 4 };
 const VARIABLES = { precipitation: 0, river_stage: 1, river_discharge: 2 };
@@ -45,7 +45,7 @@ class Writer {
   }
 }
 
-/** Mesmos bytes de `Reading::canonical_bytes` (Borsh, na ordem dos campos). */
+/** Same bytes as `Reading::canonical_bytes` (Borsh, in field order). */
 export function readingBytes(r) {
   const w = new Writer();
   w.str(r.station_id);
@@ -78,7 +78,7 @@ export const hashNode = (l, r) => sha256(Uint8Array.of(1), l, r);
 
 const splitPoint = (n) => 2 ** Math.floor(Math.log2(n - 1));
 
-/** Raiz RFC 9162 a partir dos hashes de folha. */
+/** RFC 9162 root from the leaf hashes. */
 export async function rootFromLeaves(leaves) {
   if (leaves.length === 0) return sha256(new Uint8Array());
   if (leaves.length === 1) return leaves[0];
@@ -86,7 +86,7 @@ export async function rootFromLeaves(leaves) {
   return hashNode(await rootFromLeaves(leaves.slice(0, k)), await rootFromLeaves(leaves.slice(k)));
 }
 
-/** Caminho de auditoria PATH(m, D[n]) da RFC 9162: do irmão mais profundo à raiz. */
+/** RFC 9162 audit path PATH(m, D[n]): from the deepest sibling up to the root. */
 export async function proof(leaves, m) {
   if (leaves.length <= 1) return [];
   const k = splitPoint(leaves.length);
@@ -94,7 +94,7 @@ export async function proof(leaves, m) {
   return [...(await proof(leaves.slice(k), m - k)), await rootFromLeaves(leaves.slice(0, k))];
 }
 
-/** Verificação RFC 9162 §2.1.3.2. Devolve a raiz recalculada e cada passo. */
+/** RFC 9162 §2.1.3.2 verification. Returns the recomputed root and each step. */
 export async function verifyInclusion(leaf, index, size, path) {
   let fn = index;
   let sn = size - 1;
@@ -123,7 +123,7 @@ export async function verifyInclusion(leaf, index, size, path) {
 
 export const featureLeaf = (f) => enc.encode(`${f.name}=${f.value_milli == null ? "null" : f.value_milli}`);
 
-// ---- contas on-chain ------------------------------------------------------
+// ---- on-chain accounts ---------------------------------------------------
 
 export async function fetchAccount(rpc, address) {
   const res = await fetch(rpc, {
@@ -149,7 +149,7 @@ class Reader {
   constructor(data) {
     this.d = data;
     this.v = new DataView(data.buffer, data.byteOffset, data.byteLength);
-    this.o = 8; // discriminador do Anchor
+    this.o = 8; // Anchor discriminator
   }
   u8() {
     return this.d[this.o++];
@@ -184,7 +184,7 @@ class Reader {
   }
 }
 
-/** Layout de `BatchCommitment` (programs/cota/src/state.rs). */
+/** Layout of `BatchCommitment` (programs/cota/src/state.rs). */
 export function decodeBatch(data) {
   const r = new Reader(data);
   return {
@@ -202,7 +202,7 @@ export function decodeBatch(data) {
   };
 }
 
-/** Layout de `ForecastCommitment`. */
+/** Layout of `ForecastCommitment`. */
 export function decodeForecast(data) {
   const r = new Reader(data);
   return {
@@ -227,7 +227,7 @@ export async function sha256Hex(text) {
   return toHex(await sha256(enc.encode(text)));
 }
 
-/** Layout de `PublicAlertRecord`. */
+/** Layout of `PublicAlertRecord`. */
 export function decodePublicAlert(data) {
   const r = new Reader(data);
   return {
@@ -244,7 +244,7 @@ export function decodePublicAlert(data) {
   };
 }
 
-/** Layout de `OutlookRecord`. */
+/** Layout of `OutlookRecord`. */
 export function decodeOutlook(data) {
   const r = new Reader(data);
   return {
@@ -268,7 +268,7 @@ export function decodeOutlook(data) {
 
 const B58 = "123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz";
 
-/** Base58 (alfabeto do Bitcoin/Solana), para comparar chaves lidas das contas. */
+/** Base58 (Bitcoin/Solana alphabet), to compare keys read from the accounts. */
 export function base58(bytes) {
   let n = BigInt("0x" + (toHex(bytes) || "0"));
   let out = "";
@@ -283,7 +283,7 @@ export function base58(bytes) {
   return out;
 }
 
-/** Layout de `Vault`. */
+/** Layout of `Vault`. */
 export function decodeVault(data) {
   const r = new Reader(data);
   return {
@@ -303,7 +303,7 @@ export function decodeVault(data) {
   };
 }
 
-/** Layout de `Payout`. */
+/** Layout of `Payout`. */
 export function decodePayout(data) {
   const r = new Reader(data);
   return {
@@ -317,7 +317,7 @@ export function decodePayout(data) {
   };
 }
 
-/** Layout de `AlertReceipt`. */
+/** Layout of `AlertReceipt`. */
 export function decodeAlertReceipt(data) {
   const r = new Reader(data);
   return {

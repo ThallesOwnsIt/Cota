@@ -1,13 +1,13 @@
-//! Montagem dos dados da instrução do precompile Ed25519 da Solana com várias
-//! assinaturas sobre a mesma mensagem.
+//! Builds the data of Solana's Ed25519 precompile instruction with several
+//! signatures over the same message.
 //!
-//! Layout gerado:
+//! Generated layout:
 //! ```text
-//! [n, 0] [offsets × n (14 B cada)] [mensagem] [pubkey 32 B ‖ assinatura 64 B] × n
+//! [n, 0] [offsets × n (14 B each)] [message] [pubkey 32 B ‖ signature 64 B] × n
 //! ```
-//! A mensagem aparece uma única vez e todas as assinaturas apontam para ela. Todos os
-//! índices de instrução são `u16::MAX` ("nesta mesma instrução"), que é o que o
-//! programa on-chain exige.
+//! The message appears only once and every signature points to it. All
+//! instruction indexes are `u16::MAX` ("this same instruction"), which is what the
+//! on-chain program requires.
 
 pub const PUBKEY_LEN: usize = 32;
 pub const SIGNATURE_LEN: usize = 64;
@@ -15,10 +15,10 @@ const OFFSETS_START: usize = 2;
 const OFFSETS_LEN: usize = 14;
 const THIS_INSTRUCTION: u16 = u16::MAX;
 
-/// Program ID do precompile Ed25519 (`Ed25519SigVerify111111111111111111111111111`).
+/// Program ID of the Ed25519 precompile (`Ed25519SigVerify111111111111111111111111111`).
 pub const ED25519_PROGRAM_ID: &str = "Ed25519SigVerify111111111111111111111111111";
 
-/// Dados da instrução para `signatures` = [(pubkey, assinatura)] sobre `message`.
+/// Instruction data for `signatures` = [(pubkey, signature)] over `message`.
 pub fn ed25519_instruction_data(message: &[u8], signatures: &[([u8; PUBKEY_LEN], [u8; SIGNATURE_LEN])]) -> Vec<u8> {
     let n = signatures.len();
     assert!((1..=u8::MAX as usize).contains(&n), "entre 1 e 255 assinaturas");

@@ -1,7 +1,7 @@
-//! Open-Meteo Flood API: vazão diária modelada pelo GloFAS (sem chave, CC BY 4.0).
+//! Open-Meteo Flood API: daily discharge modelled by GloFAS (no key, CC BY 4.0).
 //!
-//! Atribuição obrigatória: "Weather data by Open-Meteo.com". A vazão é **modelada**
-//! (grade de ~5 km), não medida em régua.
+//! Required attribution: "Weather data by Open-Meteo.com". The discharge is **modelled**
+//! (~5 km grid), not measured on a gauge.
 
 use anyhow::{bail, Context, Result};
 use chrono::NaiveDate;
@@ -13,7 +13,7 @@ use crate::config::StationConfig;
 use crate::decimal::parse_milli;
 
 pub const API_URL: &str = "https://flood-api.open-meteo.com/v1/flood";
-/// Tolerância entre a coordenada configurada e o centro de célula devolvido.
+/// Tolerance between the configured coordinate and the returned cell centre.
 const CELL_TOLERANCE_DEG: f64 = 0.001;
 
 #[derive(Debug, Deserialize)]
@@ -35,7 +35,7 @@ pub struct FetchStats {
     pub missing: usize,
 }
 
-/// Baixa a série diária de `start` a `end` (inclusive) para a célula da estação.
+/// Downloads the daily series from `start` to `end` (inclusive) for the station's cell.
 pub fn fetch(http: &reqwest::blocking::Client, station: &StationConfig, start: NaiveDate, end: NaiveDate) -> Result<FloodResponse> {
     let url = format!(
         "{API_URL}?latitude={}&longitude={}&daily=river_discharge&start_date={start}&end_date={end}",
@@ -49,8 +49,8 @@ pub fn fetch(http: &reqwest::blocking::Client, station: &StationConfig, start: N
         .with_context(|| format!("resposta inválida de {url}"))
 }
 
-/// String canônica cujo SHA-256 vira `raw_payload_sha256`. O corpo JSON da API não serve,
-/// porque muda a cada requisição (`generationtime_ms`).
+/// Canonical string whose SHA-256 becomes `raw_payload_sha256`. The API's JSON body won't do,
+/// because it changes on every request (`generationtime_ms`).
 pub fn canonical_payload(lat: f64, lon: f64, date: &str, value_milli: i64) -> String {
     format!("open-meteo-flood|{lat:.3}|{lon:.3}|{date}|{value_milli}")
 }
@@ -80,7 +80,8 @@ pub fn to_readings(station: &StationConfig, resp: &FloodResponse) -> Result<(Vec
             .expect("meia-noite existe")
             .and_utc()
             .timestamp();
-        // Formatar com 3 casas e reler evita depender de arredondamento de f64 entre linguagens.
+        // Formatting with 3 decimals and parsing back avoids depending on f64 rounding across
+        // languages.
         let value_milli = parse_milli(&format!("{q:.3}")).context("vazão fora do intervalo")?;
         let payload = canonical_payload(resp.latitude, resp.longitude, date, value_milli);
         readings.push(Reading {

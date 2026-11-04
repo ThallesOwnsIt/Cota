@@ -1,12 +1,12 @@
-//! Árvore Merkle no formato da RFC 6962 / RFC 9162 (Certificate Transparency).
+//! Merkle tree in the RFC 6962 / RFC 9162 format (Certificate Transparency).
 //!
-//! - folha:  H(0x00 || dado)
-//! - nó:     H(0x01 || esquerda || direita)
-//! - divisão: para n > 1 folhas, a subárvore esquerda tem k folhas, onde k é a maior
-//!   potência de 2 menor que n. Não há duplicação de nós ímpares.
+//! - leaf:  H(0x00 || data)
+//! - node:  H(0x01 || left || right)
+//! - split: for n > 1 leaves, the left subtree has k leaves, where k is the largest
+//!   power of 2 smaller than n. Odd nodes are not duplicated.
 //!
-//! Os prefixos distintos impedem apresentar um nó interno como se fosse uma folha
-//! (ataque de segunda pré-imagem).
+//! The distinct prefixes prevent presenting an internal node as if it were a leaf
+//! (second-preimage attack).
 
 use sha2::{Digest, Sha256};
 
@@ -30,18 +30,18 @@ pub fn hash_node(left: &Hash, right: &Hash) -> Hash {
     h.finalize().into()
 }
 
-/// Hash de árvore vazia: SHA-256 da string vazia.
+/// Hash of the empty tree: SHA-256 of the empty string.
 pub fn empty_root() -> Hash {
     Sha256::digest([]).into()
 }
 
-/// Maior potência de 2 estritamente menor que `n` (n >= 2).
+/// Largest power of 2 strictly smaller than `n` (n >= 2).
 fn split_point(n: usize) -> usize {
     debug_assert!(n >= 2);
     1 << (usize::BITS - 1 - (n - 1).leading_zeros())
 }
 
-/// Raiz a partir dos hashes de folha já calculados.
+/// Root from the already computed leaf hashes.
 pub fn root_from_leaves(leaves: &[Hash]) -> Hash {
     match leaves.len() {
         0 => empty_root(),
@@ -53,7 +53,7 @@ pub fn root_from_leaves(leaves: &[Hash]) -> Hash {
     }
 }
 
-/// Caminho de auditoria (irmãos, da folha até a raiz) para a folha `index`.
+/// Audit path (siblings, from the leaf up to the root) for leaf `index`.
 pub fn proof(leaves: &[Hash], index: usize) -> Vec<Hash> {
     assert!(index < leaves.len(), "índice fora da árvore");
     let mut path = Vec::new();
@@ -76,7 +76,7 @@ fn build_proof(leaves: &[Hash], index: usize, path: &mut Vec<Hash>) {
     }
 }
 
-/// Verificação de prova de inclusão (RFC 9162, seção 2.1.3.2).
+/// Inclusion proof verification (RFC 9162, section 2.1.3.2).
 pub fn verify(leaf: &Hash, index: u64, tree_size: u64, path: &[Hash], root: &Hash) -> bool {
     if index >= tree_size {
         return false;
@@ -139,8 +139,8 @@ mod tests {
         let p = proof(&ls, 5);
         assert!(!verify(&ls[6], 5, 13, &p, &root));
         assert!(!verify(&ls[5], 4, 13, &p, &root));
-        // Um tamanho com outro formato de árvore invalida a prova. Tamanhos com o mesmo formato
-        // (13 e 14 para o índice 5) não, por isso `leaf_count` faz parte do cabeçalho assinado.
+        // A size with a different tree shape invalidates the proof. Sizes with the same shape
+        // (13 and 14 for index 5) do not, which is why `leaf_count` is part of the signed header.
         assert!(!verify(&ls[5], 5, 6, &p, &root));
         assert!(!verify(&ls[5], 5, 13, &p, &[0u8; 32]));
     }

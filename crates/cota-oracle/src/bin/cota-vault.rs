@@ -1,8 +1,8 @@
-//! Cofres paramétricos: SOL travado que o programa libera sozinho diante de um gatilho do Cota.
+//! Parametric vaults: locked SOL that the program releases on its own when Cota records a trigger.
 //!
-//! - `create`: cria um cofre (qualquer carteira pode) e registra em `data/ledger/vaults/<nome>.json`.
-//! - `crank`: percorre os gatilhos do ledger (perspectivas que dispararam, recibos de alerta) e
-//!   aciona `trigger_payout` para cada cofre. Quem aciona não decide nada: o programa confere.
+//! - `create`: creates a vault (any wallet can) and records it in `data/ledger/vaults/<name>.json`.
+//! - `crank`: walks the ledger's triggers (outlooks that fired, alert receipts) and
+//!   calls `trigger_payout` for each vault. Whoever cranks decides nothing: the program checks.
 
 use std::path::{Path, PathBuf};
 
@@ -17,13 +17,13 @@ const SOL: f64 = 1e9;
 const DAY: i64 = 86_400;
 
 #[derive(Parser)]
-#[command(about = "Cofres paramétricos acionados pelos gatilhos do Cota")]
+#[command(about = "Parametric vaults triggered by Cota's triggers")]
 struct Args {
     #[arg(long, default_value = "http://127.0.0.1:8899")]
     rpc: String,
     #[arg(long, default_value = "devnet")]
     cluster: String,
-    /// Criador do cofre (`create`) ou quem paga as taxas do acionamento (`crank`).
+    /// Vault creator (`create`) or whoever pays the crank's fees (`crank`).
     #[arg(long)]
     payer: PathBuf,
     #[arg(long, default_value = "data/ledger")]
@@ -34,16 +34,16 @@ struct Args {
 
 #[derive(Clone, Copy, ValueEnum)]
 enum Kind {
-    /// Perspectiva de chuva que disparou a regra (`EarlyWarning`); assunto = região.
+    /// Rain outlook that fired the rule (`EarlyWarning`); subject = region.
     EarlyWarning,
-    /// Recibo de alerta do modelo de vazão (`AlertReceipt`); assunto = estação.
+    /// Alert receipt from the flow model (`AlertReceipt`); subject = station.
     FlowAlert,
 }
 
 #[derive(Subcommand)]
 enum Cmd {
     Create {
-        /// Nome do arquivo no ledger.
+        /// File name in the ledger.
         #[arg(long)]
         name: String,
         #[arg(long)]
@@ -52,14 +52,14 @@ enum Cmd {
         kind: Kind,
         #[arg(long)]
         subject: String,
-        /// Chave pública ou caminho de keypair.
+        /// Public key or keypair path.
         #[arg(long)]
         beneficiary: String,
         #[arg(long)]
         payout_sol: f64,
         #[arg(long, default_value_t = 7)]
         cooldown_days: i64,
-        /// Só gatilhos gravados on-chain a partir de quando: `now` ou segundos UTC (0 = todos).
+        /// Only triggers recorded on-chain from this moment: `now` or UTC seconds (0 = all).
         #[arg(long, default_value = "now")]
         accept_from: String,
         #[arg(long, default_value_t = 365)]
@@ -68,7 +68,7 @@ enum Cmd {
         deposit_sol: f64,
         #[arg(long, default_value = "")]
         description: String,
-        /// A mesma descrição em inglês, para o painel.
+        /// The same description in English, for the dashboard.
         #[arg(long, default_value = "")]
         description_en: String,
     },
@@ -148,7 +148,7 @@ fn state_json(v: &cota::state::Vault, balance: u64) -> Value {
     })
 }
 
-/// Gatilhos conhecidos pelo ledger: (conta, assunto, instante do evento).
+/// Triggers known to the ledger: (account, subject, event instant).
 fn triggers(ledger: &Path, kind: u8) -> Result<Vec<(Pubkey, String, i64)>> {
     let mut out = Vec::new();
     let read = |dir: PathBuf| -> Result<Vec<Value>> {
@@ -206,9 +206,10 @@ fn crank(rpc: &Rpc, payer: &solana_keypair::Keypair, ledger: &Path, dir: &Path, 
                 if known {
                     continue;
                 }
-                None // pago por outra execução; só falta o registro
+                None // paid by another run; only the record is missing
             } else {
-                // Pré-checagens locais para não gastar taxa com recusas certas; quem decide é o programa.
+                // Local pre-checks so as not to spend fees on certain rejections; the program is the one
+                // that decides.
                 if v.payouts > 0 && event_at < v.last_event_at + v.cooldown_secs {
                     continue;
                 }

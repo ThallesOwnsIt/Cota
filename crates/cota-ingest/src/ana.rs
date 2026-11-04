@@ -1,17 +1,17 @@
-//! ANA, HidroWebService: séries das estações telemétricas (rede hidrometeorológica nacional).
+//! ANA, HidroWebService: series from the telemetric stations (Brazil's national hydrometeorological network).
 //!
-//! Nível do rio **medido em régua**, ao contrário da vazão do GloFAS, que é modelada.
-//! Exige cadastro: o login (`ANA_IDENTIFICADOR` / `ANA_SENHA`) devolve um token de
-//! curta duração. O token nunca entra no ledger, só os valores.
+//! River level **measured on a gauge**, unlike GloFAS discharge, which is modelled.
+//! Requires registration: the login (`ANA_IDENTIFICADOR` / `ANA_SENHA`) returns a
+//! short-lived token. The token never goes into the ledger, only the values.
 //!
-//! Formato das linhas (`HidroinfoanaSerieTelemetricaAdotada/v2`):
+//! Row format (`HidroinfoanaSerieTelemetricaAdotada/v2`):
 //! `{"codigoestacao":"87450004","Data_Hora_Medicao":"2026-11-03 23:00:00.0",
 //!   "Cota_Adotada":"115.00","Chuva_Adotada":"0.20","Vazao_Adotada":null,…}`
-//! - horário de Brasília (UTC−3, sem horário de verão desde 2019);
-//! - cota em centímetros, relativa ao zero da régua de cada estação.
+//! - Brasília time (UTC−3, no daylight saving since 2019);
+//! - stage in centimetres, relative to each station's gauge zero.
 //!
-//! Só entram as leituras da hora cheia: a régua do Cais Mauá transmite de hora em hora e
-//! as outras a cada 15 min; uma cadência só deixa a disponibilidade comparável entre estações.
+//! Only on-the-hour readings are kept: the Cais Mauá gauge reports every hour and
+//! the others every 15 min; a single cadence keeps availability comparable across stations.
 
 use std::collections::BTreeMap;
 
@@ -25,12 +25,12 @@ use crate::config::StationConfig;
 use crate::decimal::parse_milli;
 
 pub const API_URL: &str = "https://www.ana.gov.br/hidrowebservice/EstacoesTelemetricas";
-/// Horário de Brasília em segundos a somar para chegar ao UTC.
+/// Seconds to add to Brasília time to get UTC.
 const BRT_TO_UTC: i64 = 3 * 3600;
-/// A API aceita no máximo 10 estações por consulta.
+/// The API accepts at most 10 stations per request.
 const MAX_CODES: usize = 10;
-/// Tentativas por requisição e espera entre elas: os 3 nós consultam ao mesmo tempo com a
-/// mesma conta, e um nó que perde a ANA assina outra raiz e enfraquece o quórum.
+/// Attempts per request and the wait between them: the 3 nodes query at the same time with the
+/// same account, and a node that loses ANA signs a different root and weakens the quorum.
 const ATTEMPTS: u32 = 3;
 const RETRY_WAIT_SECS: u64 = 15;
 const ID_PREFIX: &str = "ANA-";
@@ -55,7 +55,7 @@ struct Auth {
     tokenautenticacao: Option<String>,
 }
 
-/// Código ANA da estação: o `id` do catálogo é `ANA-<código>`.
+/// The station's ANA code: the catalog `id` is `ANA-<code>`.
 pub fn code_of(station: &StationConfig) -> Result<&str> {
     station
         .id
@@ -64,8 +64,8 @@ pub fn code_of(station: &StationConfig) -> Result<&str> {
         .with_context(|| format!("{}: estação da ANA deve ter id \"ANA-<código numérico>\"", station.id))
 }
 
-/// Login do HidroWebService. No GitHub Actions um secret não cadastrado chega como string
-/// vazia, então vazio conta como ausente.
+/// HidroWebService login. In GitHub Actions an unset secret arrives as an empty
+/// string, so empty counts as missing.
 pub struct Credentials {
     id: String,
     senha: String,
@@ -79,7 +79,7 @@ pub fn credentials() -> Result<Credentials> {
     }
 }
 
-/// Repete `f` até `ATTEMPTS` vezes, esperando entre as tentativas.
+/// Retries `f` up to `ATTEMPTS` times, waiting between attempts.
 fn retry<T>(what: &str, mut f: impl FnMut() -> Result<T>) -> Result<T> {
     let mut attempt = 1;
     loop {
@@ -112,9 +112,10 @@ pub fn login(http: &reqwest::blocking::Client, cred: &Credentials) -> Result<Str
     })
 }
 
-/// Todas as linhas das estações `codes` entre os dias locais `first` e `last` (inclusive).
+/// All rows for stations `codes` between local days `first` and `last` (inclusive).
 pub fn fetch(http: &reqwest::blocking::Client, token: &str, codes: &[&str], first: NaiveDate, last: NaiveDate) -> Result<Vec<Row>> {
-    // Um lote diário cobre 2 dias locais: DIAS_2 basta. Janelas maiores (backfill) vão de 7 em 7.
+    // A daily batch covers 2 local days: DIAS_2 is enough. Larger windows (backfill) go 7 days at a
+    // time.
     let range_days: u64 = if (last - first).num_days() < 2 { 2 } else { 7 };
     let mut rows = Vec::new();
     for chunk in codes.chunks(MAX_CODES) {
@@ -145,8 +146,8 @@ pub fn fetch(http: &reqwest::blocking::Client, token: &str, codes: &[&str], firs
     Ok(rows)
 }
 
-/// String canônica cujo SHA-256 vira `raw_payload_sha256`: código, instante local e cota
-/// exatamente como a ANA os publica. `Data_Atualizacao` fica de fora porque muda sozinha.
+/// Canonical string whose SHA-256 becomes `raw_payload_sha256`: code, local instant and stage
+/// exactly as ANA publishes them. `Data_Atualizacao` is left out because it changes on its own.
 pub fn canonical_payload(code: &str, data_hora: &str, cota: &str) -> String {
     format!("ana-telemetrica|{code}|{data_hora}|{cota}")
 }
@@ -155,16 +156,16 @@ pub fn datum_id(code: &str) -> String {
     format!("ANA-{code}-regua")
 }
 
-/// Leituras de nível da estação na janela [from, to) UTC, uma por hora cheia.
-/// Devolve também quantas horas da janela ficaram sem leitura.
+/// The station's level readings in the UTC window [from, to), one per full hour.
+/// Also returns how many hours of the window had no reading.
 ///
-/// Linha com horário ou cota ilegível conta como hora faltante, em vez de derrubar o lote
-/// de todas as estações (o que aconteceria nos 3 nós ao mesmo tempo).
+/// A row with an unreadable time or stage counts as a missing hour, instead of bringing down the batch for
+/// every station (which would happen on all 3 nodes at once).
 pub fn to_readings(station: &StationConfig, rows: &[Row], from: i64, to: i64) -> Result<(Vec<Reading>, usize, usize)> {
     let code = code_of(station)?;
     let datum = station.datum_id.clone().unwrap_or_else(|| datum_id(code));
-    // Uma linha por instante. Se a ANA repetir um instante com valores diferentes, fica o
-    // maior texto de cota: a escolha não depende da ordem em que as linhas chegaram.
+    // One row per instant. If ANA repeats an instant with different values, the
+    // largest stage text wins: the choice does not depend on the order the rows arrived in.
     let mut by_ts: BTreeMap<i64, (&str, &str)> = BTreeMap::new();
     let mut unreadable = 0;
     for row in rows.iter().filter(|r| r.codigoestacao == code) {
@@ -196,7 +197,7 @@ pub fn to_readings(station: &StationConfig, rows: &[Row], from: i64, to: i64) ->
         .into_iter()
         .map(|(ts, (data_hora, cota))| {
             let cm_milli = parse_milli(cota).expect("validada acima");
-            // centímetros x1000 -> metros x1000, arredondando meio para longe de zero.
+            // centimetres x1000 -> metres x1000, rounding half away from zero.
             let value_milli = (cm_milli + 50 * cm_milli.signum()) / 100;
             let payload = canonical_payload(code, data_hora, cota);
             Reading {
@@ -215,7 +216,7 @@ pub fn to_readings(station: &StationConfig, rows: &[Row], from: i64, to: i64) ->
     Ok((readings, missing, expected))
 }
 
-/// Dias locais (Brasília) que cobrem a janela UTC [from, to).
+/// Local (Brasília) days covering the UTC window [from, to).
 pub fn local_days(from: i64, to: i64) -> Result<(NaiveDate, NaiveDate)> {
     let day = |ts: i64| {
         chrono::DateTime::from_timestamp(ts - BRT_TO_UTC, 0).map(|d| d.date_naive()).context("timestamp fora do intervalo")
@@ -255,7 +256,7 @@ mod tests {
 
     #[test]
     fn converts_hourly_brt_centimeters_to_utc_meters() {
-        // Janela de 2024-05-02 23:00Z a 2024-05-03 02:00Z: 20h e 21h de Brasília.
+        // Window from 2024-05-02 23:00Z to 2024-05-03 02:00Z: 20:00 and 21:00 Brasília time.
         let from = 1_714_690_800;
         let (r, missing, expected) = to_readings(&station("ANA-87450004"), &rows(), from, from + 3 * 3600).unwrap();
         assert_eq!((r.len(), missing, expected), (2, 1, 3));
@@ -288,7 +289,7 @@ mod tests {
 
     #[test]
     fn local_days_shift_three_hours() {
-        // Dia UTC 2026-11-03 = 02/11 21h a 03/11 21h em Brasília.
+        // UTC day 2026-11-03 = Nov 2 21:00 to Nov 3 21:00 Brasília time.
         let from = 1_793_664_000;
         let (a, b) = local_days(from, from + 86_400).unwrap();
         assert_eq!((a.to_string(), b.to_string()), ("2026-11-02".into(), "2026-11-03".into()));

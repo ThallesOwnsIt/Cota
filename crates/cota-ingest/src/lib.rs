@@ -1,7 +1,7 @@
-//! Ingestão independente das fontes públicas, produzindo `Reading`s canônicos.
+//! Independent ingestion of the public sources, producing canonical `Reading`s.
 //!
-//! Cada nó-oráculo roda isto por conta própria; nós honestos com as mesmas fontes
-//! chegam às mesmas leituras e, portanto, à mesma raiz Merkle.
+//! Each oracle node runs this on its own; honest nodes with the same sources
+//! reach the same readings and therefore the same Merkle root.
 
 pub mod ana;
 pub mod config;
@@ -18,7 +18,7 @@ use serde::{Deserialize, Serialize};
 
 use config::StationConfig;
 
-/// Resumo por estação, gravado no manifesto.
+/// Per-station summary, written to the manifest.
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct StationReport {
     pub station_id: String,
@@ -35,10 +35,10 @@ pub fn http_client() -> Result<reqwest::blocking::Client> {
         .build()?)
 }
 
-/// Lê todas as estações configuradas para a janela [from, to) em segundos UTC.
+/// Reads every configured station for the window [from, to) in UTC seconds.
 ///
-/// Com `lenient`, uma estação INMET ausente no zip de um ano conta como horas faltantes
-/// (útil para o histórico de treino); sem ele, é erro (o que os nós usam).
+/// With `lenient`, an INMET station missing from a year's zip counts as missing hours
+/// (useful for the training history); without it, it is an error (what the nodes use).
 pub fn ingest(
     http: &reqwest::blocking::Client,
     stations: &[StationConfig],
@@ -76,12 +76,13 @@ pub fn ingest(
     Ok((all, reports))
 }
 
-/// Linhas de todas as estações da ANA do catálogo, numa consulta só.
+/// Rows for all of the catalog's ANA stations, in a single request.
 ///
-/// Uma falha da ANA que persiste depois das novas tentativas não derruba o lote: as horas
-/// contam como faltantes e a qualidade registra a estação como indisponível, como aconteceu
-/// com a régua do Cais Mauá em 2024. Se só um nó perder a ANA, ele assina outra raiz e os
-/// outros dois mantêm o quórum. Sem credenciais (ou com secret vazio), é erro de configuração.
+/// An ANA failure that persists after the retries does not bring the batch down: the hours
+/// count as missing and quality records the station as unavailable, as happened
+/// with the Cais Mauá gauge in 2024. If only one node loses ANA, it signs a different root and the
+/// other two keep the quorum. Without credentials (or with an empty secret), it is a configuration
+/// error.
 fn fetch_ana(http: &reqwest::blocking::Client, stations: &[StationConfig], from: i64, to: i64) -> Result<Vec<ana::Row>> {
     let codes = stations.iter().filter(|s| s.source == Source::Ana).map(ana::code_of).collect::<Result<Vec<_>>>()?;
     if codes.is_empty() {
@@ -98,7 +99,7 @@ fn fetch_ana(http: &reqwest::blocking::Client, stations: &[StationConfig], from:
     }
 }
 
-/// Uma janela pode atravessar o ano; lê o zip de cada ano envolvido.
+/// A window may span a year boundary; reads the zip of each year involved.
 fn ingest_inmet(
     http: &reqwest::blocking::Client,
     st: &StationConfig,
@@ -120,7 +121,7 @@ fn ingest_inmet(
         rows += stats.rows_in_window;
     }
     let expected = ((to - from) / 3600) as usize;
-    // Horas que nem aparecem no CSV também são faltantes.
+    // Hours that don't even appear in the CSV are missing too.
     missing += expected.saturating_sub(rows);
     Ok((readings, missing, expected))
 }
@@ -129,7 +130,7 @@ fn date_of(ts: i64) -> Result<NaiveDate> {
     DateTime::from_timestamp(ts, 0).map(|d| d.date_naive()).context("timestamp fora do intervalo")
 }
 
-/// Primeiro instante (00:00 UTC) do dia seguinte a `date`.
+/// First instant (00:00 UTC) of the day after `date`.
 pub fn end_of_day(date: NaiveDate) -> i64 {
     start_of_day(date.checked_add_days(Days::new(1)).expect("data válida"))
 }

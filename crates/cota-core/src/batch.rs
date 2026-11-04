@@ -1,4 +1,4 @@
-//! Lote de leituras de uma janela de tempo e o cabeçalho que os oráculos assinam.
+//! Batch of readings for a time window and the header the oracles sign.
 
 use borsh::{BorshDeserialize, BorshSerialize};
 use serde::{Deserialize, Serialize};
@@ -7,32 +7,33 @@ use sha2::{Digest, Sha256};
 use crate::merkle::{self, Hash};
 use crate::reading::Reading;
 
-/// Prefixo de domínio da mensagem assinada. Uma assinatura de lote não serve em outro contexto.
+/// Domain prefix of the signed message. A batch signature is not valid in any other context.
 pub const BATCH_DOMAIN: &[u8] = b"COTA-BATCH-v1";
 
-/// O que os nós assinam e o programa on-chain reconstrói para conferir as assinaturas.
-/// A ordem dos campos é o layout Borsh: alterá-la quebra a compatibilidade com o programa.
+/// What the nodes sign and the on-chain program rebuilds to check the signatures.
+/// The field order is the Borsh layout: changing it breaks compatibility with the program.
 #[derive(Debug, Clone, PartialEq, Eq, BorshSerialize, BorshDeserialize, Serialize, Deserialize)]
 pub struct BatchHeader {
-    /// Sequencial e estritamente crescente.
+    /// Sequential and strictly increasing.
     pub batch_id: u64,
-    /// Início da janela, inclusivo (segundos UTC).
+    /// Window start, inclusive (UTC seconds).
     pub t_start: i64,
-    /// Fim da janela, exclusivo (segundos UTC).
+    /// Window end, exclusive (UTC seconds).
     pub t_end: i64,
     pub leaf_count: u32,
     #[serde(with = "crate::reading::hex32")]
     pub merkle_root: Hash,
-    /// SHA-256 da lista ordenada de estações presentes no lote.
+    /// SHA-256 of the sorted list of stations present in the batch.
     #[serde(with = "crate::reading::hex32")]
     pub station_set_hash: Hash,
-    /// Raiz do lote anterior (zeros no primeiro): forma uma hash-chain que impede inserir lotes no passado.
+    /// Root of the previous batch (zeros for the first): forms a hash chain that prevents inserting batches
+    /// in the past.
     #[serde(with = "crate::reading::hex32")]
     pub prev_batch_root: Hash,
 }
 
 impl BatchHeader {
-    /// Bytes exatos que cada nó assina com ed25519: `BATCH_DOMAIN || borsh(header)`.
+    /// Exact bytes each node signs with ed25519: `BATCH_DOMAIN || borsh(header)`.
     pub fn signing_message(&self) -> Vec<u8> {
         let mut msg = BATCH_DOMAIN.to_vec();
         msg.extend(borsh::to_vec(self).expect("Borsh de BatchHeader não falha"));
@@ -40,7 +41,7 @@ impl BatchHeader {
     }
 }
 
-/// Lote em ordem canônica, com as folhas já calculadas.
+/// Batch in canonical order, with the leaves already computed.
 #[derive(Debug, Clone)]
 pub struct Batch {
     pub header: BatchHeader,
@@ -49,8 +50,8 @@ pub struct Batch {
 }
 
 impl Batch {
-    /// Monta o lote. As leituras são ordenadas e deduplicadas, então dois nós honestos
-    /// que leem os mesmos dados em qualquer ordem chegam à mesma raiz.
+    /// Builds the batch. Readings are sorted and deduplicated, so two honest nodes
+    /// that read the same data in any order reach the same root.
     pub fn build(
         batch_id: u64,
         t_start: i64,
@@ -66,7 +67,8 @@ impl Batch {
         }
         readings.sort();
         readings.dedup();
-        // Mesma (estação, variável, instante, fonte) com dois valores diferentes é conflito, não duplicata.
+        // The same (station, variable, instant, source) with two different values is a conflict, not a
+        // duplicate.
         if let Some(w) = readings.windows(2).find(|w| same_slot(&w[0], &w[1])) {
             return Err(BatchError::ConflictingValues { station_id: w[0].station_id.clone(), ts_utc: w[0].ts_utc });
         }
@@ -84,7 +86,7 @@ impl Batch {
         Ok(Self { header, readings, leaves })
     }
 
-    /// Prova de inclusão da leitura na posição `index` (posição na ordem canônica).
+    /// Inclusion proof for the reading at position `index` (position in canonical order).
     pub fn proof(&self, index: usize) -> Vec<Hash> {
         merkle::proof(&self.leaves, index)
     }
@@ -94,7 +96,7 @@ fn same_slot(a: &Reading, b: &Reading) -> bool {
     a.station_id == b.station_id && a.variable == b.variable && a.ts_utc == b.ts_utc && a.source == b.source
 }
 
-/// SHA-256 de `borsh(Vec<String>)` com as estações únicas em ordem.
+/// SHA-256 of `borsh(Vec<String>)` with the unique stations in order.
 fn station_set_hash(sorted: &[Reading]) -> Hash {
     let mut ids: Vec<&str> = sorted.iter().map(|r| r.station_id.as_str()).collect();
     ids.sort_unstable();
@@ -196,7 +198,7 @@ mod tests {
     #[test]
     fn signing_message_starts_with_domain() {
         let b = Batch::build(1, 0, 7200, [0; 32], sample()).unwrap();
-        // domínio + 8 + 8 + 8 + 4 + 32 + 32 + 32 bytes
+        // domain + 8 + 8 + 8 + 4 + 32 + 32 + 32 bytes
         let msg = b.header.signing_message();
         assert!(msg.starts_with(BATCH_DOMAIN));
         assert_eq!(msg.len(), BATCH_DOMAIN.len() + 124);

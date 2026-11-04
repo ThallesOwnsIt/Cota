@@ -1,16 +1,16 @@
 #!/usr/bin/env python3
-"""Gera os dados do dashboard a partir do ledger, da auditoria e do relatório do modelo.
+"""Builds the dashboard data from the ledger, the audit and the model report.
 
     python3 scripts/export_dashboard.py
 
-Saída em dashboard/data/:
-- bundle.json        tudo o que a página desenha (dias, previsões, qualidade, métricas)
-- batches/NNNNN.json leituras de cada lote, carregadas sob demanda para a prova Merkle
-- public_alerts/<sha>.txt conteúdo canônico de cada aviso oficial (o navegador refaz o SHA-256)
-- outlooks/<sha>.txt  conteúdo canônico de cada perspectiva de chuva (idem)
-(os cofres paramétricos vão no próprio bundle)
+Output in dashboard/data/:
+- bundle.json        everything the page draws (days, forecasts, quality, metrics)
+- batches/NNNNN.json each batch's readings, loaded on demand for the Merkle proof
+- public_alerts/<sha>.txt canonical content of each official warning (the browser recomputes the SHA-256)
+- outlooks/<sha>.txt  canonical content of each rain outlook (same)
+(the parametric vaults go in the bundle itself)
 
-Os lotes de 2024 são o replay da cheia; os de 2025 em diante, o modo ao vivo.
+The 2024 batches are the flood replay; those from 2025 on are live mode.
 """
 
 from __future__ import annotations
@@ -24,9 +24,9 @@ ROOT = Path(__file__).resolve().parents[1]
 LEDGER = ROOT / "data/ledger"
 OUT = ROOT / "dashboard/data"
 TARGET = "GLOFAS-GUAIBA"
-# Régua do Cais Mauá (ANA): o nível que a Defesa Civil de Porto Alegre acompanha.
+# Cais Mauá gauge (ANA): the level Porto Alegre's civil defense follows.
 STAGE_MAIN = "ANA-87450004"
-# Dias de leituras horárias do Cais Mauá no gráfico do modo ao vivo.
+# Days of Cais Mauá hourly readings in the live-mode chart.
 STAGE_SERIES_DAYS = 60
 RPC = "https://api.devnet.solana.com"
 LIVE_FROM = "2025-01-01"
@@ -90,7 +90,8 @@ def main() -> None:
                 "members": [{"member": m["member"], "status": m["status"]} for m in e["members"]],
                 "guaiba_milli": guaiba,
                 **({"flow": flow} if day_of(e["header"]["t_start"]) >= LIVE_FROM else {}),
-                # Nível medido (ANA): primeira e última leitura do dia, máxima e quantas horas vieram.
+                # Measured level (ANA): the day's first and last reading, its maximum and how many
+                # hours came in.
                 **(
                     {"stage": {sid: {"first": v[0], "last": v[-1], "max": max(v), "hours": len(v)} for sid, v in stage.items()}}
                     if stage
@@ -249,7 +250,7 @@ def main() -> None:
             "issues": live_issues,
             "public_alerts": alerts,
             "stage_stations": [{"id": s["id"], "name": s["name"]} for s in live_stations if s["source"] == "ana"],
-            # Estações do modo ao vivo, para o mapa da bacia.
+            # Live-mode stations, for the basin map.
             "stations": [{k: s[k] for k in ("id", "name", "source", "variable", "lat", "lon")} for s in live_stations],
             "stage_main": STAGE_MAIN,
             "stage_series": stage_series_tail(stage_series),
@@ -267,7 +268,7 @@ def main() -> None:
 
 
 def stage_series_tail(series: list[list[int]]) -> list[list[int]]:
-    """Leituras horárias do Cais Mauá nos últimos STAGE_SERIES_DAYS dias ancorados."""
+    """Cais Mauá hourly readings over the last STAGE_SERIES_DAYS anchored days."""
     if not series:
         return []
     series.sort()
@@ -276,7 +277,7 @@ def stage_series_tail(series: list[list[int]]) -> list[list[int]]:
 
 
 def export_outlook(audit: dict) -> dict:
-    """Regra do alerta antecipado, backtest fora da amostra e perspectivas ancoradas."""
+    """Early-warning rule, out-of-sample backtest and anchored outlooks."""
     rule = json.loads((ROOT / "ml/models/outlook-rule.json").read_text())
     bt = json.loads((ROOT / "ml/reports/outlook-backtest.json").read_text())
     spec = rule["spec"]

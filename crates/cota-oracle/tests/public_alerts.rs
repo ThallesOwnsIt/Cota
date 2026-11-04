@@ -1,4 +1,4 @@
-//! `record_public_alert` no programa compilado (LiteSVM).
+//! `record_public_alert` in the compiled program (LiteSVM).
 
 use anchor_lang::{prelude::Pubkey, solana_program::instruction::Instruction, AnchorSerialize};
 use cota::error::CotaError;
@@ -84,11 +84,11 @@ fn two_of_three_records_once() {
     assert_eq!((r.signers, r.signer_count), (0b101, 2));
     assert_eq!(r.content_sha256, h.content_sha256);
 
-    // A mesma versão não pode ser regravada (com outro horário).
+    // The same version cannot be recorded again (with a different time).
     let sigs = env.sigs(&[0, 1, 2], &h.signing_message());
     assert!(env.send(&chain::record_public_alert_instructions(env.payer.pubkey(), &h, &sigs)).is_err());
 
-    // Outra versão do mesmo aviso (conteúdo diferente) é outra conta.
+    // Another version of the same warning (different content) is a different account.
     let h2 = PublicAlertHeader { content_sha256: content_hash(r#"{"codigo":"a","encerrado":true}"#), ..h };
     let sigs = env.sigs(&[1, 2], &h2.signing_message());
     env.send(&chain::record_public_alert_instructions(env.payer.pubkey(), &h2, &sigs)).unwrap();
@@ -109,7 +109,7 @@ fn rejects_below_threshold_mismatch_and_cross_domain() {
     ixs[0] = chain::record_public_alert_instructions(env.payer.pubkey(), &other, &sigs)[0].clone();
     assert_eq!(err(env.send(&ixs)), code(CotaError::MessageMismatch));
 
-    // Os mesmos bytes Borsh sem o domínio de aviso (ex.: reaproveitar assinatura de lote).
+    // The same Borsh bytes without the warning domain (e.g. reusing a batch signature).
     let mut no_domain = Vec::new();
     chain::to_program_alert_header(&h).serialize(&mut no_domain).unwrap();
     let mut batch_domain = cota::BATCH_DOMAIN.to_vec();

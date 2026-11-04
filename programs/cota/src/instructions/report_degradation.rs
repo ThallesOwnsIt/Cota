@@ -7,8 +7,8 @@ use crate::{
     state::{BatchCommitment, Committee, Station},
 };
 
-/// Registra que uma fonte perdeu confiança no lote mais recente. Não cria conta:
-/// o histórico fica nos eventos da transação.
+/// Records that a source lost confidence in the most recent batch. Creates no account:
+/// the history lives in the transaction events.
 #[derive(Accounts)]
 #[instruction(batch_id: u64, station_id: String)]
 pub struct ReportDegradation<'info> {
@@ -28,7 +28,7 @@ pub fn handle_report_degradation(
     score_milli: u16,
     reason: u8,
 ) -> Result<()> {
-    // Só o lote recém-ancorado: o relatório fica registrado "na hora", não reescrito depois.
+    // Only the batch just anchored: the report is recorded "on the spot", not rewritten later.
     require!(batch_id + 1 == ctx.accounts.committee.next_batch_id, CotaError::StaleBatch);
     require!(score_milli <= 1000 && reason <= MAX_DEGRADATION_REASON, CotaError::InvalidDegradation);
 

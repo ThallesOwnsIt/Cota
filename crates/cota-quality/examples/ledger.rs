@@ -1,4 +1,4 @@
-//! Reavalia a qualidade de todos os lotes de um ledger: `cargo run --example ledger -- data/ledger`.
+//! Re-assesses the quality of every batch in a ledger: `cargo run --example ledger -- data/ledger`.
 
 use cota_core::{Reading, Source};
 use cota_quality::{assess, Agreement, Limits, State};

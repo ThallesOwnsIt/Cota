@@ -1,7 +1,7 @@
-//! Uma rodada de um nó-oráculo: ingere um dia, monta o lote e assina o cabeçalho.
+//! One round of an oracle node: ingests a day, builds the batch and signs the header.
 //!
-//! O número do lote e a raiz anterior vêm da cadeia (`--rpc`) ou são passados à mão
-//! (`--batch-id` + `--prev-root`), para rodar sem rede.
+//! The batch number and the previous root come from the chain (`--rpc`) or are passed by hand
+//! (`--batch-id` + `--prev-root`), to run without a network.
 
 use std::path::PathBuf;
 
@@ -18,27 +18,27 @@ enum FaultArg {
 }
 
 #[derive(Parser)]
-#[command(about = "Nó-oráculo do Cota")]
+#[command(about = "Cota oracle node")]
 struct Args {
-    /// Keypair do nó (formato solana-keygen).
+    /// The node's keypair (solana-keygen format).
     #[arg(long)]
     key: PathBuf,
-    /// Dia UTC a ancorar.
+    /// UTC day to anchor.
     #[arg(long)]
     day: NaiveDate,
-    /// RPC para ler o estado do comitê (next_batch_id, last_batch_root).
+    /// RPC used to read the committee state (next_batch_id, last_batch_root).
     #[arg(long, conflicts_with_all = ["batch_id", "prev_root"])]
     rpc: Option<String>,
     #[arg(long, requires = "prev_root")]
     batch_id: Option<u64>,
-    /// Raiz do lote anterior em hex (64 zeros para o primeiro).
+    /// Previous batch's root in hex (64 zeros for the first).
     #[arg(long)]
     prev_root: Option<String>,
     #[arg(long, default_value = "config/stations.toml")]
     config: PathBuf,
     #[arg(long, default_value = "data/raw")]
     cache: PathBuf,
-    /// Diretório deste nó; grava `{batch_id:05}.json`.
+    /// This node's directory; writes `{batch_id:05}.json`.
     #[arg(long)]
     out: PathBuf,
     #[arg(long, value_enum, default_value = "none")]
@@ -85,7 +85,7 @@ fn main() -> Result<()> {
             );
         }
         None => {
-            // Um arquivo antigo para o mesmo lote não pode contar como presença.
+            // An old file for the same batch must not count as presence.
             let _ = std::fs::remove_file(&path);
             eprintln!("[{}] lote {batch_id} ({}): nó mudo", &keys::pubkey_base58(&key)[..8], args.day);
         }

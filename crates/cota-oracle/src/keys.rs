@@ -1,5 +1,5 @@
-//! Chaves no formato de keypair da Solana (`solana-keygen new -o arquivo.json`):
-//! JSON com 64 bytes = segredo (32) ‖ chave pública (32).
+//! Keys in Solana keypair format (`solana-keygen new -o file.json`):
+//! JSON with 64 bytes = secret (32) ‖ public key (32).
 
 use std::path::Path;
 
@@ -16,7 +16,7 @@ fn read_bytes(path: &Path) -> Result<Vec<u8>> {
     Ok(bytes)
 }
 
-/// Chave de assinatura de um nó-oráculo. Confere que a metade pública corresponde ao segredo.
+/// Signing key of an oracle node. Checks that the public half matches the secret.
 pub fn load_signing_key(path: &Path) -> Result<SigningKey> {
     let bytes = read_bytes(path)?;
     let key = SigningKey::from_bytes(bytes[..32].try_into().expect("32 bytes"));
@@ -26,7 +26,7 @@ pub fn load_signing_key(path: &Path) -> Result<SigningKey> {
     Ok(key)
 }
 
-/// Keypair que paga taxas e assina transações (carteira do agregador/administrador).
+/// Keypair that pays fees and signs transactions (the aggregator's/administrator's wallet).
 pub fn load_keypair(path: &Path) -> Result<Keypair> {
     let bytes = read_bytes(path)?;
     Keypair::try_from(bytes.as_slice()).map_err(|e| anyhow::anyhow!("{}: {e}", path.display()))

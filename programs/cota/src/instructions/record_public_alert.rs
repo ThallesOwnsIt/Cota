@@ -9,10 +9,10 @@ use crate::{
     state::{Committee, PublicAlertHeader, PublicAlertRecord},
 };
 
-/// Registra um aviso oficial visto por ≥ k oráculos com o mesmo conteúdo. Qualquer conta
-/// pode submeter; a autorização vem das assinaturas Ed25519 da instrução anterior.
-/// Cada versão do aviso (conteúdo diferente) gera uma conta própria, e `init` impede
-/// regravar uma versão com outro horário.
+/// Records an official warning seen by ≥ k oracles with the same content. Any account
+/// may submit it; authorization comes from the Ed25519 signatures in the previous instruction.
+/// Each version of the warning (different content) gets its own account, and `init` prevents
+/// rewriting a version with a different time.
 #[derive(Accounts)]
 #[instruction(header: PublicAlertHeader)]
 pub struct RecordPublicAlert<'info> {
@@ -28,7 +28,7 @@ pub struct RecordPublicAlert<'info> {
         bump
     )]
     pub record: Account<'info, PublicAlertRecord>,
-    /// CHECK: endereço conferido contra o ID do sysvar Instructions.
+    /// CHECK: address checked against the Instructions sysvar ID.
     #[account(address = INSTRUCTIONS_SYSVAR_ID)]
     pub instructions: UncheckedAccount<'info>,
     pub system_program: Program<'info, System>,

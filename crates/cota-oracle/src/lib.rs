@@ -1,4 +1,4 @@
-//! Nós-oráculo, agregador k-de-n e cliente on-chain do Cota.
+//! Cota's oracle nodes, k-of-n aggregator and on-chain client.
 
 pub mod aggregate;
 pub mod attest;

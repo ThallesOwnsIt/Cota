@@ -1,17 +1,17 @@
-//! Leitura da instrução do precompile Ed25519 via introspecção (sysvar Instructions).
+//! Reads the Ed25519 precompile instruction through introspection (Instructions sysvar).
 //!
-//! O precompile já rejeitou a transação se alguma assinatura fosse inválida. Aqui só
-//! descobrimos *quais* chaves assinaram *qual* mensagem.
+//! The precompile has already rejected the transaction if any signature was invalid. Here we only
+//! find out *which* keys signed *which* message.
 //!
-//! Layout dos dados da instrução:
+//! Instruction data layout:
 //! ```text
 //! [0]      num_signatures: u8
 //! [1]      padding
-//! [2..]    num_signatures × Ed25519SignatureOffsets (14 bytes, u16 LE cada campo):
+//! [2..]    num_signatures × Ed25519SignatureOffsets (14 bytes, u16 LE per field):
 //!          signature_offset, signature_instruction_index,
 //!          public_key_offset, public_key_instruction_index,
 //!          message_data_offset, message_data_size, message_instruction_index
-//! [...]    pubkeys, assinaturas e mensagem, nos offsets acima
+//! [...]    pubkeys, signatures and message, at the offsets above
 //! ```
 
 use anchor_lang::prelude::*;
@@ -22,13 +22,14 @@ use crate::error::CotaError;
 const OFFSETS_START: usize = 2;
 const OFFSETS_SIZE: usize = 14;
 const PUBKEY_SIZE: usize = 32;
-/// Índice que significa "dados nesta mesma instrução".
+/// Index meaning "data in this same instruction".
 const THIS_INSTRUCTION: u16 = u16::MAX;
 
-/// Exige que a instrução imediatamente anterior seja o precompile Ed25519 assinando
-/// `message` e devolve (bitmap dos membros que assinaram, quantos), já checando o limiar.
+/// Requires the instruction right before this one to be the Ed25519 precompile signing
+/// `message` and returns (bitmap of the members who signed, how many), already checking the
+/// threshold.
 pub fn committee_signers(instructions: &AccountInfo, members: &[Pubkey], threshold: u8, message: &[u8]) -> Result<(u8, u8)> {
-    // Índice relativo, não absoluto: a instrução Ed25519 tem de vir logo antes desta.
+    // Relative index, not absolute: the Ed25519 instruction must come right before this one.
     let ed_ix = get_instruction_relative(-1, instructions).map_err(|_| CotaError::MissingEd25519Instruction)?;
     require_keys_eq!(ed_ix.program_id, solana_sdk_ids::ed25519_program::ID, CotaError::MissingEd25519Instruction);
 
@@ -47,10 +48,10 @@ fn read_u16(data: &[u8], at: usize) -> Result<u16> {
     Ok(u16::from_le_bytes([bytes[0], bytes[1]]))
 }
 
-/// Retorna as chaves públicas que assinaram `expected_message`.
+/// Returns the public keys that signed `expected_message`.
 ///
-/// Falha se qualquer assinatura cobrir outra mensagem ou se algum offset apontar para
-/// fora desta instrução (o que permitiria trocar a mensagem verificada por outra).
+/// Fails if any signature covers another message or if any offset points outside
+/// this instruction (which would allow swapping the verified message for another).
 pub fn signers_of(data: &[u8], expected_message: &[u8]) -> Result<Vec<Pubkey>> {
     let count = *data.first().ok_or(CotaError::MalformedEd25519Instruction)? as usize;
     require!(count > 0, CotaError::MalformedEd25519Instruction);
@@ -87,7 +88,7 @@ pub fn signers_of(data: &[u8], expected_message: &[u8]) -> Result<Vec<Pubkey>> {
 mod tests {
     use super::*;
 
-    /// Uma assinatura sobre `msg`, com todos os índices "nesta instrução".
+    /// One signature over `msg`, with every index set to "this instruction".
     fn single(msg: &[u8]) -> Vec<u8> {
         let msg_off = (OFFSETS_START + OFFSETS_SIZE) as u16;
         let pk_off = msg_off + msg.len() as u16;
@@ -109,7 +110,7 @@ mod tests {
 
     #[test]
     fn rejects_offsets_into_other_instructions() {
-        // Campos de índice: assinatura (+2), pubkey (+6), mensagem (+12).
+        // Index fields: signature (+2), pubkey (+6), message (+12).
         for field in [2, 6, 12] {
             let mut d = single(b"m");
             let at = OFFSETS_START + field;

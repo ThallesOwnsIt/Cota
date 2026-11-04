@@ -1,4 +1,4 @@
-//! Cliente JSON-RPC mínimo da Solana: só o que o Cota usa.
+//! Minimal Solana JSON-RPC client: only what Cota uses.
 
 use std::str::FromStr;
 use std::time::{Duration, Instant};
@@ -27,7 +27,7 @@ impl Rpc {
 
     fn call(&self, method: &str, params: Value) -> Result<Value> {
         let body = json!({ "jsonrpc": "2.0", "id": 1, "method": method, "params": params });
-        // RPCs públicos (devnet) respondem 429 quando passamos do limite: espera e tenta de novo.
+        // Public RPCs (devnet) answer 429 when we go over the limit: wait and try again.
         let mut wait = Duration::from_secs(1);
         let resp = loop {
             let r = self.http.post(&self.url).json(&body).send().with_context(|| format!("RPC {method}"))?;
@@ -58,7 +58,7 @@ impl Rpc {
         r["value"].as_u64().context("saldo ausente")
     }
 
-    /// Dados da conta, ou `None` se ela não existe.
+    /// Account data, or `None` if it does not exist.
     pub fn account_data(&self, pk: &Pubkey) -> Result<Option<Vec<u8>>> {
         let r = self.call("getAccountInfo", json!([pk.to_string(), { "encoding": "base64", "commitment": "confirmed" }]))?;
         if r["value"].is_null() {
@@ -68,12 +68,13 @@ impl Rpc {
         Ok(Some(base64::engine::general_purpose::STANDARD.decode(b64)?))
     }
 
-    /// Assina com `payer`, envia (com simulação prévia) e espera confirmação. Retorna a assinatura.
+    /// Signs with `payer`, sends (after simulating) and waits for confirmation. Returns the
+    /// signature.
     pub fn send_and_confirm(&self, instructions: &[Instruction], payer: &Keypair) -> Result<String> {
         self.send_and_confirm_with(instructions, payer, &[])
     }
 
-    /// Como [`Rpc::send_and_confirm`], com signatários além do pagador.
+    /// Like [`Rpc::send_and_confirm`], with signers besides the payer.
     pub fn send_and_confirm_with(&self, instructions: &[Instruction], payer: &Keypair, others: &[&Keypair]) -> Result<String> {
         let blockhash = self.latest_blockhash()?;
         let mut signers = vec![payer];

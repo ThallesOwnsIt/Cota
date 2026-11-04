@@ -1,9 +1,9 @@
-//! Alerta antecipado pela chuva prevista na bacia.
+//! Early warning from the forecast rain over the basin.
 //!
-//! - `observe` (cada nó, de forma independente): baixa a rodada 00Z do dia D de cada modelo,
-//!   resume a chuva de D+1..D+5 e assina; grava em `data/nodes/node-N/outlook/`.
-//! - `anchor` (agregador, logo depois do lote do dia D): leva à cadeia a perspectiva vista
-//!   por ≥ k membros; o programa aplica a regra e emite `EarlyWarning` se ela disparar.
+//! - `observe` (each node, independently): downloads each model's 00Z run of day D,
+//!   summarizes the rain for D+1..D+5 and signs it; writes to `data/nodes/node-N/outlook/`.
+//! - `anchor` (aggregator, right after day D's batch): takes to the chain the outlook seen
+//!   by ≥ k members; the program applies the rule and emits `EarlyWarning` if it fires.
 
 use std::path::{Path, PathBuf};
 
@@ -15,7 +15,7 @@ use serde_json::json;
 use solana_signer::Signer;
 
 #[derive(Parser)]
-#[command(about = "Chuva prevista atestada pelo comitê do Cota (alerta antecipado)")]
+#[command(about = "Forecast rain attested by Cota's committee (early warning)")]
 struct Args {
     #[command(subcommand)]
     cmd: Cmd,
@@ -26,14 +26,14 @@ enum Cmd {
     Observe {
         #[arg(long)]
         key: PathBuf,
-        /// Dia D (UTC) que acabou de fechar; a janela é D+1..D+5.
+        /// Day D (UTC) that has just closed; the window is D+1..D+5.
         #[arg(long)]
         day: NaiveDate,
         #[arg(long, default_value = "ml/models/outlook-rule.json")]
         rule: PathBuf,
         #[arg(long)]
         out: PathBuf,
-        /// Lê os totais diários (`outlook::Totals`) de um arquivo em vez da API (testes).
+        /// Reads the daily totals (`outlook::Totals`) from a file instead of the API (tests).
         #[arg(long)]
         input: Option<PathBuf>,
     },
@@ -125,7 +125,7 @@ fn anchor(rpc_url: &str, cluster: &str, payer: &Path, nodes_dir: &Path, ledger: 
         let tx = if rpc.account_data(&pda)?.is_some() {
             None
         } else if h.issued_at != committee.last_t_end {
-            // O programa só aceita a perspectiva do dia que acabou de ser ancorado.
+            // The program only accepts the outlook for the day that has just been anchored.
             eprintln!("perspectiva de {day} fora de hora (último lote termina em {}); ignorada", committee.last_t_end);
             continue;
         } else {

@@ -17,11 +17,11 @@ pub struct VaultArgs {
     pub cooldown_secs: i64,
     pub accept_from: i64,
     pub expires_at: i64,
-    /// Depósito inicial (mais SOL pode ser enviado ao endereço do cofre a qualquer momento).
+    /// Initial deposit (more SOL can be sent to the vault address at any time).
     pub deposit_lamports: u64,
 }
 
-/// Cria um cofre paramétrico. Qualquer conta pode criar o seu; as condições ficam fixas.
+/// Creates a parametric vault. Any account may create its own; the conditions are fixed.
 #[derive(Accounts)]
 #[instruction(args: VaultArgs)]
 pub struct CreateVault<'info> {
@@ -86,18 +86,19 @@ pub fn handle_create_vault(ctx: Context<CreateVault>, args: VaultArgs) -> Result
     Ok(())
 }
 
-/// Paga o beneficiário diante de um gatilho do Cota. Qualquer conta pode acionar: o programa
-/// lê o gatilho (conta do próprio programa, com discriminador conferido) e decide sozinho.
+/// Pays the beneficiary when Cota records a trigger. Any account may crank it: the program reads the trigger
+/// (an account of this program, with its discriminator checked) and decides on its own.
 #[derive(Accounts)]
 pub struct TriggerPayout<'info> {
     #[account(mut)]
     pub submitter: Signer<'info>,
     #[account(mut, seeds = [VAULT_SEED, vault.creator.as_ref(), &vault.vault_id.to_le_bytes()], bump = vault.bump)]
     pub vault: Account<'info, Vault>,
-    /// CHECK: só aceita contas do programa; o tipo é conferido pelo discriminador abaixo.
+    /// CHECK: only accepts accounts owned by the program; the type is checked through the
+    /// discriminator below.
     #[account(owner = crate::ID @ CotaError::TriggerMismatch)]
     pub trigger: UncheckedAccount<'info>,
-    /// CHECK: precisa ser o beneficiário gravado no cofre.
+    /// CHECK: must be the beneficiary recorded in the vault.
     #[account(mut, address = vault.beneficiary @ CotaError::TriggerMismatch)]
     pub beneficiary: UncheckedAccount<'info>,
     #[account(
@@ -165,7 +166,7 @@ pub fn handle_trigger_payout(ctx: Context<TriggerPayout>) -> Result<()> {
     Ok(())
 }
 
-/// Depois do vencimento, o criador fecha o cofre e recupera o saldo restante.
+/// After expiry, the creator closes the vault and recovers the remaining balance.
 #[derive(Accounts)]
 pub struct CloseVault<'info> {
     #[account(mut)]

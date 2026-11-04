@@ -1,5 +1,5 @@
-//! Agregação k-de-n: escolhe o cabeçalho que tem assinaturas válidas suficientes e
-//! classifica cada membro do comitê (assinou, discordou, ausente, assinatura inválida).
+//! k-of-n aggregation: picks the header with enough valid signatures and
+//! classifies each committee member (signed, dissented, absent, invalid signature).
 
 use std::collections::BTreeMap;
 
@@ -14,11 +14,11 @@ use crate::node::SignedBatch;
 #[serde(tag = "status", rename_all = "snake_case")]
 pub enum NodeStatus {
     Signed,
-    /// Assinou outro cabeçalho (outra raiz Merkle); a assinatura não entra no lote.
+    /// Signed a different header (different Merkle root); the signature does not go into the batch.
     Disagreed { merkle_root: String },
     Absent,
     InvalidSignature,
-    /// Publicou com uma chave que não pertence ao comitê.
+    /// Published with a key that does not belong to the committee.
     NotMember,
 }
 
@@ -32,19 +32,19 @@ pub struct MemberReport {
 #[derive(Debug, Clone)]
 pub struct Aggregate {
     pub header: BatchHeader,
-    /// (chave pública, assinatura) dos membros que assinaram o cabeçalho escolhido.
+    /// (public key, signature) of the members who signed the chosen header.
     pub signatures: Vec<([u8; 32], [u8; 64])>,
-    /// Lote de um dos nós que assinou o cabeçalho escolhido (leituras canônicas).
+    /// Batch from one of the nodes that signed the chosen header (canonical readings).
     pub batch: SignedBatch,
     pub members: Vec<MemberReport>,
-    /// Lotes com assinatura válida de membros (assinantes e discordantes), na ordem do
-    /// comitê: a base da comparação por MAD entre nós.
+    /// Batches with a valid member signature (signers and dissenters), in committee
+    /// order: the basis for the MAD comparison between nodes.
     pub valid: Vec<SignedBatch>,
 }
 
-/// `members` na ordem do comitê on-chain (a mesma ordem do bitmap de assinantes).
+/// `members` in the on-chain committee order (the same order as the signer bitmap).
 pub fn aggregate(members: &[[u8; 32]], threshold: usize, submissions: &[SignedBatch]) -> Result<Aggregate> {
-    // Só entram assinaturas válidas de membros; agrupadas pela mensagem assinada.
+    // Only valid member signatures count; grouped by signed message.
     let mut groups: BTreeMap<Vec<u8>, Vec<&SignedBatch>> = BTreeMap::new();
     let mut status: BTreeMap<[u8; 32], NodeStatus> = members.iter().map(|m| (*m, NodeStatus::Absent)).collect();
 
@@ -64,7 +64,7 @@ pub fn aggregate(members: &[[u8; 32]], threshold: usize, submissions: &[SignedBa
         groups.entry(msg).or_default().push(sub);
     }
 
-    // Grupo vencedor: o maior; empate desfeito pela ordem dos bytes (determinístico).
+    // Winning group: the largest; ties broken by byte order (deterministic).
     let Some((_, winners)) = groups.iter().max_by_key(|(_, subs)| subs.len()) else {
         bail!("nenhuma assinatura válida de membro do comitê");
     };

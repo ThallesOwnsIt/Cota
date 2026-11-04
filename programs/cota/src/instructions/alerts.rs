@@ -7,7 +7,7 @@ use crate::{
     state::{AlertReceipt, AlertRule, Committee, ForecastCommitment, Station},
 };
 
-/// Fixa o limiar de alerta de uma estação. `init` torna a regra imutável.
+/// Sets a station's alert threshold. `init` makes the rule immutable.
 #[derive(Accounts)]
 #[instruction(station_id: String)]
 pub struct SetAlertRule<'info> {
@@ -40,8 +40,8 @@ pub fn handle_set_alert_rule(ctx: Context<SetAlertRule>, station_id: String, thr
     Ok(())
 }
 
-/// Emite o recibo de alerta de uma previsão. Qualquer conta pode chamar: o programa só
-/// aceita se a P90 gravada cruza o limiar e se a observação ainda não foi ancorada.
+/// Issues the alert receipt for a forecast. Any account may call it: the program only accepts it if the
+/// recorded P90 crosses the threshold and the observation has not been anchored yet.
 #[derive(Accounts)]
 pub struct IssueAlert<'info> {
     #[account(mut)]

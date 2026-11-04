@@ -1,22 +1,22 @@
 #!/usr/bin/env python3
-"""Gera o mapa da bacia do Guaíba usado no painel (dashboard/basin-map.json).
+"""Builds the Guaíba basin map used by the dashboard (dashboard/basin-map.json).
 
-    python3 scripts/build_map.py <pasta-com-os-dados-brutos>
+    python3 scripts/build_map.py <folder-with-the-raw-data>
 
-Roda uma vez; o resultado é versionado. Precisa de `pyshp` e `shapely`. A pasta deve ter:
-- HydroBASINS nível 7, América do Sul: basins/hybas_sa_lev07_v1c.shp
+Runs once; the result is committed. Needs `pyshp` and `shapely`. The folder must contain:
+- HydroBASINS level 7, South America: basins/hybas_sa_lev07_v1c.shp
   https://data.hydrosheds.org/file/HydroBASINS/standard/hybas_sa_lev07_v1c.zip
-- HydroRIVERS, América do Sul: rivers/HydroRIVERS_v10_sa_shp/HydroRIVERS_v10_sa.shp
+- HydroRIVERS, South America: rivers/HydroRIVERS_v10_sa_shp/HydroRIVERS_v10_sa.shp
   https://data.hydrosheds.org/file/HydroRIVERS/HydroRIVERS_v10_sa_shp.zip
-- Natural Earth 1:10m (domínio público): ne/ne_10m_lakes.shp, ne/ne_10m_coastline.shp,
+- Natural Earth 1:10m (public domain): ne/ne_10m_lakes.shp, ne/ne_10m_coastline.shp,
   ne/ne_10m_admin_1_states_provinces_lakes.shp
 
-HydroSHEDS: Lehner & Grill (2013), www.hydrosheds.org. Uso livre com atribuição.
+HydroSHEDS: Lehner & Grill (2013), www.hydrosheds.org. Free to use with attribution.
 
-A bacia é tudo o que drena para a régua do Cais Mauá: o conjunto Jacuí + Taquari, o conjunto
-Caí + Sinos e o Gravataí (82.591 km², contra 82.400 km² da área de drenagem que a ANA informa
-para a estação 87450004). As coordenadas saem já projetadas (equirretangular com o cosseno da
-latitude central), em unidades de SVG; o painel usa a mesma projeção para pôr as estações.
+The basin is everything that drains to the Cais Mauá gauge: the Jacuí + Taquari group, the
+Caí + Sinos group and the Gravataí (82,591 km², against the 82,400 km² drainage area ANA reports
+for station 87450004). Coordinates come out already projected (equirectangular with the cosine of
+the central latitude), in SVG units; the dashboard uses the same projection to place the stations.
 """
 
 from __future__ import annotations
@@ -33,14 +33,15 @@ from shapely.ops import linemerge, unary_union
 ROOT = Path(__file__).resolve().parents[1]
 OUT = ROOT / "dashboard/basin-map.json"
 
-# Bacias de saída no HydroBASINS nível 7; a bacia é a união delas com tudo o que drena para elas.
+# Outlet basins in HydroBASINS level 7; the basin is their union with everything that drains into
+# them.
 OUTLETS = {6070015560: "jacui", 6070015530: "cai-sinos", 6070015510: "gravatai"}
-# Recorte do mapa (lon/lat): a bacia inteira, mais o Guaíba e o começo da Lagoa dos Patos.
+# Map frame (lon/lat): the whole basin, plus the Guaíba and the start of Lagoa dos Patos.
 FRAME = (-54.75, -31.0, -49.75, -27.95)
 WIDTH = 1000
-# Rios com pelo menos esta área a montante entram no mapa (km²); a espessura cresce com ela.
+# Rivers with at least this upstream area go on the map (km²); stroke width grows with it.
 MIN_UPLAND = 1500
-# Rótulos dos rios (lon, lat), postos à mão perto do curso principal.
+# River labels (lon, lat), placed by hand near the main channel.
 LABELS = [
     ("Jacuí", -53.05, -29.93),
     ("Taquari", -51.83, -29.12),
@@ -88,7 +89,7 @@ def main(raw: Path) -> None:
         return "".join(parts)
 
     frame = box(*FRAME)
-    # Tolerância de simplificação em graus: ~1 px no mapa.
+    # Simplification tolerance in degrees: ~1 px on the map.
     tol = 1 / scale
 
     # ---- bacia ----
@@ -125,11 +126,12 @@ def main(raw: Path) -> None:
         merged = linemerge(MultiLineString([ls for s in segs for ls in getattr(s, "geoms", [s])]))
         river_paths[cls] = path(merged.simplify(tol), closed=False)
 
-    # ---- contexto: terra (estados sem os lagos; o que sobra é água: Guaíba, Lagoa dos Patos, mar) ----
+    # ---- context: land (states without lakes; what is left is water: Guaíba, Lagoa dos Patos, sea)
+    # ----
     states = [(d, g) for d, g in read(raw / "ne/ne_10m_admin_1_states_provinces_lakes.shp", FRAME) if g.intersects(frame)]
     land = unary_union([g for _, g in states]).intersection(frame)
     rs = next(g for d, g in states if d.get("iso_3166_2") == "BR-RS")
-    # Divisa do RS só onde ela é fronteira terrestre (não o litoral).
+    # Rio Grande do Sul's border only where it is a land border (not the coastline).
     rs_border = rs.boundary.intersection(frame).intersection(unary_union([g for d, g in states if d.get("iso_3166_2") != "BR-RS"]).buffer(0.01))
 
     out = {

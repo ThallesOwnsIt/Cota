@@ -1,7 +1,7 @@
-//! Núcleo compartilhado do Cota: leitura canônica, lote assinável e árvore Merkle.
+//! Cota's shared core: canonical reading, signable batch and Merkle tree.
 //!
-//! Tudo aqui é determinístico: as mesmas leituras produzem os mesmos bytes, a mesma
-//! raiz e a mesma mensagem assinada em qualquer nó.
+//! Everything here is deterministic: the same readings produce the same bytes, the same
+//! root and the same signed message on any node.
 
 pub mod batch;
 pub mod merkle;

@@ -1,4 +1,4 @@
-//! Testes do programa compilado (cota.so) rodando no LiteSVM, com o precompile Ed25519 real.
+//! Tests of the compiled program (cota.so) running in LiteSVM, with the real Ed25519 precompile.
 
 use {
     anchor_lang::{
@@ -15,7 +15,7 @@ use {
     solana_transaction::{versioned::VersionedTransaction, InstructionError, TransactionError},
 };
 
-/// Código da primeira variante de `#[error_code]` no Anchor.
+/// Code of the first `#[error_code]` variant in Anchor.
 const ANCHOR_ERROR_OFFSET: u32 = 6000;
 
 struct Env {
@@ -61,7 +61,7 @@ impl Env {
         self.send(&[ix])
     }
 
-    /// Envia [precompile Ed25519 assinado por `signers`, commit_batch(header)].
+    /// Sends [Ed25519 precompile signed by `signers`, commit_batch(header)].
     fn commit(&mut self, header: &BatchHeader, signers: &[usize]) -> Result<(), TransactionError> {
         let ed = self.ed25519_ix(&header.signing_message(), signers);
         let ix = commit_ix(self.authority.pubkey(), header);
@@ -205,7 +205,7 @@ fn forged_signature_is_rejected_by_precompile() {
     let h = header(1, [0; 32], 0);
     let mut ed = env.ed25519_ix(&h.signing_message(), &[0, 1]);
     let last = ed.data.len() - 1;
-    ed.data[last] ^= 0x01; // altera um bit da última assinatura
+    ed.data[last] ^= 0x01; // flips one bit of the last signature
     let ix = commit_ix(env.authority.pubkey(), &h);
     let err = env.send(&[ed, ix]).unwrap_err();
     assert!(matches!(err, TransactionError::InstructionError(0, _)), "falha deve vir do precompile: {err:?}");
@@ -231,13 +231,13 @@ fn hash_chain_sequence_and_window_are_enforced() {
     let h1 = header(1, [0; 32], 1000);
     env.commit(&h1, &[0, 1]).unwrap();
 
-    // Repetir o lote 1.
+    // Repeat batch 1.
     assert!(env.commit(&h1, &[0, 1]).is_err());
-    // Pular para o lote 3.
+    // Skip to batch 3.
     assert_eq!(custom_error(env.commit(&header(3, h1.merkle_root, 5000), &[0, 1])), code(CotaError::BatchOutOfSequence));
-    // Lote 2 que não encadeia na raiz do lote 1.
+    // Batch 2 that does not chain onto batch 1's root.
     assert_eq!(custom_error(env.commit(&header(2, [7; 32], 5000), &[0, 1])), code(CotaError::BrokenHashChain));
-    // Lote 2 com janela sobreposta ao lote 1.
+    // Batch 2 with a window overlapping batch 1.
     assert_eq!(custom_error(env.commit(&header(2, h1.merkle_root, 2000), &[0, 1])), code(CotaError::InvalidWindow));
 
     env.commit(&header(2, h1.merkle_root, h1.t_end), &[1, 2]).unwrap();

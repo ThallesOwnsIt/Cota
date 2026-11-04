@@ -1,16 +1,16 @@
-# Modo ao vivo do Cota, a cada 30 minutos:
-#   - 3 jobs de nó, um por chave (cada um só enxerga o próprio secret): consultam os avisos
-#     do INMET e, se houver um dia UTC encerrado ainda não ancorado, assinam o lote dele e a
-#     chuva prevista para os 5 dias seguintes (rodada 00Z do dia, Open-Meteo);
-#   - 1 agregador: leva à cadeia o que tem ≥ 2 de 3 assinaturas (o programa aplica a regra
-#     do alerta antecipado à chuva prevista), prevê a vazão, audita e faz commit
-#     do ledger e dos dados do dashboard (a Vercel republica a cada push); aciona os cofres
-#     paramétricos diante de gatilhos novos.
+# Cota live mode, every 30 minutes:
+#   - 3 node jobs, one per key (each one only sees its own secret): they check INMET's
+#     warnings and, if there is a closed UTC day not yet anchored, sign its batch and the
+#     rain forecast for the next 5 days (that day's 00Z run, Open-Meteo);
+#   - 1 aggregator: takes to the chain whatever has ≥ 2 of 3 signatures (the program applies the
+#     early-warning rule to the forecast rain), forecasts discharge, audits and commits
+#     the ledger and the dashboard data (Vercel redeploys on every push); cranks the parametric
+#     vaults when there are new triggers.
 #
-# Secrets: NODE_1_KEY, NODE_2_KEY, NODE_3_KEY e OPERATOR_KEY (conteúdo dos keypairs JSON);
-#          ANA_IDENTIFICADOR e ANA_SENHA (cadastro no HidroWebService, nível do rio em régua).
-# Trava: só roda com a variável de repositório COTA_LIVE_ENABLED = true (ligar depois de
-# configurar os secrets e passar a autoridade do comitê para o operador).
+# Secrets: NODE_1_KEY, NODE_2_KEY, NODE_3_KEY and OPERATOR_KEY (contents of the JSON keypairs);
+#          ANA_IDENTIFICADOR and ANA_SENHA (HidroWebService login, river level from gauges).
+# Safety switch: only runs with the repository variable COTA_LIVE_ENABLED = true (turn it on after
+# setting up the secrets and handing the committee authority to the operator).
 name: Cota ao vivo
 
 on:
@@ -72,7 +72,7 @@ jobs:
           --rpc "$RPC" --config config/stations-live.toml --out out
       - name: Chuva prevista após ${{ needs.plan.outputs.day }}
         if: needs.plan.outputs.day != ''
-        # Sem a previsão, o lote do nó ainda vale.
+        # Without the forecast, the node's batch still counts.
         continue-on-error: true
         run: target/release/cota-outlook observe --key keys/node.json --day "${{ needs.plan.outputs.day }}" --out out/outlook
       - run: rm -f keys/node.json
@@ -86,7 +86,7 @@ jobs:
 
   aggregate:
     needs: [plan, node]
-    # Um nó fora do ar não pode parar o sistema: o limiar 2-de-3 decide.
+    # One node being down must not stop the system: the 2-of-3 threshold decides.
     if: always() && needs.plan.result == 'success'
     runs-on: ubuntu-latest
     steps:
@@ -121,13 +121,14 @@ jobs:
             target/release/cota-admin --rpc "$RPC" --payer keys/operator.json \
               commit-forecast --file "data/forecasts/$day.json" --cluster "$CLUSTER"
           fi
-      # Cofres paramétricos: o programa decide; o operador só paga a taxa do acionamento.
+      # Parametric vaults: the program decides; the operator only pays the crank's fee.
       - name: Cofres
         continue-on-error: true
         run: target/release/cota-vault --rpc "$RPC" --cluster "$CLUSTER" --payer keys/operator.json crank
       - run: rm -f keys/operator.json
         if: always()
-      # Rodam mesmo se o lote falhar: um aviso oficial já ancorado não pode ficar sem registro.
+      # These run even if the batch fails: an official warning already anchored must not go
+      # unrecorded.
       - name: Auditoria e dados do dashboard
         if: always()
         run: |

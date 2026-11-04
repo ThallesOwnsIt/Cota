@@ -1,6 +1,6 @@
-//! Agregador: lê as assinaturas dos nós para o próximo lote, escolhe o cabeçalho com
-//! quórum e envia `[Ed25519, commit_batch]` à rede. Em seguida avalia a qualidade do
-//! lote e emite `SourceDegraded` para cada estação degradada.
+//! Aggregator: reads the nodes' signatures for the next batch, picks the header with
+//! a quorum and sends `[Ed25519, commit_batch]` to the network. It then assesses the
+//! batch's quality and emits `SourceDegraded` for each degraded station.
 
 use std::path::PathBuf;
 
@@ -11,22 +11,22 @@ use cota_quality::Limits;
 use solana_signer::Signer;
 
 #[derive(Parser)]
-#[command(about = "Agregador k-de-n do Cota")]
+#[command(about = "Cota's k-of-n aggregator")]
 struct Args {
     #[arg(long, default_value = "http://127.0.0.1:8899")]
     rpc: String,
-    /// Nome do cluster para os links do explorer (devnet, localnet...).
+    /// Cluster name for the explorer links (devnet, localnet...).
     #[arg(long, default_value = "devnet")]
     cluster: String,
-    /// Carteira que paga as taxas (qualquer conta; a autorização vem das assinaturas dos nós).
+    /// Wallet that pays the fees (any account; authorization comes from the nodes' signatures).
     #[arg(long)]
     payer: PathBuf,
-    /// Diretório com uma subpasta por nó (`node-1/`, `node-2/`...).
+    /// Directory with one subfolder per node (`node-1/`, `node-2/`...).
     #[arg(long, default_value = "data/nodes")]
     nodes_dir: PathBuf,
     #[arg(long, default_value = "data/ledger")]
     ledger: PathBuf,
-    /// Autoridade do comitê, que assina `report_degradation` (padrão: a mesma do `--payer`).
+    /// Committee authority, which signs `report_degradation` (default: the same as `--payer`).
     #[arg(long)]
     authority: Option<PathBuf>,
     #[arg(long, default_value = "config/stations.toml")]
@@ -66,11 +66,11 @@ fn main() -> Result<()> {
     let sig = rpc.send_and_confirm(&ixs, &payer)?;
     let account = chain::batch_pda(batch_id);
 
-    // Qualidade do lote recém-ancorado: o relatório fica on-chain "na hora".
+    // Quality of the batch just anchored: the report goes on-chain "on the spot".
     let catalog: Vec<_> = cota_ingest::config::load(&args.config)?.into_iter().map(|s| (s.id, s.source)).collect();
     let limits = Limits::load(&args.limits)?;
     let mut outcome = quality::evaluate(&args.ledger.join("quality-state.json"), &limits, &catalog, &agg)?;
-    // O lote já está na cadeia: registra antes de qualquer outra transação poder falhar.
+    // The batch is already on-chain: record it before any other transaction can fail.
     ledger::write_entry(&args.ledger, &agg, account.to_string(), sig.clone(), &args.cluster, &outcome)?;
     let authority = match &args.authority {
         Some(p) => keys::load_keypair(p)?,

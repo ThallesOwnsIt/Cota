@@ -2,26 +2,26 @@ use anchor_lang::prelude::*;
 
 use crate::constants::*;
 
-/// Comitê de oráculos. Singleton (PDA `["committee"]`).
+/// Oracle committee. Singleton (PDA `["committee"]`).
 #[account]
 #[derive(InitSpace)]
 pub struct Committee {
-    /// Quem pode registrar estações e trocar membros. Não pode ancorar lotes sozinho.
+    /// Who can register stations and replace members. Cannot anchor batches alone.
     pub authority: Pubkey,
     #[max_len(MAX_MEMBERS)]
     pub members: Vec<Pubkey>,
-    /// Assinaturas distintas exigidas por lote (k de n).
+    /// Distinct signatures required per batch (k of n).
     pub threshold: u8,
-    /// Próximo `batch_id` aceito (começa em 1).
+    /// Next accepted `batch_id` (starts at 1).
     pub next_batch_id: u64,
-    /// Raiz Merkle do último lote; zeros antes do primeiro.
+    /// Merkle root of the latest batch; zeros before the first one.
     pub last_batch_root: [u8; 32],
-    /// Fim da janela do último lote; o próximo não pode começar antes.
+    /// End of the latest batch's window; the next one cannot start before it.
     pub last_t_end: i64,
     pub bump: u8,
 }
 
-/// Estação ou ponto de grade monitorado. PDA `["station", station_id]`.
+/// Monitored station or grid point. PDA `["station", station_id]`.
 #[account]
 #[derive(InitSpace)]
 pub struct Station {
@@ -29,11 +29,11 @@ pub struct Station {
     pub station_id: String,
     #[max_len(MAX_STATION_NAME_LEN)]
     pub name: String,
-    /// Mesmo discriminante de `cota_core::Source`.
+    /// Same discriminant as `cota_core::Source`.
     pub source: u8,
-    /// Mesmo discriminante de `cota_core::Variable`.
+    /// Same discriminant as `cota_core::Variable`.
     pub variable: u8,
-    /// Coordenadas efetivamente usadas, em microgrus.
+    /// Coordinates actually used, in microdegrees.
     pub lat_e6: i32,
     pub lon_e6: i32,
     #[max_len(MAX_DATUM_ID_LEN)]
@@ -42,7 +42,7 @@ pub struct Station {
     pub bump: u8,
 }
 
-/// Lote ancorado. PDA `["batch", batch_id (u64 LE)]`; `init` impede reescrever um lote.
+/// Anchored batch. PDA `["batch", batch_id (u64 LE)]`; `init` prevents rewriting a batch.
 #[account]
 #[derive(InitSpace)]
 pub struct BatchCommitment {
@@ -56,15 +56,15 @@ pub struct BatchCommitment {
     /// Bit i ligado = `committee.members[i]` assinou.
     pub signers: u8,
     pub signer_count: u8,
-    /// Slot e horário de consenso em que o lote foi aceito: o "quando" auditável.
+    /// Slot and consensus time at which the batch was accepted: the auditable "when".
     pub slot: u64,
     pub committed_at: i64,
     pub submitter: Pubkey,
     pub bump: u8,
 }
 
-/// Cabeçalho que os oráculos assinam. Layout Borsh idêntico a `cota_core::BatchHeader`
-/// (há um teste que compara os bytes).
+/// Header the oracles sign. Borsh layout identical to `cota_core::BatchHeader`
+/// (a test compares the bytes).
 #[derive(AnchorSerialize, AnchorDeserialize, Clone, Debug, PartialEq, Eq)]
 pub struct BatchHeader {
     pub batch_id: u64,
@@ -84,7 +84,7 @@ impl BatchHeader {
     }
 }
 
-/// Previsão quantílica registrada antes de a observação existir.
+/// Quantile forecast recorded before the observation exists.
 /// PDA `["forecast", station_id, based_on_batch_id (u64 LE), target_ts (i64 LE)]`.
 #[account]
 #[derive(InitSpace)]
@@ -92,20 +92,20 @@ pub struct ForecastCommitment {
     #[max_len(MAX_STATION_ID_LEN)]
     pub station_id: String,
     pub variable: u8,
-    /// Último lote ancorado quando a previsão foi aceita: os dados que ela podia conhecer.
+    /// Latest anchored batch when the forecast was accepted: the data it could have known.
     pub based_on_batch_id: u64,
     pub based_on_root: [u8; 32],
-    /// Instante de emissão no tempo do replay (= fim da janela de `based_on_batch_id`).
+    /// Issue time in replay time (= end of the `based_on_batch_id` window).
     pub issued_at: i64,
-    /// `ts_utc` da leitura prevista; estava fora de qualquer lote ancorado na emissão.
+    /// `ts_utc` of the forecast reading; it was outside every anchored batch at issue time.
     pub target_ts: i64,
     pub horizon_hours: u16,
-    /// Quantis em milésimos da unidade da variável, com p10 ≤ p50 ≤ p90.
+    /// Quantiles in thousandths of the variable's unit, with p10 ≤ p50 ≤ p90.
     pub p10: i64,
     pub p50: i64,
     pub p90: i64,
     pub model_sha256: [u8; 32],
-    /// Raiz Merkle (RFC 9162) das features usadas, para reproduzir a previsão.
+    /// Merkle root (RFC 9162) of the features used, to reproduce the forecast.
     pub features_root: [u8; 32],
     pub slot: u64,
     pub committed_at: i64,
@@ -113,7 +113,7 @@ pub struct ForecastCommitment {
     pub bump: u8,
 }
 
-/// Limiar de alerta de uma estação. Imutável depois de criado. PDA `["alert_rule", station_id]`.
+/// A station's alert threshold. Immutable once created. PDA `["alert_rule", station_id]`.
 #[account]
 #[derive(InitSpace)]
 pub struct AlertRule {
@@ -125,8 +125,8 @@ pub struct AlertRule {
     pub bump: u8,
 }
 
-/// Recibo de alerta: a P90 de uma previsão já ancorada cruzou o limiar da estação
-/// antes de a observação existir. PDA `["alert", forecast]`.
+/// Alert receipt: the P90 of an already-anchored forecast crossed the station's threshold
+/// before the observation existed. PDA `["alert", forecast]`.
 #[account]
 #[derive(InitSpace)]
 pub struct AlertReceipt {
@@ -144,8 +144,8 @@ pub struct AlertReceipt {
     pub bump: u8,
 }
 
-/// O que os oráculos assinam ao atestar um aviso oficial (ex.: INMET). O conteúdo completo
-/// fica fora da cadeia; `content_sha256` é o hash do JSON canônico dele.
+/// What the oracles sign when attesting an official warning (e.g. INMET). The full content
+/// stays off-chain; `content_sha256` is the hash of its canonical JSON.
 #[derive(AnchorSerialize, AnchorDeserialize, Clone, Debug, PartialEq, Eq)]
 pub struct PublicAlertHeader {
     pub issuer: String,
@@ -153,7 +153,7 @@ pub struct PublicAlertHeader {
     pub content_sha256: [u8; 32],
     /// 1 perigo potencial (amarelo), 2 perigo (laranja), 3 grande perigo (vermelho); 0 outro.
     pub severity: u8,
-    /// Vigência declarada pelo emissor, em segundos UTC.
+    /// Validity period declared by the issuer, in UTC seconds.
     pub onset: i64,
     pub expires: i64,
 }
@@ -166,8 +166,8 @@ impl PublicAlertHeader {
     }
 }
 
-/// Aviso oficial atestado pelo comitê: a versão com este conteúdo existia, no máximo,
-/// no slot `slot`. Imutável. PDA `["public_alert", content_sha256]`.
+/// Official warning attested by the committee: the version with this content existed by
+/// slot `slot` at the latest. Immutable. PDA `["public_alert", content_sha256]`.
 #[account]
 #[derive(InitSpace)]
 pub struct PublicAlertRecord {
@@ -187,33 +187,33 @@ pub struct PublicAlertRecord {
     pub bump: u8,
 }
 
-/// Regra do alerta antecipado de uma região. Imutável. PDA `["outlook_rule", region]`.
+/// A region's early-warning rule. Immutable. PDA `["outlook_rule", region]`.
 #[account]
 #[derive(InitSpace)]
 pub struct OutlookRule {
     #[max_len(MAX_REGION_LEN)]
     pub region: String,
-    /// Chuva média prevista na janela (milésimos de mm) a partir da qual o alerta dispara.
+    /// Mean forecast rain over the window (thousandths of a mm) from which the warning fires.
     pub threshold_milli: i64,
     pub window_secs: i64,
     pub min_models: u8,
-    /// SHA-256 da especificação completa (pontos, modelos, calibração), publicada fora da cadeia.
+    /// SHA-256 of the full specification (points, models, calibration), published off-chain.
     pub rule_sha256: [u8; 32],
     pub set_at: i64,
     pub bump: u8,
 }
 
-/// O que os oráculos assinam sobre a chuva prevista de uma região. O conteúdo completo (por
-/// modelo, ponto e dia) fica fora da cadeia; `content_sha256` é o hash do JSON canônico.
+/// What the oracles sign about a region's forecast rain. The full content (per
+/// model, point and day) stays off-chain; `content_sha256` is the hash of the canonical JSON.
 #[derive(AnchorSerialize, AnchorDeserialize, Clone, Debug, PartialEq, Eq)]
 pub struct OutlookHeader {
     pub region: String,
-    /// Fim do último dia ancorado: a perspectiva só usa o que existia até ali.
+    /// End of the latest anchored day: the outlook only uses what existed up to then.
     pub issued_at: i64,
     pub window_end: i64,
     pub models: u8,
-    /// Chuva acumulada na janela, média dos pontos, em milésimos de mm: média, mínimo e
-    /// máximo entre os modelos.
+    /// Rain accumulated over the window, averaged over the points, in thousandths of a mm: mean, minimum and
+    /// maximum across the models.
     pub rain_mean_milli: i64,
     pub rain_min_milli: i64,
     pub rain_max_milli: i64,
@@ -228,7 +228,7 @@ impl OutlookHeader {
     }
 }
 
-/// Chuva prevista atestada pelo comitê e avaliada pela regra no próprio programa.
+/// Forecast rain attested by the committee and evaluated against the rule inside the program.
 /// PDA `["outlook", region, issued_at (i64 LE)]`.
 #[account]
 #[derive(InitSpace)]
@@ -243,7 +243,7 @@ pub struct OutlookRecord {
     pub rain_min_milli: i64,
     pub rain_max_milli: i64,
     pub content_sha256: [u8; 32],
-    /// Limiar da regra no momento do registro e o resultado: o alerta antecipado.
+    /// The rule's threshold at recording time and the result: the early warning.
     pub threshold_milli: i64,
     pub triggered: bool,
     pub signers: u8,
@@ -254,24 +254,24 @@ pub struct OutlookRecord {
     pub bump: u8,
 }
 
-/// Cofre paramétrico: guarda SOL e paga `payout_lamports` ao beneficiário quando o Cota
-/// registra um gatilho, sem aprovação de ninguém. PDA `["vault", creator, vault_id (u64 LE)]`.
+/// Parametric vault: holds SOL and pays `payout_lamports` to the beneficiary when Cota
+/// records a trigger, with nobody's approval. PDA `["vault", creator, vault_id (u64 LE)]`.
 #[account]
 #[derive(InitSpace)]
 pub struct Vault {
     pub creator: Pubkey,
     pub vault_id: u64,
     pub beneficiary: Pubkey,
-    /// `TRIGGER_EARLY_WARNING` ou `TRIGGER_FLOW_ALERT`.
+    /// `TRIGGER_EARLY_WARNING` or `TRIGGER_FLOW_ALERT`.
     pub kind: u8,
-    /// Região (alerta antecipado) ou estação (alerta de vazão).
+    /// Region (early warning) or station (flow alert).
     #[max_len(MAX_STATION_ID_LEN)]
     pub subject: String,
     pub payout_lamports: u64,
-    /// Intervalo mínimo entre os eventos pagos (pelo `issued_at` do gatilho): um evento de
-    /// vários dias seguidos paga uma vez.
+    /// Minimum interval between paid events (by the trigger's `issued_at`): an event spanning
+    /// several consecutive days pays once.
     pub cooldown_secs: i64,
-    /// Só valem gatilhos gravados on-chain a partir deste instante.
+    /// Only triggers recorded on-chain from this moment on count.
     pub accept_from: i64,
     pub expires_at: i64,
     pub last_event_at: i64,
@@ -281,7 +281,7 @@ pub struct Vault {
     pub bump: u8,
 }
 
-/// Recibo de pagamento: um por (cofre, gatilho). PDA `["payout", vault, trigger]`.
+/// Payout receipt: one per (vault, trigger). PDA `["payout", vault, trigger]`.
 #[account]
 #[derive(InitSpace)]
 pub struct Payout {

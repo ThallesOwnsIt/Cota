@@ -9,11 +9,11 @@ pub const STATION_SEED: &[u8] = b"station";
 #[constant]
 pub const BATCH_SEED: &[u8] = b"batch";
 
-/// Prefixo da mensagem que os oráculos assinam. Igual a `cota_core::BATCH_DOMAIN`.
+/// Prefix of the message the oracles sign. Same as `cota_core::BATCH_DOMAIN`.
 #[constant]
 pub const BATCH_DOMAIN: &[u8] = b"COTA-BATCH-v1";
 
-/// Limite de membros do comitê; o bitmap de assinantes é um `u8`.
+/// Maximum committee size; the signer bitmap is a `u8`.
 pub const MAX_MEMBERS: usize = 8;
 
 pub const MAX_STATION_ID_LEN: usize = 32;
@@ -29,13 +29,13 @@ pub const ALERT_RULE_SEED: &[u8] = b"alert_rule";
 #[constant]
 pub const ALERT_SEED: &[u8] = b"alert";
 
-/// Motivos de `SourceDegraded` (mesmos valores de `cota_quality::Reason`).
+/// `SourceDegraded` reasons (same values as `cota_quality::Reason`).
 pub const MAX_DEGRADATION_REASON: u8 = 4;
 
 #[constant]
 pub const PUBLIC_ALERT_SEED: &[u8] = b"public_alert";
 
-/// Prefixo da mensagem que os oráculos assinam ao atestar um aviso oficial.
+/// Prefix of the message the oracles sign when attesting an official warning.
 #[constant]
 pub const PUBLIC_ALERT_DOMAIN: &[u8] = b"COTA-PUBALERT-v1";
 
@@ -48,7 +48,7 @@ pub const OUTLOOK_RULE_SEED: &[u8] = b"outlook_rule";
 #[constant]
 pub const OUTLOOK_SEED: &[u8] = b"outlook";
 
-/// Prefixo da mensagem que os oráculos assinam ao atestar a chuva prevista.
+/// Prefix of the message the oracles sign when attesting forecast rain.
 #[constant]
 pub const OUTLOOK_DOMAIN: &[u8] = b"COTA-OUTLOOK-v1";
 
@@ -60,7 +60,7 @@ pub const VAULT_SEED: &[u8] = b"vault";
 #[constant]
 pub const PAYOUT_SEED: &[u8] = b"payout";
 
-/// Gatilhos de cofre: alerta antecipado (`OutlookRecord` com `triggered`, assunto = região)
-/// ou alerta do modelo de vazão (`AlertReceipt`, assunto = estação).
+/// Vault triggers: early warning (`OutlookRecord` with `triggered`, subject = region)
+/// or flow-model alert (`AlertReceipt`, subject = station).
 pub const TRIGGER_EARLY_WARNING: u8 = 0;
 pub const TRIGGER_FLOW_ALERT: u8 = 1;

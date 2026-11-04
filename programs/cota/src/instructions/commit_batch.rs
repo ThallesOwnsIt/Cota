@@ -9,8 +9,8 @@ use crate::{
     state::{BatchCommitment, BatchHeader, Committee},
 };
 
-/// Ancora um lote assinado pelo comitê. Qualquer conta pode submeter (paga as taxas);
-/// a autorização vem das assinaturas Ed25519 verificadas na instrução anterior.
+/// Anchors a batch signed by the committee. Any account may submit it (and pays the fees);
+/// authorization comes from the Ed25519 signatures verified in the previous instruction.
 #[derive(Accounts)]
 #[instruction(header: BatchHeader)]
 pub struct CommitBatch<'info> {
@@ -26,7 +26,7 @@ pub struct CommitBatch<'info> {
         bump
     )]
     pub batch: Account<'info, BatchCommitment>,
-    /// CHECK: endereço conferido contra o ID do sysvar Instructions.
+    /// CHECK: address checked against the Instructions sysvar ID.
     #[account(address = INSTRUCTIONS_SYSVAR_ID)]
     pub instructions: UncheckedAccount<'info>,
     pub system_program: Program<'info, System>,
@@ -35,7 +35,7 @@ pub struct CommitBatch<'info> {
 pub fn handle_commit_batch(ctx: Context<CommitBatch>, header: BatchHeader) -> Result<()> {
     let committee = &ctx.accounts.committee;
 
-    // 1. Sequência e hash-chain: impede pular, repetir ou inserir lotes no passado.
+    // 1. Sequence and hash chain: prevents skipping, repeating or inserting batches in the past.
     require!(header.batch_id == committee.next_batch_id, CotaError::BatchOutOfSequence);
     require!(header.prev_batch_root == committee.last_batch_root, CotaError::BrokenHashChain);
     require!(
@@ -43,8 +43,8 @@ pub fn handle_commit_batch(ctx: Context<CommitBatch>, header: BatchHeader) -> Re
         CotaError::InvalidWindow
     );
 
-    // 2. Quem assinou exatamente este cabeçalho (precompile na instrução anterior) e se
-    //    são membros distintos em número suficiente.
+    // 2. Who signed exactly this header (precompile in the previous instruction) and whether
+    //    they are enough distinct members.
     let (signers, signer_count) = ed25519::committee_signers(
         &ctx.accounts.instructions.to_account_info(),
         &committee.members,
@@ -52,7 +52,7 @@ pub fn handle_commit_batch(ctx: Context<CommitBatch>, header: BatchHeader) -> Re
         &header.signing_message(),
     )?;
 
-    // 3. Grava o recibo e avança o comitê.
+    // 3. Records the receipt and advances the committee.
     let clock = Clock::get()?;
     let batch = &mut ctx.accounts.batch;
     batch.batch_id = header.batch_id;

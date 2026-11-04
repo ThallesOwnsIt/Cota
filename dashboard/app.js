@@ -23,7 +23,7 @@ const SVG = "http://www.w3.org/2000/svg";
 // ---- idioma ---------------------------------------------------------------
 
 let lang = "pt";
-// Texto na língua ativa: L("português", "English").
+// Text in the active language: L("português", "English").
 const L = (pt, en) => (lang === "en" ? en : pt);
 let nf0, nf1, nf2, nf3;
 function setFormats() {
@@ -58,7 +58,7 @@ const UNIT = { precipitation: "mm", river_discharge: "m³/s", river_stage: "m" }
 const state = { place: null, h: 24, sel: 0, station: "", batches: new Map(), activeReading: null, tamper: false };
 let B; // bundle
 
-// ---- utilidades de data ---------------------------------------------------
+// ---- date helpers ---------------------------------------------------------
 
 const MONTHS = {
   pt: ["jan", "fev", "mar", "abr", "mai", "jun", "jul", "ago", "set", "out", "nov", "dez"],
@@ -123,7 +123,7 @@ function derive() {
     }
     B.stats[h] = { n, hit, fa, miss, coverage: inside / n, pod: hit / (hit + miss), far: fa / (hit + fa) };
   }
-  // Cruzamentos observados e o primeiro alerta que apontava para aquele dia.
+  // Observed crossings and the first alert that pointed at that day.
   B.crossings = [];
   B.days.forEach((d, i) => {
     const prev = B.days[i - 1];
@@ -155,7 +155,7 @@ function renderKpis() {
     .join("");
 }
 
-// ---- gráfico de vazão -----------------------------------------------------
+// ---- flow chart -----------------------------------------------------------
 
 function flowSeries() {
   const first = B.days[0].day;
@@ -169,7 +169,7 @@ function flowSeries() {
   });
 }
 
-// Gráfico de vazão observada × faixa prevista. Reutilizado pelo replay e pelo modo ao vivo.
+// Chart of observed flow × forecast band. Reused by the replay and by live mode.
 function renderFlow(opts = {}) {
   const {
     box = $("#flow-chart"),
@@ -189,24 +189,24 @@ function renderFlow(opts = {}) {
   const y = (v) => H - m.b - (v / ymax) * (H - m.t - m.b);
 
   const svg = el("svg", { viewBox: `0 0 ${W} ${H}`, width: W, height: H });
-  // grade e eixo y
+  // grid and y axis
   const step = niceMax(ymax / 5);
   for (let v = 0; v <= ymax + 1; v += step) {
     el("line", { x1: m.l, x2: W - m.r, y1: y(v), y2: y(v), class: v === 0 ? "baseline" : "gridline" }, svg);
     el("text", { x: m.l - 6, y: y(v) + 4, "text-anchor": "end", class: "tick-label" }, svg).textContent = nf0.format(v / 1000);
   }
-  // eixo x: um rótulo a cada ~5 dias
+  // x axis: one label every ~5 days
   const every = Math.max(1, Math.ceil(data.length / (W < 560 ? 5 : 8)));
   data.forEach((d, i) => {
     if (i % every === 0) el("text", { x: x(i), y: H - 6, "text-anchor": "middle", class: "tick-label" }, svg).textContent = dm(d.day);
   });
 
-  // dia selecionado
+  // selected day
   const si = data.findIndex((d) => d.day === selDay);
   const colW = (W - m.l - m.r) / Math.max(1, data.length - 1);
   if (si >= 0) el("rect", { x: x(si) - colW / 2, y: m.t, width: colW, height: H - m.t - m.b, fill: "var(--surface-2)" }, svg);
 
-  // faixa P10–P90 e P50
+  // P10–P90 band and P50
   const fcPts = data.map((d, i) => (d.fc ? { i, ...d.fc } : null)).filter(Boolean);
   const band = fcPts.map((p) => `${x(p.i)},${y(p.p90)}`).concat([...fcPts].reverse().map((p) => `${x(p.i)},${y(p.p10)}`));
   el("polygon", { points: band.join(" "), fill: "var(--band)" }, svg);
@@ -220,21 +220,21 @@ function renderFlow(opts = {}) {
   const obsPts = data.map((d, i) => (d.obs != null ? `${x(i)},${y(d.obs)}` : null)).filter(Boolean);
   el("polyline", { points: obsPts.join(" "), fill: "none", stroke: "var(--observed)", "stroke-width": 2, "stroke-linejoin": "round" }, svg);
 
-  // alertas: triângulo acima da P90 do dia-alvo
+  // alerts: triangle above the target day's P90
   for (const p of fcPts) {
     if (!p.alert) continue;
     const cx = x(p.i), cy = y(p.p90) - 9;
     el("path", { d: `M${cx - 5},${cy - 4} L${cx + 5},${cy - 4} L${cx},${cy + 4} Z`, fill: "var(--critical)", stroke: "var(--surface)", "stroke-width": 1.5 }, svg);
   }
 
-  // rótulos diretos nas pontas
+  // direct labels at the line ends
   const lastObs = data.findLastIndex((d) => d.obs != null);
   if (lastObs >= 0)
     el("text", { x: x(lastObs) - 4, y: y(data[lastObs].obs) - 8, "text-anchor": "end", class: "tick-label", fill: "var(--text-2)" }, svg).textContent = L("observada", "observed");
   const lastFc = fcPts.at(-1);
   if (lastFc) el("text", { x: x(lastFc.i), y: y(lastFc.p90) - 8, "text-anchor": "end", class: "tick-label" }, svg).textContent = "P10–P90";
 
-  // camada de interação
+  // interaction layer
   const hover = el("g", { "pointer-events": "none" }, svg);
   const overlay = el("rect", { x: m.l - colW / 2, y: m.t, width: W - m.l - m.r + colW, height: H - m.t - m.b, fill: "transparent", style: "cursor:pointer" }, svg);
   const pick = (ev) => {
@@ -295,7 +295,7 @@ function renderRain() {
   const W = Math.max(320, box.clientWidth);
   const H = 120;
   const m = { l: 52, r: 18, t: 22, b: 22 };
-  const n = B.days.length + 2; // mesmo eixo x do gráfico de vazão
+  const n = B.days.length + 2; // same x axis as the flow chart
   const vals = B.days.map((d) => {
     const v = Object.entries(d.rain_milli).filter(([s]) => (d.rain_hours[s] ?? 0) >= 20).map(([, x]) => x / 1000);
     return v.length ? v.reduce((a, b) => a + b, 0) / v.length : null;
@@ -332,7 +332,7 @@ function renderRain() {
   box.replaceChildren(svg);
 }
 
-// ---- linha do tempo -------------------------------------------------------
+// ---- timeline -------------------------------------------------------------
 
 function renderTimeline() {
   const n = B.days.length;
@@ -384,7 +384,7 @@ function renderTimeline() {
     .join("");
 }
 
-// ---- dia selecionado ------------------------------------------------------
+// ---- selected day ---------------------------------------------------------
 
 async function loadBatch(id) {
   if (!state.batches.has(id)) {
@@ -445,7 +445,7 @@ function renderDay() {
   </div>`;
   $("#verify-batch").addEventListener("click", () => verifyBatch(d));
 
-  // Quem sabia o quê: previsões que apontavam para este dia e a emitida no fim dele.
+  // Who knew what: forecasts that pointed at this day and the one issued at its end.
   const before = [48, 24]
     .map((h) => B.byTarget[h].get(d.day))
     .filter(Boolean)
@@ -502,7 +502,7 @@ async function renderReadings(d) {
   $("#readings").querySelectorAll("[data-v]").forEach((btn) => btn.addEventListener("click", () => verifyReading(d, +btn.dataset.v)));
 }
 
-// ---- verificação ----------------------------------------------------------
+// ---- verification ---------------------------------------------------------
 
 const OWNED = () => L("A conta pertence ao programa do Cota", "The account belongs to the Cota program");
 const ATTESTED = (n) => L(`Atestado por ${n} de ${B.meta.members.length} nós (limiar ${B.meta.threshold})`, `Attested by ${n} of ${B.meta.members.length} nodes (threshold ${B.meta.threshold})`);
@@ -725,9 +725,9 @@ function renderMetrics() {
   document.querySelectorAll(".model-sha").forEach((n) => (n.textContent = `model_sha256 ${B.meta.model_sha256.slice(0, 16)}…`));
 }
 
-// ---- ao vivo --------------------------------------------------------------
+// ---- live -----------------------------------------------------------------
 
-// Horário de Brasília nas duas línguas; em inglês, "25 Oct 2026", como dm/dmy.
+// Brasília time in both languages; in English, "25 Oct 2026", like dm/dmy.
 const br = (ts) =>
   new Date(ts * 1000).toLocaleString(L("pt-BR", "en-GB"), { timeZone: "America/Sao_Paulo", dateStyle: L("short", "medium"), timeStyle: "short" });
 const SEVERITY = {
@@ -747,7 +747,7 @@ function liveSeries() {
     const fc = byTarget.get(d);
     rows.push({ day: d, obs: obs.get(d) ?? null, fc: fc?.f ?? null, issue: fc?.issue ?? null });
   }
-  // O alvo de +48 h da última emissão também entra na faixa.
+  // The +48 h target of the latest issue also goes into the band.
   const last = LV.issues.at(-1);
   const h48 = last?.horizons.find((f) => f.horizon_hours === 48);
   const tail = rows.find((r) => r.day === h48?.target_day);
@@ -825,29 +825,30 @@ function renderLive() {
   $("#live-alerts").querySelectorAll("[data-a]").forEach((b) => b.addEventListener("click", () => verifyPublicAlert(LV.public_alerts[+b.dataset.a])));
 }
 
-// ---- nível do rio (régua da ANA) ------------------------------------------
-// Cotas de referência da Defesa Civil de Porto Alegre na régua do Cais Mauá.
+// ---- river level (ANA gauge) ----------------------------------------------
+// Reference levels used by Porto Alegre's civil defense on the Cais Mauá gauge.
 
 const STAGE_FLOOD = 3000;
 const STAGE_NEAR = 2500;
 const STAGE_RECORD = { milli: 5350, day: "2024-05-05" };
 const meters = (milli) => nf2.format(milli / 1000);
 const cm = (milli) => nf0.format(Math.abs(milli) / 10);
-// Hora de Brasília (UTC−3) de um instante.
+// Brasília time (UTC−3) of an instant.
 const brHour = (ts) => new Date((ts - 3 * 3600) * 1000).toISOString();
 const riverName = (sid) => {
   const n = (B.live.stage_stations.find((s) => s.id === sid)?.name ?? sid).replace(/ \(ANA\)$/, "");
   return L(n, n.replace(" em ", " at "));
 };
 
-// `sameDay`: sem o dia anterior, a variação é entre a primeira e a última leitura do próprio dia.
+// `sameDay`: without the previous day, the change is between the day's own first and last reading.
 function stageChange(milli, sameDay = false) {
   const span = sameDay ? L("ao longo do dia", "during the day") : L("em 24 h", "in 24 h");
   if (milli === 0) return L(`estável ${span}`, `steady ${span}`);
   return milli > 0 ? L(`▲ subiu ${cm(milli)} cm ${span}`, `▲ up ${cm(milli)} cm ${span}`) : L(`▼ desceu ${cm(milli)} cm ${span}`, `▼ down ${cm(milli)} cm ${span}`);
 }
 
-// Variação de uma régua: contra o fim do dia anterior, ou dentro do próprio dia se ele faltar.
+// A gauge's change: against the end of the previous day, or within the day itself if that is
+// missing.
 function gaugeChange(cur, prev) {
   if (prev?.last != null) return { ch: cur.last - prev.last, sameDay: false };
   if (cur.first != null && cur.hours > 1) return { ch: cur.last - cur.first, sameDay: true };
@@ -893,8 +894,8 @@ function renderStage() {
       </div>
     </div>`;
 
-  // Afluentes: cada régua tem o seu zero, então o que dá para comparar é a variação.
-  // Só compara com o dia imediatamente anterior: com um dia faltando, a "variação em 24 h" seria de 48 h.
+  // Tributaries: each gauge has its own zero, so what can be compared is the change.
+  // Only compares with the day right before: with a day missing, the "change in 24 h" would be over 48 h.
   const before = LV.days.find((d) => d.day === addDays(day.day, -1) && d.stage);
   const rivers = Object.entries(day.stage)
     .filter(([sid]) => sid !== LV.stage_main)
@@ -929,7 +930,7 @@ function renderStageChart(ser) {
     el("line", { x1: m.l, x2: W - m.r, y1: y(v), y2: y(v), class: v === 0 ? "baseline" : "gridline" }, svg);
     el("text", { x: m.l - 6, y: y(v) + 4, "text-anchor": "end", class: "tick-label" }, svg).textContent = `${nf1.format(v / 1000)} m`;
   }
-  // um rótulo por dia (Brasília), espaçado conforme a largura
+  // one label per day (Brasília), spaced according to the width
   const days = [];
   for (let t = Math.ceil((t0 + 3 * 3600) / 86_400) * 86_400 - 3 * 3600; t <= t1; t += 86_400) days.push(t);
   const every = Math.max(1, Math.ceil(days.length / (W < 560 ? 4 : 8)));
@@ -940,8 +941,8 @@ function renderStageChart(ser) {
   el("line", { x1: m.l, x2: W - m.r, y1: y(STAGE_FLOOD), y2: y(STAGE_FLOOD), stroke: "var(--critical)", "stroke-width": 1, "stroke-dasharray": "2 3" }, svg);
   el("text", { x: m.l + 6, y: y(STAGE_FLOOD) - 5, class: "tick-label" }, svg).textContent = L(`cota de inundação · ${meters(STAGE_FLOOD)} m`, `flood level · ${meters(STAGE_FLOOD)} m`);
 
-  // Buracos de mais de 6 h (régua sem transmitir) quebram a linha em vez de ligar os pontos;
-  // uma ou outra hora faltando, comum na telemetria, não.
+  // Gaps longer than 6 h (gauge not transmitting) break the line instead of joining the points;
+  // an odd missing hour, common in telemetry, does not.
   let d = "";
   ser.forEach(([t, v], i) => (d += `${i && t - ser[i - 1][0] <= 6 * 3600 ? "L" : "M"}${x(t).toFixed(1)},${y(v).toFixed(1)}`));
   el("path", { d, fill: "none", stroke: "var(--observed)", "stroke-width": 2, "stroke-linejoin": "round" }, svg);
@@ -972,12 +973,13 @@ function renderStageChart(ser) {
     `<span class="key" style="color:var(--critical)"><span class="swatch-dash"></span><span style="color:var(--text-2)">${L("Cota de inundação de Porto Alegre", "Porto Alegre flood level")}</span></span>`;
 }
 
-// ---- mapa da bacia ---------------------------------------------------------
-// Desenho próprio (scripts/build_map.py): contorno da bacia, rios e terra em coordenadas já
-// projetadas. As estações usam a mesma projeção. Clicar num ponto mostra o último valor gravado.
+// ---- basin map -------------------------------------------------------------
+// Our own drawing (scripts/build_map.py): basin outline, rivers and land in already
+// projected coordinates. The stations use the same projection. Clicking a point shows the latest
+// recorded value.
 
 const basin = { map: null, zoom: "all", sel: null, wired: false };
-// Recorte "perto de Porto Alegre" (lon/lat), onde as estações se amontoam.
+// "Near Porto Alegre" frame (lon/lat), where the stations crowd together.
 const POA_FRAME = [-52.08, -30.32, -50.72, -29.4];
 const PORTO_ALEGRE = [-51.23, -30.03];
 
@@ -986,7 +988,7 @@ function mapXY([lon, lat]) {
   return [(lon - frame[0]) * k * scale, (frame[3] - lat) * scale];
 }
 
-// Último dia ao vivo com dado da estação, e o dia imediatamente anterior.
+// Latest live day with data for the station, and the day right before it.
 function lastWith(get) {
   const days = B.live.days;
   for (let i = days.length - 1; i >= 0; i--) {
@@ -1001,7 +1003,8 @@ function lastWith(get) {
 
 function basinPoints() {
   const pts = [];
-  // Bundles gerados antes do mapa não têm `live.stations`: usa o catálogo do replay (sem as réguas).
+  // Bundles generated before the map have no `live.stations`: fall back to the replay catalog
+  // (without the gauges).
   for (const s of B.live.stations ?? B.stations.filter((x) => x.source === "open_meteo_glofas")) {
     if (s.source === "ana") {
       const found = lastWith((d) => d.stage?.[s.id]);
@@ -1052,7 +1055,7 @@ async function renderBasin() {
   }
   const pts = basinPoints();
   basin.sel ??= pts.find((p) => p.id === B.live.stage_main && p.last)?.id ?? "GLOFAS-GUAIBA";
-  // Mesmos desenhos do mapa, em tamanho de legenda.
+  // Same marks as on the map, at legend size.
   const icon = (inner) => `<svg class="mk" viewBox="-8 -8 16 16" width="16" height="16" aria-hidden="true">${inner}</svg>`;
   const dot = (fill, stroke = "var(--surface)") => icon(`<circle r="6" fill="${fill}" stroke="${stroke}" stroke-width="2"/>`);
   $("#basin-legend").innerHTML = [
@@ -1079,7 +1082,7 @@ function drawBasin() {
     vb = [x0, y0, x1 - x0, y1 - y0];
   }
   const H = Math.round((W * vb[3]) / vb[2]);
-  const u = vb[2] / W; // unidades do mapa por pixel de tela
+  const u = vb[2] / W; // map units per screen pixel
   const svg = el("svg", { viewBox: vb.join(" "), width: W, height: H, class: "basin-svg" });
 
   el("rect", { x: vb[0], y: vb[1], width: vb[2], height: vb[3], fill: "var(--map-water)" }, svg);
@@ -1098,11 +1101,11 @@ function drawBasin() {
   const pl = el("text", { x: px - 9 * u, y: py + 22 * u, "text-anchor": "end", class: "map-city", "font-size": 13 * u }, svg);
   pl.textContent = "Porto Alegre";
 
-  // Ordem de desenho: chuva, GloFAS e, por cima, as réguas.
+  // Drawing order: rain, GloFAS and, on top, the gauges.
   const pts = basinPoints().sort((a, b) => ["rain", "glofas", "ana"].indexOf(a.kind) - ["rain", "glofas", "ana"].indexOf(b.kind));
   for (const p of pts) {
     const [x, y] = mapXY([p.lon, p.lat]);
-    // Fora do recorte não desenha: um ponto invisível não pode receber foco pelo teclado.
+    // Not drawn outside the frame: an invisible point must not receive keyboard focus.
     if (x < vb[0] || x > vb[0] + vb[2] || y < vb[1] || y > vb[1] + vb[3]) continue;
     const g = el("g", { class: `mk-g${p.id === basin.sel ? " sel" : ""}`, tabindex: 0, role: "button", "aria-label": `${cleanName(p.name)}: ${pointSummary(p)}`, "aria-pressed": p.id === basin.sel }, svg);
     if (p.id === basin.sel) el("circle", { cx: x, cy: y, r: 13 * u, fill: "none", stroke: "var(--text)", "stroke-width": 2 * u }, g);
@@ -1116,7 +1119,7 @@ function drawBasin() {
       const r = 5 * u;
       el("path", { d: `M${x - r},${y - r * 0.6}L${x + r},${y - r * 0.6}L${x},${y + r}Z`, fill: "var(--surface)", stroke: "var(--text-2)", "stroke-width": 1.5 * u, "stroke-linejoin": "round" }, g);
     }
-    // Área de toque maior que o desenho.
+    // Touch area larger than the drawing.
     el("circle", { cx: x, cy: y, r: 14 * u, fill: "transparent" }, g);
     const pick = () => {
       basin.sel = p.id;
@@ -1238,7 +1241,7 @@ async function verifyPublicAlert(a) {
   }
 }
 
-// ---- alerta antecipado (chuva prevista) -----------------------------------
+// ---- early warning (forecast rain) ----------------------------------------
 
 const mm = (milli) => nf1.format(milli / 1000);
 const monthLabel = (iso) => L(`${MONTHS.pt[+iso.slice(5, 7) - 1]}/${iso.slice(2, 4)}`, `${MONTHS.en[+iso.slice(5, 7) - 1]} '${iso.slice(2, 4)}`);
@@ -1347,7 +1350,7 @@ function renderOutlook() {
   $("#outlook-live").querySelectorAll("[data-o]").forEach((b) => b.addEventListener("click", () => verifyOutlook(O.live[+b.dataset.o])));
 }
 
-// A situação de hoje em linguagem simples; os números técnicos ficam no bloco recolhido.
+// Today's situation in plain language; the technical numbers stay in the collapsed block.
 function renderOutlookNow() {
   const O = B.outlook;
   const R = O.rule;
@@ -1407,9 +1410,9 @@ function renderOutlookNow() {
     }</dl>`;
 }
 
-// ---- gráfico do alerta antecipado, com zoom -------------------------------
-// Janela visível [i0, i1] em índices de backtest.days. Os botões de período, os atalhos das cheias
-// e a faixa de navegação embaixo (arrastar a janela ou as bordas) mudam a janela; só o gráfico de cima é redesenhado.
+// ---- early-warning chart, with zoom ---------------------------------------
+// Visible window [i0, i1] in backtest.days indexes. The range buttons, the flood shortcuts
+// and the navigation strip below (dragging the window or its edges) change the window; only the top chart is redrawn.
 
 const ov = { i0: null, i1: null, nav: null };
 const OV_MIN = 14;
@@ -1423,7 +1426,7 @@ const OV_RANGES = [
 const monthYear = (iso) =>
   new Intl.DateTimeFormat(L("pt-BR", "en-US"), { month: "long", year: "numeric", timeZone: "UTC" }).format(new Date(iso + "T00:00:00Z"));
 
-// Cheias próximas (como as duas de maio de 2024) viram um atalho só.
+// Floods close together (like the two in May 2024) become a single shortcut.
 function floodGroups() {
   const { floods } = B.outlook.backtest;
   const groups = [];
@@ -1537,7 +1540,7 @@ function drawOutlookMain() {
   const clip = el("clipPath", { id: "ov-clip" }, el("defs", {}, svg));
   el("rect", { x: m.l, y: 0, width: pw, height: H }, clip);
 
-  // cheias: faixa nos dois painéis
+  // floods: band on both panels
   const idx = new Map(data.map((d, i) => [d.day, i]));
   const plot = el("g", { "clip-path": "url(#ov-clip)" });
   for (const f of O.backtest.floods) {
@@ -1546,7 +1549,7 @@ function drawOutlookMain() {
     el("rect", { x: x(a - 0.5), y: m.t, width: Math.max(3, x(b + 0.5) - x(a - 0.5)), height: yB0 - m.t, fill: "var(--critical)", "fill-opacity": 0.14 }, plot);
   }
 
-  // eixos e grades
+  // axes and grids
   el("text", { x: m.l, y: 12, class: "tick-label", fill: "var(--text-2)" }, svg).textContent =
     L(`Chuva prevista para os ${R.window_days} dias seguintes (mm)`, `Rain forecast for the next ${R.window_days} days (mm)`);
   for (const v of [0, rmax / 2, rmax]) {
@@ -1560,7 +1563,7 @@ function drawOutlookMain() {
   }
   svg.appendChild(plot);
 
-  // rótulos de data conforme o zoom: semanas, meses ou trimestres
+  // date labels according to the zoom: weeks, months or quarters
   const perLabel = span / (small ? 4 : 8);
   const tick =
     perLabel <= (small ? 12 : 9)
@@ -1582,7 +1585,7 @@ function drawOutlookMain() {
   el("text", { x: W - m.r, y: yB(R.target.threshold_m3s) - 5, "text-anchor": "end", class: "tick-label" }, svg).textContent =
     `${L("cheia", "flood")} · ${nf0.format(R.target.threshold_m3s)} m³/s`;
 
-  // séries (quebram onde falta dado); um dia de folga em cada ponta para a linha chegar à borda
+  // series (broken where data is missing); one extra day at each end so the line reaches the edge
   const lo = Math.max(0, i0 - 1), hi = Math.min(data.length - 1, i1 + 1);
   const line = (key, y, color, width) => {
     let seg = [];
@@ -1599,7 +1602,7 @@ function drawOutlookMain() {
   for (let i = i0; i <= i1; i++)
     if (data[i].alert) el("circle", { cx: x(i), cy: yA(data[i].rain), r, fill: "var(--serious)", stroke: "var(--surface)", "stroke-width": 1.5 }, plot);
 
-  // interação
+  // interaction
   const hover = el("g", { "pointer-events": "none" }, svg);
   const overlay = el("rect", { x: m.l, y: m.t, width: pw, height: yB0 - m.t, fill: "transparent" }, svg);
   overlay.addEventListener("pointermove", (ev) => {
@@ -1629,7 +1632,7 @@ function drawOutlookMain() {
   box.replaceChildren(svg);
 }
 
-// Faixa de navegação: a vazão do período inteiro, com a janela visível por cima.
+// Navigation strip: the flow over the whole period, with the visible window on top.
 function buildOvNav() {
   const data = B.outlook.backtest.days;
   const n = data.length;
@@ -1686,7 +1689,7 @@ function buildOvNav() {
     else if (drag.moved) setOvRange(Math.min(drag.i, i), Math.max(drag.i, i));
   });
   const end = () => {
-    // Um clique fora da janela centraliza a janela ali, sem mudar o tamanho.
+    // A click outside the window centres the window there, without changing its size.
     if (drag?.role === "new" && !drag.moved) {
       const half = (ov.i1 - ov.i0) / 2;
       setOvRange(drag.i - half, drag.i + half);
@@ -1730,7 +1733,8 @@ async function verifyOutlook(o) {
     const acc = await fetchAccount(B.meta.rpc, o.record);
     const r = decodeOutlook(acc.data);
     const c = JSON.parse(text);
-    // Refaz o resumo a partir dos totais por modelo e ponto (mesma aritmética inteira do nó).
+    // Rebuilds the summary from the per-model, per-point totals (same integer arithmetic as the
+    // node).
     const perModel = Object.values(c.models).map((pts) => Math.floor((Object.values(pts).flat().reduce((a, b) => a + b, 0) * 100) / R.points.length));
     const mean = Math.floor(perModel.reduce((a, b) => a + b, 0) / perModel.length);
     const checks = [
@@ -1789,7 +1793,7 @@ async function verifyOutlook(o) {
   }
 }
 
-// ---- cofres paramétricos ----------------------------------------------------
+// ---- parametric vaults ------------------------------------------------------
 
 const sol = (lamports) => `${nf3.format(lamports / 1e9)} SOL`;
 const TRIGGERS = { 0: ["alerta antecipado (chuva prevista)", "early warning (forecast rain)"], 1: ["alerta do modelo de vazão", "flow-model alert"] };
@@ -1915,7 +1919,7 @@ async function verifyPayout(v, pi) {
   }
 }
 
-// ---- tema e inicialização -------------------------------------------------
+// ---- theme and startup ----------------------------------------------------
 
 function initTheme() {
   let saved = null;
@@ -1935,7 +1939,7 @@ function initTheme() {
   });
 }
 
-// Idioma: ?lang=en na URL, depois a escolha salva, depois o idioma do navegador.
+// Language: ?lang=en in the URL, then the saved choice, then the browser language.
 function initialLang() {
   const q = new URLSearchParams(location.search).get("lang");
   if (q === "pt" || q === "en") return q;
@@ -1946,7 +1950,8 @@ function initialLang() {
   return (navigator.languages?.[0] ?? navigator.language ?? "pt").toLowerCase().startsWith("pt") ? "pt" : "en";
 }
 
-// Textos fixos da página: os blocos [data-lang] o CSS esconde; aqui ficam o título, a descrição e os aria-label.
+// Fixed page text: the CSS hides the [data-lang] blocks; this handles the title, the description and the
+// aria-labels.
 function applyLang(next) {
   lang = next;
   setFormats();
@@ -1971,9 +1976,10 @@ function applyLang(next) {
 function renderAll() {
   renderPicker();
   $("#generated").textContent = L("Dados gerados em", "Data generated at") + ` ${utc(Date.parse(B.meta.generated_at) / 1000)}.`;
-  // Sem local escolhido as seções estão escondidas e os gráficos sairiam sem largura: espera a escolha.
+  // With no location chosen the sections are hidden and the charts would have no width: wait for the
+  // choice.
   if (!state.place) return;
-  // Os painéis de verificação abertos ficaram na outra língua: fecha.
+  // Open verification panels were left in the other language: close them.
   document.querySelectorAll(".verify").forEach((p) => (p.hidden = true));
   renderLive();
   renderOutlook();
@@ -1985,8 +1991,9 @@ function renderAll() {
   selectDay(state.sel);
 }
 
-// ---- local ----------------------------------------------------------------
-// Por enquanto só o Guaíba é monitorado; a escolha vem antes dos dados porque cada local tem os seus.
+// ---- location -------------------------------------------------------------
+// For now only the Guaíba is monitored; the choice comes before the data because each location has
+// its own.
 
 const PLACES = [
   { id: "guaiba", short: "Guaíba", name: ["Rio Guaíba", "Guaíba river"], where: ["Porto Alegre, Rio Grande do Sul, Brasil", "Porto Alegre, Rio Grande do Sul, Brazil"] },
@@ -2053,14 +2060,14 @@ function initLang() {
   );
 }
 
-// Blocos recolhidos (guia, teste de 2024): um link para eles, ou o #id na URL, abre.
+// Collapsed blocks (guide, 2024 test): a link to them, or the #id in the URL, opens them.
 function initFolds() {
   for (const id of ["guide", "replay"]) {
     const d = $(`#${id}`);
     document.querySelectorAll(`a[href="#${id}"]`).forEach((a) => a.addEventListener("click", () => (d.open = true)));
     if (location.hash === `#${id}`) d.open = true;
   }
-  // Os gráficos do teste foram desenhados com o bloco fechado, sem largura: redesenha ao abrir.
+  // The test charts were drawn with the block closed, without width: redraw them on open.
   $("#replay").addEventListener("toggle", (e) => {
     if (e.target.open && B && state.place) {
       renderFlow();
@@ -2080,9 +2087,9 @@ async function main() {
   prog.textContent = short(B.meta.program, 8);
   prog.href = explorerAddr(B.meta.program);
   $("#cluster").textContent = B.meta.cluster;
-  // Começa no primeiro cruzamento do limiar: o momento mais importante do replay.
+  // Starts at the first threshold crossing: the most important moment of the replay.
   state.sel = B.dayIndex.get(B.crossings[0]?.day) ?? 0;
-  if (state.sel > 0) state.sel -= 2; // dois dias antes: quando o primeiro alerta saiu
+  if (state.sel > 0) state.sel -= 2; // two days earlier: when the first alert went out
   renderAll();
 
   document.querySelectorAll("#horizon button").forEach((b) =>

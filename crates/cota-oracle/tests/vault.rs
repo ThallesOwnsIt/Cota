@@ -1,4 +1,4 @@
-//! Cofres paramétricos (`create_vault`, `trigger_payout`, `close_vault`) no programa compilado.
+//! Parametric vaults (`create_vault`, `trigger_payout`, `close_vault`) in the compiled program.
 
 use anchor_lang::{prelude::{Clock, Pubkey}, solana_program::instruction::Instruction};
 use cota::error::CotaError;
@@ -99,7 +99,7 @@ impl Env {
         self.next_batch += 1;
     }
 
-    /// Ancora o dia e registra a perspectiva de chuva do fim dele; devolve a conta.
+    /// Anchors the day and records the rain outlook from its end; returns the account.
     fn outlook(&mut self, day: i64, mean_mm: i64) -> Pubkey {
         self.anchor_day(day);
         let issued_at = (day + 1) * DAY;
@@ -119,7 +119,7 @@ impl Env {
         chain::outlook_pda(REGION, issued_at)
     }
 
-    /// Ancora o dia, grava uma previsão acima do limiar e emite o `AlertReceipt`.
+    /// Anchors the day, records a forecast above the threshold and issues the `AlertReceipt`.
     fn flow_alert(&mut self, day: i64) -> Pubkey {
         self.anchor_day(day);
         let args = cota::ForecastArgs {
@@ -139,7 +139,7 @@ impl Env {
         chain::alert_pda(&forecast)
     }
 
-    /// Cofre de `creator` que paga 1 SOL por evento ao beneficiário `ben`, carência de 3 dias.
+    /// Vault from `creator` that pays 1 SOL per event to beneficiary `ben`, with a 3-day cooldown.
     fn create(&mut self, creator: &Keypair, id: u64, (kind, subject): (u8, &str), ben: Pubkey, accept_from: i64, deposit: u64) -> Pubkey {
         let args = cota::VaultArgs {
             vault_id: id,
@@ -194,10 +194,10 @@ fn early_warning_pays_once_per_event() {
     assert_eq!((p.trigger, p.amount, p.event_at, p.beneficiary), (high, SOL, 101 * DAY, ben));
     assert!(env.pay(vault, high, ben).is_err(), "um pagamento por gatilho");
 
-    // Chuva abaixo da regra não é gatilho.
+    // Rain below the rule is not a trigger.
     let low = env.outlook(101, 40);
     assert_eq!(err(env.pay(vault, low, ben)), code(CotaError::TriggerMismatch));
-    // O dia seguinte do mesmo evento cai na carência de 3 dias.
+    // The next day of the same event falls inside the 3-day cooldown.
     let same_event = env.outlook(102, 120);
     assert_eq!(err(env.pay(vault, same_event, ben)), code(CotaError::CooldownActive));
     env.anchor_day(103);

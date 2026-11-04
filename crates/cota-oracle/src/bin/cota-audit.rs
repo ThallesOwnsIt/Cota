@@ -1,15 +1,15 @@
-//! Auditoria independente: confronta o ledger local com as contas on-chain.
+//! Independent audit: checks the local ledger against the on-chain accounts.
 //!
-//! Para cada lote: a raiz Merkle recalculada das leituras, o encadeamento e os assinantes.
-//! Para cada previsão: quantis, `model_sha256`, `features_root` recalculada, o lote em que
-//! se baseou e, pelo slot, que foi gravada antes do lote que contém a observação prevista.
-//! Para cada alerta: P90 ≥ limiar e gravação também antes da observação.
-//! Para cada aviso oficial: o SHA-256 do conteúdo guardado bate com a conta on-chain.
-//! Para cada perspectiva de chuva: o conteúdo guardado reproduz o cabeçalho pela regra
-//! publicada, o hash e o resultado da regra batem com a conta, e ela foi gravada antes de o
-//! primeiro dia da janela ser ancorado.
-//! Para cada cofre: cada pagamento existe on-chain, aponta para um gatilho válido do tipo e
-//! assunto do cofre, e os totais do cofre batem com a soma dos pagamentos.
+//! For each batch: the Merkle root recomputed from the readings, the chaining and the signers.
+//! For each forecast: quantiles, `model_sha256`, recomputed `features_root`, the batch it was based on
+//! and, by slot, that it was recorded before the batch containing the forecast observation.
+//! For each alert: P90 ≥ threshold and also recorded before the observation.
+//! For each official warning: the SHA-256 of the stored content matches the on-chain account.
+//! For each rain outlook: the stored content reproduces the header under the published
+//! rule, the hash and the rule's result match the account, and it was recorded before the
+//! first day of the window was anchored.
+//! For each vault: every payout exists on-chain, points to a valid trigger of the vault's type and
+//! subject, and the vault's totals match the sum of the payouts.
 
 use std::collections::BTreeMap;
 use std::path::PathBuf;
@@ -23,7 +23,7 @@ use serde::Serialize;
 use serde_json::Value;
 
 #[derive(Parser)]
-#[command(about = "Confere o ledger do Cota contra a cadeia")]
+#[command(about = "Checks Cota's ledger against the chain")]
 struct Args {
     #[arg(long, default_value = "http://127.0.0.1:8899")]
     rpc: String,
@@ -55,7 +55,7 @@ struct ForecastAudit {
     p10: i64,
     p50: i64,
     p90: i64,
-    /// Slot do lote que contém a leitura prevista (ausente se ainda não foi ancorado).
+    /// Slot of the batch containing the forecast reading (absent if not anchored yet).
     observation_slot: Option<u64>,
     observed_milli: Option<i64>,
     recorded_before_observation: Option<bool>,
@@ -89,7 +89,7 @@ struct OutlookAudit {
     rain_mean_milli: i64,
     triggered: bool,
     slot: u64,
-    /// Slot do lote que ancorou o primeiro dia da janela, se já existe.
+    /// Slot of the batch that anchored the first day of the window, if it exists already.
     next_batch_slot: Option<u64>,
     problems: Vec<String>,
 }
@@ -141,7 +141,7 @@ fn main() -> Result<()> {
     let rpc = Rpc::new(&args.rpc)?;
     let committee = chain::decode_committee(&rpc.account_data(&chain::committee_pda())?.context("comitê não encontrado")?)?;
 
-    // Lotes.
+    // Batches.
     let mut batches = Vec::new();
     let mut by_id: BTreeMap<u64, (BatchAudit, Vec<Reading>, [u8; 32])> = BTreeMap::new();
     let mut prev = [0u8; 32];
@@ -179,7 +179,7 @@ fn main() -> Result<()> {
         by_id.insert(id, (audit, readings, acc.merkle_root));
     }
 
-    // Previsões e alertas.
+    // Forecasts and alerts.
     let mut forecasts = Vec::new();
     let forecast_dir = args.ledger.join("forecasts");
     let files = if forecast_dir.exists() { read_dir_sorted(&forecast_dir)? } else { vec![] };
@@ -213,7 +213,7 @@ fn main() -> Result<()> {
                 problems.push("lote-base ausente do ledger".into());
             }
 
-            // Lote que contém a leitura prevista.
+            // Batch containing the forecast reading.
             let target = by_id.values().find(|(b, _, _)| b.t_start <= acc.target_ts && acc.target_ts < b.t_end);
             let observation_slot = target.map(|(b, _, _)| b.slot);
             let observed = target.and_then(|(_, rs, _)| rs.iter().find(|r| r.station_id == station && r.ts_utc == acc.target_ts)).map(|r| r.value_milli);
@@ -276,7 +276,7 @@ fn main() -> Result<()> {
         });
     }
 
-    // Perspectivas de chuva (alerta antecipado).
+    // Rain outlooks (early warning).
     let mut outlooks = Vec::new();
     let ol_dir = args.ledger.join("outlooks");
     let entries = if ol_dir.exists() { read_dir_sorted(&ol_dir)? } else { vec![] };
@@ -326,7 +326,7 @@ fn main() -> Result<()> {
         });
     }
 
-    // Cofres paramétricos.
+    // Parametric vaults.
     let mut vaults = Vec::new();
     let v_dir = args.ledger.join("vaults");
     for e in if v_dir.exists() { read_dir_sorted(&v_dir)? } else { vec![] } {

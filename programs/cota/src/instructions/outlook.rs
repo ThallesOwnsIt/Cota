@@ -18,7 +18,7 @@ pub struct OutlookRuleArgs {
     pub rule_sha256: [u8; 32],
 }
 
-/// Fixa a regra do alerta antecipado de uma região. `init` torna a regra imutável.
+/// Sets a region's early-warning rule. `init` makes the rule immutable.
 #[derive(Accounts)]
 #[instruction(args: OutlookRuleArgs)]
 pub struct SetOutlookRule<'info> {
@@ -62,11 +62,11 @@ pub fn handle_set_outlook_rule(ctx: Context<SetOutlookRule>, args: OutlookRuleAr
     Ok(())
 }
 
-/// Registra a chuva prevista vista por ≥ k oráculos e aplica a regra. Qualquer conta pode
-/// submeter; a autorização vem das assinaturas Ed25519 da instrução anterior.
+/// Records the forecast rain seen by ≥ k oracles and applies the rule. Any account may
+/// submit it; authorization comes from the Ed25519 signatures in the previous instruction.
 ///
-/// A emissão precisa ser o fim do último lote ancorado: a perspectiva fica presa ao dia que
-/// acabou de fechar, não pode ser antecipada nem registrada depois do lote seguinte.
+/// The issue time must be the end of the latest anchored batch: the outlook is tied to the day that
+/// has just closed, and can be neither brought forward nor recorded after the next batch.
 #[derive(Accounts)]
 #[instruction(header: OutlookHeader)]
 pub struct CommitOutlook<'info> {
@@ -84,7 +84,7 @@ pub struct CommitOutlook<'info> {
         bump
     )]
     pub outlook: Account<'info, OutlookRecord>,
-    /// CHECK: endereço conferido contra o ID do sysvar Instructions.
+    /// CHECK: address checked against the Instructions sysvar ID.
     #[account(address = INSTRUCTIONS_SYSVAR_ID)]
     pub instructions: UncheckedAccount<'info>,
     pub system_program: Program<'info, System>,

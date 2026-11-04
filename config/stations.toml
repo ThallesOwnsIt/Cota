@@ -1,7 +1,7 @@
-# Estações e pontos de grade monitorados na bacia do Guaíba.
-# `id` é o station_id gravado em cada Reading e na conta Station on-chain.
+# Stations and grid points monitored in the Guaíba basin.
+# `id` is the station_id written in each Reading and in the on-chain Station account.
 
-# --- INMET: chuva horária (mm), estações automáticas -------------------------
+# --- INMET: hourly rain (mm), automatic stations -------------------------------
 [[station]]
 id = "A801"
 name = "Porto Alegre - Jardim Botânico"
@@ -50,9 +50,9 @@ variable = "precipitation"
 lat = -28.859211
 lon = -52.542387
 
-# --- Open-Meteo Flood API (GloFAS): vazão diária modelada (m³/s) -------------
-# Coordenadas = centro da célula devolvido pela API, escolhido como a célula de
-# maior vazão numa vizinhança de ±0,1° (a célula de ~5 km pode cair fora do rio).
+# --- Open-Meteo Flood API (GloFAS): modelled daily discharge (m³/s) -------------
+# Coordinates = cell centre returned by the API, chosen as the cell with the
+# largest discharge within a ±0.1° neighbourhood (the ~5 km cell may fall outside the river).
 [[station]]
 id = "GLOFAS-GUAIBA"
 name = "Guaíba em Porto Alegre (GloFAS)"

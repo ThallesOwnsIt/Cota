@@ -1,9 +1,9 @@
-//! Chuva prevista na bacia (alerta antecipado): cada nó baixa a mesma rodada de cada
-//! modelo (Open-Meteo Single Runs, rodada 00Z do dia D, imutável depois de publicada),
-//! resume e assina. Nós honestos chegam aos mesmos bytes; o agregador exige k de n.
+//! Forecast rain over the basin (early warning): each node downloads the same run of each
+//! model (Open-Meteo Single Runs, the 00Z run of day D, immutable once published),
+//! summarizes it and signs. Honest nodes reach the same bytes; the aggregator requires k of n.
 //!
-//! A regra (pontos, modelos, janela, limiar) vem de `ml/models/outlook-rule.json`, cujo
-//! SHA-256 está fixado on-chain na `OutlookRule`.
+//! The rule (points, models, window, threshold) comes from `ml/models/outlook-rule.json`, whose
+//! SHA-256 is fixed on-chain in the `OutlookRule`.
 
 use std::collections::BTreeMap;
 use std::path::Path;
@@ -56,19 +56,19 @@ impl Rule {
         self.spec.window_days as i64 * DAY
     }
 
-    /// Rodada usada para a emissão no fim do dia `day`.
+    /// Run used for the issue at the end of day `day`.
     pub fn run(&self, day: NaiveDate) -> String {
         format!("{day}T{:02}:00", self.spec.run_hour_utc)
     }
 
-    /// Dias da janela: D+1..=D+window_days.
+    /// Days in the window: D+1..=D+window_days.
     pub fn window(&self, day: NaiveDate) -> Vec<NaiveDate> {
         (1..=self.spec.window_days).map(|k| day + Days::new(k)).collect()
     }
 }
 
-/// Lê a regra e confere que o hash declarado é o do JSON canônico da especificação
-/// (o mesmo que o Python grava e que vai on-chain).
+/// Reads the rule and checks that the declared hash is that of the specification's canonical JSON
+/// (the same one Python writes and that goes on-chain).
 pub fn load_rule(path: &Path) -> Result<Rule> {
     let file: Value = serde_json::from_str(&std::fs::read_to_string(path).with_context(|| format!("lendo {}", path.display()))?)?;
     let spec = file.get("spec").context("regra sem `spec`")?;
@@ -80,10 +80,10 @@ pub fn load_rule(path: &Path) -> Result<Rule> {
     Ok(Rule { sha256: sha, spec: serde_json::from_value(spec.clone())? })
 }
 
-/// Chuva diária em décimos de mm: {modelo: {ponto: [D+1, …]}}.
+/// Daily rain in tenths of a mm: {model: {point: [D+1, …]}}.
 pub type Totals = BTreeMap<String, BTreeMap<String, Vec<i64>>>;
 
-/// Soma as 24 horas de cada dia pedido; `None` se faltar alguma hora.
+/// Sums the 24 hours of each requested day; `None` if any hour is missing.
 pub fn daily_tenths(times: &[String], values: &[Option<f64>], days: &[NaiveDate]) -> Option<Vec<i64>> {
     days.iter()
         .map(|d| {
@@ -113,7 +113,7 @@ pub fn fetch_point(http: &reqwest::blocking::Client, rule: &Rule, model: &str, p
     daily_tenths(&times, &values, &rule.window(day)).with_context(|| format!("{model} em {}: horas faltando na rodada {}", p.id, rule.run(day)))
 }
 
-/// Baixa todos os modelos; um modelo com qualquer ponto faltando fica de fora.
+/// Downloads every model; a model with any point missing is left out.
 pub fn fetch(http: &reqwest::blocking::Client, rule: &Rule, day: NaiveDate) -> Totals {
     let mut out = Totals::new();
     'model: for m in &rule.spec.models {
@@ -137,7 +137,7 @@ pub fn fetch(http: &reqwest::blocking::Client, rule: &Rule, day: NaiveDate) -> T
 #[derive(Debug, Clone)]
 pub struct Observed {
     pub header: OutlookHeader,
-    /// JSON canônico: os bytes cujo SHA-256 é `header.content_sha256`.
+    /// Canonical JSON: the bytes whose SHA-256 is `header.content_sha256`.
     pub content: String,
 }
 
@@ -145,7 +145,8 @@ pub fn issued_at(day: NaiveDate) -> i64 {
     (day + Days::new(1)).and_time(NaiveTime::MIN).and_utc().timestamp()
 }
 
-/// Resume a chuva de cada modelo (média dos pontos, acumulada na janela) e monta o conteúdo.
+/// Summarizes each model's rain (mean of the points, accumulated over the window) and builds the
+/// content.
 pub fn summarize(rule: &Rule, day: NaiveDate, totals: &Totals) -> Result<Observed> {
     let n_points = rule.spec.points.len() as i64;
     let mut kept = Totals::new();
@@ -189,7 +190,7 @@ pub fn summarize(rule: &Rule, day: NaiveDate, totals: &Totals) -> Result<Observe
     Ok(Observed { header, content })
 }
 
-/// O que um nó publica sobre a chuva prevista de um dia.
+/// What a node publishes about a day's forecast rain.
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct SignedOutlook {
     pub node: String,
@@ -263,7 +264,7 @@ mod tests {
         let day = NaiveDate::from_ymd_opt(2024, 4, 26).unwrap();
         let full = |mm: i64| r.spec.points.iter().map(|p| (p.id.clone(), vec![mm; 5])).collect::<BTreeMap<_, _>>();
         let mut t = Totals::new();
-        t.insert("ecmwf_ifs025".into(), full(200)); // 20 mm/dia → 100 mm
+        t.insert("ecmwf_ifs025".into(), full(200)); // 20 mm/day → 100 mm
         t.insert("gfs_global".into(), full(100)); // 50 mm
         let mut partial = full(999);
         partial.pop_first();

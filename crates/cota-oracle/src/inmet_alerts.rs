@@ -1,7 +1,7 @@
-//! Avisos meteorológicos ativos do INMET, transformados em `PublicAlertHeader`s.
+//! INMET's active weather warnings, turned into `PublicAlertHeader`s.
 //!
-//! A API só devolve os avisos vigentes ou futuros; depois que expiram, somem. Por isso o
-//! conteúdo canônico de cada versão fica guardado no ledger e o hash dele, on-chain.
+//! The API only returns current or upcoming warnings; once they expire, they disappear. That is why
+//! the canonical content of each version is kept in the ledger and its hash on-chain.
 
 use std::fmt::Write as _;
 
@@ -12,13 +12,13 @@ use serde_json::Value;
 
 pub const URL: &str = "https://apiprevmet3.inmet.gov.br/avisos/ativos";
 pub const ISSUER: &str = "inmet";
-/// Campos que não descrevem o aviso: o ícone (imagem base64) e o id interno do banco.
+/// Fields that do not describe the warning: the icon (base64 image) and the internal database id.
 const IGNORED: &[&str] = &["icone", "id"];
 
 #[derive(Debug, Clone)]
 pub struct ObservedAlert {
     pub header: PublicAlertHeader,
-    /// JSON canônico: os bytes cujo SHA-256 é `header.content_sha256`.
+    /// Canonical JSON: the bytes whose SHA-256 is `header.content_sha256`.
     pub content: String,
     pub description: String,
     pub severity_label: String,
@@ -26,7 +26,7 @@ pub struct ObservedAlert {
 }
 
 pub fn fetch(http: &reqwest::blocking::Client) -> Result<Value> {
-    // O servidor do INMET recusa clientes sem User-Agent de navegador.
+    // INMET's server refuses clients without a browser User-Agent.
     http.get(URL)
         .header(reqwest::header::USER_AGENT, "Mozilla/5.0")
         .send()
@@ -36,7 +36,7 @@ pub fn fetch(http: &reqwest::blocking::Client) -> Result<Value> {
         .context("resposta do INMET não é JSON")
 }
 
-/// JSON com chaves ordenadas, sem espaços: a mesma entrada gera os mesmos bytes em qualquer nó.
+/// JSON with sorted keys and no spaces: the same input produces the same bytes on any node.
 pub fn canonical_json(v: &Value, out: &mut String) {
     match v {
         Value::Object(map) => {
@@ -77,14 +77,14 @@ fn severity(label: &str) -> u8 {
     }
 }
 
-/// "2024-04-29 10:00" no horário de Brasília (UTC−3, sem horário de verão desde 2019).
+/// "2024-04-29 10:00" in Brasília time (UTC−3, no daylight saving since 2019).
 fn brasilia(text: &str) -> Result<i64> {
     let naive = NaiveDateTime::parse_from_str(text, "%Y-%m-%d %H:%M").with_context(|| format!("data inválida: {text}"))?;
     let tz = FixedOffset::west_opt(3 * 3600).expect("fuso válido");
     Ok(tz.from_local_datetime(&naive).single().context("data ambígua")?.timestamp())
 }
 
-/// Avisos que citam algum dos `states` (nomes por extenso, como na API).
+/// Warnings that mention any of `states` (full names, as in the API).
 pub fn parse(body: &Value, states: &[String]) -> Result<Vec<ObservedAlert>> {
     let Some(groups) = body.as_object() else { bail!("formato inesperado da API do INMET") };
     let mut out: Vec<ObservedAlert> = Vec::new();
@@ -101,7 +101,7 @@ pub fn parse(body: &Value, states: &[String]) -> Result<Vec<ObservedAlert>> {
         let mut content = String::new();
         canonical_json(&Value::Object(obj), &mut content);
         let content_sha256 = content_hash(&content);
-        // O mesmo aviso pode aparecer em "hoje" e em "futuro".
+        // The same warning may appear under "today" and "future".
         if out.iter().any(|a| a.header.content_sha256 == content_sha256) {
             continue;
         }
@@ -159,7 +159,7 @@ mod tests {
         assert_eq!(alerts.len(), 1);
         let a = &alerts[0];
         assert_eq!(a.header.severity, 3);
-        // 10:00 em Brasília = 13:00 UTC.
+        // 10:00 in Brasília = 13:00 UTC.
         assert_eq!(a.header.onset, 1714395600);
         assert_eq!(a.header.expires - a.header.onset, 86_400);
         assert!(!a.content.contains("icone") && a.content.contains("\"issuer\":\"inmet\""));

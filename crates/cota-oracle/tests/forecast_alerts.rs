@@ -1,5 +1,5 @@
-//! Previsões, alertas e degradação no programa compilado (LiteSVM): cada regra que o
-//! programa impõe, com o código de erro esperado.
+//! Forecasts, alerts and degradation in the compiled program (LiteSVM): every rule the
+//! program enforces, with the expected error code.
 
 use anchor_lang::{prelude::Pubkey, solana_program::instruction::Instruction};
 use cota::error::CotaError;
@@ -62,7 +62,7 @@ impl Env {
         self.send(ixs).unwrap();
     }
 
-    /// Ancora o dia `day` assinado por 2 nós.
+    /// Anchors day `day` signed by 2 nodes.
     fn anchor_day(&mut self, day: i64) {
         let reading = Reading {
             station_id: STATION.into(),
@@ -133,7 +133,7 @@ fn forecast_is_bound_to_the_latest_anchored_batch() {
     assert_eq!(f.model_sha256, [0xaa; 32]);
     assert_eq!(f.variable, Variable::RiverDischarge as u8);
 
-    // A mesma previsão não pode ser regravada.
+    // The same forecast cannot be recorded again.
     assert!(env.send(&[env.forecast_ix(101 * DAY, [1, 2, 3])]).is_err());
 }
 
@@ -142,7 +142,7 @@ fn cannot_forecast_what_was_already_anchored() {
     let mut env = Env::new();
     env.anchor_day(100);
     env.anchor_day(101);
-    // Alvo dentro de uma janela já ancorada (o "previsto depois de ver").
+    // Target inside an already anchored window ("forecast after seeing it").
     let ix = env.forecast_ix(101 * DAY, [1, 2, 3]);
     assert_eq!(err(env.send(&[ix])), code(CotaError::TargetAlreadyAnchored));
     let ix = env.forecast_ix(100 * DAY + 3_600, [1, 2, 3]);
@@ -172,7 +172,7 @@ fn forecast_validation_and_authority() {
 fn alert_requires_p90_over_threshold_before_observation() {
     let mut env = Env::new();
     env.ok(&[chain::set_alert_rule_instruction(env.authority.pubkey(), STATION, 9_353_000, 1)]);
-    // A regra é imutável.
+    // The rule is immutable.
     assert!(env.send(&[chain::set_alert_rule_instruction(env.authority.pubkey(), STATION, 1, 1)]).is_err());
 
     env.anchor_day(100);
@@ -181,7 +181,7 @@ fn alert_requires_p90_over_threshold_before_observation() {
     let low = chain::forecast_pda(STATION, 1, 101 * DAY);
     let high = chain::forecast_pda(STATION, 1, 102 * DAY);
 
-    // Qualquer conta pode emitir, mas só se a P90 cruza o limiar.
+    // Any account may issue it, but only if the P90 crosses the threshold.
     let crank = Keypair::new();
     env.svm.airdrop(&crank.pubkey(), 1_000_000_000).unwrap();
     let ix = chain::issue_alert_instruction(crank.pubkey(), low, STATION);
@@ -192,7 +192,7 @@ fn alert_requires_p90_over_threshold_before_observation() {
     assert_eq!((a.forecast, a.p90, a.threshold_milli, a.target_ts), (high, 9_996_000, 9_353_000, 102 * DAY));
     assert!(env.send_as(&crank, &[chain::issue_alert_instruction(crank.pubkey(), high, STATION)]).is_err(), "um recibo por previsão");
 
-    // Depois que o alvo foi ancorado, um alerta deixaria de ser alerta.
+    // Once the target has been anchored, an alert would no longer be an alert.
     env.anchor_day(101);
     env.ok(&[env.forecast_ix(102 * DAY, [6_000_000, 8_000_000, 9_500_000])]);
     let from_day_101 = chain::forecast_pda(STATION, 2, 102 * DAY);
@@ -231,7 +231,7 @@ fn authority_can_be_handed_to_an_operator() {
     let c = chain::decode_committee(&env.svm.get_account(&chain::committee_pda()).unwrap().data).unwrap();
     assert_eq!(c.authority, operator.pubkey());
 
-    // A antiga não manda mais; o operador sim.
+    // The old one is no longer in charge; the operator is.
     let ix = chain::set_alert_rule_instruction(env.authority.pubkey(), STATION, 1, 1);
     assert_eq!(err(env.send(&[ix])), code(CotaError::Unauthorized));
     env.send_as(&operator, &[chain::set_alert_rule_instruction(operator.pubkey(), STATION, 1, 1)]).unwrap();

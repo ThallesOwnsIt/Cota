@@ -1,18 +1,18 @@
-"""Camada C: alerta antecipado pela chuva prevista na bacia do Guaíba.
+"""Layer C: early warning from the forecast rain over the Guaíba basin.
 
     uv run python -m cota_ml.outlook
 
-Regra: se a média, entre modelos, da chuva prevista para os próximos 5 dias nos 6 pontos
-da bacia passa de X mm, o Guaíba (GloFAS) pode cruzar o limiar P99 em até 7 dias.
+Rule: if the mean, across models, of the rain forecast for the next 5 days at the basin's 6 points
+goes above X mm, the Guaíba (GloFAS) may cross the P99 threshold within 7 days.
 
-1. Calibração (só 2015–2023): X que maximiza o CSI usando a chuva **observada** do INMET.
-2. Backtest (fev/2024 → ontem): a mesma regra aplicada à chuva que os modelos **previam**
-   (Open-Meteo Previous Runs). Para o dia alvo D+k usa-se a previsão feita (k+1)×24 h antes
-   da hora válida: todas as rodadas usadas começaram no dia D−1 e já estavam publicadas no
-   fim do dia D. Ao vivo o nó usa a rodada 00Z do dia D, que é mais nova: o backtest é
-   conservador.
-3. Exporta `ml/models/outlook-rule.json` (regra + `rule_sha256`, que vai on-chain) e
-   `ml/reports/outlook-backtest.json` (série diária e tabela de contingência).
+1. Calibration (2015–2023 only): the X that maximizes CSI using INMET's **observed** rain.
+2. Backtest (Feb 2024 → yesterday): the same rule applied to the rain the models **forecast**
+   (Open-Meteo Previous Runs). For target day D+k it uses the forecast made (k+1)×24 h before
+   the valid hour: every run used started on day D−1 and had already been published by the
+   end of day D. Live, the node uses day D's 00Z run, which is newer: the backtest is
+   conservative.
+3. Exports `ml/models/outlook-rule.json` (rule + `rule_sha256`, which goes on-chain) and
+   `ml/reports/outlook-backtest.json` (daily series and contingency table).
 """
 
 from __future__ import annotations
@@ -78,7 +78,7 @@ def _get(url: str, path: Path) -> dict:
 
 
 def calibrate(hist: pl.DataFrame, threshold: float) -> dict:
-    """Limiar de chuva (mm em WINDOW_DAYS) que maximiza o CSI de 'Q ≥ limiar em até 7 dias'."""
+    """Rain threshold (mm over WINDOW_DAYS) that maximizes the CSI of 'Q ≥ threshold within 7 days'."""
     rain = hist.select(pl.mean_horizontal([f"rain_{s}" for s in RAIN_STATIONS])).to_series().to_numpy()
     q = hist[TARGET].to_numpy()
     xs, ys = [], []
@@ -117,7 +117,7 @@ def rule_spec(cal: dict, threshold_q: float) -> dict:
 
 
 def archived_forecasts(end: date) -> dict:
-    """{(modelo, ponto, dia alvo, k): mm} com a previsão feita (k+1)×24 h antes de cada hora."""
+    """{(model, point, target day, k): mm} using the forecast made (k+1)×24 h before each hour."""
     out = {}
     hourly = ",".join(f"precipitation_previous_day{k}" for k in range(2, WINDOW_DAYS + 2))
     for p in points():
@@ -176,7 +176,7 @@ def backtest(spec: dict, end: date) -> dict:
         })
         day += timedelta(days=1)
 
-    # Mesma pontuação da calibração: dias já acima do limiar não contam.
+    # Same scoring as the calibration: days already above the threshold don't count.
     scored = [r for r in rows if r["rain_mm"] is not None and r["complete"] and (r["q"] or 0) < thr_q]
     a = sum(r["alert"] and r["flood_ahead"] for r in scored)
     b = sum(r["alert"] and not r["flood_ahead"] for r in scored)

@@ -1,7 +1,8 @@
-//! Conversão de texto decimal para inteiro escalado x1000 sem passar por ponto flutuante.
+//! Converts decimal text to an integer scaled x1000 without going through floating point.
 
 /// "17,2" -> 17_200; ",8" -> 800; "-3.25" -> -3_250; "1010" -> 1_010_000.
-/// Aceita vírgula ou ponto. Casas além da terceira são arredondadas (meio para longe de zero).
+/// Accepts a comma or a dot. Digits beyond the third decimal place are rounded (half away from
+/// zero).
 pub fn parse_milli(text: &str) -> Option<i64> {
     let t = text.trim();
     let (negative, t) = match t.strip_prefix('-') {

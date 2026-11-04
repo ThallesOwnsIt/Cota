@@ -1,4 +1,4 @@
-//! Nó-oráculo: ingere um dia de dados por conta própria, monta o lote e assina o cabeçalho.
+//! Oracle node: ingests a day of data on its own, builds the batch and signs the header.
 
 use std::path::Path;
 
@@ -11,18 +11,18 @@ use serde::{Deserialize, Serialize};
 
 use crate::keys::pubkey_base58;
 
-/// Falhas simuladas para demonstrar a degradação graciosa.
+/// Simulated faults to demonstrate graceful degradation.
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum Fault {
     /// Funciona normalmente.
     None,
-    /// Não produz assinatura (nó caído ou sem acesso às fontes).
+    /// Produces no signature (node down or without access to the sources).
     Silent,
-    /// Soma 10 mm à maior chuva do dia antes de assinar (nó comprometido ou fonte adulterada).
+    /// Adds 10 mm to the day's largest rain before signing (compromised node or tampered source).
     Tamper,
 }
 
-/// O que um nó publica para um dia: cabeçalho assinado e as leituras que o compõem.
+/// What a node publishes for a day: the signed header and the readings that make it up.
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct SignedBatch {
     pub node: String,
@@ -34,8 +34,8 @@ pub struct SignedBatch {
     pub ingest: Vec<StationReport>,
 }
 
-/// Executa uma rodada: ingere `day`, monta o lote `batch_id` encadeado em `prev_root` e assina.
-/// Retorna `None` se o nó estiver configurado como mudo.
+/// Runs one round: ingests `day`, builds batch `batch_id` chained onto `prev_root` and signs it.
+/// Returns `None` if the node is configured as silent.
 pub fn sign_day(
     key: &SigningKey,
     stations: &[StationConfig],

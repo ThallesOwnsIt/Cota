@@ -2,8 +2,8 @@ use anchor_lang::prelude::*;
 
 use crate::{constants::*, error::CotaError, events::AuthorityChanged, state::Committee};
 
-/// Passa a autoridade do comitê para outra chave (ex.: um operador automatizado), sem
-/// tocar na upgrade authority do programa, que continua com quem fez o deploy.
+/// Hands the committee authority to another key (e.g. an automated operator), without
+/// touching the program's upgrade authority, which stays with whoever deployed it.
 #[derive(Accounts)]
 pub struct SetAuthority<'info> {
     pub authority: Signer<'info>,

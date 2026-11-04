@@ -1,4 +1,4 @@
-//! Qualidade de cada lote ancorado (via `cota-quality`), com estado persistido entre lotes.
+//! Quality of each anchored batch (through `cota-quality`), with state persisted between batches.
 
 use std::path::Path;
 
@@ -33,7 +33,7 @@ pub struct Outcome {
     pub degradations: Vec<DegradationReport>,
 }
 
-/// Compara os nós, avalia cada estação do catálogo e atualiza o estado em `state_path`.
+/// Compares the nodes, assesses each catalog station and updates the state in `state_path`.
 pub fn evaluate(state_path: &Path, limits: &Limits, catalog: &[(String, Source)], agg: &Aggregate) -> Result<Outcome> {
     let mut state: State = match std::fs::read_to_string(state_path) {
         Ok(text) => serde_json::from_str(&text).with_context(|| format!("interpretando {}", state_path.display()))?,

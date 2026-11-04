@@ -1,4 +1,4 @@
-//! Administração do comitê: inicialização, registro de estações e status.
+//! Committee administration: initialization, station registration and status.
 
 use std::path::PathBuf;
 
@@ -11,11 +11,11 @@ use serde_json::json;
 use solana_signer::Signer;
 
 #[derive(Parser)]
-#[command(about = "Administração do Cota on-chain")]
+#[command(about = "Cota on-chain administration")]
 struct Args {
     #[arg(long, default_value = "http://127.0.0.1:8899")]
     rpc: String,
-    /// Carteira da autoridade do comitê.
+    /// Wallet of the committee authority.
     #[arg(long)]
     payer: PathBuf,
     #[command(subcommand)]
@@ -24,42 +24,42 @@ struct Args {
 
 #[derive(Subcommand)]
 enum Cmd {
-    /// Cria o comitê com as chaves públicas dos nós.
+    /// Creates the committee with the nodes' public keys.
     Init {
-        /// Keypairs dos nós (só a parte pública vai on-chain).
+        /// The nodes' keypairs (only the public half goes on-chain).
         #[arg(long, num_args = 1.., required = true)]
         members: Vec<PathBuf>,
         #[arg(long, default_value_t = 2)]
         threshold: u8,
     },
-    /// Registra on-chain as estações do catálogo que ainda não existem.
+    /// Registers on-chain the catalog stations that do not exist yet.
     RegisterStations {
         #[arg(long, default_value = "config/stations.toml")]
         config: PathBuf,
     },
-    /// Fixa on-chain o limiar de alerta definido no treino (`alert_rule` do manifesto).
+    /// Fixes on-chain the alert threshold set during training (the manifest's `alert_rule`).
     SetAlertRule {
         #[arg(long, default_value = "ml/models/manifest.json")]
         manifest: PathBuf,
     },
-    /// Grava as previsões de um arquivo do `cota_ml.forecast` e emite os alertas cabíveis.
+    /// Records the forecasts from a `cota_ml.forecast` file and issues the applicable alerts.
     CommitForecast {
         #[arg(long)]
         file: PathBuf,
         #[arg(long, default_value = "devnet")]
         cluster: String,
-        /// Onde registrar as contas e transações criadas.
+        /// Where to record the accounts and transactions created.
         #[arg(long, default_value = "data/ledger")]
         ledger: PathBuf,
     },
-    /// Passa a autoridade do comitê para outra chave (ex.: o operador do GitHub Actions).
+    /// Hands the committee authority to another key (e.g. the GitHub Actions operator).
     SetAuthority {
-        /// Keypair ou chave pública (base58) da nova autoridade.
+        /// Keypair or public key (base58) of the new authority.
         #[arg(long)]
         new: String,
     },
-    /// Mostra o estado do comitê e o saldo da carteira.
-    /// Fixa (uma vez) a regra do alerta antecipado a partir de `ml/models/outlook-rule.json`.
+    /// Shows the committee state and the wallet balance.
+    /// Fixes (once) the early-warning rule from `ml/models/outlook-rule.json`.
     SetOutlookRule {
         #[arg(long, default_value = "ml/models/outlook-rule.json")]
         rule: PathBuf,

@@ -1,4 +1,4 @@
-//! `set_outlook_rule` e `commit_outlook` no programa compilado (LiteSVM).
+//! `set_outlook_rule` and `commit_outlook` in the compiled program (LiteSVM).
 
 use anchor_lang::{prelude::Pubkey, solana_program::instruction::Instruction, AnchorSerialize};
 use cota::error::CotaError;
@@ -89,7 +89,7 @@ fn rule_args(threshold_milli: i64) -> cota::OutlookRuleArgs {
     cota::OutlookRuleArgs { region: REGION.into(), threshold_milli, window_secs: 5 * DAY, min_models: 2, rule_sha256: [0xcc; 32] }
 }
 
-/// Perspectiva emitida no fim do dia `day`.
+/// Outlook issued at the end of day `day`.
 fn header(day: i64, mean_mm: i64) -> OutlookHeader {
     let issued_at = (day + 1) * DAY;
     OutlookHeader {
@@ -170,10 +170,10 @@ fn bound_to_the_day_that_just_closed() {
     assert_eq!(err(env.commit(&[0, 1], &header(100, 95))), code(CotaError::NoAnchoredBatch));
 
     env.anchor_day(100);
-    // Antecipar o dia seguinte (antes de o lote dele existir) não vale.
+    // Getting ahead of the next day (before its batch exists) is not allowed.
     assert_eq!(err(env.commit(&[0, 1], &header(101, 95))), code(CotaError::InvalidOutlook));
     env.anchor_day(101);
-    // Nem registrar a do dia 100 depois que o lote do dia 101 entrou.
+    // Nor recording day 100's outlook after day 101's batch went in.
     assert_eq!(err(env.commit(&[0, 1], &header(100, 95))), code(CotaError::InvalidOutlook));
     env.commit(&[0, 1], &header(101, 95)).unwrap();
 }
@@ -197,14 +197,14 @@ fn rejects_bad_headers_and_signatures() {
 
     assert_eq!(err(env.commit(&[2], &h)), code(CotaError::ThresholdNotMet));
 
-    // Assinaram outra chuva.
+    // They signed a different rain.
     let other = OutlookHeader { rain_mean_milli: 10_000, rain_min_milli: 0, ..h.clone() };
     let sigs = env.sigs(&[0, 1], &other.signing_message());
     let mut ixs = chain::commit_outlook_instructions(env.authority.pubkey(), &h, &sigs);
     ixs[0] = chain::commit_outlook_instructions(env.authority.pubkey(), &other, &sigs)[0].clone();
     assert_eq!(err(env.send(&ixs)), code(CotaError::MessageMismatch));
 
-    // Os mesmos bytes com o domínio de aviso oficial.
+    // The same bytes with the official-warning domain.
     let mut body = Vec::new();
     chain::to_program_outlook_header(&h).serialize(&mut body).unwrap();
     let foreign = [cota::PUBLIC_ALERT_DOMAIN, &body].concat();

@@ -1,11 +1,11 @@
 #!/usr/bin/env bash
-# Replay dia a dia: 3 nós independentes assinam, o agregador ancora o lote (e emite
-# SourceDegraded), depois o previsor lê o ledger e grava P10/P50/P90 (+ alerta) on-chain.
+# Day-by-day replay: 3 independent nodes sign, the aggregator anchors the batch (and emits
+# SourceDegraded), then the forecaster reads the ledger and records P10/P50/P90 (+ alert) on-chain.
 #
-# Uso: scripts/replay.sh <primeiro-dia> <último-dia>
-# Variáveis: RPC (padrão local), CLUSTER, PAYER, FAULTS (config/faults.csv), NODES (1 2 3),
-#            FORECAST (1 = prever após cada lote; 0 = só lotes), CONFIG (catálogo de estações),
-#            OUTLOOK (1 = atestar a chuva prevista após cada lote; só ao vivo)
+# Usage: scripts/replay.sh <first-day> <last-day>
+# Variables: RPC (default local), CLUSTER, PAYER, FAULTS (config/faults.csv), NODES (1 2 3),
+#            FORECAST (1 = forecast after each batch; 0 = batches only), CONFIG (station catalog),
+#            OUTLOOK (1 = attest the forecast rain after each batch; live only)
 set -euo pipefail
 cd "$(dirname "$0")/.."
 
@@ -23,7 +23,7 @@ BIN=target/release
 
 cargo build -q --release -p cota-oracle --bins
 
-fault_for() { # nó, dia -> none | silent | tamper
+fault_for() { # node, day -> none | silent | tamper
   local node=$1 day=$2
   if [[ -f $FAULTS ]]; then
     while IFS=, read -r n f a b; do
@@ -46,7 +46,7 @@ while [[ ! $day > $TO ]]; do
   for p in "${pids[@]}"; do wait "$p"; done
   $BIN/cota-aggregator --rpc "$RPC" --cluster "$CLUSTER" --payer "$PAYER" --config "$CONFIG"
   if [[ $OUTLOOK == 1 ]]; then
-    # Chuva prevista: só vale logo depois do lote do dia, antes do lote seguinte.
+    # Forecast rain: only valid right after the day's batch, before the next batch.
     for i in $NODES; do
       $BIN/cota-outlook observe --key "keys/node-$i.json" --day "$day" --out "data/nodes/node-$i/outlook" || true
     done
