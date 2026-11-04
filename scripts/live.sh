@@ -19,7 +19,12 @@ BACKFILL_DAYS=${BACKFILL_DAYS:-7}
 DEPLOY=${DEPLOY:-0}
 BIN=target/release
 # Credenciais locais (ANA_IDENTIFICADOR, ANA_SENHA); no GitHub Actions vêm dos secrets.
-if [[ -f .env ]]; then set -a; . ./.env; set +a; fi
+# Lido como CHAVE=valor literal, sem executar o arquivo: uma senha com $ ou aspas chega intacta.
+if [[ -f .env ]]; then
+  while IFS='=' read -r k v; do
+    [[ $k =~ ^[A-Za-z_][A-Za-z0-9_]*$ ]] && export "$k=$v"
+  done < .env
+fi
 
 cargo build -q --release -p cota-oracle --bins
 

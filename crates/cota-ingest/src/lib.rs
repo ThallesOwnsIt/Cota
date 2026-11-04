@@ -78,17 +78,18 @@ pub fn ingest(
 
 /// Linhas de todas as estações da ANA do catálogo, numa consulta só.
 ///
-/// Uma falha da ANA não derruba o lote: as horas contam como faltantes e a qualidade
-/// registra a estação como indisponível, como aconteceu com a régua do Cais Mauá em 2024.
-/// Sem credenciais, porém, é erro de configuração.
+/// Uma falha da ANA que persiste depois das novas tentativas não derruba o lote: as horas
+/// contam como faltantes e a qualidade registra a estação como indisponível, como aconteceu
+/// com a régua do Cais Mauá em 2024. Se só um nó perder a ANA, ele assina outra raiz e os
+/// outros dois mantêm o quórum. Sem credenciais (ou com secret vazio), é erro de configuração.
 fn fetch_ana(http: &reqwest::blocking::Client, stations: &[StationConfig], from: i64, to: i64) -> Result<Vec<ana::Row>> {
     let codes = stations.iter().filter(|s| s.source == Source::Ana).map(ana::code_of).collect::<Result<Vec<_>>>()?;
     if codes.is_empty() {
         return Ok(Vec::new());
     }
-    anyhow::ensure!(ana::has_credentials(), "defina ANA_IDENTIFICADOR e ANA_SENHA (cadastro no HidroWebService)");
+    let cred = ana::credentials()?;
     let (first, last) = ana::local_days(from, to)?;
-    match ana::login(http).and_then(|token| ana::fetch(http, &token, &codes, first, last)) {
+    match ana::login(http, &cred).and_then(|token| ana::fetch(http, &token, &codes, first, last)) {
         Ok(rows) => Ok(rows),
         Err(e) => {
             eprintln!("aviso: ANA indisponível, estações {codes:?} ficam sem leituras: {e:#}");

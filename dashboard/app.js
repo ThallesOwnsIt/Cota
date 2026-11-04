@@ -884,7 +884,8 @@ function renderStage() {
     </div>`;
 
   // Afluentes: cada régua tem o seu zero, então o que dá para comparar é a variação.
-  const before = LV.days.findLast((d) => d.stage && d.day < day.day);
+  // Só compara com o dia imediatamente anterior: com um dia faltando, a "variação em 24 h" seria de 48 h.
+  const before = LV.days.find((d) => d.day === addDays(day.day, -1) && d.stage);
   const rivers = Object.entries(day.stage)
     .filter(([sid]) => sid !== LV.stage_main)
     .map(([sid, s]) => {
@@ -1873,6 +1874,7 @@ async function main() {
       renderFlow();
       renderRain();
       renderLiveChart();
+      if (B.live.stage_series?.length) renderStageChart(B.live.stage_series);
       renderOutlookChart();
     }, 150);
   });
