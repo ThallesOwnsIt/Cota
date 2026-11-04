@@ -3,6 +3,7 @@
 //! Cada nó-oráculo roda isto por conta própria; nós honestos com as mesmas fontes
 //! chegam às mesmas leituras e, portanto, à mesma raiz Merkle.
 
+pub mod ana;
 pub mod config;
 pub mod decimal;
 pub mod glofas;
@@ -48,6 +49,7 @@ pub fn ingest(
 ) -> Result<(Vec<Reading>, Vec<StationReport>)> {
     let mut all = Vec::new();
     let mut reports = Vec::new();
+    let ana_rows = fetch_ana(http, stations, from, to)?;
 
     for st in stations {
         let (readings, missing, expected) = match st.source {
@@ -58,6 +60,7 @@ pub fn ingest(
                 let (r, stats) = glofas::to_readings(st, &resp)?;
                 (r, stats.missing, stats.days)
             }
+            Source::Ana => ana::to_readings(st, &ana_rows, from, to)?,
             other => anyhow::bail!("{}: fonte {other:?} ainda não suportada", st.id),
         };
         reports.push(StationReport {
@@ -71,6 +74,27 @@ pub fn ingest(
     }
     all.sort();
     Ok((all, reports))
+}
+
+/// Linhas de todas as estações da ANA do catálogo, numa consulta só.
+///
+/// Uma falha da ANA não derruba o lote: as horas contam como faltantes e a qualidade
+/// registra a estação como indisponível, como aconteceu com a régua do Cais Mauá em 2024.
+/// Sem credenciais, porém, é erro de configuração.
+fn fetch_ana(http: &reqwest::blocking::Client, stations: &[StationConfig], from: i64, to: i64) -> Result<Vec<ana::Row>> {
+    let codes = stations.iter().filter(|s| s.source == Source::Ana).map(ana::code_of).collect::<Result<Vec<_>>>()?;
+    if codes.is_empty() {
+        return Ok(Vec::new());
+    }
+    anyhow::ensure!(ana::has_credentials(), "defina ANA_IDENTIFICADOR e ANA_SENHA (cadastro no HidroWebService)");
+    let (first, last) = ana::local_days(from, to)?;
+    match ana::login(http).and_then(|token| ana::fetch(http, &token, &codes, first, last)) {
+        Ok(rows) => Ok(rows),
+        Err(e) => {
+            eprintln!("aviso: ANA indisponível, estações {codes:?} ficam sem leituras: {e:#}");
+            Ok(Vec::new())
+        }
+    }
 }
 
 /// Uma janela pode atravessar o ano; lê o zip de cada ano envolvido.

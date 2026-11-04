@@ -44,6 +44,10 @@ pub struct Limits {
     /// Dias seguidos de vazão idêntica.
     #[serde(default = "default_stuck_days")]
     pub stuck_days_discharge: u32,
+    /// Horas seguidas de nível idêntico (régua da ANA). Rio lento fica parado por muito tempo:
+    /// o Gravataí passou 28 h no mesmo centímetro em out/2026, sem nada de errado.
+    #[serde(default = "default_stuck_hours_stage")]
+    pub stuck_hours_stage: u32,
     /// Chuva acima disto em uma hora é suspeita no RS (100 mm/h).
     #[serde(default = "default_max_precip")]
     pub max_precip_milli: i64,
@@ -57,6 +61,9 @@ fn default_stuck_hours() -> u32 {
 }
 fn default_stuck_days() -> u32 {
     3
+}
+fn default_stuck_hours_stage() -> u32 {
+    48
 }
 fn default_max_precip() -> i64 {
     100_000
@@ -75,6 +82,7 @@ impl Default for Limits {
         Self {
             stuck_hours_precip: default_stuck_hours(),
             stuck_days_discharge: default_stuck_days(),
+            stuck_hours_stage: default_stuck_hours_stage(),
             max_precip_milli: default_max_precip(),
             jump_ln: BTreeMap::new(),
         }
@@ -84,8 +92,8 @@ impl Default for Limits {
 /// Intervalo esperado entre leituras de cada fonte, em segundos.
 pub fn cadence(source: Source) -> i64 {
     match source {
-        Source::Inmet | Source::Cemaden => 3_600,
-        Source::Ana => 900,
+        // A ANA publica a cada 15 min, mas a ingestão só guarda a hora cheia.
+        Source::Inmet | Source::Cemaden | Source::Ana => 3_600,
         Source::OpenMeteoGlofas | Source::PublicRecord => 86_400,
     }
 }
@@ -243,7 +251,8 @@ pub fn assess(
 
             let stuck_limit = match r.variable {
                 Variable::Precipitation => limits.stuck_hours_precip,
-                _ => limits.stuck_days_discharge,
+                Variable::RiverStage => limits.stuck_hours_stage,
+                Variable::RiverDischarge => limits.stuck_days_discharge,
             };
             let jump = match r.variable {
                 Variable::Precipitation => v > limits.max_precip_milli,

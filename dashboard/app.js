@@ -767,11 +767,12 @@ function renderLive() {
     $("#live-sub").textContent = L("Modo ao vivo ainda não iniciado: nenhum lote depois do replay.", "Live mode not started yet: no batch after the replay.");
   } else {
     const d = LV.days.at(-1);
+    renderStage();
     $("#live-sub").textContent = L(
       `Último lote: ${dmy(d.day)} (lote ${d.batch_id}), ancorado em ${br(d.committed_at)} (horário de Brasília). ` +
-        `${LV.days.length} dia(s) desde ${dmy(LV.days[0].day)}. Vazão modelada pelo GloFAS; a chuva do INMET entra com ~1 mês de atraso.`,
+        `${LV.days.length} dia(s) desde ${dmy(LV.days[0].day)}. Nível medido nas réguas da ANA; vazão modelada pelo GloFAS; a chuva do INMET entra com ~1 mês de atraso.`,
       `Latest batch: ${dmy(d.day)} (batch ${d.batch_id}), anchored ${br(d.committed_at)} (Brasília time). ` +
-        `${LV.days.length} day(s) since ${dmy(LV.days[0].day)}. Flow modelled by GloFAS; INMET rain comes in about 1 month late.`,
+        `${LV.days.length} day(s) since ${dmy(LV.days[0].day)}. Level measured on ANA gauges; flow modelled by GloFAS; INMET rain comes in about 1 month late.`,
     );
     const is = LV.issues.at(-1);
     const fc = (h) => is?.horizons.find((f) => f.horizon_hours === h);
@@ -821,6 +822,143 @@ function renderLive() {
   $("#live-alerts").innerHTML =
     `<table class="data"><thead><tr><th>${L("Gravado on-chain", "Recorded on-chain")}</th><th>${L("Aviso (texto do INMET)", "Warning (INMET text, Portuguese)")}</th><th>${L("Severidade", "Severity")}</th><th>${L("Vigência", "In force")}</th><th class="num">${L("Nós", "Nodes")}</th><th></th></tr></thead><tbody>${rows}</tbody></table>`;
   $("#live-alerts").querySelectorAll("[data-a]").forEach((b) => b.addEventListener("click", () => verifyPublicAlert(LV.public_alerts[+b.dataset.a])));
+}
+
+// ---- nível do rio (régua da ANA) ------------------------------------------
+// Cotas de referência da Defesa Civil de Porto Alegre na régua do Cais Mauá.
+
+const STAGE_FLOOD = 3000;
+const STAGE_NEAR = 2500;
+const STAGE_RECORD = { milli: 5350, day: "2024-05-05" };
+const meters = (milli) => nf2.format(milli / 1000);
+const cm = (milli) => nf0.format(Math.abs(milli) / 10);
+// Hora de Brasília (UTC−3) de um instante.
+const brHour = (ts) => new Date((ts - 3 * 3600) * 1000).toISOString();
+const riverName = (sid) => {
+  const n = (B.live.stage_stations.find((s) => s.id === sid)?.name ?? sid).replace(/ \(ANA\)$/, "");
+  return L(n, n.replace(" em ", " at "));
+};
+
+function stageChange(milli) {
+  if (milli === 0) return L("estável em 24 h", "steady over 24 h");
+  return milli > 0 ? L(`▲ subiu ${cm(milli)} cm em 24 h`, `▲ up ${cm(milli)} cm in 24 h`) : L(`▼ desceu ${cm(milli)} cm em 24 h`, `▼ down ${cm(milli)} cm in 24 h`);
+}
+
+function renderStage() {
+  const LV = B.live;
+  const ser = LV.stage_series ?? [];
+  $("#stage").hidden = !ser.length;
+  if (!ser.length) return;
+
+  const [ts, v] = ser.at(-1);
+  const prev = ser.find(([t]) => t === ts - 86_400);
+  const iso = brHour(ts);
+  const when = L(`${iso.slice(11, 13)}h de ${dm(iso.slice(0, 10))}`, `${iso.slice(11, 13)}:00 on ${dm(iso.slice(0, 10))}`);
+  const state =
+    v >= STAGE_FLOOD
+      ? { icon: "▲", cls: "alert", h: L("Guaíba acima da cota de inundação", "Guaíba above flood level") }
+      : v >= STAGE_NEAR
+        ? { icon: "!", cls: "warn", h: L("Guaíba perto da cota de inundação", "Guaíba close to flood level") }
+        : { icon: "✓", cls: "ok", h: L("Guaíba em nível normal", "Guaíba at a normal level") };
+  const max = Math.max(6000, v * 1.1);
+  const at = (x) => `${Math.min(100, (x / max) * 100)}%`;
+  const day = LV.days.findLast((d) => d.stage);
+
+  const status = `<div class="now-status">
+      <span class="now-icon ${state.cls}" aria-hidden="true">${state.icon}</span>
+      <div>
+        <h3>${state.h}</h3>
+        <p>${L(
+          `O nível no Cais Mauá era de <strong>${meters(v)} m</strong> às ${when}${prev ? ` (${stageChange(v - prev[1])})` : ""}. Porto Alegre começa a alagar a partir de ${meters(STAGE_FLOOD)} m; em 2024 o rio chegou a ${meters(STAGE_RECORD.milli)} m.`,
+          `The level at Cais Mauá was <strong>${meters(v)} m</strong> at ${when}${prev ? ` (${stageChange(v - prev[1])})` : ""}. Porto Alegre starts to flood from ${meters(STAGE_FLOOD)} m; in 2024 the river reached ${meters(STAGE_RECORD.milli)} m.`,
+        )}</p>
+        <div class="meter" role="img" aria-label="${L(`${meters(v)} m; inundação a partir de ${meters(STAGE_FLOOD)} m`, `${meters(v)} m; flooding from ${meters(STAGE_FLOOD)} m`)}">
+          <div class="meter-track"><div class="meter-fill${v >= STAGE_FLOOD ? " alert" : ""}" style="width:${at(v)}"></div><span class="meter-mark" style="left:${at(STAGE_FLOOD)}"></span><span class="meter-mark soft" style="left:${at(STAGE_RECORD.milli)}"></span></div>
+          <div class="meter-labels"><span style="left:0">0 m</span><span style="left:${at(STAGE_FLOOD)}">${L("inundação", "flooding")} · ${meters(STAGE_FLOOD)} m</span><span class="rec" style="left:${at(STAGE_RECORD.milli)}">2024 · ${meters(STAGE_RECORD.milli)} m</span></div>
+        </div>
+        <p class="sub">${L(
+          `Medido na régua da ANA (estação ${LV.stage_main.replace("ANA-", "")}), hora a hora, e gravado na devnet no lote de ${dmy(day.day)}.`,
+          `Measured on the ANA gauge (station ${LV.stage_main.replace("ANA-", "")}), every hour, and recorded on devnet in the batch for ${dmy(day.day)}.`,
+        )}</p>
+      </div>
+    </div>`;
+
+  // Afluentes: cada régua tem o seu zero, então o que dá para comparar é a variação.
+  const before = LV.days.findLast((d) => d.stage && d.day < day.day);
+  const rivers = Object.entries(day.stage)
+    .filter(([sid]) => sid !== LV.stage_main)
+    .map(([sid, s]) => {
+      const p = before?.stage?.[sid];
+      const ch = p ? stageChange(s.last - p.last) : L("sem leitura do dia anterior", "no reading from the day before");
+      return `<div><dt>${esc(riverName(sid))}</dt><dd>${meters(s.last)} m<small>${ch}</small></dd></div>`;
+    })
+    .join("");
+  $("#stage-now").innerHTML =
+    status +
+    (rivers
+      ? `<div><p class="facts-title">${L("Rios que chegam ao Guaíba", "Rivers flowing into the Guaíba")}</p><dl class="facts compact">${rivers}</dl>
+         <p class="sub">${L("Fim do dia anterior. Cada régua tem o seu próprio zero: compare a subida, não a altura.", "End of the previous day. Each gauge has its own zero: compare the rise, not the height.")}</p></div>`
+      : "");
+  renderStageChart(ser);
+}
+
+function renderStageChart(ser) {
+  const box = $("#stage-chart");
+  const W = Math.max(320, box.clientWidth);
+  const H = W < 560 ? 220 : 280;
+  const m = { l: 44, r: 18, t: 14, b: 26 };
+  const t0 = ser[0][0], t1 = ser.at(-1)[0];
+  const ymax = Math.max(3500, Math.ceil((Math.max(...ser.map((p) => p[1])) * 1.1) / 500) * 500);
+  const x = (t) => m.l + ((t - t0) / Math.max(1, t1 - t0)) * (W - m.l - m.r);
+  const y = (v) => H - m.b - (v / ymax) * (H - m.t - m.b);
+  const svg = el("svg", { viewBox: `0 0 ${W} ${H}`, width: W, height: H });
+
+  for (let v = 0; v <= ymax; v += 500) {
+    if (v % 1000 && ymax > 4000) continue;
+    el("line", { x1: m.l, x2: W - m.r, y1: y(v), y2: y(v), class: v === 0 ? "baseline" : "gridline" }, svg);
+    el("text", { x: m.l - 6, y: y(v) + 4, "text-anchor": "end", class: "tick-label" }, svg).textContent = `${nf1.format(v / 1000)} m`;
+  }
+  // um rótulo por dia (Brasília), espaçado conforme a largura
+  const days = [];
+  for (let t = Math.ceil((t0 + 3 * 3600) / 86_400) * 86_400 - 3 * 3600; t <= t1; t += 86_400) days.push(t);
+  const every = Math.max(1, Math.ceil(days.length / (W < 560 ? 4 : 8)));
+  days.forEach((t, i) => {
+    if (i % every === 0) el("text", { x: x(t), y: H - 6, "text-anchor": "middle", class: "tick-label" }, svg).textContent = dm(brHour(t).slice(0, 10));
+  });
+
+  el("line", { x1: m.l, x2: W - m.r, y1: y(STAGE_FLOOD), y2: y(STAGE_FLOOD), stroke: "var(--critical)", "stroke-width": 1, "stroke-dasharray": "2 3" }, svg);
+  el("text", { x: m.l + 6, y: y(STAGE_FLOOD) - 5, class: "tick-label" }, svg).textContent = L(`cota de inundação · ${meters(STAGE_FLOOD)} m`, `flood level · ${meters(STAGE_FLOOD)} m`);
+
+  // Buracos de mais de 6 h (régua sem transmitir) quebram a linha em vez de ligar os pontos;
+  // uma ou outra hora faltando, comum na telemetria, não.
+  let d = "";
+  ser.forEach(([t, v], i) => (d += `${i && t - ser[i - 1][0] <= 6 * 3600 ? "L" : "M"}${x(t).toFixed(1)},${y(v).toFixed(1)}`));
+  el("path", { d, fill: "none", stroke: "var(--observed)", "stroke-width": 2, "stroke-linejoin": "round" }, svg);
+
+  const hover = el("g", { "pointer-events": "none" }, svg);
+  const overlay = el("rect", { x: m.l, y: m.t, width: W - m.l - m.r, height: H - m.t - m.b, fill: "transparent" }, svg);
+  const move = (ev) => {
+    const r = svg.getBoundingClientRect();
+    const t = t0 + ((ev.clientX - r.left) * (W / r.width) - m.l) / (W - m.l - m.r) * (t1 - t0);
+    let best = ser[0];
+    for (const p of ser) if (Math.abs(p[0] - t) < Math.abs(best[0] - t)) best = p;
+    hover.innerHTML = "";
+    el("line", { x1: x(best[0]), x2: x(best[0]), y1: m.t, y2: H - m.b, stroke: "var(--muted)", "stroke-width": 1 }, hover);
+    el("circle", { cx: x(best[0]), cy: y(best[1]), r: 4, fill: "var(--observed)", stroke: "var(--surface)", "stroke-width": 2 }, hover);
+    const iso = brHour(best[0]);
+    showTip(`<strong>${dmy(iso.slice(0, 10))}, ${iso.slice(11, 13)}h</strong>${row(L("Nível", "Level"), `${meters(best[1])} m`)}`, ev.clientX, ev.clientY);
+  };
+  overlay.addEventListener("pointermove", move);
+  overlay.addEventListener("pointerleave", () => {
+    hover.innerHTML = "";
+    hideTip();
+  });
+  box.replaceChildren(svg);
+  $("#stage-legend").innerHTML = `<span class="key" style="color:var(--observed)"><span class="swatch-line"></span><span style="color:var(--text-2)">${L(
+    `Nível medido no Cais Mauá, hora a hora (últimos ${Math.round((t1 - t0) / 86_400)} dias gravados)`,
+    `Level measured at Cais Mauá, hour by hour (last ${Math.round((t1 - t0) / 86_400)} recorded days)`,
+  )}</span></span>` +
+    `<span class="key" style="color:var(--critical)"><span class="swatch-dash"></span><span style="color:var(--text-2)">${L("Cota de inundação de Porto Alegre", "Porto Alegre flood level")}</span></span>`;
 }
 
 async function verifyPublicAlert(a) {

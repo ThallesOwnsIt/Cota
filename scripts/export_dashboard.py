@@ -24,6 +24,10 @@ ROOT = Path(__file__).resolve().parents[1]
 LEDGER = ROOT / "data/ledger"
 OUT = ROOT / "dashboard/data"
 TARGET = "GLOFAS-GUAIBA"
+# Régua do Cais Mauá (ANA): o nível que a Defesa Civil de Porto Alegre acompanha.
+STAGE_MAIN = "ANA-87450004"
+# Dias de leituras horárias do Cais Mauá no gráfico do modo ao vivo.
+STAGE_SERIES_DAYS = 60
 RPC = "https://api.devnet.solana.com"
 LIVE_FROM = "2025-01-01"
 
@@ -36,6 +40,7 @@ def main() -> None:
     anchor = tomllib.loads((ROOT / "Anchor.toml").read_text())
     program = anchor["programs"]["devnet"]["cota"]
     stations = tomllib.loads((ROOT / "config/stations.toml").read_text())["station"]
+    live_stations = tomllib.loads((ROOT / "config/stations-live.toml").read_text())["station"]
     manifest = json.loads((ROOT / "ml/models/manifest.json").read_text())
     metrics = json.loads((ROOT / "ml/reports/metrics.json").read_text())
     audit = json.loads((LEDGER / "audit.json").read_text())
@@ -44,6 +49,7 @@ def main() -> None:
 
     (OUT / "batches").mkdir(parents=True, exist_ok=True)
     days = []
+    stage_series: list[list[int]] = []
     members = None
     for path in sorted((LEDGER / "batches").glob("*.json")):
         e = json.loads(path.read_text())
@@ -52,8 +58,13 @@ def main() -> None:
         rain: dict[str, float | None] = {}
         hours: dict[str, int] = {}
         guaiba = None
+        stage: dict[str, list[int]] = {}
         for r in e["readings"]:
-            if r["variable"] == "precipitation":
+            if r["variable"] == "river_stage":
+                stage.setdefault(r["station_id"], []).append(r["value_milli"])
+                if r["station_id"] == STAGE_MAIN:
+                    stage_series.append([r["ts_utc"], r["value_milli"]])
+            elif r["variable"] == "precipitation":
                 rain[r["station_id"]] = rain.get(r["station_id"], 0) + r["value_milli"]
                 hours[r["station_id"]] = hours.get(r["station_id"], 0) + 1
             elif r["station_id"] == TARGET:
@@ -75,6 +86,12 @@ def main() -> None:
                 "signers": a["signers"],
                 "members": [{"member": m["member"], "status": m["status"]} for m in e["members"]],
                 "guaiba_milli": guaiba,
+                # Nível medido (ANA): última leitura do dia, máxima e quantas horas vieram.
+                **(
+                    {"stage": {sid: {"last": v[-1], "max": max(v), "hours": len(v)} for sid, v in stage.items()}}
+                    if stage
+                    else {}
+                ),
                 "rain_milli": rain,
                 "rain_hours": hours,
                 "quality": [
@@ -223,7 +240,14 @@ def main() -> None:
         ],
         "days": replay_days,
         "issues": replay_issues,
-        "live": {"days": live_days, "issues": live_issues, "public_alerts": alerts},
+        "live": {
+            "days": live_days,
+            "issues": live_issues,
+            "public_alerts": alerts,
+            "stage_stations": [{"id": s["id"], "name": s["name"]} for s in live_stations if s["source"] == "ana"],
+            "stage_main": STAGE_MAIN,
+            "stage_series": stage_series_tail(stage_series),
+        },
         "outlook": outlook,
         "vaults": vaults,
     }
@@ -234,6 +258,15 @@ def main() -> None:
         f"{len(live_issues)} previsões, {len(alerts)} avisos oficiais, {len(outlook['live'])} perspectivas de chuva, {len(vaults)} cofres "
         f"→ {OUT} ({size / 1024:.0f} KiB)"
     )
+
+
+def stage_series_tail(series: list[list[int]]) -> list[list[int]]:
+    """Leituras horárias do Cais Mauá nos últimos STAGE_SERIES_DAYS dias ancorados."""
+    if not series:
+        return []
+    series.sort()
+    start = series[-1][0] - STAGE_SERIES_DAYS * 86_400
+    return [p for p in series if p[0] > start]
 
 
 def export_outlook(audit: dict) -> dict:

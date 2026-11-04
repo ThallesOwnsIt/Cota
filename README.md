@@ -16,7 +16,7 @@ spreadsheets can be edited later. Cota is the record that was missing: a river d
 known about the river to Solana (devnet), where anyone can read it and nobody can change it.
 
 - **Three oracles, two signatures.** A blockchain can't see the weather. Each of Cota's three oracles fetches data on its own from
-  INMET rain gauges, GloFAS river discharge and Open-Meteo forecasts, and signs what it saw. The program only records a value that
+  INMET rain gauges, ANA river gauges, GloFAS river discharge and Open-Meteo forecasts, and signs what it saw. The program only records a value that
   at least 2 of the 3 signed byte for byte. If one fails or is tampered with, the other two hold.
 - **Forecasts on record before the facts.** A quantile model forecasts the Guaíba's discharge 1 and 2 days ahead with an uncertainty
   band. The program refuses any forecast whose target day is already anchored. In the 2024 replay, the first alert was on record
@@ -40,7 +40,8 @@ when the data existed.
 
 Cota records on Solana (devnet), so that anyone can check it, **who knew what, and when**:
 
-- rain readings (INMET) and river discharge (GloFAS via Open-Meteo), signed by a committee of 3 oracles with a 2-of-3 threshold and
+- rain readings (INMET), hourly river levels measured on ANA telemetric gauges (Guaíba at Cais Mauá and five tributaries) and
+  river discharge (GloFAS via Open-Meteo), signed by a committee of 3 oracles with a 2-of-3 threshold and
   anchored as Merkle roots (RFC 9162), one batch per day;
 - P10/P50/P90 forecasts of the Guaíba's discharge (quantile LightGBM, fixed `model_sha256`), which the program only accepts **before**
   the observation is anchored;
@@ -64,7 +65,7 @@ April–May 2024 flood, with Merkle and on-chain account checks done in the brow
 |---|---|
 | `programs/cota` | Anchor program: committee, stations, batches (Ed25519 via precompile), forecasts, alerts, official warnings, outlooks, vaults |
 | `crates/cota-core` | Canonical formats (Borsh), Merkle tree, signed message |
-| `crates/cota-ingest` | INMET ingestion (yearly zip) and GloFAS (Open-Meteo) |
+| `crates/cota-ingest` | INMET ingestion (yearly zip), ANA telemetric gauges (HidroWebService) and GloFAS (Open-Meteo) |
 | `crates/cota-quality` | Sensor rules, MAD between nodes, confidence index C_s |
 | `crates/cota-oracle` | Nodes, aggregator, admin, INMET warnings (`cota-alerts`), forecast rain (`cota-outlook`), vaults (`cota-vault`), audit (`cota-audit`) |
 | `ml/` | Training, evaluation and forecasting (Python/uv); `cota_ml.outlook` calibrates the rain rule and runs the backtest |
@@ -94,14 +95,18 @@ Vault: `cota-vault --rpc … --payer <wallet> create --name … --id 1 --kind ea
 chain what has 2 of 3 signatures, then commits `data/ledger` and `dashboard/data`.
 
 Repository secrets (Settings → Secrets and variables → Actions): `NODE_1_KEY`, `NODE_2_KEY`, `NODE_3_KEY` and `OPERATOR_KEY`, with
-the contents of `keys/node-N.json` and `keys/operator.json`. The operator is the committee authority (`cota-admin set-authority`);
+the contents of `keys/node-N.json` and `keys/operator.json`; `ANA_IDENTIFICADOR` and `ANA_SENHA`, the HidroWebService login used
+by the nodes to read the river gauges (locally they go in `.env`, which git ignores). The operator is the committee authority (`cota-admin set-authority`);
 the program's upgrade authority never leaves the deployer's machine.
 
 ## Known limits
 
 - The three oracles fetch and sign data independently, but today they are run by the same person (separate GitHub Actions jobs).
   The next step is handing them to different institutions (civil defense, universities, NGOs).
-- The forecast is of the **daily discharge modelled by GloFAS**, 1 and 2 days ahead, not of the river gauge level.
+- The forecast is of the **daily discharge modelled by GloFAS**, 1 and 2 days ahead, not of the river gauge level. Gauge levels
+  from ANA are recorded since November 2026, but the model has not been trained on them yet.
+- ANA gauges are read once per hour (the value on the hour). If ANA is down, the batch still goes out and the hours count as
+  missing, so the outage itself ends up on record. All three nodes use the same ANA login.
 - In the replay, the transactions are from 2026: the proof is of **order** (forecast before observation), not of the 2024 calendar.
 - Rain from INMET stations arrives about a month late; live mode uses only discharge until real-time access is available.
 - Vaults run on devnet with test SOL. The `replay-2024` vault accepts the replay's alerts (recorded in 2026 over 2024 data) to
@@ -111,4 +116,5 @@ the program's upgrade authority never leaves the deployer's machine.
   backtest, the forecast used is one day older than live mode's (no peeking at the future). Three floods in 2.7 years is a small
   sample: the CSI of 0.25 is very uncertain. Archived forecasts come from Open-Meteo, not from each model's official service.
 
-Data: [Weather data by Open-Meteo.com](https://open-meteo.com/) (CC BY 4.0) · GloFAS / Copernicus EMS · INMET.
+Data: [Weather data by Open-Meteo.com](https://open-meteo.com/) (CC BY 4.0) · GloFAS / Copernicus EMS · INMET ·
+ANA (Agência Nacional de Águas e Saneamento Básico, HidroWebService).

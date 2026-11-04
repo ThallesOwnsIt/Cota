@@ -831,6 +831,31 @@ a.ghost {
   height: 22px;
   background: var(--critical);
 }
+.meter-mark.soft {
+  background: var(--muted);
+}
+.now-icon.warn {
+  background: var(--warning);
+  color: var(--navy);
+}
+.facts-title {
+  margin: 0 0 12px;
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--text-2);
+}
+.facts.compact {
+  grid-template-columns: repeat(auto-fill, minmax(min(150px, 100%), 1fr));
+  gap: 14px 20px;
+}
+.facts.compact dd {
+  font-size: 19px;
+}
+#stage-now + .chart-card {
+  margin-bottom: 40px;
+}
 .meter-labels {
   position: relative;
   height: 18px;
@@ -842,6 +867,14 @@ a.ghost {
   position: absolute;
   transform: translateX(-50%);
   white-space: nowrap;
+}
+.meter-labels span.rec {
+  transform: translateX(calc(-100% + 1px));
+}
+@media (max-width: 560px) {
+  .meter-labels span.rec {
+    display: none;
+  }
 }
 .meter-labels span:first-child {
   transform: none;

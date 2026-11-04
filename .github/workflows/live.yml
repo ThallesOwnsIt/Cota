@@ -7,7 +7,8 @@
 #     do ledger e dos dados do dashboard (a Vercel republica a cada push); aciona os cofres
 #     paramétricos diante de gatilhos novos.
 #
-# Secrets: NODE_1_KEY, NODE_2_KEY, NODE_3_KEY e OPERATOR_KEY (conteúdo dos keypairs JSON).
+# Secrets: NODE_1_KEY, NODE_2_KEY, NODE_3_KEY e OPERATOR_KEY (conteúdo dos keypairs JSON);
+#          ANA_IDENTIFICADOR e ANA_SENHA (cadastro no HidroWebService, nível do rio em régua).
 # Trava: só roda com a variável de repositório COTA_LIVE_ENABLED = true (ligar depois de
 # configurar os secrets e passar a autoridade do comitê para o operador).
 name: Cota ao vivo
@@ -63,6 +64,9 @@ jobs:
         run: target/release/cota-alerts observe --key keys/node.json --out out/alerts
       - name: Lote de ${{ needs.plan.outputs.day }}
         if: needs.plan.outputs.day != ''
+        env:
+          ANA_IDENTIFICADOR: ${{ secrets.ANA_IDENTIFICADOR }}
+          ANA_SENHA: ${{ secrets.ANA_SENHA }}
         run: >
           target/release/cota-node --key keys/node.json --day "${{ needs.plan.outputs.day }}"
           --rpc "$RPC" --config config/stations-live.toml --out out

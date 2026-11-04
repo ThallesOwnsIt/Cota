@@ -18,6 +18,8 @@ export PAYER=${PAYER:-$HOME/.config/solana/id.json}
 BACKFILL_DAYS=${BACKFILL_DAYS:-7}
 DEPLOY=${DEPLOY:-0}
 BIN=target/release
+# Credenciais locais (ANA_IDENTIFICADOR, ANA_SENHA); no GitHub Actions vêm dos secrets.
+if [[ -f .env ]]; then set -a; . ./.env; set +a; fi
 
 cargo build -q --release -p cota-oracle --bins
 

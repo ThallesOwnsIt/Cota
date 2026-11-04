@@ -49,3 +49,61 @@ source = "open_meteo_glofas"
 variable = "river_discharge"
 lat = -29.975
 lon = -51.175
+
+# Nível medido em régua pelas estações telemétricas da ANA (HidroWebService, exige
+# ANA_IDENTIFICADOR e ANA_SENHA). Valor em metros acima do zero da régua de cada estação;
+# o Cais Mauá é a referência da Defesa Civil de Porto Alegre (inundação a partir de 3,00 m).
+
+[[station]]
+id = "ANA-87450004"
+name = "Guaíba no Cais Mauá, Porto Alegre (ANA)"
+source = "ana"
+variable = "river_stage"
+lat = -30.0211
+lon = -51.2211
+datum_id = "ANA-87450004-regua"
+
+[[station]]
+id = "ANA-85930001"
+name = "Jacuí em São Jerônimo (ANA)"
+source = "ana"
+variable = "river_stage"
+lat = -29.955
+lon = -51.7631
+datum_id = "ANA-85930001-regua"
+
+[[station]]
+id = "ANA-86879300"
+name = "Taquari em Estrela (ANA)"
+source = "ana"
+variable = "river_stage"
+lat = -29.4717
+lon = -51.965
+datum_id = "ANA-86879300-regua"
+
+[[station]]
+id = "ANA-87270000"
+name = "Caí em Passo Montenegro (ANA)"
+source = "ana"
+variable = "river_stage"
+lat = -29.7011
+lon = -51.4411
+datum_id = "ANA-87270000-regua"
+
+[[station]]
+id = "ANA-87382000"
+name = "Sinos em São Leopoldo (ANA)"
+source = "ana"
+variable = "river_stage"
+lat = -29.7589
+lon = -51.1483
+datum_id = "ANA-87382000-regua"
+
+[[station]]
+id = "ANA-87399000"
+name = "Gravataí em Passo das Canoas (ANA)"
+source = "ana"
+variable = "river_stage"
+lat = -29.9644
+lon = -50.9778
+datum_id = "ANA-87399000-regua"
