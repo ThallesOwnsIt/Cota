@@ -8,12 +8,9 @@
 
 ## About
 
-In May 2024 the Guaíba river in southern Brazil rose higher than ever recorded and Porto Alegre went underwater. More than 180
-people died in Rio Grande do Sul. Afterwards, everyone asked the same questions: who knew? Who warned us, and when?
-
-Those questions were hard to answer. Forecast websites overwrite old forecasts, official warnings go offline when they expire, and
-spreadsheets can be edited later. Cota is the record that was missing: a river diary nobody can erase. Every day it writes what was
-known about the river to Solana (devnet), where anyone can read it and nobody can change it.
+Every day Cota records river levels, rain, forecasts and official warnings for the Guaíba basin (Porto Alegre, Brazil) in a public
+log on Solana that nobody can change afterwards, so anyone can check what was known, and when. It started from the May 2024 flood,
+when the Guaíba reached 5.35 m and it was hard to piece together what had been forecast and announced beforehand.
 
 - **Three oracles, two signatures.** A blockchain can't see the weather. Each of Cota's three oracles fetches data on its own from
   INMET rain gauges, ANA river gauges, GloFAS river discharge and Open-Meteo forecasts, and signs what it saw. The program only records a value that
