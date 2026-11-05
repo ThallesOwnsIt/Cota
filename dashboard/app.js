@@ -1299,34 +1299,66 @@ function renderStamp() {
 }
 
 // ---- who can change the program ----------------------------------------------------------------
-// The upgrade authority of program v2 is a multisig vault; the browser reads it live from devnet.
+// The upgrade authority of program v2 is a Squads multisig vault. The browser reads, live from devnet, the
+// program's authority and the multisig's own account (threshold, members, wait): the static config only
+// says where to look. One query per page load; every redraw (language switch) reuses it.
+
+let upgradeState = null;
+
+/** Squads v4 `Multisig`: create_key, config_authority, threshold u16, time_lock u32, …, members Vec. */
+function decodeSquads(d) {
+  const v = new DataView(d.buffer, d.byteOffset, d.byteLength);
+  let o = 8 + 32 + 32;
+  const threshold = v.getUint16(o, true);
+  const timeLock = v.getUint32(o + 2, true);
+  o += 2 + 4 + 8 + 8;
+  o += 1 + (d[o] ? 32 : 0) + 1; // rent_collector: Option<Pubkey>, bump
+  const members = v.getUint32(o, true);
+  return { threshold, timeLock, members };
+}
+
+function upgradeFacts() {
+  const u = B.upgrade;
+  upgradeState ??= Promise.all([fetchAccount(B.meta.rpc, u.program_data), fetchAccount(B.meta.rpc, u.multisig)]).then(([pd, ms]) => ({
+    authority: pd.data[12] === 1 ? base58(pd.data.subarray(13, 45)) : null,
+    squads: ms.owner === u.squads_program ? decodeSquads(ms.data) : null,
+  }));
+  upgradeState.catch(() => (upgradeState = null));
+  return upgradeState;
+}
 
 async function renderUpgrade() {
   const box = $("#upgrade-auth");
   const u = B.upgrade;
   box.hidden = !u;
   if (!u) return;
-  const wait = u.time_lock_secs >= 3600 ? L(`${u.time_lock_secs / 3600} h`, `${u.time_lock_secs / 3600} h`) : `${u.time_lock_secs ?? 0} s`;
-  const head = `<h3>${L("Quem pode alterar o programa", "Who can change the program")}</h3>
-    <p>${L(
-      `Nenhuma chave sozinha. Uma atualização do código precisa de ${u.threshold} de ${u.members.length} assinaturas numa multisig (Squads) e ainda espera ${wait} antes de valer; durante a espera, a proposta fica pública. Por enquanto as ${u.members.length} chaves estão com o mesmo responsável: o próximo passo é entregá-las a pessoas diferentes.`,
-      `No single key. A code update needs ${u.threshold} of ${u.members.length} signatures on a multisig (Squads) and then waits ${wait} before it takes effect; while it waits, the proposal is public. For now the ${u.members.length} keys are held by the same person: the next step is handing them to different people.`,
-    )}</p>`;
-  box.innerHTML = head + `<p class="sub">${L("Conferindo na devnet…", "Checking on devnet…")}</p>`;
+  const title = `<h3>${L("Quem pode alterar o programa", "Who can change the program")}</h3>`;
+  box.innerHTML = title + `<p class="sub">${L("Conferindo na devnet…", "Checking on devnet…")}</p>`;
+  let facts;
   try {
-    const acc = await fetchAccount(B.meta.rpc, u.program_data);
-    const auth = acc.data[12] === 1 ? base58(acc.data.subarray(13, 45)) : null;
-    const ok = auth === u.vault;
-    box.innerHTML =
-      head +
-      `<p class="sub">${
-        ok
-          ? `<span class="good-text">✓ ${L("conferido agora na devnet", "checked just now on devnet")}</span>: ${L("a autoridade de upgrade do programa é o", "the program's upgrade authority is the")} <a href="https://explorer.solana.com/address/${u.vault}?cluster=${B.meta.cluster}" target="_blank" rel="noopener">${L("cofre da multisig", "multisig vault")}</a>`
-          : `<span class="crit-text">✕ ${L("a autoridade de upgrade on-chain é", "the on-chain upgrade authority is")} ${esc(auth ?? L("nenhuma", "none"))}</span>`
-      } · <a href="https://explorer.solana.com/address/${u.multisig}?cluster=${B.meta.cluster}" target="_blank" rel="noopener">multisig</a></p>`;
+    facts = await upgradeFacts();
   } catch (e) {
-    box.innerHTML = head + `<p class="sub">${L("Não foi possível consultar a devnet agora", "Could not query devnet right now")}: ${esc(e.message)}</p>`;
+    box.innerHTML = title + `<p class="sub">${L("Não foi possível consultar a devnet agora", "Could not query devnet right now")}: ${esc(e.message)}</p>`;
+    return;
   }
+  // Drawn in the language active now, whatever language was active when the query started.
+  const { authority, squads } = facts;
+  const ok = authority === u.vault && squads != null;
+  const wait = (s) => (s >= 3600 && s % 3600 === 0 ? `${s / 3600} h` : `${nf0.format(s)} s`);
+  const body = squads
+    ? L(
+        `Nenhuma chave sozinha. Uma atualização do código precisa de ${squads.threshold} de ${squads.members} assinaturas numa multisig (Squads) e ainda espera ${wait(squads.timeLock)} antes de valer; durante a espera, a proposta fica pública. Por enquanto as ${squads.members} chaves estão com o mesmo responsável: o próximo passo é entregá-las a pessoas diferentes.`,
+        `No single key. A code update needs ${squads.threshold} of ${squads.members} signatures on a multisig (Squads) and then waits ${wait(squads.timeLock)} before it takes effect; while it waits, the proposal is public. For now the ${squads.members} keys are held by the same person: the next step is handing them to different people.`,
+      )
+    : "";
+  box.innerHTML =
+    title +
+    (body ? `<p>${body}</p>` : "") +
+    `<p class="sub">${
+      ok
+        ? `<span class="good-text">✓ ${L("conferido agora na devnet", "checked just now on devnet")}</span>: ${L("a autoridade de upgrade do programa é o", "the program's upgrade authority is the")} <a href="${explorerAddr(u.vault)}" target="_blank" rel="noopener">${L("cofre da multisig", "multisig vault")}</a>${L(", e as regras acima foram lidas da própria multisig", ", and the rules above were read from the multisig itself")}`
+        : `<span class="crit-text">✕ ${L("a autoridade de upgrade on-chain é", "the on-chain upgrade authority is")} ${esc(authority ?? L("nenhuma", "none"))}</span>`
+    } · <a href="${explorerAddr(u.multisig)}" target="_blank" rel="noopener">multisig</a></p>`;
 }
 
 async function verifyPublicAlert(a) {
