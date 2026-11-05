@@ -19,10 +19,16 @@ ROOT = Path(__file__).resolve().parents[1]
 LIVE_FROM = date(2025, 1, 1)
 
 
+def last_day(ledger: Path) -> date | None:
+    files = sorted(glob.glob(str(ledger / "batches/*.json")))
+    return date.fromisoformat(json.loads(Path(files[-1]).read_text())["day"]) if files else None
+
+
 def missing_days() -> list[date]:
     yesterday = datetime.now(timezone.utc).date() - timedelta(days=1)
-    files = sorted(glob.glob(str(ROOT / "data/ledger/batches/*.json")))
-    last = date.fromisoformat(json.loads(Path(files[-1]).read_text())["day"]) if files else None
+    # The live days program v1 recorded (data/ledger-v1) count too: v2 picks up the day after them.
+    days = [d for d in (last_day(ROOT / "data/ledger"), last_day(ROOT / "data/ledger-v1")) if d is not None]
+    last = max(days) if days else None
     if last is None or last < LIVE_FROM:
         first = yesterday - timedelta(days=int(os.environ.get("BACKFILL_DAYS", "7")) - 1)
     else:

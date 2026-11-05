@@ -5,7 +5,7 @@
 # Usage: scripts/replay.sh <first-day> <last-day>
 # Variables: RPC (default local), CLUSTER, PAYER, FAULTS (config/faults.csv), NODES (1 2 3),
 #            FORECAST (1 = forecast after each batch; 0 = batches only), CONFIG (station catalog),
-#            OUTLOOK (1 = attest the forecast rain after each batch; live only)
+#            OUTLOOK (1 = attest the forecast rain after each batch; live only), LEDGER (data/ledger)
 set -euo pipefail
 cd "$(dirname "$0")/.."
 
@@ -19,6 +19,7 @@ NODES=${NODES:-1 2 3}
 FORECAST=${FORECAST:-1}
 OUTLOOK=${OUTLOOK:-0}
 CONFIG=${CONFIG:-config/stations.toml}
+LEDGER=${LEDGER:-data/ledger}
 BIN=target/release
 
 cargo build -q --release -p cota-oracle --bins
@@ -44,19 +45,19 @@ while [[ ! $day > $TO ]]; do
     pids+=($!)
   done
   for p in "${pids[@]}"; do wait "$p"; done
-  $BIN/cota-aggregator --rpc "$RPC" --cluster "$CLUSTER" --payer "$PAYER" --config "$CONFIG"
+  $BIN/cota-aggregator --rpc "$RPC" --cluster "$CLUSTER" --payer "$PAYER" --config "$CONFIG" --ledger "$LEDGER"
   if [[ $OUTLOOK == 1 ]]; then
     # Forecast rain: only valid right after the day's batch, before the next batch.
     for i in $NODES; do
       $BIN/cota-outlook observe --key "keys/node-$i.json" --day "$day" --out "data/nodes/node-$i/outlook" || true
     done
-    $BIN/cota-outlook anchor --rpc "$RPC" --cluster "$CLUSTER" --payer "$PAYER"
+    $BIN/cota-outlook anchor --rpc "$RPC" --cluster "$CLUSTER" --payer "$PAYER" --ledger "$LEDGER"
   fi
   if [[ $FORECAST == 1 ]]; then
     rm -f "data/forecasts/$day.json"
-    (cd ml && uv run -q python -m cota_ml.forecast --day "$day")
+    (cd ml && uv run -q python -m cota_ml.forecast --day "$day" --ledger "../$LEDGER")
     if [[ -f data/forecasts/$day.json ]]; then
-      $BIN/cota-admin --rpc "$RPC" --payer "$PAYER" commit-forecast --file "data/forecasts/$day.json" --cluster "$CLUSTER"
+      $BIN/cota-admin --rpc "$RPC" --payer "$PAYER" --ledger "$LEDGER" commit-forecast --file "data/forecasts/$day.json" --cluster "$CLUSTER"
     fi
   fi
   day=$(date -u -d "$day + 1 day" +%F)

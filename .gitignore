@@ -8,6 +8,7 @@ node_modules
 /data/raw
 /data/test-ledger
 /data/nodes
+/data/nodes-v1
 /data/forecasts
 .vercel
 /data/readings/history-*
