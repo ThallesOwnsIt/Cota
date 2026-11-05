@@ -2,14 +2,15 @@
   "program": "FnjR7wG5zicqWJ6KQuWQ5UcqqhcSghrYozVgMmmDFNwR",
   "registry": "6CNtD18LQ4bBZTGK1C2Z6RuJrSwyxCD3ToRpiWE3y9bR",
   "accumulator": {
-    "records": 129,
-    "on_chain": 129,
+    "records": 134,
+    "on_chain": 134,
     "peaks_match": true,
-    "root": "df6e75b7e61d73ded3964e423eb9c10dc00c1259c1b4a3ddc956099cb4eb0603",
+    "root": "7f55d0b91b0d474e2df4c13bd91c2eafa056c878e724c317b9618955c64585f8",
     "kinds": {
       "batch": 36,
       "degradation": 3,
       "forecast": 72,
+      "public_alert": 5,
       "station": 18
     }
   },
@@ -1720,7 +1721,48 @@
       "problems": []
     }
   ],
-  "public_alerts": [],
+  "public_alerts": [
+    {
+      "record_index": 133,
+      "alert_id": "urn:oid:2.49.0.0.76.0.2026.28634.1",
+      "slot": 519096974,
+      "committed_at": 1793919726,
+      "signers": 7,
+      "problems": []
+    },
+    {
+      "record_index": 129,
+      "alert_id": "urn:oid:2.49.0.0.76.0.2026.28619.1",
+      "slot": 519096943,
+      "committed_at": 1793919719,
+      "signers": 7,
+      "problems": []
+    },
+    {
+      "record_index": 132,
+      "alert_id": "urn:oid:2.49.0.0.76.0.2026.28624.1",
+      "slot": 519096966,
+      "committed_at": 1793919724,
+      "signers": 7,
+      "problems": []
+    },
+    {
+      "record_index": 131,
+      "alert_id": "urn:oid:2.49.0.0.76.0.2026.28623.1",
+      "slot": 519096958,
+      "committed_at": 1793919722,
+      "signers": 7,
+      "problems": []
+    },
+    {
+      "record_index": 130,
+      "alert_id": "urn:oid:2.49.0.0.76.0.2026.28622.1",
+      "slot": 519096951,
+      "committed_at": 1793919721,
+      "signers": 7,
+      "problems": []
+    }
+  ],
   "outlooks": [],
   "vaults": [
     {
@@ -1752,9 +1794,9 @@
     "forecasts_with_problems": 0,
     "outlooks": 0,
     "outlooks_with_problems": 0,
-    "public_alerts": 0,
+    "public_alerts": 5,
     "public_alerts_with_problems": 0,
-    "records": 129,
+    "records": 134,
     "unmatched": 0,
     "vault_payouts": 3,
     "vaults": 2,

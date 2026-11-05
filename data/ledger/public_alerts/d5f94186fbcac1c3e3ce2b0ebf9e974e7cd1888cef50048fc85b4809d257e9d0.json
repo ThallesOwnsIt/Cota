@@ -1,0 +1,35 @@
+{
+  "cluster": "devnet",
+  "committed_at": 1793919721,
+  "content": "{\"alterado\":false,\"aviso_cor\":\"#FFFE00\",\"codigo\":\"urn:oid:2.49.0.0.76.0.2026.28622.1\",\"created_at\":\"2026-11-04T00:00:00.000Z\",\"data_fim\":\"2026-11-07T00:00:00.000Z\",\"data_inicio\":\"2026-11-07T00:00:00.000Z\",\"descricao\":\"Ventos Costeiros\",\"encerrado\":false,\"estados\":\"Rio Grande do Sul,Santa Catarina,Paraná\",\"fim\":\"2026-11-07 23:59\",\"geocodes\":\"4300851,4201307,4201406,4301057,4301305,4201950,4202057,4202008,4202073,4212809,4301636,4220000,4301909,4202107,4202305,4202453,4303509,4203204,4203709,4304630,4304663,4203956,4304671,4304713,4305439,4305454,4204608,4306056,4306551,4205407,4205704,4206009,4109500,4109609,4207007,4207106,4207205,4310330,4207304,4208203,4208302,4208450,4311007,4208807,4209409,4311775,4210407,4115705,4312443,4312500,4211306,4313508,4211900,4313656,4118204,4212254,4212304,4314407,4212502,4212650,4119954,4213500,4315602,4215455,4215653,4317301,4215703,4317608,4216206,4216354,4216404,4216602,4318507,4318804,4217709,4321105,4321352,4321436,4218004,4321501,4321600,4321667,4321832,4218707,4322327,4323002,4323804\",\"hora_fim\":\"23:59\",\"hora_inicio\":\"00:01\",\"id_aviso\":28622,\"id_condicao_severa\":37,\"id_icone\":97,\"id_sequencia\":1,\"id_severidade\":6,\"id_usuario\":108,\"inicio\":\"2026-11-07 00:01\",\"instrucoes\":[\"Contate a Defesa Civil (telefone: 199).\"],\"issuer\":\"inmet\",\"mesorregioes\":\"Metropolitana de Porto Alegre,Norte Catarinense,Sul Catarinense,Sudeste Rio-grandense,Vale do Itajaí,Grande Florianópolis,Metropolitana de Curitiba\",\"microrregioes\":\"Camaquã,Joinville,Araranguá,Osório,Jaguarão,Itajaí,Criciúma,Florianópolis,Tijucas,Pelotas,Tubarão,Litoral Lagunar,Paranaguá,Porto Alegre\",\"municipios\":\"Arambaré - RS (4300851),Araquari - SC (4201307),Araranguá - SC (4201406),Arroio do Sal - RS (4301057),Arroio Grande - RS (4301305),Balneário Arroio do Silva - SC (4201950),Balneário Barra do Sul - SC (4202057),Balneário Camboriú - SC (4202008),Balneário Gaivota - SC (4202073),Balneário Piçarras - SC (4212809),Balneário Pinhal - RS (4301636),Balneário Rincão - SC (4220000),Barra do Ribeiro - RS (4301909),Barra Velha - SC (4202107),Biguaçu - SC (4202305),Bombinhas - SC (4202453),Camaquã - RS (4303509),Camboriú - SC (4203204),Canelinha - SC (4203709),Capão da Canoa - RS (4304630),Capão do Leão - RS (4304663),Capivari de Baixo - SC (4203956),Capivari do Sul - RS (4304671),Caraá - RS (4304713),Chuí - RS (4305439),Cidreira - RS (4305454),Criciúma - SC (4204608),Cristal - RS (4306056),Dom Pedro de Alcântara - RS (4306551),Florianópolis - SC (4205407),Garopaba - SC (4205704),Governador Celso Ramos - SC (4206009),Guaraqueçaba - PR (4109500),Guaratuba - PR (4109609),Içara - SC (4207007),Ilhota - SC (4207106),Imaruí - SC (4207205),Imbé - RS (4310330),Imbituba - SC (4207304),Itajaí - SC (4208203),Itapema - SC (4208302),Itapoá - SC (4208450),Jaguarão - RS (4311007),Jaguaruna - SC (4208807),Laguna - SC (4209409),Maquiné - RS (4311775),Maracajá - SC (4210407),Matinhos - PR (4115705),Morrinhos do Sul - RS (4312443),Mostardas - RS (4312500),Navegantes - SC (4211306),Osório - RS (4313508),Palhoça - SC (4211900),Palmares do Sul - RS (4313656),Paranaguá - PR (4118204),Passo de Torres - SC (4212254),Paulo Lopes - SC (4212304),Pelotas - RS (4314407),Penha - SC (4212502),Pescaria Brava - SC (4212650),Pontal do Paraná - PR (4119954),Porto Belo - SC (4213500),Rio Grande - RS (4315602),Sangão - SC (4215455),Santa Rosa do Sul - SC (4215653),Santa Vitória do Palmar - RS (4317301),Santo Amaro da Imperatriz - SC (4215703),Santo Antônio da Patrulha - RS (4317608),São Francisco do Sul - SC (4216206),São João do Itaperiú - SC (4216354),São João do Sul - SC (4216404),São José - SC (4216602),São José do Norte - RS (4318507),São Lourenço do Sul - RS (4318804),Sombrio - SC (4217709),Tapes - RS (4321105),Tavares - RS (4321352),Terra de Areia - RS (4321436),Tijucas - SC (4218004),Torres - RS (4321501),Tramandaí - RS (4321600),Três Cachoeiras - RS (4321667),Três Forquilhas - RS (4321832),Tubarão - SC (4218707),Turuçu - RS (4322327),Viamão - RS (4323002),Xangri-lá - RS (4323804)\",\"poligono\":\"{\\\"type\\\":\\\"Polygon\\\",\\\"coordinates\\\":[[[-48.140605,-25.23438],[-48.274862,-25.267498],[-48.439631,-25.493564],[-48.592195,-25.746694],[-48.671528,-25.94442],[-48.665426,-26.163727],[-48.659323,-26.377155],[-48.775272,-26.68838],[-48.756423,-26.988691],[-48.756423,-27.227718],[-48.683192,-27.552838],[-48.7015,-27.79065],[-48.768628,-28.162536],[-48.847961,-28.388272],[-49.043243,-28.592095],[-49.580269,-29.003896],[-49.775551,-29.201193],[-50.037961,-29.52564],[-50.172217,-29.706029],[-51.295089,-30.424338],[-51.478166,-30.744821],[-51.999167,-31.347568],[-52.347013,-31.685736],[-52.664346,-32.100258],[-53.085422,-32.626056],[-53.109833,-32.887804],[-53.418806,-33.48152],[-53.406601,-33.705197],[-53.28455,-33.776246],[-53.034345,-33.63409],[-52.771935,-33.394944],[-52.485114,-33.083579],[-52.326448,-32.627309],[-52.131166,-32.313233],[-51.874858,-32.086008],[-51.33173,-31.733729],[-50.953637,-31.415243],[-50.599689,-31.107454],[-50.282355,-30.520428],[-49.708715,-29.442065],[-49.354766,-29.096024],[-49.110663,-28.861118],[-48.671279,-28.539934],[-48.360048,-27.732695],[-48.262407,-27.39727],[-48.390562,-26.984712],[-48.451587,-26.65248],[-48.421074,-26.220774],[-48.067126,-25.479336],[-48.140605,-25.23438]]]}\",\"referencia\":null,\"regioes\":\"Sul\",\"riscos\":[\"Intensificação dos ventos nas regiões litorâneas, movimentando dunas de areia sobre construções na orla.\"],\"severidade\":\"Perigo Potencial\",\"updated_at\":\"2026-11-04T00:00:00.000Z\"}",
+  "description": "Ventos Costeiros",
+  "explorer": "https://explorer.solana.com/tx/4UUnATsxvuutHBkWdR97N4eZTmmuCC4bypcK1H5m2hMcqdxdfhcX7AQoWAk7XKiT5e377hyRCixPXFb6TtWoEoDB?cluster=devnet",
+  "header": {
+    "alert_id": "urn:oid:2.49.0.0.76.0.2026.28622.1",
+    "content_sha256": "d5f94186fbcac1c3e3ce2b0ebf9e974e7cd1888cef50048fc85b4809d257e9d0",
+    "expires": 1794106740,
+    "issuer": "inmet",
+    "onset": 1794020460,
+    "severity": 1
+  },
+  "observations": [
+    {
+      "member": "AFbz6rqf4u7pexBHadriqd9VNDh74KGqEeZG5eeQKTs3",
+      "seen_at": 1793919639
+    },
+    {
+      "member": "B4FwxN42zWyiSKU7qwvbpchy7uDD8ugnzX43B9mPd38L",
+      "seen_at": 1793919602
+    },
+    {
+      "member": "GS3uQUPgfCDXqtbpD6vPyNpQgRcDUFj1fhF4wYGk9ist",
+      "seen_at": 1793919582
+    }
+  ],
+  "record_index": 130,
+  "severity_label": "Perigo Potencial",
+  "signers": 7,
+  "slot": 519096951,
+  "states": "Rio Grande do Sul,Santa Catarina,Paraná",
+  "tx_signature": "4UUnATsxvuutHBkWdR97N4eZTmmuCC4bypcK1H5m2hMcqdxdfhcX7AQoWAk7XKiT5e377hyRCixPXFb6TtWoEoDB"
+}
