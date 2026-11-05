@@ -5,7 +5,7 @@ use std::path::PathBuf;
 use anchor_lang::prelude::Pubkey;
 use anyhow::{bail, Context, Result};
 use clap::{Parser, Subcommand};
-use cota_oracle::{chain, keys, outlook, rpc::{explorer_tx, Rpc}};
+use cota_oracle::{chain, chain::Record, keys, outlook, records, rpc::{explorer_tx, Rpc}};
 use serde::Deserialize;
 use serde_json::json;
 use solana_signer::Signer;
@@ -18,13 +18,16 @@ struct Args {
     /// Wallet of the committee authority.
     #[arg(long)]
     payer: PathBuf,
+    /// Ledger whose `records.jsonl` mirrors the accumulator.
+    #[arg(long, global = true, default_value = "data/ledger")]
+    ledger: PathBuf,
     #[command(subcommand)]
     cmd: Cmd,
 }
 
 #[derive(Subcommand)]
 enum Cmd {
-    /// Creates the committee with the nodes' public keys.
+    /// Creates the registry with the committee's public keys.
     Init {
         /// The nodes' keypairs (only the public half goes on-chain).
         #[arg(long, num_args = 1.., required = true)]
@@ -32,7 +35,7 @@ enum Cmd {
         #[arg(long, default_value_t = 2)]
         threshold: u8,
     },
-    /// Registers on-chain the catalog stations that do not exist yet.
+    /// Registers on-chain the catalog stations not registered yet.
     RegisterStations {
         #[arg(long, default_value = "config/stations.toml")]
         config: PathBuf,
@@ -48,9 +51,6 @@ enum Cmd {
         file: PathBuf,
         #[arg(long, default_value = "devnet")]
         cluster: String,
-        /// Where to record the accounts and transactions created.
-        #[arg(long, default_value = "data/ledger")]
-        ledger: PathBuf,
     },
     /// Hands the committee authority to another key (e.g. the GitHub Actions operator).
     SetAuthority {
@@ -95,6 +95,7 @@ fn main() -> Result<()> {
     let args = Args::parse();
     let rpc = Rpc::new(&args.rpc)?;
     let payer = keys::load_keypair(&args.payer)?;
+    let ledger = &args.ledger;
 
     match args.cmd {
         Cmd::Init { members, threshold } => {
@@ -102,19 +103,26 @@ fn main() -> Result<()> {
                 .iter()
                 .map(|p| keys::load_signing_key(p).map(|k| Pubkey::new_from_array(k.verifying_key().to_bytes())))
                 .collect::<Result<Vec<_>>>()?;
-            let sig = rpc.send_and_confirm(&[chain::init_committee_instruction(payer.pubkey(), pubkeys.clone(), threshold)], &payer)?;
-            eprintln!("comitê {threshold}-de-{} criado em {}\n  tx {sig}", pubkeys.len(), chain::committee_pda());
+            let sig = rpc.send_and_confirm(&[chain::init_registry_instruction(payer.pubkey(), pubkeys.clone(), threshold)], &payer)?;
+            eprintln!("registry {threshold}-de-{} criado em {}\n  tx {sig}", pubkeys.len(), chain::registry_pda());
         }
         Cmd::RegisterStations { config } => {
+            records::sync(&rpc, ledger)?;
+            let registered: Vec<String> = records::load(ledger)?
+                .iter()
+                .filter_map(|s| match s.decode() {
+                    Ok(Record::Station(st)) => Some(st.station.station_id),
+                    _ => None,
+                })
+                .collect();
             for st in cota_ingest::config::load(&config)? {
-                let pda = chain::station_pda(&st.id);
-                if rpc.account_data(&pda)?.is_some() {
+                if registered.contains(&st.id) {
                     eprintln!("{:<16} já registrada", st.id);
                     continue;
                 }
-                rpc.send_and_confirm(&[chain::register_station_instruction(payer.pubkey(), &st)], &payer)
+                let (_, appended) = records::send(&rpc, ledger, &[chain::register_station_instruction(payer.pubkey(), &st)], &payer, &[])
                     .with_context(|| format!("registrando {}", st.id))?;
-                eprintln!("{:<16} registrada em {pda}", st.id);
+                eprintln!("{:<16} registrada (registro {})", st.id, appended[0].index);
             }
         }
         Cmd::SetAlertRule { manifest } => {
@@ -126,18 +134,17 @@ fn main() -> Result<()> {
             let sig = rpc.send_and_confirm(&[chain::set_alert_rule_instruction(payer.pubkey(), station, threshold, level)], &payer)?;
             eprintln!("regra de alerta {station}: P90 ≥ {:.0} (nível {level}) em {}\n  tx {sig}", threshold as f64 / 1000.0, chain::alert_rule_pda(station));
         }
-        Cmd::CommitForecast { file, cluster, ledger } => {
+        Cmd::CommitForecast { file, cluster } => {
             let f: ForecastFile = serde_json::from_str(&std::fs::read_to_string(&file)?)
                 .with_context(|| format!("interpretando {}", file.display()))?;
-            let committee = chain::decode_committee(&rpc.account_data(&chain::committee_pda())?.context("comitê não inicializado")?)?;
-            if committee.next_batch_id - 1 != f.based_on_batch_id || hex::encode(committee.last_batch_root) != f.based_on_root {
-                bail!("a previsão foi feita sobre o lote {}, mas o último ancorado é {}", f.based_on_batch_id, committee.next_batch_id - 1);
+            let registry = chain::decode_registry(&rpc.account_data(&chain::registry_pda())?.context("registry not initialized")?)?;
+            if registry.next_batch_id - 1 != f.based_on_batch_id || hex::encode(registry.last_batch_root) != f.based_on_root {
+                bail!("a previsão foi feita sobre o lote {}, mas o último ancorado é {}", f.based_on_batch_id, registry.next_batch_id - 1);
             }
-            let rule = rpc.account_data(&chain::alert_rule_pda(&f.station_id))?.map(|d| chain::decode_alert_rule(&d)).transpose()?;
 
-            let mut records = Vec::new();
+            let mut onchain = Vec::new();
             for h in &f.forecasts {
-                let args = cota::ForecastArgs {
+                let args = chain::ForecastArgs {
                     station_id: f.station_id.clone(),
                     target_ts: h.target_ts,
                     horizon_hours: h.horizon_hours,
@@ -147,19 +154,12 @@ fn main() -> Result<()> {
                     model_sha256: hex32(&f.model_sha256)?,
                     features_root: hex32(&f.features_root)?,
                 };
-                let pda = chain::forecast_pda(&f.station_id, f.based_on_batch_id, h.target_ts);
-                let tx = rpc.send_and_confirm(&[chain::commit_forecast_instruction(payer.pubkey(), f.based_on_batch_id, args)], &payer)?;
-                let mut alert = None;
-                if let Some(r) = rule.as_ref().filter(|r| h.p90 >= r.threshold_milli) {
-                    let atx = rpc.send_and_confirm(&[chain::issue_alert_instruction(payer.pubkey(), pda, &f.station_id)], &payer)?;
-                    alert = Some(json!({
-                        "account": chain::alert_pda(&pda).to_string(),
-                        "threshold_milli": r.threshold_milli,
-                        "level": r.level,
-                        "tx_signature": atx,
-                        "explorer": explorer_tx(&atx, &cluster),
-                    }));
-                }
+                let (tx, appended) =
+                    records::send(&rpc, ledger, &[chain::commit_forecast_instruction(payer.pubkey(), args)], &payer, &[])?;
+                let a = appended.first().context("commit_forecast emitted no record")?;
+                let Record::Forecast(rec) = a.record()? else { bail!("record {} is not a forecast", a.index) };
+                // The alert, if any, was decided by the program in the same instruction.
+                let alert = rec.alert.as_ref().map(|al| json!({ "threshold_milli": al.threshold_milli, "level": al.level }));
                 eprintln!(
                     "{} +{}h: P10 {:.0}  P50 {:.0}  P90 {:.0}{}",
                     f.issue_day,
@@ -169,11 +169,13 @@ fn main() -> Result<()> {
                     h.p90 as f64 / 1e3,
                     if alert.is_some() { "  → ALERTA" } else { "" }
                 );
-                records.push(json!({
+                onchain.push(json!({
                     "horizon_hours": h.horizon_hours,
                     "target_ts": h.target_ts,
                     "p10": h.p10, "p50": h.p50, "p90": h.p90,
-                    "account": pda.to_string(),
+                    "record_index": a.index,
+                    "slot": rec.slot,
+                    "committed_at": rec.committed_at,
                     "tx_signature": tx,
                     "explorer": explorer_tx(&tx, &cluster),
                     "alert": alert,
@@ -181,7 +183,7 @@ fn main() -> Result<()> {
             }
             let mut entry: serde_json::Value = serde_json::from_str(&std::fs::read_to_string(&file)?)?;
             entry["cluster"] = json!(cluster);
-            entry["onchain"] = json!(records);
+            entry["onchain"] = json!(onchain);
             let dir = ledger.join("forecasts");
             std::fs::create_dir_all(&dir)?;
             std::fs::write(dir.join(format!("{}.json", f.issue_day)), serde_json::to_string_pretty(&entry)?)?;
@@ -196,7 +198,7 @@ fn main() -> Result<()> {
         }
         Cmd::SetOutlookRule { rule } => {
             let r = outlook::load_rule(&rule)?;
-            let args = cota::OutlookRuleArgs {
+            let args = chain::OutlookRuleArgs {
                 region: r.spec.region.clone(),
                 threshold_milli: r.threshold_milli(),
                 window_secs: r.window_secs(),
@@ -217,17 +219,21 @@ fn main() -> Result<()> {
         Cmd::Status => {
             println!("programa   {}", chain::PROGRAM_ID);
             println!("carteira   {} ({:.4} SOL)", payer.pubkey(), rpc.balance(&payer.pubkey())? as f64 / 1e9);
-            match rpc.account_data(&chain::committee_pda())? {
-                None => println!("comitê     não inicializado"),
+            match rpc.account_data(&chain::registry_pda())? {
+                None => println!("registry   não inicializado"),
                 Some(data) => {
-                    let c = chain::decode_committee(&data)?;
-                    println!("comitê     {} ({}-de-{})", chain::committee_pda(), c.threshold, c.members.len());
-                    println!("autoridade {}", c.authority);
-                    for (i, m) in c.members.iter().enumerate() {
+                    let r = chain::decode_registry(&data)?;
+                    println!("registry   {} ({}-de-{})", chain::registry_pda(), r.threshold, r.members.len());
+                    println!("autoridade {}", r.authority);
+                    for (i, m) in r.members.iter().enumerate() {
                         println!("  membro {i}  {m}");
                     }
-                    println!("próximo    lote {}", c.next_batch_id);
-                    println!("últ. raiz  {}", hex::encode(c.last_batch_root));
+                    println!("próximo    lote {}", r.next_batch_id);
+                    println!("últ. raiz  {}", hex::encode(r.last_batch_root));
+                    println!("registros  {} na árvore", r.leaf_count);
+                    let local = records::load(ledger)?;
+                    let ok = records::mmr(&local).map(|m| m.peaks() == r.peaks && m.len() == r.leaf_count).unwrap_or(false);
+                    println!("ledger     {} registros, {}", local.len(), if ok { "picos conferem" } else { "DIVERGE da cadeia (rode sync)" });
                     if let Some(rule) = rpc.account_data(&chain::alert_rule_pda("GLOFAS-GUAIBA"))? {
                         let r = chain::decode_alert_rule(&rule)?;
                         println!("alerta     {} P90 ≥ {:.0}", r.station_id, r.threshold_milli as f64 / 1000.0);

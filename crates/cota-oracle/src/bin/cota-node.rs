@@ -26,7 +26,7 @@ struct Args {
     /// UTC day to anchor.
     #[arg(long)]
     day: NaiveDate,
-    /// RPC used to read the committee state (next_batch_id, last_batch_root).
+    /// RPC used to read the registry state (next_batch_id, last_batch_root).
     #[arg(long, conflicts_with_all = ["batch_id", "prev_root"])]
     rpc: Option<String>,
     #[arg(long, requires = "prev_root")]
@@ -52,9 +52,9 @@ fn main() -> Result<()> {
 
     let (batch_id, prev_root) = match (&args.rpc, args.batch_id, &args.prev_root) {
         (Some(url), _, _) => {
-            let data = Rpc::new(url)?.account_data(&chain::committee_pda())?.context("comitê não inicializado on-chain")?;
-            let c = chain::decode_committee(&data)?;
-            (c.next_batch_id, c.last_batch_root)
+            let data = Rpc::new(url)?.account_data(&chain::registry_pda())?.context("registry not initialized on-chain")?;
+            let r = chain::decode_registry(&data)?;
+            (r.next_batch_id, r.last_batch_root)
         }
         (None, Some(id), Some(root)) => {
             let mut r = [0u8; 32];

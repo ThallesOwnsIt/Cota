@@ -7,9 +7,9 @@
 
 use std::path::{Path, PathBuf};
 
-use anyhow::{Context, Result};
+use anyhow::{bail, Context, Result};
 use clap::{Parser, Subcommand};
-use cota_oracle::{attest, chain, inmet_alerts, keys, rpc::{explorer_tx, Rpc}};
+use cota_oracle::{attest, chain, chain::Record, inmet_alerts, keys, records, rpc::{explorer_tx, Rpc}};
 use serde_json::json;
 use solana_signer::Signer;
 
@@ -80,7 +80,8 @@ fn observe(key: &Path, out: &Path, states: &[String], input: Option<&Path>) -> R
 fn anchor(rpc_url: &str, cluster: &str, payer: &Path, nodes_dir: &Path, ledger: &Path) -> Result<()> {
     let rpc = Rpc::new(rpc_url)?;
     let payer = keys::load_keypair(payer)?;
-    let committee = chain::decode_committee(&rpc.account_data(&chain::committee_pda())?.context("comitê não inicializado")?)?;
+    let committee = chain::decode_registry(&rpc.account_data(&chain::registry_pda())?.context("registry not initialized")?)?;
+    records::sync(&rpc, ledger)?;
     let members: Vec<[u8; 32]> = committee.members.iter().map(|m| m.to_bytes()).collect();
 
     let mut subs = Vec::new();
@@ -105,16 +106,24 @@ fn anchor(rpc_url: &str, cluster: &str, payer: &Path, nodes_dir: &Path, ledger: 
     for a in attest::select(&members, committee.threshold as usize, &subs)? {
         let sha = hex::encode(a.header.content_sha256);
         let file = out_dir.join(format!("{sha}.json"));
-        let pda = chain::public_alert_pda(&a.header.content_sha256);
         if file.exists() {
             continue;
         }
-        let tx = if rpc.account_data(&pda)?.is_some() {
-            None // already anchored by another run; only the local record is missing
-        } else {
-            Some(rpc.send_and_confirm(&chain::record_public_alert_instructions(payer.pubkey(), &a.header, &a.signatures), &payer)?)
+        // The earliest record of this version is the one that counts; another run may have made it already.
+        let existing = records::load(ledger)?.into_iter().find(|s| {
+            matches!(s.decode(), Ok(Record::PublicAlert(p)) if p.header.content_sha256 == a.header.content_sha256)
+        });
+        let (index, tx) = match existing {
+            Some(s) => (s.index, s.tx),
+            None => {
+                let ixs = chain::record_public_alert_instructions(payer.pubkey(), &a.header, &a.signatures);
+                let (tx, appended) = records::send(&rpc, ledger, &ixs, &payer, &[])?;
+                (appended.first().context("record_public_alert emitted no record")?.index, tx)
+            }
         };
-        let rec = chain::decode_public_alert(&rpc.account_data(&pda)?.context("aviso não apareceu on-chain")?)?;
+        let Record::PublicAlert(rec) = records::load(ledger)?[index as usize].decode()? else {
+            bail!("record {index} is not an official warning")
+        };
         let first = &a.observations[0];
         let entry = json!({
             "header": a.header,
@@ -122,12 +131,12 @@ fn anchor(rpc_url: &str, cluster: &str, payer: &Path, nodes_dir: &Path, ledger: 
             "description": first.description,
             "severity_label": first.severity_label,
             "states": first.states,
-            "record": pda.to_string(),
+            "record_index": index,
             "slot": rec.slot,
             "committed_at": rec.committed_at,
             "signers": rec.signers,
+            "explorer": explorer_tx(&tx, cluster),
             "tx_signature": tx,
-            "explorer": tx.as_ref().map(|t| explorer_tx(t, cluster)),
             "cluster": cluster,
             "observations": a.observations.iter().map(|o| json!({"member": o.node, "seen_at": o.seen_at})).collect::<Vec<_>>(),
         });

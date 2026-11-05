@@ -6,7 +6,7 @@ use std::path::PathBuf;
 
 use anyhow::{bail, Context, Result};
 use clap::Parser;
-use cota_oracle::{aggregate, chain, keys, ledger, node::SignedBatch, quality, rpc::Rpc};
+use cota_oracle::{aggregate, chain, keys, ledger, node::SignedBatch, quality, records, rpc::Rpc};
 use cota_quality::Limits;
 use solana_signer::Signer;
 
@@ -40,8 +40,8 @@ fn main() -> Result<()> {
     let rpc = Rpc::new(&args.rpc)?;
     let payer = keys::load_keypair(&args.payer)?;
 
-    let committee = chain::decode_committee(
-        &rpc.account_data(&chain::committee_pda())?.context("comitê não inicializado on-chain")?,
+    let committee = chain::decode_registry(
+        &rpc.account_data(&chain::registry_pda())?.context("registry not initialized on-chain")?,
     )?;
     let batch_id = committee.next_batch_id;
     let members: Vec<[u8; 32]> = committee.members.iter().map(|m| m.to_bytes()).collect();
@@ -63,15 +63,15 @@ fn main() -> Result<()> {
     }
 
     let ixs = chain::commit_batch_instructions(payer.pubkey(), &agg.header, &agg.signatures);
-    let sig = rpc.send_and_confirm(&ixs, &payer)?;
-    let account = chain::batch_pda(batch_id);
+    let (sig, appended) = records::send(&rpc, &args.ledger, &ixs, &payer, &[])?;
+    let record_index = appended.first().context("commit_batch emitted no record")?.index;
 
     // Quality of the batch just anchored: the report goes on-chain "on the spot".
     let catalog: Vec<_> = cota_ingest::config::load(&args.config)?.into_iter().map(|s| (s.id, s.source)).collect();
     let limits = Limits::load(&args.limits)?;
     let mut outcome = quality::evaluate(&args.ledger.join("quality-state.json"), &limits, &catalog, &agg)?;
     // The batch is already on-chain: record it before any other transaction can fail.
-    ledger::write_entry(&args.ledger, &agg, account.to_string(), sig.clone(), &args.cluster, &outcome)?;
+    ledger::write_entry(&args.ledger, &agg, record_index, sig.clone(), &args.cluster, &outcome)?;
     let authority = match &args.authority {
         Some(p) => keys::load_keypair(p)?,
         None => payer.insecure_clone(),
@@ -80,7 +80,7 @@ fn main() -> Result<()> {
         let Some(reason) = q.degraded else { continue };
         let score_milli = (q.score * 1000.0).round().clamp(0.0, 1000.0) as u16;
         let ix = chain::report_degradation_instruction(authority.pubkey(), batch_id, &q.station_id, score_milli, reason as u8);
-        let tx = rpc.send_and_confirm_with(&[ix], &payer, &[&authority])?;
+        let (tx, _) = records::send(&rpc, &args.ledger, &[ix], &payer, &[&authority])?;
         eprintln!("  SourceDegraded {} ({reason:?}, C={:.3})", q.station_id, q.score);
         outcome.degradations.push(quality::DegradationReport {
             station_id: q.station_id.clone(),
@@ -90,7 +90,7 @@ fn main() -> Result<()> {
             tx_signature: tx,
         });
     }
-    ledger::write_entry(&args.ledger, &agg, account.to_string(), sig.clone(), &args.cluster, &outcome)?;
+    ledger::write_entry(&args.ledger, &agg, record_index, sig.clone(), &args.cluster, &outcome)?;
 
     let statuses: Vec<String> = agg
         .members

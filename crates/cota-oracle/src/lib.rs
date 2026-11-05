@@ -9,4 +9,8 @@ pub mod ledger;
 pub mod node;
 pub mod outlook;
 pub mod quality;
+pub mod records;
 pub mod rpc;
+
+/// Which program the committee signs for. v1 (`4FCh…`) is a frozen archive; see `docs/v2-accumulator.md`.
+pub const PROTOCOL: cota_core::Protocol = cota_core::Protocol::V2;

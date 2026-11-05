@@ -1,15 +1,19 @@
-//! Independent audit: checks the local ledger against the on-chain accounts.
+//! Independent audit: checks the local ledger against the chain.
+//!
+//! First the accumulator: `records.jsonl` is rebuilt into an MMR and its peaks must equal the ones in the
+//! on-chain `Registry`. One account read proves that every record in the file is exactly what the program
+//! accepted, in that order. Every other check runs on those proven records:
 //!
 //! For each batch: the Merkle root recomputed from the readings, the chaining and the signers.
 //! For each forecast: quantiles, `model_sha256`, recomputed `features_root`, the batch it was based on
-//! and, by slot, that it was recorded before the batch containing the forecast observation.
-//! For each alert: P90 ≥ threshold and also recorded before the observation.
-//! For each official warning: the SHA-256 of the stored content matches the on-chain account.
-//! For each rain outlook: the stored content reproduces the header under the published
-//! rule, the hash and the rule's result match the account, and it was recorded before the
-//! first day of the window was anchored.
-//! For each vault: every payout exists on-chain, points to a valid trigger of the vault's type and
+//! and, by slot, that it was recorded before the batch containing the forecast observation. If it carries
+//! an alert: P90 ≥ the station's rule.
+//! For each official warning: the SHA-256 of the stored content matches the record.
+//! For each rain outlook: the stored content reproduces the header under the published rule, the hash and
+//! the rule's result match the record, and it was recorded before the next batch.
+//! For each vault: every payout exists on-chain, points to a valid trigger record of the vault's type and
 //! subject, and the vault's totals match the sum of the payouts.
+//! Completeness: every batch, forecast, warning and outlook record has its ledger file.
 
 use std::collections::BTreeMap;
 use std::path::PathBuf;
@@ -17,8 +21,13 @@ use std::path::PathBuf;
 use anchor_lang::prelude::Pubkey;
 use anyhow::{Context, Result};
 use clap::Parser;
-use cota_core::{merkle, Reading};
-use cota_oracle::{chain, outlook, rpc::Rpc};
+use cota_core::{merkle, mmr, Reading};
+use cota_oracle::{
+    chain::{self, Record},
+    outlook, records,
+    rpc::Rpc,
+};
+use cota_v2::{BatchRecord, ForecastRecord, OutlookRecord, PublicAlertRecord};
 use serde::Serialize;
 use serde_json::Value;
 
@@ -34,8 +43,19 @@ struct Args {
 }
 
 #[derive(Serialize)]
+struct AccumulatorAudit {
+    records: u64,
+    on_chain: u64,
+    peaks_match: bool,
+    /// The peaks folded into one hash (`cota_core::mmr::bag`): what gets timestamped off-chain.
+    root: Option<String>,
+    kinds: BTreeMap<&'static str, usize>,
+}
+
+#[derive(Serialize)]
 struct BatchAudit {
     batch_id: u64,
+    record_index: u64,
     day: String,
     t_start: i64,
     t_end: i64,
@@ -50,7 +70,7 @@ struct ForecastAudit {
     issue_day: String,
     horizon_hours: u16,
     target_ts: i64,
-    account: String,
+    record_index: u64,
     slot: u64,
     p10: i64,
     p50: i64,
@@ -66,15 +86,16 @@ struct ForecastAudit {
 
 #[derive(Serialize)]
 struct AlertAudit {
-    account: String,
-    slot: u64,
     threshold_milli: i64,
+    level: u8,
+    /// The alert is decided in the forecast's own instruction, so it has the forecast's slot.
+    slot: u64,
     recorded_before_observation: Option<bool>,
 }
 
 #[derive(Serialize)]
 struct PublicAlertAudit {
-    record: String,
+    record_index: u64,
     alert_id: String,
     slot: u64,
     committed_at: i64,
@@ -85,7 +106,7 @@ struct PublicAlertAudit {
 #[derive(Serialize)]
 struct OutlookAudit {
     day: String,
-    record: String,
+    record_index: u64,
     rain_mean_milli: i64,
     triggered: bool,
     slot: u64,
@@ -106,15 +127,21 @@ struct VaultAudit {
 #[derive(Serialize)]
 struct Report {
     program: String,
+    accumulator: AccumulatorAudit,
     batches: Vec<BatchAudit>,
     forecasts: Vec<ForecastAudit>,
     public_alerts: Vec<PublicAlertAudit>,
     outlooks: Vec<OutlookAudit>,
     vaults: Vec<VaultAudit>,
+    /// Records with no ledger file (or ledger files pointing at the wrong record).
+    unmatched: Vec<String>,
     summary: BTreeMap<&'static str, usize>,
 }
 
 fn read_dir_sorted(dir: &std::path::Path) -> Result<Vec<Value>> {
+    if !dir.exists() {
+        return Ok(vec![]);
+    }
     let mut files: Vec<_> = std::fs::read_dir(dir)
         .with_context(|| format!("lendo {}", dir.display()))?
         .map(|e| e.map(|e| e.path()))
@@ -139,51 +166,93 @@ fn check(problems: &mut Vec<String>, ok: bool, what: &str) {
 fn main() -> Result<()> {
     let args = Args::parse();
     let rpc = Rpc::new(&args.rpc)?;
-    let committee = chain::decode_committee(&rpc.account_data(&chain::committee_pda())?.context("comitê não encontrado")?)?;
+    let registry = chain::decode_registry(&rpc.account_data(&chain::registry_pda())?.context("registry não encontrado")?)?;
 
-    // Batches.
+    // 1. The accumulator: the file must rebuild exactly the on-chain peaks.
+    let stored = records::load(&args.ledger)?;
+    let tree = records::mmr(&stored)?;
+    let peaks_match = tree.len() == registry.leaf_count && tree.peaks() == registry.peaks;
+    let decoded: Vec<Record> = stored.iter().map(|s| s.decode()).collect::<Result<_>>()?;
+    let mut kinds = BTreeMap::new();
+    for r in &decoded {
+        *kinds.entry(records::kind(r)).or_insert(0) += 1;
+    }
+    let accumulator = AccumulatorAudit {
+        records: tree.len(),
+        on_chain: registry.leaf_count,
+        peaks_match,
+        root: mmr::bag(&registry.peaks, registry.leaf_count).map(hex::encode),
+        kinds,
+    };
+    anyhow::ensure!(
+        peaks_match,
+        "records.jsonl ({} registros) não reconstrói os picos on-chain ({} registros): rode `records sync` ou investigue",
+        tree.len(),
+        registry.leaf_count
+    );
+
+    let batch_records: BTreeMap<u64, (u64, &BatchRecord)> = decoded
+        .iter()
+        .enumerate()
+        .filter_map(|(i, r)| match r {
+            Record::Batch(b) => Some((b.header.batch_id, (i as u64, b))),
+            _ => None,
+        })
+        .collect();
+    let mut unmatched = Vec::new();
+    let mut seen = std::collections::BTreeSet::new();
+    let get = |index: u64| -> Option<&Record> { decoded.get(index as usize) };
+
+    // 2. Batches.
     let mut batches = Vec::new();
-    let mut by_id: BTreeMap<u64, (BatchAudit, Vec<Reading>, [u8; 32])> = BTreeMap::new();
+    let mut by_id: BTreeMap<u64, (u64, Vec<Reading>)> = BTreeMap::new();
     let mut prev = [0u8; 32];
     for e in read_dir_sorted(&args.ledger.join("batches"))? {
         let id = e["batch_id"].as_u64().context("batch_id")?;
         let readings: Vec<Reading> = serde_json::from_value(e["readings"].clone())?;
         let root = merkle::root_from_leaves(&readings.iter().map(|r| merkle::hash_leaf(&r.canonical_bytes())).collect::<Vec<_>>());
-        let acc = chain::decode_batch(&rpc.account_data(&chain::batch_pda(id))?.with_context(|| format!("lote {id} não está on-chain"))?)?;
-
+        let Some(&(index, rec)) = batch_records.get(&id) else {
+            unmatched.push(format!("lote {id} do ledger não está no acumulador"));
+            continue;
+        };
+        seen.insert(index);
+        let h = &rec.header;
         let mut problems = Vec::new();
-        check(&mut problems, root == acc.merkle_root, "raiz recalculada difere da on-chain");
-        check(&mut problems, hex32(&e["header"]["merkle_root"])? == acc.merkle_root, "raiz do ledger difere da on-chain");
-        check(&mut problems, acc.prev_batch_root == prev, "encadeamento quebrado");
-        check(&mut problems, acc.leaf_count as usize == readings.len(), "leaf_count difere");
+        check(&mut problems, e["record_index"].as_u64() == Some(index), "record_index do ledger difere");
+        check(&mut problems, root == h.merkle_root, "raiz recalculada difere da registrada");
+        check(&mut problems, hex32(&e["header"]["merkle_root"])? == h.merkle_root, "raiz do ledger difere da registrada");
+        check(&mut problems, h.prev_batch_root == prev, "encadeamento quebrado");
+        check(&mut problems, h.leaf_count as usize == readings.len(), "leaf_count difere");
         let mut bitmap = 0u8;
         for s in e["signatures"].as_array().context("signatures")? {
             let pk: Pubkey = s["member"].as_str().context("member")?.parse().map_err(|_| anyhow::anyhow!("chave inválida"))?;
-            if let Some(i) = committee.members.iter().position(|m| *m == pk) {
+            if let Some(i) = registry.members.iter().position(|m| *m == pk) {
                 bitmap |= 1 << i;
             }
         }
-        check(&mut problems, bitmap == acc.signers, "assinantes do ledger diferem do bitmap on-chain");
-        prev = acc.merkle_root;
-
-        let audit = BatchAudit {
+        check(&mut problems, bitmap == rec.signers, "assinantes do ledger diferem do bitmap registrado");
+        check(&mut problems, rec.signer_count >= registry.threshold, "assinaturas abaixo do limiar");
+        prev = h.merkle_root;
+        batches.push(BatchAudit {
             batch_id: id,
+            record_index: index,
             day: e["day"].as_str().unwrap_or_default().to_string(),
-            t_start: acc.t_start,
-            t_end: acc.t_end,
-            slot: acc.slot,
-            committed_at: acc.committed_at,
-            signers: acc.signers,
+            t_start: h.t_start,
+            t_end: h.t_end,
+            slot: rec.slot,
+            committed_at: rec.committed_at,
+            signers: rec.signers,
             problems,
-        };
-        by_id.insert(id, (audit, readings, acc.merkle_root));
+        });
+        by_id.insert(id, (index, readings));
     }
+    let batch_of = |ts: i64| batches.iter().find(|b| b.t_start <= ts && ts < b.t_end);
 
-    // Forecasts and alerts.
+    // 3. Forecasts and their alerts.
+    let rule_accounts: BTreeMap<String, Option<cota_v2::AlertRule>> = BTreeMap::new();
+    let mut rule_accounts = rule_accounts;
     let mut forecasts = Vec::new();
-    let forecast_dir = args.ledger.join("forecasts");
-    let files = if forecast_dir.exists() { read_dir_sorted(&forecast_dir)? } else { vec![] };
-    for f in files {
+    for f in read_dir_sorted(&args.ledger.join("forecasts"))? {
         let station = f["station_id"].as_str().context("station_id")?;
         let based_on = f["based_on_batch_id"].as_u64().context("based_on_batch_id")?;
         let leaves: Vec<_> = f["features"]
@@ -196,101 +265,121 @@ fn main() -> Result<()> {
             })
             .collect();
         let features_root = merkle::root_from_leaves(&leaves);
+        if !rule_accounts.contains_key(station) {
+            let rule = rpc.account_data(&chain::alert_rule_pda(station))?.map(|d| chain::decode_alert_rule(&d)).transpose()?;
+            rule_accounts.insert(station.to_string(), rule);
+        }
+        let rule = rule_accounts[station].as_ref();
 
         for rec in f["onchain"].as_array().context("onchain")? {
-            let pda: Pubkey = rec["account"].as_str().context("account")?.parse().map_err(|_| anyhow::anyhow!("conta inválida"))?;
-            let acc = chain::decode_forecast(&rpc.account_data(&pda)?.with_context(|| format!("previsão {pda} não está on-chain"))?)?;
-            let mut problems = Vec::new();
-            check(&mut problems, acc.station_id == station, "estação difere");
-            check(&mut problems, acc.based_on_batch_id == based_on, "lote-base difere");
-            check(&mut problems, (acc.p10, acc.p50, acc.p90) == (rec["p10"].as_i64().unwrap_or(-1), rec["p50"].as_i64().unwrap_or(-1), rec["p90"].as_i64().unwrap_or(-1)), "quantis diferem");
-            check(&mut problems, acc.model_sha256 == hex32(&f["model_sha256"])?, "model_sha256 difere");
-            check(&mut problems, acc.features_root == features_root, "features_root recalculada difere");
-            if let Some((base, _, root)) = by_id.get(&based_on) {
-                check(&mut problems, acc.based_on_root == *root, "based_on_root não é a raiz do lote-base");
-                check(&mut problems, acc.issued_at == base.t_end, "issued_at não é o fim da janela do lote-base");
-            } else {
-                problems.push("lote-base ausente do ledger".into());
-            }
-
-            // Batch containing the forecast reading.
-            let target = by_id.values().find(|(b, _, _)| b.t_start <= acc.target_ts && acc.target_ts < b.t_end);
-            let observation_slot = target.map(|(b, _, _)| b.slot);
-            let observed = target.and_then(|(_, rs, _)| rs.iter().find(|r| r.station_id == station && r.ts_utc == acc.target_ts)).map(|r| r.value_milli);
-
-            let alert = match rec["alert"]["account"].as_str() {
-                Some(a) => {
-                    let apk: Pubkey = a.parse().map_err(|_| anyhow::anyhow!("conta inválida"))?;
-                    let al = chain::decode_alert(&rpc.account_data(&apk)?.with_context(|| format!("alerta {apk} não está on-chain"))?)?;
-                    check(&mut problems, al.forecast == pda && al.p90 >= al.threshold_milli, "alerta inconsistente com a previsão");
-                    Some(AlertAudit {
-                        account: a.to_string(),
-                        slot: al.slot,
-                        threshold_milli: al.threshold_milli,
-                        recorded_before_observation: observation_slot.map(|s| al.slot < s),
-                    })
-                }
-                None => None,
+            let index = rec["record_index"].as_u64().context("record_index")?;
+            let Some(Record::Forecast(fr)) = get(index) else {
+                unmatched.push(format!("previsão {} aponta para o registro {index}, que não é uma previsão", f["issue_day"]));
+                continue;
             };
-
+            let fr: &ForecastRecord = fr;
+            seen.insert(index);
+            let mut problems = Vec::new();
+            check(&mut problems, fr.station_id == station, "estação difere");
+            check(&mut problems, fr.based_on_batch_id == based_on, "lote-base difere");
+            check(
+                &mut problems,
+                (fr.p10, fr.p50, fr.p90) == (rec["p10"].as_i64().unwrap_or(-1), rec["p50"].as_i64().unwrap_or(-1), rec["p90"].as_i64().unwrap_or(-1)),
+                "quantis diferem",
+            );
+            check(&mut problems, fr.model_sha256 == hex32(&f["model_sha256"])?, "model_sha256 difere");
+            check(&mut problems, fr.features_root == features_root, "features_root recalculada difere");
+            match batch_records.get(&based_on) {
+                Some((_, b)) => {
+                    check(&mut problems, fr.based_on_root == b.header.merkle_root, "based_on_root não é a raiz do lote-base");
+                    check(&mut problems, fr.issued_at == b.header.t_end, "issued_at não é o fim da janela do lote-base");
+                }
+                None => problems.push("lote-base ausente do acumulador".into()),
+            }
+            let observation = batch_of(fr.target_ts);
+            let observation_slot = observation.map(|b| b.slot);
+            let observed = observation
+                .and_then(|b| by_id.get(&b.batch_id))
+                .and_then(|(_, rs)| rs.iter().find(|r| r.station_id == station && r.ts_utc == fr.target_ts))
+                .map(|r| r.value_milli);
+            let alert = fr.alert.as_ref().map(|a| {
+                check(&mut problems, fr.p90 >= a.threshold_milli, "alerta com P90 abaixo do limiar");
+                check(&mut problems, rule.is_some_and(|r| r.threshold_milli == a.threshold_milli), "alerta com limiar diferente da regra on-chain");
+                AlertAudit {
+                    threshold_milli: a.threshold_milli,
+                    level: a.level,
+                    slot: fr.slot,
+                    recorded_before_observation: observation_slot.map(|s| fr.slot < s),
+                }
+            });
+            if fr.alert.is_none() {
+                check(&mut problems, rule.is_none_or(|r| fr.p90 < r.threshold_milli), "P90 cruzou a regra e o alerta não saiu");
+            }
             forecasts.push(ForecastAudit {
                 issue_day: f["issue_day"].as_str().unwrap_or_default().to_string(),
-                horizon_hours: acc.horizon_hours,
-                target_ts: acc.target_ts,
-                account: pda.to_string(),
-                slot: acc.slot,
-                p10: acc.p10,
-                p50: acc.p50,
-                p90: acc.p90,
+                horizon_hours: fr.horizon_hours,
+                target_ts: fr.target_ts,
+                record_index: index,
+                slot: fr.slot,
+                p10: fr.p10,
+                p50: fr.p50,
+                p90: fr.p90,
                 observation_slot,
                 observed_milli: observed,
-                recorded_before_observation: observation_slot.map(|s| acc.slot < s),
-                inside_p10_p90: observed.map(|o| acc.p10 <= o && o <= acc.p90),
+                recorded_before_observation: observation_slot.map(|s| fr.slot < s),
+                inside_p10_p90: observed.map(|o| fr.p10 <= o && o <= fr.p90),
                 alert,
                 problems,
             });
         }
     }
-    batches.extend(by_id.into_values().map(|(b, _, _)| b));
 
-    // Avisos oficiais.
+    // 4. Official warnings.
     let mut public_alerts = Vec::new();
-    let pa_dir = args.ledger.join("public_alerts");
-    for e in if pa_dir.exists() { read_dir_sorted(&pa_dir)? } else { vec![] } {
+    for e in read_dir_sorted(&args.ledger.join("public_alerts"))? {
         let header: cota_core::PublicAlertHeader = serde_json::from_value(e["header"].clone())?;
-        let pda = chain::public_alert_pda(&header.content_sha256);
-        let rec = chain::decode_public_alert(&rpc.account_data(&pda)?.with_context(|| format!("aviso {pda} não está on-chain"))?)?;
+        let index = e["record_index"].as_u64().context("record_index")?;
+        let Some(Record::PublicAlert(pr)) = get(index) else {
+            unmatched.push(format!("aviso {} aponta para o registro {index}, que não é um aviso", header.alert_id));
+            continue;
+        };
+        let pr: &PublicAlertRecord = pr;
+        seen.insert(index);
         let mut problems = Vec::new();
         let content = e["content"].as_str().context("content")?;
-        check(&mut problems, cota_core::public_alert::content_hash(content) == rec.content_sha256, "conteúdo guardado não bate com o hash on-chain");
-        check(&mut problems, rec.alert_id == header.alert_id && rec.issuer == header.issuer, "identificação difere");
-        check(&mut problems, (rec.severity, rec.onset, rec.expires) == (header.severity, header.onset, header.expires), "severidade ou vigência diferem");
-        check(&mut problems, rec.signer_count >= committee.threshold, "assinaturas abaixo do limiar");
+        check(&mut problems, cota_core::public_alert::content_hash(content) == pr.header.content_sha256, "conteúdo guardado não bate com o hash registrado");
+        check(&mut problems, chain::to_program_alert_header(&header) == pr.header, "cabeçalho do ledger difere do registrado");
+        check(&mut problems, pr.signer_count >= registry.threshold, "assinaturas abaixo do limiar");
         public_alerts.push(PublicAlertAudit {
-            record: pda.to_string(),
-            alert_id: rec.alert_id,
-            slot: rec.slot,
-            committed_at: rec.committed_at,
-            signers: rec.signers,
+            record_index: index,
+            alert_id: header.alert_id,
+            slot: pr.slot,
+            committed_at: pr.committed_at,
+            signers: pr.signers,
             problems,
         });
     }
 
-    // Rain outlooks (early warning).
+    // 5. Rain outlooks (early warning).
     let mut outlooks = Vec::new();
-    let ol_dir = args.ledger.join("outlooks");
-    let entries = if ol_dir.exists() { read_dir_sorted(&ol_dir)? } else { vec![] };
+    let entries = read_dir_sorted(&args.ledger.join("outlooks"))?;
     let rule = if entries.is_empty() { None } else { Some(outlook::load_rule(&args.outlook_rule)?) };
     for e in entries {
         let rule = rule.as_ref().expect("regra carregada quando há perspectivas");
         let header: cota_core::OutlookHeader = serde_json::from_value(e["header"].clone())?;
-        let pda = chain::outlook_pda(&header.region, header.issued_at);
-        let rec = chain::decode_outlook(&rpc.account_data(&pda)?.with_context(|| format!("perspectiva {pda} não está on-chain"))?)?;
-        let on_rule = chain::decode_outlook_rule(&rpc.account_data(&chain::outlook_rule_pda(&header.region))?.context("regra de perspectiva ausente")?)?;
+        let index = e["record_index"].as_u64().context("record_index")?;
+        let Some(Record::Outlook(or)) = get(index) else {
+            unmatched.push(format!("perspectiva {} aponta para o registro {index}, que não é uma perspectiva", e["day"]));
+            continue;
+        };
+        let or: &OutlookRecord = or;
+        seen.insert(index);
+        let on_rule =
+            chain::decode_outlook_rule(&rpc.account_data(&chain::outlook_rule_pda(&header.region))?.context("regra de perspectiva ausente")?)?;
         let day: chrono::NaiveDate = e["day"].as_str().context("day")?.parse()?;
         let content = e["content"].as_str().context("content")?;
         let mut problems = Vec::new();
-        check(&mut problems, cota_core::public_alert::content_hash(content) == rec.content_sha256, "conteúdo guardado não bate com o hash on-chain");
+        check(&mut problems, cota_core::public_alert::content_hash(content) == or.header.content_sha256, "conteúdo guardado não bate com o hash registrado");
         check(&mut problems, on_rule.rule_sha256 == rule.sha256, "regra local difere da fixada on-chain");
         let totals: outlook::Totals = serde_json::from_value(serde_json::from_str::<Value>(content)?["models"].clone())?;
         match outlook::summarize(rule, day, &totals) {
@@ -300,36 +389,30 @@ fn main() -> Result<()> {
             }
             Err(err) => problems.push(format!("conteúdo não reproduz: {err:#}")),
         }
-        check(
-            &mut problems,
-            (rec.rain_mean_milli, rec.rain_min_milli, rec.rain_max_milli, rec.issued_at, rec.window_end)
-                == (header.rain_mean_milli, header.rain_min_milli, header.rain_max_milli, header.issued_at, header.window_end),
-            "valores on-chain diferem do cabeçalho",
-        );
-        check(&mut problems, rec.triggered == (rec.rain_mean_milli >= rec.threshold_milli), "resultado da regra incoerente");
-        check(&mut problems, rec.signer_count >= committee.threshold, "assinaturas abaixo do limiar");
-        let based = chain::decode_batch(&rpc.account_data(&chain::batch_pda(rec.based_on_batch_id))?.context("lote de base ausente")?)?;
-        check(&mut problems, based.t_end == rec.issued_at, "emissão não é o fim do lote de base");
-        let next_batch_slot = match rpc.account_data(&chain::batch_pda(rec.based_on_batch_id + 1))? {
-            Some(d) => Some(chain::decode_batch(&d)?.slot),
-            None => None,
-        };
-        check(&mut problems, next_batch_slot.is_none_or(|s| rec.slot < s), "gravada depois do lote seguinte");
+        check(&mut problems, chain::to_program_outlook_header(&header) == or.header, "valores registrados diferem do cabeçalho");
+        check(&mut problems, or.threshold_milli == on_rule.threshold_milli, "limiar registrado difere da regra");
+        check(&mut problems, or.triggered == (or.header.rain_mean_milli >= or.threshold_milli), "resultado da regra incoerente");
+        check(&mut problems, or.signer_count >= registry.threshold, "assinaturas abaixo do limiar");
+        match batch_records.get(&or.based_on_batch_id) {
+            Some((_, b)) => check(&mut problems, b.header.t_end == or.header.issued_at, "emissão não é o fim do lote de base"),
+            None => problems.push("lote de base ausente do acumulador".into()),
+        }
+        let next_batch_slot = batch_records.get(&(or.based_on_batch_id + 1)).map(|(_, b)| b.slot);
+        check(&mut problems, next_batch_slot.is_none_or(|s| or.slot < s), "gravada depois do lote seguinte");
         outlooks.push(OutlookAudit {
             day: day.to_string(),
-            record: pda.to_string(),
-            rain_mean_milli: rec.rain_mean_milli,
-            triggered: rec.triggered,
-            slot: rec.slot,
+            record_index: index,
+            rain_mean_milli: or.header.rain_mean_milli,
+            triggered: or.triggered,
+            slot: or.slot,
             next_batch_slot,
             problems,
         });
     }
 
-    // Parametric vaults.
+    // 6. Parametric vaults.
     let mut vaults = Vec::new();
-    let v_dir = args.ledger.join("vaults");
-    for e in if v_dir.exists() { read_dir_sorted(&v_dir)? } else { vec![] } {
+    for e in read_dir_sorted(&args.ledger.join("vaults"))? {
         let name = e["name"].as_str().unwrap_or_default().to_string();
         let addr: Pubkey = e["vault"].as_str().context("vault")?.parse()?;
         let mut problems = Vec::new();
@@ -342,18 +425,28 @@ fn main() -> Result<()> {
         let mut sum = 0;
         let payouts = e["payouts"].as_array().cloned().unwrap_or_default();
         for p in &payouts {
-            let trigger: Pubkey = p["trigger"].as_str().context("trigger")?.parse()?;
-            let Some(pd) = rpc.account_data(&chain::payout_pda(&addr, &trigger))? else {
-                problems.push(format!("pagamento por {trigger} não está on-chain"));
+            let index = p["trigger_index"].as_u64().context("trigger_index")?;
+            let leaf = hex::decode(&stored.get(index as usize).context("gatilho fora do acumulador")?.leaf)?;
+            let leaf: [u8; 32] = leaf.try_into().map_err(|_| anyhow::anyhow!("leaf"))?;
+            let Some(pd) = rpc.account_data(&chain::payout_pda(&addr, &leaf))? else {
+                problems.push(format!("pagamento pelo registro {index} não está on-chain"));
                 continue;
             };
             let rec = chain::decode_payout(&pd)?;
             sum += rec.amount;
-            check(&mut problems, rec.amount == p["amount"].as_u64().unwrap_or_default() && rec.beneficiary == v.beneficiary, "valor ou beneficiário diferem");
-            let td = rpc.account_data(&trigger)?.unwrap_or_default();
-            let valid = match v.kind {
-                cota::TRIGGER_EARLY_WARNING => chain::decode_outlook(&td).is_ok_and(|o| o.triggered && o.region == v.subject && o.issued_at == rec.event_at),
-                _ => chain::decode_alert(&td).is_ok_and(|a| a.station_id == v.subject && a.issued_at == rec.event_at),
+            check(
+                &mut problems,
+                rec.amount == p["amount"].as_u64().unwrap_or_default() && rec.beneficiary == v.beneficiary && rec.trigger_index == index,
+                "valor, beneficiário ou gatilho diferem",
+            );
+            let valid = match (v.kind, get(index)) {
+                (chain::TRIGGER_EARLY_WARNING, Some(Record::Outlook(o))) => {
+                    o.triggered && o.header.region == v.subject && o.header.issued_at == rec.event_at
+                }
+                (chain::TRIGGER_FLOW_ALERT, Some(Record::Forecast(f))) => {
+                    f.alert.is_some() && f.station_id == v.subject && f.issued_at == rec.event_at
+                }
+                _ => false,
             };
             check(&mut problems, valid, "gatilho inválido para o cofre");
         }
@@ -361,8 +454,17 @@ fn main() -> Result<()> {
         vaults.push(VaultAudit { name, vault: addr.to_string(), payouts: payouts.len(), total_paid: sum, problems });
     }
 
+    // 7. Completeness: records the ledger has no file for.
+    for (i, r) in decoded.iter().enumerate() {
+        if matches!(r, Record::Batch(_) | Record::Forecast(_) | Record::PublicAlert(_) | Record::Outlook(_)) && !seen.contains(&(i as u64)) {
+            unmatched.push(format!("registro {i} ({}) sem arquivo no ledger", records::kind(r)));
+        }
+    }
+
     let count = |p: &dyn Fn(&ForecastAudit) -> bool| forecasts.iter().filter(|f| p(f)).count();
     let summary = BTreeMap::from([
+        ("records", stored.len()),
+        ("unmatched", unmatched.len()),
         ("batches", batches.len()),
         ("batches_with_problems", batches.iter().filter(|b| !b.problems.is_empty()).count()),
         ("forecasts", forecasts.len()),
@@ -371,6 +473,7 @@ fn main() -> Result<()> {
         ("forecasts_recorded_before_observation", count(&|f| f.recorded_before_observation == Some(true))),
         ("forecasts_inside_p10_p90", count(&|f| f.inside_p10_p90 == Some(true))),
         ("alerts", count(&|f| f.alert.is_some())),
+        ("alerts_recorded_before_observation", count(&|f| f.alert.as_ref().is_some_and(|a| a.recorded_before_observation == Some(true)))),
         ("public_alerts", public_alerts.len()),
         ("public_alerts_with_problems", public_alerts.iter().filter(|a| !a.problems.is_empty()).count()),
         ("outlooks", outlooks.len()),
@@ -379,21 +482,16 @@ fn main() -> Result<()> {
         ("vaults", vaults.len()),
         ("vault_payouts", vaults.iter().map(|v| v.payouts).sum()),
         ("vaults_with_problems", vaults.iter().filter(|v| !v.problems.is_empty()).count()),
-        ("alerts_recorded_before_observation", count(&|f| f.alert.as_ref().is_some_and(|a| a.recorded_before_observation == Some(true)))),
     ]);
-    let ok = summary["batches_with_problems"] == 0 && summary["forecasts_with_problems"] == 0 && summary["public_alerts_with_problems"] == 0
-        && summary["outlooks_with_problems"] == 0
-        && summary["vaults_with_problems"] == 0;
+    let ok = ["unmatched", "batches_with_problems", "forecasts_with_problems", "public_alerts_with_problems", "outlooks_with_problems", "vaults_with_problems"]
+        .iter()
+        .all(|k| summary[k] == 0);
     for b in batches.iter().filter(|b| !b.problems.is_empty()) {
         eprintln!("lote {}: {:?}", b.batch_id, b.problems);
     }
     for f in forecasts.iter().filter(|f| !f.problems.is_empty()) {
         eprintln!("previsão {} +{}h: {:?}", f.issue_day, f.horizon_hours, f.problems);
     }
-    for (k, v) in &summary {
-        eprintln!("{k:<40} {v}");
-    }
-
     for a in public_alerts.iter().filter(|a| !a.problems.is_empty()) {
         eprintln!("aviso {}: {:?}", a.alert_id, a.problems);
     }
@@ -403,7 +501,23 @@ fn main() -> Result<()> {
     for v in vaults.iter().filter(|v| !v.problems.is_empty()) {
         eprintln!("cofre {}: {:?}", v.name, v.problems);
     }
-    let report = Report { program: chain::PROGRAM_ID.to_string(), batches, forecasts, public_alerts, outlooks, vaults, summary };
+    for u in &unmatched {
+        eprintln!("{u}");
+    }
+    for (k, v) in &summary {
+        eprintln!("{k:<40} {v}");
+    }
+    let report = Report {
+        program: chain::PROGRAM_ID.to_string(),
+        accumulator,
+        batches,
+        forecasts,
+        public_alerts,
+        outlooks,
+        vaults,
+        unmatched,
+        summary,
+    };
     std::fs::write(args.ledger.join("audit.json"), serde_json::to_string_pretty(&report)?)?;
     anyhow::ensure!(ok, "a auditoria encontrou divergências");
     eprintln!("auditoria OK: {}", args.ledger.join("audit.json").display());

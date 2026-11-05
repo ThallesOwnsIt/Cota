@@ -53,7 +53,7 @@ pub fn aggregate(members: &[[u8; 32]], threshold: usize, submissions: &[SignedBa
         if !members.contains(&pk) {
             continue;
         }
-        let msg = sub.header.signing_message();
+        let msg = sub.header.signing_message_for(crate::PROTOCOL);
         let valid = VerifyingKey::from_bytes(&pk)
             .map(|vk| vk.verify_strict(&msg, &Signature::from_bytes(&sub.signature)).is_ok())
             .unwrap_or(false);
@@ -141,7 +141,7 @@ mod tests {
         SignedBatch {
             node: crate::keys::pubkey_base58(key),
             day: NaiveDate::from_ymd_opt(1970, 1, 1).unwrap(),
-            signature: key.sign(&b.header.signing_message()).to_bytes(),
+            signature: key.sign(&b.header.signing_message_for(crate::PROTOCOL)).to_bytes(),
             header: b.header,
             readings: b.readings,
             ingest: vec![],

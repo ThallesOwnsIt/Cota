@@ -31,7 +31,7 @@ pub struct SignedAlert {
 pub fn sign(key: &SigningKey, a: &ObservedAlert, seen_at: i64) -> SignedAlert {
     SignedAlert {
         node: pubkey_base58(key),
-        signature: key.sign(&a.header.signing_message()).to_bytes(),
+        signature: key.sign(&a.header.signing_message_for(crate::PROTOCOL)).to_bytes(),
         header: a.header.clone(),
         content: a.content.clone(),
         seen_at,
@@ -64,7 +64,7 @@ impl Attestation for SignedAlert {
         &self.header
     }
     fn message(&self) -> Vec<u8> {
-        self.header.signing_message()
+        self.header.signing_message_for(crate::PROTOCOL)
     }
     fn content_matches(&self) -> bool {
         content_hash(&self.content) == self.header.content_sha256

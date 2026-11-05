@@ -7,10 +7,10 @@
 
 use std::path::{Path, PathBuf};
 
-use anyhow::{Context, Result};
+use anyhow::{bail, Context, Result};
 use chrono::{DateTime, Days, NaiveDate};
 use clap::{Parser, Subcommand};
-use cota_oracle::{attest, chain, keys, outlook, rpc::{explorer_tx, Rpc}};
+use cota_oracle::{attest, chain, chain::Record, keys, outlook, records, rpc::{explorer_tx, Rpc}};
 use serde_json::json;
 use solana_signer::Signer;
 
@@ -93,7 +93,8 @@ fn day_of(issued_at: i64) -> NaiveDate {
 fn anchor(rpc_url: &str, cluster: &str, payer: &Path, nodes_dir: &Path, ledger: &Path) -> Result<()> {
     let rpc = Rpc::new(rpc_url)?;
     let payer = keys::load_keypair(payer)?;
-    let committee = chain::decode_committee(&rpc.account_data(&chain::committee_pda())?.context("comitê não inicializado")?)?;
+    let committee = chain::decode_registry(&rpc.account_data(&chain::registry_pda())?.context("registry not initialized")?)?;
+    records::sync(&rpc, ledger)?;
     let members: Vec<[u8; 32]> = committee.members.iter().map(|m| m.to_bytes()).collect();
 
     let mut subs = Vec::new();
@@ -121,22 +122,30 @@ fn anchor(rpc_url: &str, cluster: &str, payer: &Path, nodes_dir: &Path, ledger: 
         if file.exists() {
             continue;
         }
-        let pda = chain::outlook_pda(&h.region, h.issued_at);
-        let tx = if rpc.account_data(&pda)?.is_some() {
-            None
-        } else if h.issued_at != committee.last_t_end {
-            // The program only accepts the outlook for the day that has just been anchored.
-            eprintln!("perspectiva de {day} fora de hora (último lote termina em {}); ignorada", committee.last_t_end);
-            continue;
-        } else {
-            Some(rpc.send_and_confirm(&chain::commit_outlook_instructions(payer.pubkey(), h, &a.signatures), &payer)?)
+        let existing = records::load(ledger)?.into_iter().find(|s| {
+            matches!(s.decode(), Ok(Record::Outlook(o)) if o.header.region == h.region && o.header.issued_at == h.issued_at)
+        });
+        let (index, tx) = match existing {
+            Some(s) => (s.index, s.tx),
+            None if h.issued_at != committee.last_t_end => {
+                // The program only accepts the outlook for the day that has just been anchored.
+                eprintln!("perspectiva de {day} fora de hora (último lote termina em {}); ignorada", committee.last_t_end);
+                continue;
+            }
+            None => {
+                let ixs = chain::commit_outlook_instructions(payer.pubkey(), h, &a.signatures);
+                let (tx, appended) = records::send(&rpc, ledger, &ixs, &payer, &[])?;
+                (appended.first().context("commit_outlook emitted no record")?.index, tx)
+            }
         };
-        let rec = chain::decode_outlook(&rpc.account_data(&pda)?.context("perspectiva não apareceu on-chain")?)?;
+        let Record::Outlook(rec) = records::load(ledger)?[index as usize].decode()? else {
+            bail!("record {index} is not an outlook")
+        };
         let entry = json!({
             "day": day.to_string(),
             "header": h,
             "content": a.observations[0].content,
-            "record": pda.to_string(),
+            "record_index": index,
             "rule": chain::outlook_rule_pda(&h.region).to_string(),
             "based_on_batch_id": rec.based_on_batch_id,
             "threshold_milli": rec.threshold_milli,
@@ -144,15 +153,15 @@ fn anchor(rpc_url: &str, cluster: &str, payer: &Path, nodes_dir: &Path, ledger: 
             "slot": rec.slot,
             "committed_at": rec.committed_at,
             "signers": rec.signers,
+            "explorer": explorer_tx(&tx, cluster),
             "tx_signature": tx,
-            "explorer": tx.as_ref().map(|t| explorer_tx(t, cluster)),
             "cluster": cluster,
             "observations": a.observations.iter().map(|o| json!({"member": o.node, "seen_at": o.seen_at})).collect::<Vec<_>>(),
         });
         std::fs::write(&file, serde_json::to_string_pretty(&entry)?)?;
         eprintln!(
             "perspectiva de {day}: {:.1} mm em 5 dias (limiar {:.0}) → {} — slot {}, {} assinatura(s)",
-            rec.rain_mean_milli as f64 / 1000.0,
+            rec.header.rain_mean_milli as f64 / 1000.0,
             rec.threshold_milli as f64 / 1000.0,
             if rec.triggered { "ALERTA ANTECIPADO" } else { "sem alerta" },
             rec.slot,

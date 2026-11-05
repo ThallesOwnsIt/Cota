@@ -21,7 +21,8 @@ pub struct LedgerEntry<'a> {
     pub batch_id: u64,
     pub day: NaiveDate,
     pub header: &'a BatchHeader,
-    pub batch_account: String,
+    /// Position of the batch record in the accumulator.
+    pub record_index: u64,
     pub tx_signature: String,
     pub cluster: String,
     pub explorer: String,
@@ -35,7 +36,7 @@ pub struct LedgerEntry<'a> {
 pub fn write_entry(
     dir: &Path,
     agg: &Aggregate,
-    batch_account: String,
+    record_index: u64,
     tx_signature: String,
     cluster: &str,
     quality: &Outcome,
@@ -44,7 +45,7 @@ pub fn write_entry(
         batch_id: agg.header.batch_id,
         day: agg.batch.day,
         header: &agg.header,
-        batch_account,
+        record_index,
         explorer: crate::rpc::explorer_tx(&tx_signature, cluster),
         tx_signature,
         cluster: cluster.to_string(),

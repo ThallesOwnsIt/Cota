@@ -68,6 +68,37 @@ impl Rpc {
         Ok(Some(base64::engine::general_purpose::STANDARD.decode(b64)?))
     }
 
+    /// Log messages of a confirmed transaction (where the program's events are). Retries briefly: right
+    /// after confirmation some RPC nodes do not serve the transaction yet.
+    pub fn transaction_logs(&self, sig: &str) -> Result<Vec<String>> {
+        for attempt in 0..10 {
+            let r = self.call(
+                "getTransaction",
+                json!([sig, { "encoding": "json", "commitment": "confirmed", "maxSupportedTransactionVersion": 0 }]),
+            )?;
+            if let Some(logs) = r.pointer("/meta/logMessages").and_then(Value::as_array) {
+                return Ok(logs.iter().filter_map(Value::as_str).map(str::to_string).collect());
+            }
+            std::thread::sleep(Duration::from_millis(500 * (attempt + 1)));
+        }
+        bail!("transaction {sig} not available from the RPC")
+    }
+
+    /// Signatures of successful transactions that touched `address`, newest first.
+    pub fn signatures_for_address(&self, address: &Pubkey, before: Option<&str>, limit: usize) -> Result<Vec<String>> {
+        let mut opts = json!({ "limit": limit, "commitment": "confirmed" });
+        if let Some(b) = before {
+            opts["before"] = json!(b);
+        }
+        let r = self.call("getSignaturesForAddress", json!([address.to_string(), opts]))?;
+        Ok(r.as_array()
+            .context("getSignaturesForAddress without a list")?
+            .iter()
+            .filter(|s| s["err"].is_null())
+            .filter_map(|s| s["signature"].as_str().map(str::to_string))
+            .collect())
+    }
+
     /// Signs with `payer`, sends (after simulating) and waits for confirmation. Returns the
     /// signature.
     pub fn send_and_confirm(&self, instructions: &[Instruction], payer: &Keypair) -> Result<String> {

@@ -59,7 +59,7 @@ pub fn sign_day(
     }
 
     let batch = Batch::build(batch_id, from, to, prev_root, readings)?;
-    let signature = key.sign(&batch.header.signing_message()).to_bytes();
+    let signature = key.sign(&batch.header.signing_message_for(crate::PROTOCOL)).to_bytes();
     Ok(Some(SignedBatch {
         node: pubkey_base58(key),
         day,

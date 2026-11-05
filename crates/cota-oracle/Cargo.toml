@@ -13,7 +13,7 @@ bincode = "1.3"
 bs58 = "0.5.1"
 chrono = { version = "0.4.45", features = ["serde"] }
 clap = { version = "4.6.7", features = ["derive"] }
-cota = { version = "0.1.0", path = "../../programs/cota", features = ["no-entrypoint"] }
+cota-v2 = { version = "0.2.0", path = "../../programs/cota-v2", features = ["no-entrypoint"] }
 cota-core = { version = "0.1.0", path = "../cota-core" }
 cota-ingest = { version = "0.1.0", path = "../cota-ingest" }
 cota-quality = { version = "0.1.0", path = "../cota-quality" }

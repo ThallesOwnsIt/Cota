@@ -565,3 +565,129 @@ fn many_records_keep_the_peaks_identical_to_the_reference() {
     let a = env.svm.get_account(&registry_pda()).unwrap();
     assert!(a.data.len() < 1_500, "registry is fixed-size: {} bytes", a.data.len());
 }
+
+#[test]
+fn authority_handover_takes_the_power_away_from_the_old_key() {
+    let mut env = Env::new();
+    let operator = Keypair::new();
+    env.svm.airdrop(&operator.pubkey(), 1_000_000_000).unwrap();
+    let i = Instruction::new_with_bytes(cota_v2::id(), &ix::SetAuthority { new_authority: operator.pubkey() }.data(), env.authority_accounts());
+    env.send(&[i]).unwrap();
+    assert_eq!(env.registry().authority, operator.pubkey());
+    // The old key can no longer register stations (nor forecasts, rules or degradations).
+    let station = StationArgs { station_id: "X".into(), name: "x".into(), source: 0, variable: 0, lat_e6: 0, lon_e6: 0, datum_id: None };
+    let i = Instruction::new_with_bytes(cota_v2::id(), &ix::RegisterStation { station: station.clone() }.data(), env.authority_accounts());
+    assert_eq!(env.send(&[i]), Err(custom0(code(cota_v2::error::CotaError::Unauthorized))));
+    // The operator can.
+    let i = Instruction::new_with_bytes(
+        cota_v2::id(),
+        &ix::RegisterStation { station }.data(),
+        acc::AuthorityOnly { authority: operator.pubkey(), registry: registry_pda() }.to_account_metas(None),
+    );
+    let msg = Message::new_with_blockhash(&[i], Some(&env.authority.pubkey()), &env.svm.latest_blockhash());
+    let tx = VersionedTransaction::try_new(VersionedMessage::Legacy(msg), &[&env.authority, &operator]).unwrap();
+    env.svm.send_transaction(tx).unwrap();
+}
+
+#[test]
+fn outlook_only_for_the_day_just_anchored() {
+    let mut env = Env::new();
+    env.set_outlook_rule();
+    env.next_day();
+    let ahead = env.registry().last_t_end + DAY;
+    let h = OutlookHeader {
+        region: "guaiba".into(),
+        issued_at: ahead,
+        window_end: ahead + 5 * DAY,
+        models: 3,
+        rain_mean_milli: 1,
+        rain_min_milli: 0,
+        rain_max_milli: 2,
+        content_sha256: [0; 32],
+    };
+    let ed = env.ed25519_ix(&h.signing_message(), &[0, 1]);
+    let i = Instruction::new_with_bytes(
+        cota_v2::id(),
+        &ix::CommitOutlook { header: h.clone() }.data(),
+        acc::CommitOutlook {
+            submitter: env.authority.pubkey(),
+            registry: registry_pda(),
+            rule: outlook_rule_pda("guaiba"),
+            instructions: solana_instructions_sysvar::ID,
+        }
+        .to_account_metas(None),
+    );
+    // Getting ahead of the next day (before its batch exists) is not allowed.
+    assert_eq!(env.send(&[ed, i]), Err(custom(code(cota_v2::error::CotaError::InvalidOutlook))));
+    // Nor recording a day's outlook after the next batch went in.
+    let late = env.registry().last_t_end;
+    env.next_day();
+    let h = OutlookHeader { issued_at: late, window_end: late + 5 * DAY, ..h };
+    let ed = env.ed25519_ix(&h.signing_message(), &[0, 1]);
+    let i = Instruction::new_with_bytes(
+        cota_v2::id(),
+        &ix::CommitOutlook { header: h }.data(),
+        acc::CommitOutlook {
+            submitter: env.authority.pubkey(),
+            registry: registry_pda(),
+            rule: outlook_rule_pda("guaiba"),
+            instructions: solana_instructions_sysvar::ID,
+        }
+        .to_account_metas(None),
+    );
+    assert_eq!(env.send(&[ed, i]), Err(custom(code(cota_v2::error::CotaError::InvalidOutlook))));
+}
+
+#[test]
+fn a_batch_signature_is_not_a_warning_signature() {
+    let mut env = Env::new();
+    let w = PublicAlertHeader { issuer: "INMET".into(), alert_id: "x".into(), content_sha256: [1; 32], severity: 1, onset: 0, expires: 1 };
+    // The same Borsh bytes signed under the batch domain.
+    let mut msg = cota_v2::BATCH_DOMAIN.to_vec();
+    msg.extend(ser(&w));
+    let ed = env.ed25519_ix(&msg, &[0, 1]);
+    let i = Instruction::new_with_bytes(cota_v2::id(), &ix::RecordPublicAlert { header: w }.data(), env.signed_accounts());
+    assert_eq!(env.send(&[ed, i]), Err(custom(code(cota_v2::error::CotaError::MessageMismatch))));
+}
+
+#[test]
+fn vault_ignores_triggers_before_accept_from_and_stays_closed_until_expiry() {
+    let mut env = Env::new();
+    use cota_v2::error::CotaError::*;
+    env.set_outlook_rule();
+    env.next_day();
+    env.outlook(95_000).unwrap();
+    let old = env.last_record().0;
+    let ben = Keypair::new().pubkey();
+    let creator = env.authority.pubkey();
+    let now = env.svm.get_sysvar::<anchor_lang::prelude::Clock>().unix_timestamp;
+    let args = VaultArgs {
+        vault_id: 9,
+        beneficiary: ben,
+        kind: cota_v2::TRIGGER_EARLY_WARNING,
+        subject: "guaiba".into(),
+        payout_lamports: 1_000_000_000,
+        cooldown_secs: 0,
+        accept_from: now + 1,
+        expires_at: now + 10 * DAY,
+        deposit_lamports: 2_000_000_000,
+    };
+    let i = Instruction::new_with_bytes(
+        cota_v2::id(),
+        &ix::CreateVault { args }.data(),
+        acc::CreateVault { creator, vault: vault_pda(&creator, 9), system_program: system_program::ID }.to_account_metas(None),
+    );
+    env.send(&[i]).unwrap();
+    let vault = vault_pda(&creator, 9);
+    // A trigger recorded before the vault accepted triggers does not pay.
+    let i = env.payout_ix(vault, ben, env.proof(old));
+    assert_eq!(env.send(&[i]), Err(custom0(code(TriggerTooEarly))));
+    // The creator cannot take the money back before expiry.
+    let close = Instruction::new_with_bytes(cota_v2::id(), &ix::CloseVault {}.data(), acc::CloseVault { creator, vault }.to_account_metas(None));
+    assert_eq!(env.send(&[close.clone()]), Err(custom0(code(VaultActive))));
+    let mut clock = env.svm.get_sysvar::<anchor_lang::prelude::Clock>();
+    clock.unix_timestamp = now + 10 * DAY;
+    env.svm.set_sysvar(&clock);
+    env.send(&[close]).unwrap();
+    assert!(env.svm.get_account(&vault).is_none_or(|a| a.lamports == 0));
+}

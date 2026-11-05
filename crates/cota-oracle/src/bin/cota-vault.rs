@@ -1,15 +1,16 @@
 //! Parametric vaults: locked SOL that the program releases on its own when Cota records a trigger.
 //!
 //! - `create`: creates a vault (any wallet can) and records it in `data/ledger/vaults/<name>.json`.
-//! - `crank`: walks the ledger's triggers (outlooks that fired, alert receipts) and
-//!   calls `trigger_payout` for each vault. Whoever cranks decides nothing: the program checks.
+//! - `crank`: walks the accumulator's triggers (outlooks that fired, forecasts with an alert) and
+//!   calls `trigger_payout` for each vault with the record's inclusion proof. Whoever cranks decides
+//!   nothing: the program checks the proof and the conditions.
 
 use std::path::{Path, PathBuf};
 
 use anchor_lang::prelude::Pubkey;
 use anyhow::{bail, Context, Result};
 use clap::{Parser, Subcommand, ValueEnum};
-use cota_oracle::{chain, keys, rpc::{explorer_tx, Rpc}};
+use cota_oracle::{chain, chain::Record, keys, records, rpc::{explorer_tx, Rpc}};
 use serde_json::{json, Value};
 use solana_signer::Signer;
 
@@ -34,9 +35,9 @@ struct Args {
 
 #[derive(Clone, Copy, ValueEnum)]
 enum Kind {
-    /// Rain outlook that fired the rule (`EarlyWarning`); subject = region.
+    /// Rain outlook that fired the rule; subject = region.
     EarlyWarning,
-    /// Alert receipt from the flow model (`AlertReceipt`); subject = station.
+    /// Flow forecast whose P90 crossed the station's rule; subject = station.
     FlowAlert,
 }
 
@@ -88,12 +89,12 @@ fn main() -> Result<()> {
             };
             let now = chrono::Utc::now().timestamp();
             let accept_from = if accept_from == "now" { now } else { accept_from.parse().context("--accept-from: `now` ou segundos")? };
-            let vault_args = cota::VaultArgs {
+            let vault_args = chain::VaultArgs {
                 vault_id: id,
                 beneficiary,
                 kind: match kind {
-                    Kind::EarlyWarning => cota::TRIGGER_EARLY_WARNING,
-                    Kind::FlowAlert => cota::TRIGGER_FLOW_ALERT,
+                    Kind::EarlyWarning => chain::TRIGGER_EARLY_WARNING,
+                    Kind::FlowAlert => chain::TRIGGER_FLOW_ALERT,
                 },
                 subject,
                 payout_lamports: (payout_sol * SOL).round() as u64,
@@ -129,7 +130,7 @@ fn main() -> Result<()> {
     Ok(())
 }
 
-fn state_json(v: &cota::state::Vault, balance: u64) -> Value {
+fn state_json(v: &chain::Vault, balance: u64) -> Value {
     json!({
         "creator": v.creator.to_string(),
         "vault_id": v.vault_id,
@@ -148,34 +149,28 @@ fn state_json(v: &cota::state::Vault, balance: u64) -> Value {
     })
 }
 
-/// Triggers known to the ledger: (account, subject, event instant).
-fn triggers(ledger: &Path, kind: u8) -> Result<Vec<(Pubkey, String, i64)>> {
+/// A trigger in the accumulator.
+struct Trigger {
+    index: u64,
+    leaf: [u8; 32],
+    subject: String,
+    event_at: i64,
+    recorded_at: i64,
+}
+
+/// Triggers of `kind` in the ledger's copy of the accumulator, oldest event first.
+fn triggers(stored: &[records::Stored], kind: u8) -> Result<Vec<Trigger>> {
     let mut out = Vec::new();
-    let read = |dir: PathBuf| -> Result<Vec<Value>> {
-        if !dir.exists() {
-            return Ok(vec![]);
-        }
-        let mut files: Vec<_> = std::fs::read_dir(&dir)?.map(|e| e.map(|e| e.path())).collect::<Result<_, _>>()?;
-        files.sort();
-        files.iter().map(|f| Ok(serde_json::from_str(&std::fs::read_to_string(f)?)?)).collect()
-    };
-    if kind == cota::TRIGGER_EARLY_WARNING {
-        for e in read(ledger.join("outlooks"))? {
-            if e["triggered"].as_bool() == Some(true) {
-                let h = &e["header"];
-                out.push((e["record"].as_str().context("record")?.parse()?, h["region"].as_str().unwrap_or_default().into(), h["issued_at"].as_i64().unwrap_or_default()));
-            }
-        }
-    } else {
-        for e in read(ledger.join("forecasts"))? {
-            for o in e["onchain"].as_array().into_iter().flatten() {
-                if let Some(a) = o["alert"]["account"].as_str() {
-                    out.push((a.parse()?, e["station_id"].as_str().unwrap_or_default().into(), e["issued_at"].as_i64().unwrap_or_default()));
-                }
-            }
-        }
+    for st in stored {
+        let t = match (kind, st.decode()?) {
+            (chain::TRIGGER_EARLY_WARNING, Record::Outlook(o)) if o.triggered => (o.header.region, o.header.issued_at, o.committed_at),
+            (chain::TRIGGER_FLOW_ALERT, Record::Forecast(f)) if f.alert.is_some() => (f.station_id, f.issued_at, f.committed_at),
+            _ => continue,
+        };
+        let leaf = hex::decode(&st.leaf)?.try_into().map_err(|_| anyhow::anyhow!("leaf"))?;
+        out.push(Trigger { index: st.index, leaf, subject: t.0, event_at: t.1, recorded_at: t.2 });
     }
-    out.sort_by_key(|t| t.2);
+    out.sort_by_key(|t| (t.event_at, t.index));
     Ok(out)
 }
 
@@ -184,6 +179,7 @@ fn crank(rpc: &Rpc, payer: &solana_keypair::Keypair, ledger: &Path, dir: &Path, 
         eprintln!("nenhum cofre no ledger");
         return Ok(());
     }
+    records::sync(rpc, ledger)?;
     let now = chrono::Utc::now().timestamp();
     let mut files: Vec<_> = std::fs::read_dir(dir)?.map(|e| e.map(|e| e.path())).collect::<Result<_, _>>()?;
     files.sort();
@@ -196,12 +192,13 @@ fn crank(rpc: &Rpc, payer: &solana_keypair::Keypair, ledger: &Path, dir: &Path, 
         };
         let mut v = chain::decode_vault(&data)?;
         let mut paid = 0;
-        for (trigger, subject, event_at) in triggers(ledger, v.kind)? {
-            if subject != v.subject || now >= v.expires_at {
+        let stored = records::load(ledger)?;
+        for t in triggers(&stored, v.kind)? {
+            if t.subject != v.subject || now >= v.expires_at {
                 continue;
             }
-            let pda = chain::payout_pda(&vault, &trigger);
-            let known = entry["payouts"].as_array().is_some_and(|ps| ps.iter().any(|p| p["trigger"] == trigger.to_string()));
+            let pda = chain::payout_pda(&vault, &t.leaf);
+            let known = entry["payouts"].as_array().is_some_and(|ps| ps.iter().any(|p| p["trigger_index"] == json!(t.index)));
             let tx = if rpc.account_data(&pda)?.is_some() {
                 if known {
                     continue;
@@ -210,27 +207,24 @@ fn crank(rpc: &Rpc, payer: &solana_keypair::Keypair, ledger: &Path, dir: &Path, 
             } else {
                 // Local pre-checks so as not to spend fees on certain rejections; the program is the one
                 // that decides.
-                if v.payouts > 0 && event_at < v.last_event_at + v.cooldown_secs {
+                if v.payouts > 0 && t.event_at < v.last_event_at + v.cooldown_secs || t.recorded_at < v.accept_from {
                     continue;
                 }
-                let recorded_at = match v.kind {
-                    cota::TRIGGER_EARLY_WARNING => chain::decode_outlook(&rpc.account_data(&trigger)?.context("gatilho")?)?.committed_at,
-                    _ => chain::decode_alert(&rpc.account_data(&trigger)?.context("gatilho")?)?.committed_at,
-                };
-                if recorded_at < v.accept_from {
-                    continue;
-                }
-                match rpc.send_and_confirm(&[chain::trigger_payout_instruction(payer.pubkey(), vault, trigger, v.beneficiary)], payer) {
+                // The proof is against the current peaks: rebuild it right before sending.
+                records::sync(rpc, ledger)?;
+                let proof = records::proof(&records::load(ledger)?, t.index)?;
+                match rpc.send_and_confirm(&[chain::trigger_payout_instruction(payer.pubkey(), vault, v.beneficiary, proof)], payer) {
                     Ok(sig) => Some(sig),
                     Err(e) => {
-                        eprintln!("{}: pagamento por {trigger} recusado: {e:#}", file.display());
+                        eprintln!("{}: pagamento pelo registro {} recusado: {e:#}", file.display(), t.index);
                         break;
                     }
                 }
             };
             let p = chain::decode_payout(&rpc.account_data(&pda)?.context("pagamento não apareceu on-chain")?)?;
             entry["payouts"].as_array_mut().context("payouts")?.push(json!({
-                "trigger": trigger.to_string(),
+                "trigger_index": t.index,
+                "trigger_leaf": hex::encode(t.leaf),
                 "payout": pda.to_string(),
                 "event_at": p.event_at,
                 "amount": p.amount,
@@ -242,11 +236,12 @@ fn crank(rpc: &Rpc, payer: &solana_keypair::Keypair, ledger: &Path, dir: &Path, 
             v = chain::decode_vault(&rpc.account_data(&vault)?.context("cofre")?)?;
             paid += 1;
             eprintln!(
-                "{}: pagou {:.3} SOL a {} pelo evento de {} (gatilho {trigger})",
+                "{}: pagou {:.3} SOL a {} pelo evento de {} (registro {})",
                 entry["name"].as_str().unwrap_or("?"),
                 p.amount as f64 / SOL,
                 v.beneficiary,
                 chrono::DateTime::from_timestamp(p.event_at, 0).map(|d| d.date_naive().to_string()).unwrap_or_default(),
+                t.index,
             );
         }
         entry["state"] = state_json(&v, rpc.balance(&vault)?);

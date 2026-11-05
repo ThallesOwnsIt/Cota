@@ -204,7 +204,7 @@ pub struct SignedOutlook {
 pub fn sign(key: &SigningKey, o: &Observed, seen_at: i64) -> SignedOutlook {
     SignedOutlook {
         node: pubkey_base58(key),
-        signature: key.sign(&o.header.signing_message()).to_bytes(),
+        signature: key.sign(&o.header.signing_message_for(crate::PROTOCOL)).to_bytes(),
         header: o.header.clone(),
         content: o.content.clone(),
         seen_at,
@@ -223,7 +223,7 @@ impl Attestation for SignedOutlook {
         &self.header
     }
     fn message(&self) -> Vec<u8> {
-        self.header.signing_message()
+        self.header.signing_message_for(crate::PROTOCOL)
     }
     fn content_matches(&self) -> bool {
         content_hash(&self.content) == self.header.content_sha256
