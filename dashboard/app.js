@@ -13,6 +13,7 @@ import {
   decodeVault,
   decodePayout,
   decodeAlertReceipt,
+  base58,
   decodePayoutV2,
   decodeRecord,
   decodeRegistry,
@@ -1297,6 +1298,37 @@ function renderStamp() {
     <a href="data/timestamps/${t.file}" download>${L("arquivo", "file")}</a> · <a href="data/timestamps/${t.file}.ots" download>${L("prova .ots", ".ots proof")}</a> · <a href="https://opentimestamps.org" target="_blank" rel="noopener">${L("conferir em opentimestamps.org", "check on opentimestamps.org")} ↗</a></p>`;
 }
 
+// ---- who can change the program ----------------------------------------------------------------
+// The upgrade authority of program v2 is a multisig vault; the browser reads it live from devnet.
+
+async function renderUpgrade() {
+  const box = $("#upgrade-auth");
+  const u = B.upgrade;
+  box.hidden = !u;
+  if (!u) return;
+  const wait = u.time_lock_secs >= 3600 ? L(`${u.time_lock_secs / 3600} h`, `${u.time_lock_secs / 3600} h`) : `${u.time_lock_secs ?? 0} s`;
+  const head = `<h3>${L("Quem pode alterar o programa", "Who can change the program")}</h3>
+    <p>${L(
+      `Nenhuma chave sozinha. Uma atualização do código precisa de ${u.threshold} de ${u.members.length} assinaturas numa multisig (Squads) e ainda espera ${wait} antes de valer; durante a espera, a proposta fica pública. Por enquanto as ${u.members.length} chaves estão com o mesmo responsável: o próximo passo é entregá-las a pessoas diferentes.`,
+      `No single key. A code update needs ${u.threshold} of ${u.members.length} signatures on a multisig (Squads) and then waits ${wait} before it takes effect; while it waits, the proposal is public. For now the ${u.members.length} keys are held by the same person: the next step is handing them to different people.`,
+    )}</p>`;
+  box.innerHTML = head + `<p class="sub">${L("Conferindo na devnet…", "Checking on devnet…")}</p>`;
+  try {
+    const acc = await fetchAccount(B.meta.rpc, u.program_data);
+    const auth = acc.data[12] === 1 ? base58(acc.data.subarray(13, 45)) : null;
+    const ok = auth === u.vault;
+    box.innerHTML =
+      head +
+      `<p class="sub">${
+        ok
+          ? `<span class="good-text">✓ ${L("conferido agora na devnet", "checked just now on devnet")}</span>: ${L("a autoridade de upgrade do programa é o", "the program's upgrade authority is the")} <a href="https://explorer.solana.com/address/${u.vault}?cluster=${B.meta.cluster}" target="_blank" rel="noopener">${L("cofre da multisig", "multisig vault")}</a>`
+          : `<span class="crit-text">✕ ${L("a autoridade de upgrade on-chain é", "the on-chain upgrade authority is")} ${esc(auth ?? L("nenhuma", "none"))}</span>`
+      } · <a href="https://explorer.solana.com/address/${u.multisig}?cluster=${B.meta.cluster}" target="_blank" rel="noopener">multisig</a></p>`;
+  } catch (e) {
+    box.innerHTML = head + `<p class="sub">${L("Não foi possível consultar a devnet agora", "Could not query devnet right now")}: ${esc(e.message)}</p>`;
+  }
+}
+
 async function verifyPublicAlert(a) {
   panel("", `<h3>${L("Verificando o aviso", "Verifying warning")} ${esc(a.alert_id)}…</h3>`, "#live-verify");
   try {
@@ -2103,6 +2135,7 @@ function renderAll() {
   document.querySelectorAll(".verify").forEach((p) => (p.hidden = true));
   renderLive();
   renderStamp();
+  renderUpgrade();
   renderOutlook();
   renderVaults();
   renderKpis();

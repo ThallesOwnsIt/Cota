@@ -155,6 +155,8 @@ def main() -> None:
         },
         "outlook": export_outlook(outlooks, parts),
         "timestamps": timestamps,
+        # Who can change program v2: a multisig (scripts/squads/squads.mjs). The browser checks it live.
+        "upgrade": json.loads((ROOT / "config/upgrade-multisig.json").read_text()) if (ROOT / "config/upgrade-multisig.json").exists() else None,
         "vaults": vaults,
     }
     (OUT / "bundle.json").write_text(json.dumps(bundle, separators=(",", ":"), ensure_ascii=False))

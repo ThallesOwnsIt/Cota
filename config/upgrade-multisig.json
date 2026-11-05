@@ -1,0 +1,28 @@
+{
+  "program": "FnjR7wG5zicqWJ6KQuWQ5UcqqhcSghrYozVgMmmDFNwR",
+  "multisig": "9YJLAapCP7dPPsMGv9jn5sLyrAaXY31BaX5ZY3RHta7k",
+  "vault": "ApMyXiwmTaum9kRyDWXzRHePsMVqP9tYzQ93ngZrmTNC",
+  "threshold": 2,
+  "members": [
+    "28JccEpdZqoKJhhURpDC4XGkZv4QADxoBtm7idrLVHo4",
+    "3MHgEdrFYh5kCB58qdY9CQgCacKX9K2qpiu5i9cTmTWp",
+    "Ba7Du5woWJTXkRYpKpasYCPpPbREJGqiSeUW5Z5ich8k"
+  ],
+  "squads_program": "SQDS4ep65T869zMMBKyuUq6aD6EgTu8psMjkvj52pCf",
+  "created_tx": "ZLAjR8A6j61CUdCzUcZeHwNDCNyQQxM1KsRyVoVbffhwC4u13Bj8behmeDXBe4tTRBkhTWHwFzwzAbQpSj4WJ9N",
+  "program_data": "F1SUp87vgdbcYtPjj1wHan4fb8gVnE7niXYJxHKe7Xfy",
+  "time_lock_secs": 86400,
+  "upgrades": [
+    {
+      "proposal": 1,
+      "what": "same code, to test the path (2 approvals, wait, execute)",
+      "slot": 519088192,
+      "tx": "529jHi2TZeCwJnqMHavAhBjPj8unH3jeuKE76wJk4uZsmKwGkPc5pQyzSGiKW3FugPZJecDRECzvZ9tb1JoWkSEH"
+    },
+    {
+      "proposal": 2,
+      "what": "time lock 60 s -> 86400 s",
+      "tx": "3k5W79zJPfuf3T1phK9J4z2xSX3HdkD9gC8Bc9KmpDMnmPZYjw5W4FA9BbpXh5dBLQHaLiAb9Af352Zy1KHZjsky"
+    }
+  ]
+}

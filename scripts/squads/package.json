@@ -1,0 +1,10 @@
+{
+  "name": "cota-squads",
+  "private": true,
+  "type": "module",
+  "description": "Operations on the multisig that holds the upgrade authority of program v2",
+  "dependencies": {
+    "@solana/web3.js": "^1.98.0",
+    "@sqds/multisig": "2.1.4"
+  }
+}

@@ -100,12 +100,23 @@ chain what has 2 of 3 signatures, then commits `data/ledger` and `dashboard/data
 
 Repository secrets (Settings → Secrets and variables → Actions): `NODE_1_KEY`, `NODE_2_KEY`, `NODE_3_KEY` and `OPERATOR_KEY`, with
 the contents of `keys/node-N.json` and `keys/operator.json`; `ANA_IDENTIFICADOR` and `ANA_SENHA`, the HidroWebService login used
-by the nodes to read the river gauges (locally they go in `.env`, which git ignores). The operator is the committee authority (`cota-admin set-authority`);
-the program's upgrade authority never leaves the deployer's machine.
+by the nodes to read the river gauges (locally they go in `.env`, which git ignores). The operator is the committee authority (`cota-admin set-authority`).
+
+## Who can change the program
+
+Program v2's upgrade authority is the vault of a [Squads](https://squads.so) v4 multisig (`config/upgrade-multisig.json`): an
+upgrade needs **2 of 3** member signatures and then waits **24 hours** before it can run. While it waits the proposal is public,
+so anyone can see what would change. Changing the members or the wait goes through the same rule. Anyone can check it:
+`solana program show FnjR7wG5zicqWJ6KQuWQ5UcqqhcSghrYozVgMmmDFNwR -u devnet` shows the vault as authority.
+
+How an upgrade is done: `scripts/squads/squads.mjs` (write the buffer, hand it to the vault, propose, two approvals, wait,
+execute). Today the three member keys belong to the same person (on separate files); before real money, they should move to
+separate devices and people. Program v1 (the archive) is still upgradeable by its deployer.
 
 ## Known limits
 
-- The three oracles fetch and sign data independently, but today they are run by the same person (separate GitHub Actions jobs).
+- The three oracles, and the three keys of the upgrade multisig, are held by the same person today (separate GitHub Actions jobs,
+  separate key files).
   The next step is handing them to different institutions (civil defense, universities, NGOs).
 - The forecast is of the **daily discharge modelled by GloFAS**, 1 and 2 days ahead, not of the river gauge level. Gauge levels
   from ANA are recorded since November 2026, but the model has not been trained on them yet.
