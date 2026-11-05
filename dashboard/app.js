@@ -1898,7 +1898,11 @@ function renderVaults() {
       const rows = v.payouts
         .map(
           (p, pi) => `<tr><td>${L("fim de", "end of")} ${endOf(p.event_at)}</td>
-          <td><a href="${explorerAddr(p.trigger)}" target="_blank" rel="noopener" class="hash">${short(p.trigger)}</a></td>
+          <td>${
+            v.protocol === "v2"
+              ? chainLink({ protocol: "v2", record_index: p.trigger_index })
+              : `<a href="${explorerAddr(p.trigger)}" target="_blank" rel="noopener" class="hash">${short(p.trigger)}</a>`
+          }</td>
           <td class="num">${sol(p.amount)}</td>
           <td>${br(p.paid_at)}<br><span class="hash">slot ${nf0.format(p.slot)}</span></td>
           <td><button type="button" class="link-btn" data-v="${vi}" data-p="${pi}">${L("verificar", "verify")}</button>${p.explorer ? ` · <a href="${p.explorer}" target="_blank" rel="noopener">tx</a>` : ""}</td></tr>`,

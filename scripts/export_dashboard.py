@@ -65,7 +65,10 @@ def main() -> None:
         alerts += part["alerts"]
         outlook_days = {o["day"] for o in outlooks}
         outlooks += [o for o in part["outlooks"] if o["day"] not in outlook_days]
-        vaults += part["vaults"]
+        # Vaults only from the current program: v1's receive no more triggers, and v2's replay vault
+        # reproduces the same payouts.
+        if part is cur:
+            vaults += part["vaults"]
     days.sort(key=lambda d: d["day"])
     issues.sort(key=lambda i: i["issue_day"])
     # The same warning version may be in both programs: the earliest record is the one that counts.
