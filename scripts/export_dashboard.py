@@ -7,6 +7,7 @@ Output in dashboard/data/:
 - bundle.json        everything the page draws (days, forecasts, quality, metrics)
 - batches/vN-NNNNN.json each batch's readings, loaded on demand for the Merkle proof
 - records-v2.json     the leaves of program v2's accumulator, to check them against the on-chain peaks
+- timestamps/         the accumulator's daily root and its OpenTimestamps proof (Bitcoin)
 - public_alerts/<sha>.txt canonical content of each official warning (the browser recomputes the SHA-256)
 - outlooks/<sha>.txt  canonical content of each rain outlook (same)
 (the parametric vaults go in the bundle itself)
@@ -100,6 +101,17 @@ def main() -> None:
         if part["proto"] == "v2":
             (OUT / "records-v2.json").write_text(json.dumps({"leaves": part["leaves"]}, separators=(",", ":")))
 
+    # OpenTimestamps: the accumulator's root, timestamped in Bitcoin (scripts/timestamp.py).
+    timestamps = []
+    ts_dir = LEDGER / "timestamps"
+    if (ts_dir / "index.json").exists():
+        (OUT / "timestamps").mkdir(exist_ok=True)
+        for t in json.loads((ts_dir / "index.json").read_text()):
+            for name in (t["file"], t["file"] + ".ots"):
+                (OUT / "timestamps" / name).write_bytes((ts_dir / name).read_bytes())
+            timestamps.append(t)
+        timestamps.sort(key=lambda t: t["records"], reverse=True)
+
     test = metrics["test_2024"]
     bundle = {
         "meta": {
@@ -142,6 +154,7 @@ def main() -> None:
             "stage_series": stage_series_tail(stage_series),
         },
         "outlook": export_outlook(outlooks, parts),
+        "timestamps": timestamps,
         "vaults": vaults,
     }
     (OUT / "bundle.json").write_text(json.dumps(bundle, separators=(",", ":"), ensure_ascii=False))

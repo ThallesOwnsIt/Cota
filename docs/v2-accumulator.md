@@ -100,7 +100,7 @@ retries.
 2. Oracles, aggregator, audit and vault crank on v2; dashboard verification for v2 records.
 3. Replay of 2024 on v2 (devnet SOL is free), then live mode switches to v2 on a cutover day.
    Live days before the cutover stay verifiable against v1.
-4. OpenTimestamps for each day's root.
+4. OpenTimestamps for each day's root (`scripts/timestamp.py`, done).
 
 Devnet SOL needed: about 5.2 (program rent plus a temporary upload buffer of the same size), from the free
 faucet. Mainnet later: ~2.5 SOL of rent for the program (recoverable by closing it) and fees only after that.

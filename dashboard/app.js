@@ -1270,6 +1270,33 @@ function renderBasinDetail(p) {
   $("#basin-detail").innerHTML = `<p class="detail-kind">${kinds[p.kind]}</p><h4>${esc(cleanName(p.name))}</h4>${body}`;
 }
 
+// ---- copy in Bitcoin (OpenTimestamps) -------------------------------------
+// Once a day the accumulator's root is timestamped in Bitcoin, so the record survives a devnet reset.
+
+function renderStamp() {
+  const box = $("#btc-stamp");
+  const t = (B.timestamps ?? [])[0];
+  box.hidden = !t;
+  if (!t) return;
+  const when = br(Date.parse(t.stamped) / 1000);
+  const status = t.bitcoin_block
+    ? L(
+        `<span class="good-text">✓ confirmado no bloco <a href="https://mempool.space/block/${t.bitcoin_block}" target="_blank" rel="noopener">${nf0.format(t.bitcoin_block)}</a> do Bitcoin</span>`,
+        `<span class="good-text">✓ confirmed in Bitcoin block <a href="https://mempool.space/block/${t.bitcoin_block}" target="_blank" rel="noopener">${nf0.format(t.bitcoin_block)}</a></span>`,
+      )
+    : L("aguardando o próximo bloco do Bitcoin (leva algumas horas)", "waiting for the next Bitcoin block (takes a few hours)");
+  box.innerHTML = `<h3>${L("Cópia de segurança no Bitcoin", "Backup copy in Bitcoin")}</h3>
+    <p>${L(
+      "Todo dia a raiz da árvore com todos os registros do Cota é carimbada no Bitcoin pelo OpenTimestamps, de graça. Mesmo que a rede de testes da Solana seja apagada, dá para provar que estes registros já existiam naquela data.",
+      "Every day the root of the tree holding all of Cota's records is timestamped in Bitcoin through OpenTimestamps, for free. Even if Solana's test network is wiped, it can be proven that these records already existed on that date.",
+    )}</p>
+    <p class="sub">${L(
+      `Último carimbo: ${nf0.format(t.records)} registros, raiz <span class="hash">${short(t.root, 12)}</span>, enviado em ${when} · ${status}.`,
+      `Latest stamp: ${nf0.format(t.records)} records, root <span class="hash">${short(t.root, 12)}</span>, sent ${when} · ${status}.`,
+    )}
+    <a href="data/timestamps/${t.file}" download>${L("arquivo", "file")}</a> · <a href="data/timestamps/${t.file}.ots" download>${L("prova .ots", ".ots proof")}</a> · <a href="https://opentimestamps.org" target="_blank" rel="noopener">${L("conferir em opentimestamps.org", "check on opentimestamps.org")} ↗</a></p>`;
+}
+
 async function verifyPublicAlert(a) {
   panel("", `<h3>${L("Verificando o aviso", "Verifying warning")} ${esc(a.alert_id)}…</h3>`, "#live-verify");
   try {
@@ -2075,6 +2102,7 @@ function renderAll() {
   // Open verification panels were left in the other language: close them.
   document.querySelectorAll(".verify").forEach((p) => (p.hidden = true));
   renderLive();
+  renderStamp();
   renderOutlook();
   renderVaults();
   renderKpis();

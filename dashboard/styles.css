@@ -1765,3 +1765,20 @@ dl.kv dd {
     gap: 20px;
   }
 }
+
+/* ---- copy in Bitcoin ---- */
+.btc-stamp {
+  margin-top: 40px;
+  border-left: 2px solid var(--brand);
+  padding-left: 16px;
+  max-width: 78ch;
+}
+.btc-stamp h3 {
+  margin: 0 0 6px;
+  font-size: 18px;
+  font-weight: 500;
+}
+.btc-stamp p {
+  margin: 0 0 6px;
+  color: var(--text-2);
+}

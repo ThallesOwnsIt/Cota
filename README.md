@@ -75,7 +75,7 @@ April–May 2024 flood, with the Merkle proofs and the accumulator check against
 | `ml/` | Training, evaluation and forecasting (Python/uv); `cota_ml.outlook` calibrates the rain rule and runs the backtest |
 | `dashboard/` | Static dashboard (HTML/JS) |
 | `data/ledger/` | State: every anchored batch, forecast and warning, with explorer links |
-| `scripts/` | `replay.sh`, `live.sh`, `export_dashboard.py`, `next_day.py`, `build_map.py` (basin map, run once) |
+| `scripts/` | `replay.sh`, `live.sh`, `export_dashboard.py`, `next_day.py`, `timestamp.py` (OpenTimestamps), `build_map.py` (basin map, run once) |
 
 ## Running
 
@@ -115,8 +115,9 @@ the program's upgrade authority never leaves the deployer's machine.
 - Rain from INMET stations arrives about a month late; live mode uses only discharge until real-time access is available.
 - Vaults run on devnet with test SOL. The `replay-2024` vault accepts the replay's alerts (recorded in 2026 over 2024 data) to
   demonstrate the mechanism; `ao-vivo` only accepts triggers recorded after it was created.
-- Devnet can be reset. The accumulator's root is a single hash, which makes it cheap to timestamp elsewhere; until that is in place,
-  the record lives on devnet and in this repository.
+- Devnet can be reset. Once a day the accumulator's root is timestamped in Bitcoin with OpenTimestamps (free public calendars;
+  `scripts/timestamp.py`, files in `data/ledger/timestamps`), so the record keeps a date nobody controls even if devnet is wiped.
+  A timestamp proves the records existed by that date; the slot inside each record is still the finer-grained "when".
 - Early warning: the rule was calibrated on **observed** rain and is applied to **forecast** rain at the station points. In the
   backtest, the forecast used is one day older than live mode's (no peeking at the future). Three floods in 2.7 years is a small
   sample: the CSI of 0.25 is very uncertain. Archived forecasts come from Open-Meteo, not from each model's official service.

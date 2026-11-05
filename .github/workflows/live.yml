@@ -127,6 +127,12 @@ jobs:
         run: target/release/cota-vault --rpc "$RPC" --cluster "$CLUSTER" --payer keys/operator.json crank
       - run: rm -f keys/operator.json
         if: always()
+      # Daily copy of the accumulator's root in Bitcoin (free OpenTimestamps calendars): it survives a
+      # devnet reset. Also completes the proofs still waiting for their Bitcoin block.
+      - name: Carimbo no Bitcoin
+        if: always()
+        continue-on-error: true
+        run: python3 scripts/timestamp.py
       # These run even if the batch fails: an official warning already anchored must not go
       # unrecorded.
       - name: Auditoria e dados do dashboard
