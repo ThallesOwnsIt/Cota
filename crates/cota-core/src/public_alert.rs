@@ -26,8 +26,14 @@ pub struct PublicAlertHeader {
 }
 
 impl PublicAlertHeader {
+    /// Exact bytes each node signs with ed25519 for program v1: `PUBLIC_ALERT_DOMAIN || borsh(header)`.
     pub fn signing_message(&self) -> Vec<u8> {
-        let mut msg = PUBLIC_ALERT_DOMAIN.to_vec();
+        self.signing_message_for(crate::Protocol::V1)
+    }
+
+    /// Same, under the signing domain of `protocol`.
+    pub fn signing_message_for(&self, protocol: crate::Protocol) -> Vec<u8> {
+        let mut msg = protocol.public_alert_domain().to_vec();
         msg.extend(borsh::to_vec(self).expect("Borsh de PublicAlertHeader não falha"));
         msg
     }

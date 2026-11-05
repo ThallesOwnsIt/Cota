@@ -26,3 +26,6 @@ codegen-units = 1
 # The on-chain program pays rent per byte: optimize for size.
 [profile.release.package.cota]
 opt-level = "z"
+
+[profile.release.package.cota-v2]
+opt-level = "z"

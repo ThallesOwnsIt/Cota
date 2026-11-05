@@ -33,9 +33,14 @@ pub struct BatchHeader {
 }
 
 impl BatchHeader {
-    /// Exact bytes each node signs with ed25519: `BATCH_DOMAIN || borsh(header)`.
+    /// Exact bytes each node signs with ed25519 for program v1: `BATCH_DOMAIN || borsh(header)`.
     pub fn signing_message(&self) -> Vec<u8> {
-        let mut msg = BATCH_DOMAIN.to_vec();
+        self.signing_message_for(crate::Protocol::V1)
+    }
+
+    /// Same, under the signing domain of `protocol`.
+    pub fn signing_message_for(&self, protocol: crate::Protocol) -> Vec<u8> {
+        let mut msg = protocol.batch_domain().to_vec();
         msg.extend(borsh::to_vec(self).expect("Borsh de BatchHeader não falha"));
         msg
     }
