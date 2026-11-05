@@ -1,0 +1,306 @@
+{
+  "batch_id": 54,
+  "day": "2026-11-04",
+  "header": {
+    "batch_id": 54,
+    "t_start": 1793750400,
+    "t_end": 1793836800,
+    "leaf_count": 6,
+    "merkle_root": "29b4781a31583482108894c74f4d5072deba5eaceeea147d59bc8b6e9c39eb44",
+    "station_set_hash": "c4c9d3e76e2d04cd40c1be3c6bba5c8e4a3c9765a59bc433db8768424a82f4ba",
+    "prev_batch_root": "7ba277d05f97a9de5a637634d1cbe4ee6ad8f9c92f6687b83c0fc9742ac042cc"
+  },
+  "batch_account": "HPJaNUo5U6wRwuBjUeJrvda9y6popWG55d6ZEoZhXCbz",
+  "tx_signature": "jnzsSypbRX2eE5wtt1qjzkVuKzkaswfRVoB37c8tPG7Ec3RPVmrhMoZWPNQ1Equ6SwnmqwP5XSJ3zgLxPVP1KWH",
+  "cluster": "devnet",
+  "explorer": "https://explorer.solana.com/tx/jnzsSypbRX2eE5wtt1qjzkVuKzkaswfRVoB37c8tPG7Ec3RPVmrhMoZWPNQ1Equ6SwnmqwP5XSJ3zgLxPVP1KWH?cluster=devnet",
+  "members": [
+    {
+      "member": "GS3uQUPgfCDXqtbpD6vPyNpQgRcDUFj1fhF4wYGk9ist",
+      "status": "signed"
+    },
+    {
+      "member": "B4FwxN42zWyiSKU7qwvbpchy7uDD8ugnzX43B9mPd38L",
+      "status": "signed"
+    },
+    {
+      "member": "AFbz6rqf4u7pexBHadriqd9VNDh74KGqEeZG5eeQKTs3",
+      "status": "signed"
+    }
+  ],
+  "signatures": [
+    {
+      "member": "AFbz6rqf4u7pexBHadriqd9VNDh74KGqEeZG5eeQKTs3",
+      "signature": "4db35f0fc6c4d345f64b5c5ed8d4a35d19c93981f8e688fc2058e1fe2c4816f54af54038682bd59eb43945670035a8fb77bce1062394a92e960667a0a13fd900"
+    },
+    {
+      "member": "B4FwxN42zWyiSKU7qwvbpchy7uDD8ugnzX43B9mPd38L",
+      "signature": "31ccc7b8a3238281a0a6a81dc8c9879730d1bf9564c2012ad8d965c02dc8a19bd896ab706dfb8272f9793b1bc9e3622f8a04bfdfdbd5bf6635f116b0d2518003"
+    },
+    {
+      "member": "GS3uQUPgfCDXqtbpD6vPyNpQgRcDUFj1fhF4wYGk9ist",
+      "signature": "dc2503ac160e9b6d1fb44bf9723fa245bed3fad7a463890fc7bd99d11599382c06f281f4666dbe0e46445ef4cf39ac7f7fdbe44b5c49560cb6bd82123c1d6303"
+    }
+  ],
+  "quality": {
+    "stations": [
+      {
+        "station_id": "GLOFAS-GUAIBA",
+        "expected": 1,
+        "present": 1,
+        "availability": 1.0,
+        "flag_rate": 0.0,
+        "agreement": 1.0,
+        "freshness": 1.0,
+        "raw": 0.9999999999999999,
+        "score": 1.0,
+        "flags": [],
+        "degraded": null
+      },
+      {
+        "station_id": "GLOFAS-JACUI",
+        "expected": 1,
+        "present": 1,
+        "availability": 1.0,
+        "flag_rate": 0.0,
+        "agreement": 1.0,
+        "freshness": 1.0,
+        "raw": 0.9999999999999999,
+        "score": 1.0,
+        "flags": [],
+        "degraded": null
+      },
+      {
+        "station_id": "GLOFAS-TAQUARI",
+        "expected": 1,
+        "present": 1,
+        "availability": 1.0,
+        "flag_rate": 0.0,
+        "agreement": 1.0,
+        "freshness": 1.0,
+        "raw": 0.9999999999999999,
+        "score": 1.0,
+        "flags": [],
+        "degraded": null
+      },
+      {
+        "station_id": "GLOFAS-CAI",
+        "expected": 1,
+        "present": 1,
+        "availability": 1.0,
+        "flag_rate": 0.0,
+        "agreement": 1.0,
+        "freshness": 1.0,
+        "raw": 0.9999999999999999,
+        "score": 1.0,
+        "flags": [],
+        "degraded": null
+      },
+      {
+        "station_id": "GLOFAS-SINOS",
+        "expected": 1,
+        "present": 1,
+        "availability": 1.0,
+        "flag_rate": 0.0,
+        "agreement": 1.0,
+        "freshness": 1.0,
+        "raw": 0.9999999999999999,
+        "score": 1.0,
+        "flags": [],
+        "degraded": null
+      },
+      {
+        "station_id": "GLOFAS-GRAVATAI",
+        "expected": 1,
+        "present": 1,
+        "availability": 1.0,
+        "flag_rate": 0.0,
+        "agreement": 1.0,
+        "freshness": 1.0,
+        "raw": 0.9999999999999999,
+        "score": 1.0,
+        "flags": [],
+        "degraded": null
+      },
+      {
+        "station_id": "ANA-87450004",
+        "expected": 24,
+        "present": 0,
+        "availability": 0.0,
+        "flag_rate": 0.0,
+        "agreement": 1.0,
+        "freshness": 0.0,
+        "raw": 0.2,
+        "score": 0.2,
+        "flags": [],
+        "degraded": "unavailable"
+      },
+      {
+        "station_id": "ANA-85930001",
+        "expected": 24,
+        "present": 0,
+        "availability": 0.0,
+        "flag_rate": 0.0,
+        "agreement": 1.0,
+        "freshness": 0.0,
+        "raw": 0.2,
+        "score": 0.2,
+        "flags": [],
+        "degraded": "unavailable"
+      },
+      {
+        "station_id": "ANA-86879300",
+        "expected": 24,
+        "present": 0,
+        "availability": 0.0,
+        "flag_rate": 0.0,
+        "agreement": 1.0,
+        "freshness": 0.0,
+        "raw": 0.2,
+        "score": 0.2,
+        "flags": [],
+        "degraded": "unavailable"
+      },
+      {
+        "station_id": "ANA-87270000",
+        "expected": 24,
+        "present": 0,
+        "availability": 0.0,
+        "flag_rate": 0.0,
+        "agreement": 1.0,
+        "freshness": 0.0,
+        "raw": 0.2,
+        "score": 0.2,
+        "flags": [],
+        "degraded": "unavailable"
+      },
+      {
+        "station_id": "ANA-87382000",
+        "expected": 24,
+        "present": 0,
+        "availability": 0.0,
+        "flag_rate": 0.0,
+        "agreement": 1.0,
+        "freshness": 0.0,
+        "raw": 0.2,
+        "score": 0.2,
+        "flags": [],
+        "degraded": "unavailable"
+      },
+      {
+        "station_id": "ANA-87399000",
+        "expected": 24,
+        "present": 0,
+        "availability": 0.0,
+        "flag_rate": 0.0,
+        "agreement": 1.0,
+        "freshness": 0.0,
+        "raw": 0.2,
+        "score": 0.2,
+        "flags": [],
+        "degraded": "unavailable"
+      }
+    ],
+    "dissents": [],
+    "degradations": [
+      {
+        "station_id": "ANA-87450004",
+        "reason": "unavailable",
+        "score_milli": 200,
+        "tx_signature": "5vf4KG2Wh7J7uBZeXGQ6vUMMuR9aTQnjJ2APGgp9ieknobcF7QPSe92tuYBVM2DzTfgeTcjcaCJKRC9GpSeNTcuJ",
+        "explorer": "https://explorer.solana.com/tx/5vf4KG2Wh7J7uBZeXGQ6vUMMuR9aTQnjJ2APGgp9ieknobcF7QPSe92tuYBVM2DzTfgeTcjcaCJKRC9GpSeNTcuJ?cluster=devnet"
+      },
+      {
+        "station_id": "ANA-85930001",
+        "reason": "unavailable",
+        "score_milli": 200,
+        "tx_signature": "5j2tEh4qGR1bed3gyNLbP4AcFtojxAxKvQZwEamr4rmTw4Jj5qakHFyZ23j2Nx3cojgkwVNJpP3CY2dWE227FydM",
+        "explorer": "https://explorer.solana.com/tx/5j2tEh4qGR1bed3gyNLbP4AcFtojxAxKvQZwEamr4rmTw4Jj5qakHFyZ23j2Nx3cojgkwVNJpP3CY2dWE227FydM?cluster=devnet"
+      },
+      {
+        "station_id": "ANA-86879300",
+        "reason": "unavailable",
+        "score_milli": 200,
+        "tx_signature": "3wjfCibTbEbgeXnDYHnZiYVD1SeuZTZeVmNTk859Lnrrkc6smZoxHo98i2sdVpCufcuqeew5X3ZtMAn88XpY6oeT",
+        "explorer": "https://explorer.solana.com/tx/3wjfCibTbEbgeXnDYHnZiYVD1SeuZTZeVmNTk859Lnrrkc6smZoxHo98i2sdVpCufcuqeew5X3ZtMAn88XpY6oeT?cluster=devnet"
+      },
+      {
+        "station_id": "ANA-87270000",
+        "reason": "unavailable",
+        "score_milli": 200,
+        "tx_signature": "5CLpdBMECMC7LzJcsafgbgtjnWeapmHraiTV7GDQtoWh4FfuHHpVRRsLaYVufy3SDCkj2AbJakYXwkxkYESHxUhu",
+        "explorer": "https://explorer.solana.com/tx/5CLpdBMECMC7LzJcsafgbgtjnWeapmHraiTV7GDQtoWh4FfuHHpVRRsLaYVufy3SDCkj2AbJakYXwkxkYESHxUhu?cluster=devnet"
+      },
+      {
+        "station_id": "ANA-87382000",
+        "reason": "unavailable",
+        "score_milli": 200,
+        "tx_signature": "31dckHEn2JX8bon549Hc5LmKCr5SZpjAXrwyZsdZRidGXv8iT7qUdWcWzHM7o4gY1HExeZQwR2fpeYjcTQVBMj5z",
+        "explorer": "https://explorer.solana.com/tx/31dckHEn2JX8bon549Hc5LmKCr5SZpjAXrwyZsdZRidGXv8iT7qUdWcWzHM7o4gY1HExeZQwR2fpeYjcTQVBMj5z?cluster=devnet"
+      },
+      {
+        "station_id": "ANA-87399000",
+        "reason": "unavailable",
+        "score_milli": 200,
+        "tx_signature": "3n4DAspBzvFf3c4hUf98iNSpSZRSViuWe4CfgsqKZ4dA7wSs3oQSgqLrSXUUA3xc6mHEzU81ubGAjeX34i2y1D3C",
+        "explorer": "https://explorer.solana.com/tx/3n4DAspBzvFf3c4hUf98iNSpSZRSViuWe4CfgsqKZ4dA7wSs3oQSgqLrSXUUA3xc6mHEzU81ubGAjeX34i2y1D3C?cluster=devnet"
+      }
+    ]
+  },
+  "readings": [
+    {
+      "station_id": "GLOFAS-CAI",
+      "variable": "river_discharge",
+      "ts_utc": 1793750400,
+      "source": "open_meteo_glofas",
+      "value_milli": 151760,
+      "datum_id": null,
+      "raw_payload_sha256": "7d9b95718c0d1da1e7d19cf464118fce82a89862adb1ffc8516c53b9acdc7228"
+    },
+    {
+      "station_id": "GLOFAS-GRAVATAI",
+      "variable": "river_discharge",
+      "ts_utc": 1793750400,
+      "source": "open_meteo_glofas",
+      "value_milli": 10250,
+      "datum_id": null,
+      "raw_payload_sha256": "a925db008ebd5af0b4f13290edb70fefd96cbf326c4a95c9ec88fae3cea760f6"
+    },
+    {
+      "station_id": "GLOFAS-GUAIBA",
+      "variable": "river_discharge",
+      "ts_utc": 1793750400,
+      "source": "open_meteo_glofas",
+      "value_milli": 1712960,
+      "datum_id": null,
+      "raw_payload_sha256": "55c5a2484f871451071833c240834790b6dde476146458ef3f70719cb1078cb0"
+    },
+    {
+      "station_id": "GLOFAS-JACUI",
+      "variable": "river_discharge",
+      "ts_utc": 1793750400,
+      "source": "open_meteo_glofas",
+      "value_milli": 1478110,
+      "datum_id": null,
+      "raw_payload_sha256": "048dd41b97f9f419ca64d2f2d71947f402d00328730428ae1a3ab536f0857fd9"
+    },
+    {
+      "station_id": "GLOFAS-SINOS",
+      "variable": "river_discharge",
+      "ts_utc": 1793750400,
+      "source": "open_meteo_glofas",
+      "value_milli": 59390,
+      "datum_id": null,
+      "raw_payload_sha256": "946f4a1b8644bf7928f8f3ad5d908d33ccbae22ba33c09399e7568ec8e7cbd50"
+    },
+    {
+      "station_id": "GLOFAS-TAQUARI",
+      "variable": "river_discharge",
+      "ts_utc": 1793750400,
+      "source": "open_meteo_glofas",
+      "value_milli": 451900,
+      "datum_id": null,
+      "raw_payload_sha256": "d092597ca56fa30018da41f3e8044c957bbfcb343eb5f53297c3b5fbca7c7582"
+    }
+  ]
+}
