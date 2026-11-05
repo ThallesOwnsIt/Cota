@@ -8,9 +8,11 @@ skip-lint = false
 
 [programs.localnet]
 cota = "4FChu6PkKzsFQRAtQt2oiGt7TuC4uZhBNSSHqDoVNFsa"
+cota_v2 = "FnjR7wG5zicqWJ6KQuWQ5UcqqhcSghrYozVgMmmDFNwR"
 
 [programs.devnet]
 cota = "4FChu6PkKzsFQRAtQt2oiGt7TuC4uZhBNSSHqDoVNFsa"
+cota_v2 = "FnjR7wG5zicqWJ6KQuWQ5UcqqhcSghrYozVgMmmDFNwR"
 
 [provider]
 cluster = "localnet"

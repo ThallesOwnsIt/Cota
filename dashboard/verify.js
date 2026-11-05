@@ -146,10 +146,11 @@ export async function fetchAccount(rpc, address) {
 }
 
 class Reader {
-  constructor(data) {
+  /** `offset` 8 skips the Anchor discriminator of an account; records (v2) have none. */
+  constructor(data, offset = 8) {
     this.d = data;
     this.v = new DataView(data.buffer, data.byteOffset, data.byteLength);
-    this.o = 8; // Anchor discriminator
+    this.o = offset;
   }
   u8() {
     return this.d[this.o++];
@@ -161,6 +162,11 @@ class Reader {
   }
   u32() {
     const x = this.v.getUint32(this.o, true);
+    this.o += 4;
+    return x;
+  }
+  i32() {
+    const x = this.v.getInt32(this.o, true);
     this.o += 4;
     return x;
   }
@@ -330,5 +336,192 @@ export function decodeAlertReceipt(data) {
     level: r.u8(),
     slot: r.u64(),
     committed_at: r.i64(),
+  };
+}
+
+// ---- program v2: one accumulator (Merkle Mountain Range) for every record ----------------------
+// Same algorithms as `cota_core::mmr` and the program: leaf H(0x00 ‖ record), node H(0x01 ‖ left ‖ right),
+// peaks indexed by height (peak h exists when bit h of the record count is set).
+
+export const MAX_PEAKS = 32;
+
+/** Layout of `Registry` (programs/cota-v2/src/state.rs). */
+export function decodeRegistry(data) {
+  const r = new Reader(data);
+  const authority = base58(r.bytes(32));
+  const members = Array.from({ length: r.u32() }, () => base58(r.bytes(32)));
+  return {
+    authority,
+    members,
+    threshold: r.u8(),
+    next_batch_id: r.u64(),
+    last_batch_root: toHex(r.bytes(32)),
+    last_t_end: r.i64(),
+    leaf_count: r.u64(),
+    peaks: Array.from({ length: MAX_PEAKS }, () => toHex(r.bytes(32))),
+  };
+}
+
+/** Peaks of the accumulator over these leaf hashes (binary-counter append, like the program). */
+export async function mmrPeaks(leaves) {
+  const peaks = Array(MAX_PEAKS).fill(null);
+  for (let n = 0; n < leaves.length; n++) {
+    let carry = leaves[n];
+    let h = 0;
+    while (Math.floor(n / 2 ** h) % 2 === 1) {
+      carry = await hashNode(peaks[h], carry);
+      peaks[h] = null;
+      h++;
+    }
+    peaks[h] = carry;
+  }
+  return peaks.map((p) => (p ? toHex(p) : "0".repeat(64)));
+}
+
+/** The perfect trees of an accumulator with `n` leaves, oldest first: [height, first index]. */
+function ranges(n) {
+  const out = [];
+  let start = 0;
+  for (let h = MAX_PEAKS - 1; h >= 0; h--) {
+    if (Math.floor(n / 2 ** h) % 2 === 1) {
+      out.push([h, start]);
+      start += 2 ** h;
+    }
+  }
+  return out;
+}
+
+/** Inclusion proof of leaf `index`: its peak's height and the siblings up to it. */
+export async function mmrProof(leaves, index) {
+  const [height, start] = ranges(leaves.length).find(([h, s]) => index >= s && index < s + 2 ** h);
+  let level = leaves.slice(start, start + 2 ** height);
+  let i = index - start;
+  const siblings = [];
+  while (level.length > 1) {
+    siblings.push(level[i ^ 1]);
+    const next = [];
+    for (let k = 0; k < level.length; k += 2) next.push(await hashNode(level[k], level[k + 1]));
+    level = next;
+    i = Math.floor(i / 2);
+  }
+  return { height, siblings };
+}
+
+/** Walks `leaf` up to its peak and compares with the stored one. Returns the steps for display. */
+export async function mmrVerify(peaks, count, leaf, index, siblings) {
+  const range = ranges(count).find(([h, s]) => index >= s && index < s + 2 ** h);
+  if (!range || siblings.length !== range[0]) return { ok: false, steps: [], peak: null, height: null };
+  const local = index - range[1];
+  let node = leaf;
+  const steps = [];
+  for (let k = 0; k < siblings.length; k++) {
+    const left = Math.floor(local / 2 ** k) % 2 === 0;
+    node = left ? await hashNode(node, siblings[k]) : await hashNode(siblings[k], node);
+    steps.push({ side: left ? "right" : "left", sibling: siblings[k], result: node });
+  }
+  return { ok: toHex(node) === peaks[range[0]], steps, peak: toHex(node), height: range[0] };
+}
+
+const RECORD_KINDS = ["station", "batch", "degradation", "forecast", "public_alert", "outlook"];
+
+/** Borsh of a v2 `Record`. Field names follow the v1 account decoders above. */
+export function decodeRecord(bytes) {
+  const r = new Reader(bytes, 0);
+  const kind = RECORD_KINDS[r.u8()];
+  switch (kind) {
+    case "station": {
+      const station_id = r.str(), name = r.str(), source = r.u8(), variable = r.u8(), lat_e6 = r.i32(), lon_e6 = r.i32();
+      const datum_id = r.u8() ? r.str() : null;
+      return { kind, station_id, name, source, variable, lat_e6, lon_e6, datum_id, slot: r.u64(), registered_at: r.i64() };
+    }
+    case "batch":
+      return {
+        kind,
+        batch_id: r.u64(),
+        t_start: r.i64(),
+        t_end: r.i64(),
+        leaf_count: r.u32(),
+        merkle_root: toHex(r.bytes(32)),
+        station_set_hash: toHex(r.bytes(32)),
+        prev_batch_root: toHex(r.bytes(32)),
+        signers: r.u8(),
+        signer_count: r.u8(),
+        slot: r.u64(),
+        committed_at: r.i64(),
+      };
+    case "degradation":
+      return { kind, batch_id: r.u64(), station_id: r.str(), score_milli: r.u16(), reason: r.u8(), slot: r.u64() };
+    case "forecast": {
+      const f = {
+        kind,
+        station_id: r.str(),
+        based_on_batch_id: r.u64(),
+        based_on_root: toHex(r.bytes(32)),
+        issued_at: r.i64(),
+        target_ts: r.i64(),
+        horizon_hours: r.u16(),
+        p10: r.i64(),
+        p50: r.i64(),
+        p90: r.i64(),
+        model_sha256: toHex(r.bytes(32)),
+        features_root: toHex(r.bytes(32)),
+      };
+      f.alert = r.u8() ? { threshold_milli: r.i64(), level: r.u8() } : null;
+      f.slot = r.u64();
+      f.committed_at = r.i64();
+      return f;
+    }
+    case "public_alert":
+      return {
+        kind,
+        issuer: r.str(),
+        alert_id: r.str(),
+        content_sha256: toHex(r.bytes(32)),
+        severity: r.u8(),
+        onset: r.i64(),
+        expires: r.i64(),
+        signers: r.u8(),
+        signer_count: r.u8(),
+        slot: r.u64(),
+        committed_at: r.i64(),
+      };
+    case "outlook": {
+      const o = {
+        kind,
+        region: r.str(),
+        issued_at: r.i64(),
+        window_end: r.i64(),
+        models: r.u8(),
+        rain_mean_milli: r.i64(),
+        rain_min_milli: r.i64(),
+        rain_max_milli: r.i64(),
+        content_sha256: toHex(r.bytes(32)),
+      };
+      o.based_on_batch_id = r.u64();
+      o.threshold_milli = r.i64();
+      o.triggered = r.u8() === 1;
+      o.signers = r.u8();
+      o.signer_count = r.u8();
+      o.slot = r.u64();
+      o.committed_at = r.i64();
+      return o;
+    }
+    default:
+      throw new Error(`unknown record kind ${bytes[0]}`);
+  }
+}
+
+/** Layout of the v2 `Payout`. */
+export function decodePayoutV2(data) {
+  const r = new Reader(data);
+  return {
+    vault: base58(r.bytes(32)),
+    trigger_leaf: toHex(r.bytes(32)),
+    trigger_index: r.u64(),
+    event_at: r.i64(),
+    amount: r.u64(),
+    beneficiary: base58(r.bytes(32)),
+    slot: r.u64(),
+    paid_at: r.i64(),
   };
 }

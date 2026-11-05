@@ -127,6 +127,8 @@ struct VaultAudit {
 #[derive(Serialize)]
 struct Report {
     program: String,
+    /// The `Registry` account (committee and peaks) the dashboard reads to verify records.
+    registry: String,
     accumulator: AccumulatorAudit,
     batches: Vec<BatchAudit>,
     forecasts: Vec<ForecastAudit>,
@@ -509,6 +511,7 @@ fn main() -> Result<()> {
     }
     let report = Report {
         program: chain::PROGRAM_ID.to_string(),
+        registry: chain::registry_pda().to_string(),
         accumulator,
         batches,
         forecasts,

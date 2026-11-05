@@ -294,6 +294,27 @@ impl Env {
         TriggerProof { record: self.records[index as usize].clone(), leaf_index: index, siblings: p.siblings }
     }
 
+    /// For the dashboard's JS check: COTA_KEEP_RECORDS=dir writes the records and the on-chain peaks.
+    fn dump_for_js(&self) {
+        let Ok(dir) = std::env::var("COTA_KEEP_RECORDS") else { return };
+        std::fs::create_dir_all(&dir).unwrap();
+        let kinds = ["station", "batch", "degradation", "forecast", "public_alert", "outlook"];
+        let lines: Vec<String> = self
+            .records
+            .iter()
+            .enumerate()
+            .map(|(i, r)| {
+                let leaf: String = hash_leaf(r).iter().map(|b| format!("{b:02x}")).collect();
+                let hex: String = r.iter().map(|b| format!("{b:02x}")).collect();
+                format!(r#"{{"index":{i},"leaf":"{leaf}","record":"{hex}","kind":"{}"}}"#, kinds[r[0] as usize])
+            })
+            .collect();
+        std::fs::write(format!("{dir}/records.jsonl"), lines.join("\n") + "\n").unwrap();
+        let reg = self.registry();
+        let peaks: Vec<String> = reg.peaks.iter().map(|p| format!("\"{}\"", p.iter().map(|b| format!("{b:02x}")).collect::<String>())).collect();
+        std::fs::write(format!("{dir}/registry.json"), format!(r#"{{"leaf_count":{},"peaks":[{}]}}"#, reg.leaf_count, peaks.join(","))).unwrap();
+    }
+
     fn last_record(&self) -> (u64, Record) {
         let i = self.records.len() - 1;
         (i as u64, borsh::from_slice(&self.records[i]).unwrap())
@@ -468,6 +489,7 @@ fn outlooks_degradations_stations_and_warnings_are_records() {
         env.send(&[ed, i]).unwrap();
     }
     assert!(matches!(env.last_record().1, Record::PublicAlert(p) if p.header == w && p.signer_count == 2));
+    env.dump_for_js();
 }
 
 #[test]

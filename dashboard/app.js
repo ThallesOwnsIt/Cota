@@ -13,6 +13,13 @@ import {
   decodeVault,
   decodePayout,
   decodeAlertReceipt,
+  decodePayoutV2,
+  decodeRecord,
+  decodeRegistry,
+  fromHex,
+  mmrPeaks,
+  mmrProof,
+  mmrVerify,
   toHex,
   verifyInclusion,
 } from "./verify.js";
@@ -386,12 +393,13 @@ function renderTimeline() {
 
 // ---- selected day ---------------------------------------------------------
 
-async function loadBatch(id) {
-  if (!state.batches.has(id)) {
-    const res = await fetch(`data/batches/${String(id).padStart(5, "0")}.json`);
-    state.batches.set(id, await res.json());
+async function loadBatch(d) {
+  const file = d.batch_file ?? `batches/${String(d.batch_id).padStart(5, "0")}.json`;
+  if (!state.batches.has(file)) {
+    const res = await fetch(`data/${file}`);
+    state.batches.set(file, await res.json());
   }
-  return state.batches.get(id);
+  return state.batches.get(file);
 }
 
 function selectDay(i) {
@@ -438,7 +446,7 @@ function renderDay() {
       <dt>${L("Raiz anterior", "Previous root")}</dt><dd class="hash" title="${d.prev_batch_root}">${short(d.prev_batch_root, 16)}</dd>
       <dt>${L("Leituras", "Readings")}</dt><dd>${d.leaf_count}</dd>
       <dt>${L("Assinaturas", "Signatures")}</dt><dd>${signers}</dd>
-      <dt>${L("Na cadeia", "On-chain")}</dt><dd><a href="${d.explorer}" target="_blank" rel="noopener">${L("transação", "transaction")}</a> · <a href="${explorerAddr(d.batch_account)}" target="_blank" rel="noopener">${L("conta do lote", "batch account")}</a></dd>
+      <dt>${L("Na cadeia", "On-chain")}</dt><dd><a href="${d.explorer}" target="_blank" rel="noopener">${L("transação", "transaction")}</a> · ${d.protocol === "v2" ? chainLink(d) : `<a href="${explorerAddr(d.batch_account)}" target="_blank" rel="noopener">${L("conta do lote", "batch account")}</a>`}</dd>
     </dl>
     ${events.length ? `<ul class="events">${events.join("")}</ul>` : ""}
     <p><button type="button" class="ghost" id="verify-batch">${L("Verificar o lote inteiro na devnet", "Verify the whole batch on devnet")}</button></p>
@@ -483,7 +491,7 @@ function renderDay() {
 }
 
 async function renderReadings(d) {
-  const b = await loadBatch(d.batch_id);
+  const b = await loadBatch(d);
   if (B.days[state.sel] !== d) return;
   const sel = $("#station-filter");
   const ids = [...new Set(b.readings.map((r) => r.station_id))].sort();
@@ -505,6 +513,67 @@ async function renderReadings(d) {
 // ---- verification ---------------------------------------------------------
 
 const OWNED = () => L("A conta pertence ao programa do Cota", "The account belongs to the Cota program");
+
+// ---- where a record lives: its own account (program v1) or a leaf of the accumulator (program v2) ----
+
+const programOf = (item) => B.meta.programs?.[item.protocol || "v1"]?.program ?? B.meta.program;
+let accState = null;
+
+/** Program v2's registry, read live, and the dashboard's copy of the leaves rebuilt into peaks. Cached for a minute. */
+async function accumulator() {
+  if (accState && Date.now() - accState.at < 60_000) return accState.value;
+  const meta = B.meta.programs.v2;
+  const value = (async () => {
+    const [acc, file] = await Promise.all([fetchAccount(B.meta.rpc, meta.registry), fetch(`data/${meta.leaves_file}`).then((r) => r.json())]);
+    if (acc.owner !== meta.program) throw new Error(L(`a conta do registro pertence a ${acc.owner}`, `the registry account belongs to ${acc.owner}`));
+    const reg = decodeRegistry(acc.data);
+    const leaves = file.leaves.map(fromHex);
+    const peaks = await mmrPeaks(leaves);
+    const same = reg.leaf_count === leaves.length && peaks.every((x, i) => x === reg.peaks[i]);
+    return { reg, leaves, same, slot: acc.slot };
+  })();
+  accState = { at: Date.now(), value };
+  value.catch(() => (accState = null));
+  return value;
+}
+
+/** The on-chain version of an item, with the same field names in both programs, plus how it was proven. */
+async function onchain(item, address, decodeV1) {
+  if (item.protocol === "v2") {
+    const a = await accumulator();
+    const bytes = fromHex(item.record);
+    const leaf = await hashLeaf(bytes);
+    const known = item.record_index < a.leaves.length && toHex(a.leaves[item.record_index]) === toHex(leaf);
+    const { siblings } = known ? await mmrProof(a.leaves, item.record_index) : { siblings: [] };
+    const v = await mmrVerify(a.reg.peaks, a.reg.leaf_count, leaf, item.record_index, siblings);
+    return {
+      ...decodeRecord(bytes),
+      contextSlot: a.slot,
+      owned: v.ok,
+      stale: !v.ok && a.reg.leaf_count > a.leaves.length,
+      proven: { index: item.record_index, count: a.reg.leaf_count, depth: siblings.length, registry: B.meta.programs.v2.registry },
+    };
+  }
+  const acc = await fetchAccount(B.meta.rpc, address);
+  return { ...decodeV1(acc.data), contextSlot: acc.slot, owned: acc.owner === programOf(item), lamports: acc.lamports };
+}
+
+/** The check that the record is the program's own: its account (v1) or its place in the tree (v2). */
+const OWNED_BY = (c) =>
+  c.proven
+    ? L(
+        `Registro nº ${nf0.format(c.proven.index)} de ${nf0.format(c.proven.count)} na árvore do programa: subindo ${c.proven.depth} níveis chega-se ao pico guardado na <a href="${explorerAddr(c.proven.registry)}" target="_blank" rel="noopener">conta do registro</a>`,
+        `Record #${nf0.format(c.proven.index)} of ${nf0.format(c.proven.count)} in the program's tree: ${c.proven.depth} levels up it reaches the peak stored in the <a href="${explorerAddr(c.proven.registry)}" target="_blank" rel="noopener">registry account</a>`,
+      )
+    : OWNED();
+const STALE = () =>
+  L("O painel está alguns minutos atrás da cadeia (registros novos ainda não publicados). Tente de novo em instantes.", "The dashboard is a few minutes behind the chain (new records not published yet). Try again shortly.");
+
+/** Link to where the item lives on-chain. */
+const chainLink = (item) =>
+  item.protocol === "v2"
+    ? `<a href="${explorerAddr(B.meta.programs.v2.registry)}" target="_blank" rel="noopener">${L(`registro nº ${nf0.format(item.record_index)}`, `record #${nf0.format(item.record_index)}`)}</a>`
+    : `<a href="${explorerAddr(item.batch_account ?? item.account ?? item.record)}" target="_blank" rel="noopener">${L("conta", "account")}</a>`;
 const ATTESTED = (n) => L(`Atestado por ${n} de ${B.meta.members.length} nós (limiar ${B.meta.threshold})`, `Attested by ${n} of ${B.meta.members.length} nodes (threshold ${B.meta.threshold})`);
 const CHECKED = (slot) => L(`conferido contra a devnet (slot atual ${nf0.format(slot)})`, `checked against devnet (current slot ${nf0.format(slot)})`);
 const MISMATCH = () => L("✕ Divergência encontrada.", "✕ Mismatch found.");
@@ -519,15 +588,15 @@ function panel(cls, html, target = "#verify-panel") {
 }
 
 async function onchainBatch(d) {
-  const acc = await fetchAccount(B.meta.rpc, d.batch_account);
-  if (acc.owner !== B.meta.program) throw new Error(L(`conta pertence a ${acc.owner}, não ao programa do Cota`, `account belongs to ${acc.owner}, not to the Cota program`));
-  return { ...decodeBatch(acc.data), contextSlot: acc.slot };
+  const c = await onchain(d, d.batch_account, decodeBatch);
+  if (!c.owned) throw new Error(c.stale ? STALE() : L("o lote não é um registro do programa do Cota", "the batch is not a record of the Cota program"));
+  return c;
 }
 
 async function verifyReading(d, index) {
   state.activeReading = index;
   $("#readings").querySelectorAll("tr[data-i]").forEach((tr) => tr.classList.toggle("active", +tr.dataset.i === index));
-  const b = await loadBatch(d.batch_id);
+  const b = await loadBatch(d);
   const original = b.readings[index];
   const r = state.tamper ? { ...original, value_milli: original.value_milli + 1 } : original;
   panel("", `<h3>${L("Verificando a leitura", "Verifying reading")} ${original.station_id} · ${utc(original.ts_utc)}…</h3>`);
@@ -556,7 +625,7 @@ async function verifyReading(d, index) {
         <li>${L("Folha", "Leaf")} = SHA-256(0x00 ‖ bytes) = <span class="hash">${toHex(leaf)}</span></li>
         <li>${L(`Caminho de ${path.length} irmãos (posição ${index} de ${leaves.length})`, `Path of ${path.length} siblings (position ${index} of ${leaves.length})`)}:<ol>${steps}</ol></li>
         <li>${L("Raiz recalculada no navegador", "Root recomputed in the browser")}: <span class="hash">${computed}</span></li>
-        <li>${L("Raiz on-chain, lida agora da devnet", "On-chain root, read just now from devnet")}${chain ? ` (${L("conta", "account")} <a href="${explorerAddr(d.batch_account)}" target="_blank" rel="noopener">${short(d.batch_account, 6)}</a>, slot ${nf0.format(chain.contextSlot)})` : ""}: <span class="hash">${chain ? chain.merkle_root : `${L("não foi possível consultar", "could not query")}: ${esc(chainErr)}`}</span></li>
+        <li>${L("Raiz on-chain, lida agora da devnet", "On-chain root, read just now from devnet")}${chain ? ` (${chainLink(d)}, slot ${nf0.format(chain.contextSlot)})` : ""}: <span class="hash">${chain ? chain.merkle_root : `${L("não foi possível consultar", "could not query")}: ${esc(chainErr)}`}</span></li>
       </ol>
       <div class="verdict ${ok ? "good-text" : "crit-text"}">${
         ok
@@ -579,7 +648,7 @@ async function verifyReading(d, index) {
 async function verifyBatch(d) {
   panel("", `<h3>${L("Verificando o lote", "Verifying batch")} ${d.batch_id}…</h3>`);
   try {
-    const b = await loadBatch(d.batch_id);
+    const b = await loadBatch(d);
     const root = toHex(await rootFromLeaves(await Promise.all(b.readings.map((x) => hashLeaf(readingBytes(x))))));
     const c = await onchainBatch(d);
     const prev = B.days[state.sel - 1];
@@ -594,7 +663,7 @@ async function verifyBatch(d) {
         ),
         c.signer_count >= B.meta.threshold,
       ],
-      [L("Conta pertence ao programa do Cota", "Account belongs to the Cota program"), true],
+      [OWNED_BY(c), c.owned],
     ];
     const ok = checks.every(([, v]) => v);
     panel(
@@ -616,10 +685,9 @@ async function verifyForecast(is) {
     let ok = froot === is.features_root;
     items.push([L(`features_root recalculada de ${is.features.length} features = ${short(froot)}`, `features_root recomputed from ${is.features.length} features = ${short(froot)}`), ok]);
     for (const f of is.horizons) {
-      const acc = await fetchAccount(B.meta.rpc, f.account);
-      const c = decodeForecast(acc.data);
+      const c = await onchain(f, f.account, decodeForecast);
       const checks = [
-        acc.owner === B.meta.program,
+        c.owned,
         c.p10 === f.p10 && c.p50 === f.p50 && c.p90 === f.p90,
         c.features_root === froot,
         c.model_sha256 === B.meta.model_sha256,
@@ -1207,10 +1275,10 @@ async function verifyPublicAlert(a) {
   try {
     const text = await (await fetch(`data/public_alerts/${a.content_sha256}.txt`)).text();
     const local = await sha256Hex(text);
-    const acc = await fetchAccount(B.meta.rpc, a.record);
-    const r = decodePublicAlert(acc.data);
+    const r = await onchain(a, a.record, decodePublicAlert);
+    const acc = { slot: r.contextSlot };
     const checks = [
-      [OWNED(), acc.owner === B.meta.program],
+      [OWNED_BY(r), r.owned],
       [
         L(
           `SHA-256 do conteúdo guardado (${nf0.format(text.length)} caracteres), calculado no navegador = hash on-chain`,
@@ -1730,15 +1798,15 @@ async function verifyOutlook(o) {
   try {
     const text = await (await fetch(`data/outlooks/${o.content_sha256}.txt`)).text();
     const local = await sha256Hex(text);
-    const acc = await fetchAccount(B.meta.rpc, o.record);
-    const r = decodeOutlook(acc.data);
+    const r = await onchain(o, o.record, decodeOutlook);
+    const acc = { slot: r.contextSlot };
     const c = JSON.parse(text);
     // Rebuilds the summary from the per-model, per-point totals (same integer arithmetic as the
     // node).
     const perModel = Object.values(c.models).map((pts) => Math.floor((Object.values(pts).flat().reduce((a, b) => a + b, 0) * 100) / R.points.length));
     const mean = Math.floor(perModel.reduce((a, b) => a + b, 0) / perModel.length);
     const checks = [
-      [OWNED(), acc.owner === B.meta.program],
+      [OWNED_BY(r), r.owned],
       [L("SHA-256 do conteúdo guardado, calculado no navegador = hash on-chain", "SHA-256 of the stored content, computed in the browser = on-chain hash"), local === r.content_sha256],
       [L("O conteúdo usa a regra fixada on-chain (rule_sha256)", "The content uses the rule fixed on-chain (rule_sha256)"), c.rule_sha256 === R.sha256],
       [
@@ -1762,7 +1830,7 @@ async function verifyOutlook(o) {
     ];
     const next = [...B.live.days].find((d) => d.batch_id === r.based_on_batch_id + 1);
     if (next) {
-      const nb = decodeBatch((await fetchAccount(B.meta.rpc, next.batch_account)).data);
+      const nb = await onchain(next, next.batch_account, decodeBatch);
       checks.push([
         L(
           `Gravada (slot ${nf0.format(r.slot)}) antes do lote de ${dmy(next.day)} (slot ${nf0.format(nb.slot)}), o 1º dia da janela`,
@@ -1860,20 +1928,41 @@ async function verifyPayout(v, pi) {
   const p = v.payouts[pi];
   panel("", `<h3>${L("Verificando o pagamento do cofre", "Verifying the payout of vault")} ${esc(v.name)}…</h3>`, "#vault-verify");
   try {
-    const [pa, va, ta] = await Promise.all([p.payout, v.vault, p.trigger].map((a) => fetchAccount(B.meta.rpc, a)));
-    const pay = decodePayout(pa.data);
+    const v2 = v.protocol === "v2";
+    const prog = programOf(v);
+    const [pa, va] = await Promise.all([p.payout, v.vault].map((a) => fetchAccount(B.meta.rpc, a)));
+    const pay = v2 ? decodePayoutV2(pa.data) : decodePayout(pa.data);
     const vault = decodeVault(va.data);
-    let trig, kindOk;
-    if (vault.kind === 0) {
-      trig = decodeOutlook(ta.data);
-      kindOk = trig.triggered && trig.region === vault.subject;
+    let trig, kindOk, trigOwned, pointsHere;
+    if (v2) {
+      // The trigger is a record: proven to be in the program's tree, and the receipt names its leaf.
+      trig = await onchain({ protocol: "v2", record: p.trigger_record, record_index: p.trigger_index }, null, null);
+      trigOwned = trig.owned;
+      kindOk =
+        vault.kind === 0
+          ? trig.kind === "outlook" && trig.triggered && trig.region === vault.subject
+          : trig.kind === "forecast" && trig.alert != null && trig.station_id === vault.subject;
+      pointsHere = pay.vault === v.vault && pay.trigger_index === p.trigger_index && pay.trigger_leaf === toHex(await hashLeaf(fromHex(p.trigger_record)));
     } else {
-      trig = decodeAlertReceipt(ta.data);
-      kindOk = trig.station_id === vault.subject;
+      const ta = await fetchAccount(B.meta.rpc, p.trigger);
+      trigOwned = ta.owner === prog;
+      if (vault.kind === 0) {
+        trig = decodeOutlook(ta.data);
+        kindOk = trig.triggered && trig.region === vault.subject;
+      } else {
+        trig = decodeAlertReceipt(ta.data);
+        kindOk = trig.station_id === vault.subject;
+      }
+      pointsHere = pay.vault === v.vault && pay.trigger === p.trigger;
     }
     const checks = [
-      [L("Pagamento, cofre e gatilho são contas do programa do Cota", "Payout, vault and trigger are all Cota program accounts"), [pa, va, ta].every((a) => a.owner === B.meta.program)],
-      [L("O recibo aponta para este cofre e este gatilho", "The receipt points to this vault and this trigger"), pay.vault === v.vault && pay.trigger === p.trigger],
+      [
+        v2
+          ? L("Pagamento e cofre são contas do programa do Cota; o gatilho é um registro da árvore dele", "Payout and vault are Cota program accounts; the trigger is a record in its tree")
+          : L("Pagamento, cofre e gatilho são contas do programa do Cota", "Payout, vault and trigger are all Cota program accounts"),
+        [pa, va].every((a) => a.owner === prog) && trigOwned,
+      ],
+      [L("O recibo aponta para este cofre e este gatilho", "The receipt points to this vault and this trigger"), pointsHere],
       [
         L(
           `O gatilho é um ${trigger(vault.kind)} de ${esc(vault.subject)}${vault.kind === 0 ? " que disparou a regra" : ""}`,

@@ -208,6 +208,14 @@ fn vault_payout_with_a_proof_from_the_ledger() {
     // The proof is built from the ledger alone, after many more records were appended.
     let proof = records::proof(&records::load(&ledger).unwrap(), alert_index).unwrap();
     send(&mut svm, &payer, &ledger, &[chain::trigger_payout_instruction(payer.pubkey(), vault, ben, proof)]);
+    // For the dashboard's JS check (dashboard/verify.js against the same bytes): COTA_KEEP_LEDGER=dir.
+    if let Ok(dir) = std::env::var("COTA_KEEP_LEDGER") {
+        let reg = registry(&svm);
+        std::fs::create_dir_all(&dir).unwrap();
+        std::fs::copy(ledger.join("records.jsonl"), format!("{dir}/records.jsonl")).unwrap();
+        let peaks: Vec<String> = reg.peaks.iter().map(hex::encode).collect();
+        std::fs::write(format!("{dir}/registry.json"), serde_json::json!({"leaf_count": reg.leaf_count, "peaks": peaks}).to_string()).unwrap();
+    }
     assert_eq!(svm.get_balance(&ben), Some(1_000_000_000));
     let v = chain::decode_vault(&svm.get_account(&vault).unwrap().data).unwrap();
     assert_eq!((v.payouts, v.total_paid), (1, 1_000_000_000));
