@@ -42,25 +42,32 @@ Cota records on Solana (devnet), so that anyone can check it, **who knew what, a
   anchored as Merkle roots (RFC 9162), one batch per day;
 - P10/P50/P90 forecasts of the Guaíba's discharge (quantile LightGBM, fixed `model_sha256`), which the program only accepts **before**
   the observation is anchored;
-- alerts (`AlertReceipt`) when P90 crosses a threshold fixed in advance;
+- alerts when P90 crosses a threshold fixed in advance, decided by the program in the same instruction as the forecast;
 - official INMET warnings for Rio Grande do Sul, attested by the committee with the SHA-256 of their content (INMET's API only shows
   warnings currently in force);
 - **early warning**: the rain forecast for the next 5 days (ECMWF, GFS, ICON; the day's 00Z run) at 6 points in the basin, attested
   by the committee right after each batch; the program applies an immutable rule (≥ 90 mm, calibrated on 2015–2023 only) and issues
-  an `EarlyWarning`;
-- source degradation (`SourceDegraded`): station without data, stuck sensor, nodes that disagree;
+  an early warning;
+- source degradation: station without data, stuck sensor, nodes that disagree;
 - **parametric trigger**: vaults (`create_vault`) where any wallet locks SOL under fixed terms; when Cota records a trigger
-  (`EarlyWarning` or `AlertReceipt`), any account can call `trigger_payout` and the program pays the beneficiary, once per trigger
-  and respecting the cooldown. The creator only gets the balance back after expiry (`close_vault`).
+  (an early warning or a flow alert), any account can call `trigger_payout` with the trigger's proof and the program pays the
+  beneficiary, once per trigger and respecting the cooldown. The creator only gets the balance back after expiry (`close_vault`).
+
+Every one of these records is a leaf of a single append-only accumulator (a Merkle Mountain Range) whose peaks live in one account
+(program v2, `FnjR7wG5zicqWJ6KQuWQ5UcqqhcSghrYozVgMmmDFNwR`). No record creates an account, so running it costs transaction fees
+only. The ledger's `records.jsonl` rebuilds the accumulator, and the audit and the dashboard check it against the on-chain peaks.
+See [`docs/v2-accumulator.md`](docs/v2-accumulator.md). Program v1 (`4FChu6PkKzsFQRAtQt2oiGt7TuC4uZhBNSSHqDoVNFsa`, one account
+per record) is kept as a read-only archive in `data/ledger-v1`; the tools that wrote to it are at tag `v1-final`.
 
 Dashboard: **https://cota-eight.vercel.app** (Portuguese and English): live mode, early warning, vaults and the replay of the
-April–May 2024 flood, with Merkle and on-chain account checks done in the browser.
+April–May 2024 flood, with the Merkle proofs and the accumulator check against the chain done in the browser.
 
 ## Layout
 
 | Path | What |
 |---|---|
-| `programs/cota` | Anchor program: committee, stations, batches (Ed25519 via precompile), forecasts, alerts, official warnings, outlooks, vaults |
+| `programs/cota-v2` | Anchor program: committee and one accumulator for stations, batches (Ed25519 via precompile), forecasts and alerts, official warnings, outlooks; vaults |
+| `programs/cota` | Program v1 (one account per record), kept for the archive |
 | `crates/cota-core` | Canonical formats (Borsh), Merkle tree, signed message |
 | `crates/cota-ingest` | INMET ingestion (yearly zip), ANA telemetric gauges (HidroWebService) and GloFAS (Open-Meteo) |
 | `crates/cota-quality` | Sensor rules, MAD between nodes, confidence index C_s |
@@ -107,8 +114,9 @@ the program's upgrade authority never leaves the deployer's machine.
 - In the replay, the transactions are from 2026: the proof is of **order** (forecast before observation), not of the 2024 calendar.
 - Rain from INMET stations arrives about a month late; live mode uses only discharge until real-time access is available.
 - Vaults run on devnet with test SOL. The `replay-2024` vault accepts the replay's alerts (recorded in 2026 over 2024 data) to
-  demonstrate the mechanism; `ao-vivo` only accepts triggers recorded after it was created. The program is built with
-  `opt-level = "z"` to fit in the account already allocated.
+  demonstrate the mechanism; `ao-vivo` only accepts triggers recorded after it was created.
+- Devnet can be reset. The accumulator's root is a single hash, which makes it cheap to timestamp elsewhere; until that is in place,
+  the record lives on devnet and in this repository.
 - Early warning: the rule was calibrated on **observed** rain and is applied to **forecast** rain at the station points. In the
   backtest, the forecast used is one day older than live mode's (no peeking at the future). Three floods in 2.7 years is a small
   sample: the CSI of 0.25 is very uncertain. Archived forecasts come from Open-Meteo, not from each model's official service.

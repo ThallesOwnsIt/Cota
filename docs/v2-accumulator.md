@@ -1,7 +1,8 @@
 # Cota v2: one accumulator instead of one account per record
 
-Status: design, not implemented yet. v1 (program `4FChu6PkKzsFQRAtQt2oiGt7TuC4uZhBNSSHqDoVNFsa`) stays
-on devnet, untouched, as the archive of the 2024 replay and of the live days recorded with it.
+Status: running on devnet since November 2026 (program `FnjR7wG5zicqWJ6KQuWQ5UcqqhcSghrYozVgMmmDFNwR`). v1 (program
+`4FChu6PkKzsFQRAtQt2oiGt7TuC4uZhBNSSHqDoVNFsa`) stays on devnet, untouched, as the archive of the live days recorded with it
+(`data/ledger-v1`); the 2024 replay was recorded again on v2.
 
 ## Why
 
