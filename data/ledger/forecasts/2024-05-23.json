@@ -112,26 +112,30 @@
   "model_sha256": "4e16a4b4e3a3bf3b5ac94317a15064fe12d029d5cc6557410182a7b3b42a792e",
   "onchain": [
     {
-      "account": "5uizyjdQp34Ed2hvZqKwLYCiWe1Sd3C48PCuGj3kstbS",
       "alert": null,
-      "explorer": "https://explorer.solana.com/tx/5uMrRDY2u2a3Ft7qJzSeyMy4vdvhDK131t1fTUAHyqSRyggqa7NfNBYoeBn86NmT89giZmCNQGwbqYtV2Z936gU1?cluster=devnet",
+      "committed_at": 1793914144,
+      "explorer": "https://explorer.solana.com/tx/4JVWPKL1GZyuESeW31WQ3L6ZFqsAkMTEZSL8z2vmf6tBzA5gVMnhFWonwdtXm9f9qJLhM3xNFmwayJduGyPLwsr6?cluster=devnet",
       "horizon_hours": 24,
       "p10": 4531946,
       "p50": 4781939,
       "p90": 4953393,
+      "record_index": 119,
+      "slot": 519073568,
       "target_ts": 1716508800,
-      "tx_signature": "5uMrRDY2u2a3Ft7qJzSeyMy4vdvhDK131t1fTUAHyqSRyggqa7NfNBYoeBn86NmT89giZmCNQGwbqYtV2Z936gU1"
+      "tx_signature": "4JVWPKL1GZyuESeW31WQ3L6ZFqsAkMTEZSL8z2vmf6tBzA5gVMnhFWonwdtXm9f9qJLhM3xNFmwayJduGyPLwsr6"
     },
     {
-      "account": "DPyBNJMxrCHt4kxy8PQiGBbBK4JXbPEquxBMWzWfS36Y",
       "alert": null,
-      "explorer": "https://explorer.solana.com/tx/37grt79xKUDSLLiCk8uNppPYTydpw3vrCKTDYMpNGNsM22g4CrULUDU3Cza33L6WWaRX8wf8z23XPcDujGVx9r1n?cluster=devnet",
+      "committed_at": 1793914146,
+      "explorer": "https://explorer.solana.com/tx/359wy49sEpp9Pmc43mz2sUYj5KHz8TjGTs8DSuR8Xytv8ZEYqzt94ehW2qjRNbYmzzN8eMWVYpDRuE1ZT84cpvGB?cluster=devnet",
       "horizon_hours": 48,
       "p10": 4240225,
       "p50": 4790888,
       "p90": 5692156,
+      "record_index": 120,
+      "slot": 519073577,
       "target_ts": 1716595200,
-      "tx_signature": "37grt79xKUDSLLiCk8uNppPYTydpw3vrCKTDYMpNGNsM22g4CrULUDU3Cza33L6WWaRX8wf8z23XPcDujGVx9r1n"
+      "tx_signature": "359wy49sEpp9Pmc43mz2sUYj5KHz8TjGTs8DSuR8Xytv8ZEYqzt94ehW2qjRNbYmzzN8eMWVYpDRuE1ZT84cpvGB"
     }
   ],
   "station_id": "GLOFAS-GUAIBA"

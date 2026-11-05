@@ -1,7 +1,7 @@
 {
   "cluster": "devnet",
-  "created_explorer": "https://explorer.solana.com/tx/2CEQRe2xDDGsJ3PFx666D1gXoMu8vcqCnzEVLtYRZPR4xHtBF5oYF58CXUNaEvWvU76EB6eUpL4fGFs7HPmFJxDF?cluster=devnet",
-  "created_tx": "2CEQRe2xDDGsJ3PFx666D1gXoMu8vcqCnzEVLtYRZPR4xHtBF5oYF58CXUNaEvWvU76EB6eUpL4fGFs7HPmFJxDF",
+  "created_explorer": "https://explorer.solana.com/tx/3FDR8u2NypEtr5u7VXgetcK4TGumPJPPbVpj9Fg5ZcQUdMYawWzy6cDktFvWWC5jecUmww2Z4uRrYXZpupyBWqe1?cluster=devnet",
+  "created_tx": "3FDR8u2NypEtr5u7VXgetcK4TGumPJPPbVpj9Fg5ZcQUdMYawWzy6cDktFvWWC5jecUmww2Z4uRrYXZpupyBWqe1",
   "description": "Demonstração: paga a cada evento de cheia previsto pelo modelo de vazão, inclusive os alertas do replay de 2024",
   "description_en": "Demo: pays on every flood event forecast by the flow model, including the alerts from the 2024 replay",
   "name": "replay-2024",
@@ -9,32 +9,35 @@
     {
       "amount": 20000000,
       "event_at": 1714694400,
-      "explorer": "https://explorer.solana.com/tx/5qJ1S9YhQ7HuyLvoJrSgLLQM4cw6EeKmbJvum78vV5MA6R3R6acRgrGozLe5MC9QyEJKr7ZhMp7T9sLq7aF882Fq?cluster=devnet",
-      "paid_at": 1792934415,
-      "payout": "3GZSYPSgyBC193mhGRHz2c5XXAR6ycgBnsz2SjShFsni",
-      "slot": 514983239,
-      "trigger": "HC3RHM6jD5276qwYiRaZ7pNApQXnZ9pTHfRNmyTvFs5s",
-      "tx_signature": "5qJ1S9YhQ7HuyLvoJrSgLLQM4cw6EeKmbJvum78vV5MA6R3R6acRgrGozLe5MC9QyEJKr7ZhMp7T9sLq7aF882Fq"
+      "explorer": "https://explorer.solana.com/tx/4rPD5dxDYTHWH5pdDPtRRPoCS3PujShhon26M72vMVub1mrZDt3yM9ns3sUXZmeWFRT3msf7uWXE6qDEqgxkyHF5?cluster=devnet",
+      "paid_at": 1793914206,
+      "payout": "9kgN2j33RMXZ3zZisEXrtYDSD5iBa9s7BRaGqkkBMgwc",
+      "slot": 519073829,
+      "trigger_index": 56,
+      "trigger_leaf": "2bb7b60ae301f304ea5a92de4ef14acfc69326b0767d6bf9606908b365594d70",
+      "tx_signature": "4rPD5dxDYTHWH5pdDPtRRPoCS3PujShhon26M72vMVub1mrZDt3yM9ns3sUXZmeWFRT3msf7uWXE6qDEqgxkyHF5"
     },
     {
       "amount": 20000000,
       "event_at": 1715299200,
-      "explorer": "https://explorer.solana.com/tx/3qUm7k6F2pw4HL6oHjyWnCv9MdjmPVQLTs9jbwDatRXVvUEHHJMmpJ7qbrm5TKwTHHzbLYVxwCFqmCschSUE2SR3?cluster=devnet",
-      "paid_at": 1792934420,
-      "payout": "8tiw6eFGNcDPg1aujD9EQyPhLAq4pwNVXcpCUcBy2uru",
-      "slot": 514983257,
-      "trigger": "CVJB2CGDarNkNURGAuz45ZTSbc4UZQ6VQZysRxMwkLX1",
-      "tx_signature": "3qUm7k6F2pw4HL6oHjyWnCv9MdjmPVQLTs9jbwDatRXVvUEHHJMmpJ7qbrm5TKwTHHzbLYVxwCFqmCschSUE2SR3"
+      "explorer": "https://explorer.solana.com/tx/3qUHWXAFaEcfi71TGS47htVkZ24mjTSRADTbtb3MxQrovQDrZa3i7H7YD7QyVk5VwtNGrgjrjkuxxrWgFZc2CAmg?cluster=devnet",
+      "paid_at": 1793914210,
+      "payout": "BPPgUMsXBLJihAiK9oYqiSShkuzpMCUGc9AqARkej7Ey",
+      "slot": 519073848,
+      "trigger_index": 77,
+      "trigger_leaf": "8d6e0eb0658f52cc5a547154c656d482fe6b46e7838488601069c6dbd03d8f25",
+      "tx_signature": "3qUHWXAFaEcfi71TGS47htVkZ24mjTSRADTbtb3MxQrovQDrZa3i7H7YD7QyVk5VwtNGrgjrjkuxxrWgFZc2CAmg"
     },
     {
       "amount": 20000000,
       "event_at": 1715904000,
-      "explorer": "https://explorer.solana.com/tx/614hAwii2V4emmVxmmgSDJLYVgvyHZjvLhqYPfJUNrj42Hxw5fimQFHR9NDD3ztLJEQVpR9GhywPwNHAARwgu6RH?cluster=devnet",
-      "paid_at": 1792934427,
-      "payout": "E2dGfaYkPGDKJHEiLNEBPeoA9gXMgLaHQX15KKicrstA",
-      "slot": 514983287,
-      "trigger": "2f4HnxAY7GpwYtMobaZLu8Z2T7EboTiipCvgvEc1fF2G",
-      "tx_signature": "614hAwii2V4emmVxmmgSDJLYVgvyHZjvLhqYPfJUNrj42Hxw5fimQFHR9NDD3ztLJEQVpR9GhywPwNHAARwgu6RH"
+      "explorer": "https://explorer.solana.com/tx/2VKGfwTRAa5SsHpoYKUtegpvbemoqftCSpPtS4A2UskMcTwxCAjDyJxwP76TzRiPkXAzWW9LofzWx3EMrzmmdedK?cluster=devnet",
+      "paid_at": 1793914217,
+      "payout": "EbGvD5V1jyRSM3jhcKtzxxjrLPYPCRry9TAm96BCUCBV",
+      "slot": 519073877,
+      "trigger_index": 98,
+      "trigger_leaf": "8c0be1b73bc19176768a47edb3e1f35e689d6d077cb8903f56b40f3c96c96992",
+      "tx_signature": "2VKGfwTRAa5SsHpoYKUtegpvbemoqftCSpPtS4A2UskMcTwxCAjDyJxwP76TzRiPkXAzWW9LofzWx3EMrzmmdedK"
     }
   ],
   "state": {
@@ -42,9 +45,9 @@
     "balance": 41554480,
     "beneficiary": "cETyw8BecDDiiCgFhK93AqQo3Q56G8AcyQjDeSBwfPo",
     "cooldown_secs": 604800,
-    "created_at": 1792934409,
+    "created_at": 1793914200,
     "creator": "28JccEpdZqoKJhhURpDC4XGkZv4QADxoBtm7idrLVHo4",
-    "expires_at": 1824470409,
+    "expires_at": 1825450199,
     "kind": 1,
     "last_event_at": 1715904000,
     "payout_lamports": 20000000,
@@ -53,5 +56,5 @@
     "total_paid": 60000000,
     "vault_id": 1
   },
-  "vault": "2bNi4vNgzHPCgEdbai88ZhRBB5xTjRieChScjFF6uRff"
+  "vault": "7zfdWrguyty7YmpHrq432yzk43U1c6DucV9i1ijJ4jNU"
 }

@@ -10,10 +10,10 @@
     "station_set_hash": "da21592e7d974a944a6ea685abbed982d0baee45bb582c2f6bca1fd69c529c32",
     "prev_batch_root": "aa909026e6cbfd03e0a127a8be6561f21cdd07941a23c8d53da1a174143c6145"
   },
-  "batch_account": "5zmdywjAsngvH8oL2YjyDBoihG4poYByiyxq1Cb2oQk3",
-  "tx_signature": "2QP7bvKnYLzSYcGnMz5PtygPr12oGVmQGQokxqeheyqAXdvNr17t2g3eK4KV8kocKvbRbgnJDRhvN86DEyj6YCGm",
+  "record_index": 45,
+  "tx_signature": "62w56dmSkf7F8DyQJR2YyUenYvUrSm6y6q2VBXd3hkYqH5wqQ8hmKe9Wiie3RGqy15dYG7fLDrDoQMb5BjQmRPxK",
   "cluster": "devnet",
-  "explorer": "https://explorer.solana.com/tx/2QP7bvKnYLzSYcGnMz5PtygPr12oGVmQGQokxqeheyqAXdvNr17t2g3eK4KV8kocKvbRbgnJDRhvN86DEyj6YCGm?cluster=devnet",
+  "explorer": "https://explorer.solana.com/tx/62w56dmSkf7F8DyQJR2YyUenYvUrSm6y6q2VBXd3hkYqH5wqQ8hmKe9Wiie3RGqy15dYG7fLDrDoQMb5BjQmRPxK?cluster=devnet",
   "members": [
     {
       "member": "GS3uQUPgfCDXqtbpD6vPyNpQgRcDUFj1fhF4wYGk9ist",
@@ -30,16 +30,16 @@
   ],
   "signatures": [
     {
-      "member": "AFbz6rqf4u7pexBHadriqd9VNDh74KGqEeZG5eeQKTs3",
-      "signature": "37d6a628d833dde6b3987d6c91edf197e02c4cf99c170571e4fb1c1cc66bfdb7fdfe8030056d551ac15103de43f5c6304679a57d1c70c33900010c977c556b0c"
+      "member": "B4FwxN42zWyiSKU7qwvbpchy7uDD8ugnzX43B9mPd38L",
+      "signature": "83938ae3cd54b3583ba1ccb771229da4946038fda64aa79fb119ed0ea0372010352dc914daee48e21ae32936c9ad8110c4400ef7e095d5905508e69bdb138c0a"
     },
     {
       "member": "GS3uQUPgfCDXqtbpD6vPyNpQgRcDUFj1fhF4wYGk9ist",
-      "signature": "e5f7b3d264bebb0fef8796831c7e0ae37bd4b3559cade2b8d261ef8ba38a382607fa7c0ea030a6e13b76af3ddaa3e2d5da56a75baa1f1fd1420b777e8c04be01"
+      "signature": "b422257d0f1b04f0669c15bfc766d627ba998d468283b69fd83387e24a1fc52ef9d85f6740e0a47c7b6653c9fba9e6b5110fc4de4f71a6ac86d3edf8c85c6306"
     },
     {
-      "member": "B4FwxN42zWyiSKU7qwvbpchy7uDD8ugnzX43B9mPd38L",
-      "signature": "3efd7fae5f0d8750ab3947c063fa6f1759cdb20168f15f84c9172b64fd2174d2b6f6c2318e59dcaf076536ab0dbd1dbb0a403ed5341aca0286439205b9a5f104"
+      "member": "AFbz6rqf4u7pexBHadriqd9VNDh74KGqEeZG5eeQKTs3",
+      "signature": "1fb224ce41da91273915582b027163f6e2bcc543ea8e1c9b166ea42ef21dfc8b8cdf58c2f47f41e3481cf5b27372eee119fa875ed59fec587485a8c128bb2c04"
     }
   ],
   "quality": {

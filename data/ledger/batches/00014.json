@@ -10,10 +10,10 @@
     "station_set_hash": "da21592e7d974a944a6ea685abbed982d0baee45bb582c2f6bca1fd69c529c32",
     "prev_batch_root": "f64c6779f66395c39fe42e793882e7aa232bfdda372c6df7ac2205da4f1bae76"
   },
-  "batch_account": "84WDxPDQ66NapCQhd8dFxZcKrVtGfTaEmmR25bEh2x6C",
-  "tx_signature": "3krweyyipuwctPewTvDbo4yf7yh7w5aRT4m8184PtHcjpgrJoRP5enNq8ZkMBo9rZjzfGYbh7xf8Pa2phkZgQJkQ",
+  "record_index": 57,
+  "tx_signature": "63gVGV55L3UDTRguDRRowKDj9QWBks62Vd9Zm2aX3JJEsLLH89aD1LpPENjoKtNtyfjuLvjEVmGMaQA9NtjUQ1hh",
   "cluster": "devnet",
-  "explorer": "https://explorer.solana.com/tx/3krweyyipuwctPewTvDbo4yf7yh7w5aRT4m8184PtHcjpgrJoRP5enNq8ZkMBo9rZjzfGYbh7xf8Pa2phkZgQJkQ?cluster=devnet",
+  "explorer": "https://explorer.solana.com/tx/63gVGV55L3UDTRguDRRowKDj9QWBks62Vd9Zm2aX3JJEsLLH89aD1LpPENjoKtNtyfjuLvjEVmGMaQA9NtjUQ1hh?cluster=devnet",
   "members": [
     {
       "member": "GS3uQUPgfCDXqtbpD6vPyNpQgRcDUFj1fhF4wYGk9ist",
@@ -30,12 +30,12 @@
   ],
   "signatures": [
     {
-      "member": "GS3uQUPgfCDXqtbpD6vPyNpQgRcDUFj1fhF4wYGk9ist",
-      "signature": "ea62bf4875d04402eda2110ef31ae97c70adad736887d86dd9ae48655123e7411a7757efe0bb49684456b2268426a1439f8b63109177e605a1ef7db99d21a705"
+      "member": "B4FwxN42zWyiSKU7qwvbpchy7uDD8ugnzX43B9mPd38L",
+      "signature": "9dfb1ef008837645d0c1c8a8ec622c93294a4719b9ae011e55263941002092f0dd693152b11ae016dbf6dcd6fd5ed261015e853fef6bfc4a5824d46c78969f0a"
     },
     {
-      "member": "B4FwxN42zWyiSKU7qwvbpchy7uDD8ugnzX43B9mPd38L",
-      "signature": "9ff1bc38ea29e093c5d01a39528f9ffc087a079b1e4e6a4ad1f1925b851b961702e96444cd63d1a954ce2cf01f53baf4ded9418a7e9b3492a5f631a7a1c78c0c"
+      "member": "GS3uQUPgfCDXqtbpD6vPyNpQgRcDUFj1fhF4wYGk9ist",
+      "signature": "91fc91969906e892487c644f4abf239f2b207faf844219bb598b8ba99434608ee00a113f14eb1b091fd65122a23a8b5f6a207bb594cf573885cee2316cd18f0b"
     }
   ],
   "quality": {

@@ -112,32 +112,33 @@
   "model_sha256": "4e16a4b4e3a3bf3b5ac94317a15064fe12d029d5cc6557410182a7b3b42a792e",
   "onchain": [
     {
-      "account": "9BcTzPuDaiX4Gsfw7X8Hfj9TpjLxEMLiALSSWcoUoEB8",
       "alert": null,
-      "explorer": "https://explorer.solana.com/tx/2bmK2DBEYQSkr1mYaM15ZZzFHquVxoTzRq1hhNS97fveMUmtu9YYyoKLiDHg1YoaXdAqDXfV7NYtKgR3QSoAzm9C?cluster=devnet",
+      "committed_at": 1793914090,
+      "explorer": "https://explorer.solana.com/tx/5gSKMEcJZN9nX9DUn4Y2ZT5vQobXBw8wWvACLgBy6y4qt3b8RjzTZWdwVSEAxoY8HtGdsiwhQjp9Vn3nQyFyYZqP?cluster=devnet",
       "horizon_hours": 24,
       "p10": 8264196,
       "p50": 8412139,
       "p90": 9242881,
+      "record_index": 104,
+      "slot": 519073339,
       "target_ts": 1716076800,
-      "tx_signature": "2bmK2DBEYQSkr1mYaM15ZZzFHquVxoTzRq1hhNS97fveMUmtu9YYyoKLiDHg1YoaXdAqDXfV7NYtKgR3QSoAzm9C"
+      "tx_signature": "5gSKMEcJZN9nX9DUn4Y2ZT5vQobXBw8wWvACLgBy6y4qt3b8RjzTZWdwVSEAxoY8HtGdsiwhQjp9Vn3nQyFyYZqP"
     },
     {
-      "account": "8mD9u5NvP67Nkm9rffkgxrMa4kHTzJhWxzwbhaCXWhWc",
       "alert": {
-        "account": "GpTaheeFp4iBGs4ZtjwxRkQTfCJrYa6rLx5v4B2gMjm3",
-        "explorer": "https://explorer.solana.com/tx/57gVTBkU7BpivTfVrWSkuz6ZE9Dmc8kDbFz18VSfXEED6JWF2T6Esez1XWf2ZmxDLYHpqdfwagFkTx64naN961JB?cluster=devnet",
         "level": 1,
-        "threshold_milli": 9353060,
-        "tx_signature": "57gVTBkU7BpivTfVrWSkuz6ZE9Dmc8kDbFz18VSfXEED6JWF2T6Esez1XWf2ZmxDLYHpqdfwagFkTx64naN961JB"
+        "threshold_milli": 9353060
       },
-      "explorer": "https://explorer.solana.com/tx/47wVmAozTDZUW4nj2FDZEzNGrktuUtHgSEwHbg8uBZchaxueRUxcAtxxM4WFsePmMaJmAsEErzphZL7zLXWi7598?cluster=devnet",
+      "committed_at": 1793914092,
+      "explorer": "https://explorer.solana.com/tx/3YY8X8n3A7P1VzohwFQzv95Cmrq9y9tTBUAz1PeLY26U9LTqMiiHtopSMuSDaStTutwi4UjQ2CJJhsbTwSCg575H?cluster=devnet",
       "horizon_hours": 48,
       "p10": 7191823,
       "p50": 7814080,
       "p90": 9406549,
+      "record_index": 105,
+      "slot": 519073349,
       "target_ts": 1716163200,
-      "tx_signature": "47wVmAozTDZUW4nj2FDZEzNGrktuUtHgSEwHbg8uBZchaxueRUxcAtxxM4WFsePmMaJmAsEErzphZL7zLXWi7598"
+      "tx_signature": "3YY8X8n3A7P1VzohwFQzv95Cmrq9y9tTBUAz1PeLY26U9LTqMiiHtopSMuSDaStTutwi4UjQ2CJJhsbTwSCg575H"
     }
   ],
   "station_id": "GLOFAS-GUAIBA"

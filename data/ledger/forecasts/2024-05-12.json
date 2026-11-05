@@ -112,38 +112,36 @@
   "model_sha256": "4e16a4b4e3a3bf3b5ac94317a15064fe12d029d5cc6557410182a7b3b42a792e",
   "onchain": [
     {
-      "account": "BmX5hdufUnVAWEVy6hgLABrmjsQ638wasUtfpfVbwqfH",
       "alert": {
-        "account": "CmiSDB3SoKbjKvr8LmJ31qS7w9LeGViqmrpRoDa3fk4g",
-        "explorer": "https://explorer.solana.com/tx/2yT13H4T7oD6m6z5wU5NG6sfViiFE6gxLn9FBdCKjpvjct1DKiT54tThEqwD8dRWRoMCdAWWo5d9meYBobysNyKg?cluster=devnet",
         "level": 1,
-        "threshold_milli": 9353060,
-        "tx_signature": "2yT13H4T7oD6m6z5wU5NG6sfViiFE6gxLn9FBdCKjpvjct1DKiT54tThEqwD8dRWRoMCdAWWo5d9meYBobysNyKg"
+        "threshold_milli": 9353060
       },
-      "explorer": "https://explorer.solana.com/tx/563nb1pmM53BeRy26HKLbBoyJxMASNxLgMBLPAc2GSyCKacB4bwobmPG7d9VzyPMuLh5rS2AKD9iBSvboesSwpuV?cluster=devnet",
+      "committed_at": 1793914025,
+      "explorer": "https://explorer.solana.com/tx/PPJeF5fHupskMUb1M7buHfj4GwLFa7N65sq61FkCip1uaDgrkpYQjcEQnt2mzrpucYZLGNyCZPspwHVCs3JWhod?cluster=devnet",
       "horizon_hours": 24,
       "p10": 10368314,
       "p50": 12482318,
       "p90": 14011594,
+      "record_index": 86,
+      "slot": 519073068,
       "target_ts": 1715558400,
-      "tx_signature": "563nb1pmM53BeRy26HKLbBoyJxMASNxLgMBLPAc2GSyCKacB4bwobmPG7d9VzyPMuLh5rS2AKD9iBSvboesSwpuV"
+      "tx_signature": "PPJeF5fHupskMUb1M7buHfj4GwLFa7N65sq61FkCip1uaDgrkpYQjcEQnt2mzrpucYZLGNyCZPspwHVCs3JWhod"
     },
     {
-      "account": "DFB3xH7jZ2mVNJZRTz9B89jw3AZgKEBy4vWVCk4xfrPN",
       "alert": {
-        "account": "B1MKaBRwFibg1SD649PFtTJNCi2t3JAr6aWPVce3Qf6E",
-        "explorer": "https://explorer.solana.com/tx/45AqQ8mLVWb7oNpZqjj8zR1RVg2GeWZowdnihHzCNq1M8SuRVLrwHQ4Xq5yWBBHzg1yMvRu1jMxMVmDTKdd3bpx6?cluster=devnet",
         "level": 1,
-        "threshold_milli": 9353060,
-        "tx_signature": "45AqQ8mLVWb7oNpZqjj8zR1RVg2GeWZowdnihHzCNq1M8SuRVLrwHQ4Xq5yWBBHzg1yMvRu1jMxMVmDTKdd3bpx6"
+        "threshold_milli": 9353060
       },
-      "explorer": "https://explorer.solana.com/tx/55Zok6Re5RX3UXBp4uByQ2HLUpYbNSGsjRpeZAZpf6jYYGwuogDAzm7ksLqaBrwMyNskJ2YtqMmYkxdPeBQKcCLy?cluster=devnet",
+      "committed_at": 1793914027,
+      "explorer": "https://explorer.solana.com/tx/5of624Mge2q6YgLkYKR9cPhWzAhBUw3JGc46QC536dM8xPfqt7A6rQWUmEaksKLAmPW4qASwsYPFswjNDWyosvjV?cluster=devnet",
       "horizon_hours": 48,
       "p10": 10743253,
       "p50": 14761644,
       "p90": 20007189,
+      "record_index": 87,
+      "slot": 519073077,
       "target_ts": 1715644800,
-      "tx_signature": "55Zok6Re5RX3UXBp4uByQ2HLUpYbNSGsjRpeZAZpf6jYYGwuogDAzm7ksLqaBrwMyNskJ2YtqMmYkxdPeBQKcCLy"
+      "tx_signature": "5of624Mge2q6YgLkYKR9cPhWzAhBUw3JGc46QC536dM8xPfqt7A6rQWUmEaksKLAmPW4qASwsYPFswjNDWyosvjV"
     }
   ],
   "station_id": "GLOFAS-GUAIBA"

@@ -1,0 +1,1559 @@
+{
+  "batch_id": 25,
+  "day": "2024-05-14",
+  "header": {
+    "batch_id": 25,
+    "t_start": 1715644800,
+    "t_end": 1715731200,
+    "leaf_count": 150,
+    "merkle_root": "19bb80a11dcb3f642f69a4b217c83292863f42ba5a70e5b3875f08a2f4d600a9",
+    "station_set_hash": "da21592e7d974a944a6ea685abbed982d0baee45bb582c2f6bca1fd69c529c32",
+    "prev_batch_root": "12b8bf70cde2733e59d99cad9f851d7edae987c58e547a7c4f33ed97b573565e"
+  },
+  "batch_account": "8G47Vo9tVYjMc461zXcbTtzNGtcCQoETefvHQwZddZjP",
+  "tx_signature": "oGZ71qnfR1QVPFAfpB7rAubZcJ6WjnW7mVwjB2SV6DF8cTC2cgP4oxkW3H2kqcA1guvBooNCqVBLvLYSLZYYMQ1",
+  "cluster": "devnet",
+  "explorer": "https://explorer.solana.com/tx/oGZ71qnfR1QVPFAfpB7rAubZcJ6WjnW7mVwjB2SV6DF8cTC2cgP4oxkW3H2kqcA1guvBooNCqVBLvLYSLZYYMQ1?cluster=devnet",
+  "members": [
+    {
+      "member": "GS3uQUPgfCDXqtbpD6vPyNpQgRcDUFj1fhF4wYGk9ist",
+      "status": "signed"
+    },
+    {
+      "member": "B4FwxN42zWyiSKU7qwvbpchy7uDD8ugnzX43B9mPd38L",
+      "status": "signed"
+    },
+    {
+      "member": "AFbz6rqf4u7pexBHadriqd9VNDh74KGqEeZG5eeQKTs3",
+      "status": "signed"
+    }
+  ],
+  "signatures": [
+    {
+      "member": "AFbz6rqf4u7pexBHadriqd9VNDh74KGqEeZG5eeQKTs3",
+      "signature": "4aa827b9ad4a872640900dc0b54b606df13595c7322a7d00fc19a3c10a8ac025a38e5c17b214d16f4e3cd05a5d8016ccbfd3a685d0763f9db8a303d2eabfa307"
+    },
+    {
+      "member": "GS3uQUPgfCDXqtbpD6vPyNpQgRcDUFj1fhF4wYGk9ist",
+      "signature": "7d87d871a4f2ba7c8e8d78eae5d00d9207a92a0d532eebea4506c7873fee2a121525cfe014dc5c88a095be9f09327088ba6f97e21723704bbba06a698fc3af00"
+    },
+    {
+      "member": "B4FwxN42zWyiSKU7qwvbpchy7uDD8ugnzX43B9mPd38L",
+      "signature": "c4b4a0960772775c115aa78e94658ce8fb2eaaeed2efdc410e9e8d0bf6d9f72816486fd79c5811d3cc05d20d1b586f30de4ee8355fa7dafca36f44bee34c2c06"
+    }
+  ],
+  "quality": {
+    "stations": [
+      {
+        "station_id": "A801",
+        "expected": 24,
+        "present": 24,
+        "availability": 1.0,
+        "flag_rate": 0.0,
+        "agreement": 1.0,
+        "freshness": 1.0,
+        "raw": 0.9999999999999999,
+        "score": 0.9999999756614366,
+        "flags": [],
+        "degraded": null
+      },
+      {
+        "station_id": "B807",
+        "expected": 24,
+        "present": 24,
+        "availability": 1.0,
+        "flag_rate": 0.0,
+        "agreement": 1.0,
+        "freshness": 1.0,
+        "raw": 0.9999999999999999,
+        "score": 1.0,
+        "flags": [],
+        "degraded": null
+      },
+      {
+        "station_id": "A840",
+        "expected": 24,
+        "present": 24,
+        "availability": 1.0,
+        "flag_rate": 0.0,
+        "agreement": 1.0,
+        "freshness": 1.0,
+        "raw": 0.9999999999999999,
+        "score": 1.0,
+        "flags": [],
+        "degraded": null
+      },
+      {
+        "station_id": "A879",
+        "expected": 24,
+        "present": 24,
+        "availability": 1.0,
+        "flag_rate": 0.0,
+        "agreement": 1.0,
+        "freshness": 1.0,
+        "raw": 0.9999999999999999,
+        "score": 0.9999674479166665,
+        "flags": [],
+        "degraded": null
+      },
+      {
+        "station_id": "A882",
+        "expected": 24,
+        "present": 24,
+        "availability": 1.0,
+        "flag_rate": 0.0,
+        "agreement": 1.0,
+        "freshness": 1.0,
+        "raw": 0.9999999999999999,
+        "score": 0.9999959309895832,
+        "flags": [],
+        "degraded": null
+      },
+      {
+        "station_id": "A837",
+        "expected": 24,
+        "present": 24,
+        "availability": 1.0,
+        "flag_rate": 0.0,
+        "agreement": 1.0,
+        "freshness": 1.0,
+        "raw": 0.9999999999999999,
+        "score": 1.0,
+        "flags": [],
+        "degraded": null
+      },
+      {
+        "station_id": "GLOFAS-GUAIBA",
+        "expected": 1,
+        "present": 1,
+        "availability": 1.0,
+        "flag_rate": 0.0,
+        "agreement": 1.0,
+        "freshness": 1.0,
+        "raw": 0.9999999999999999,
+        "score": 1.0,
+        "flags": [],
+        "degraded": null
+      },
+      {
+        "station_id": "GLOFAS-JACUI",
+        "expected": 1,
+        "present": 1,
+        "availability": 1.0,
+        "flag_rate": 0.0,
+        "agreement": 1.0,
+        "freshness": 1.0,
+        "raw": 0.9999999999999999,
+        "score": 1.0,
+        "flags": [],
+        "degraded": null
+      },
+      {
+        "station_id": "GLOFAS-TAQUARI",
+        "expected": 1,
+        "present": 1,
+        "availability": 1.0,
+        "flag_rate": 0.0,
+        "agreement": 1.0,
+        "freshness": 1.0,
+        "raw": 0.9999999999999999,
+        "score": 1.0,
+        "flags": [],
+        "degraded": null
+      },
+      {
+        "station_id": "GLOFAS-CAI",
+        "expected": 1,
+        "present": 1,
+        "availability": 1.0,
+        "flag_rate": 0.0,
+        "agreement": 1.0,
+        "freshness": 1.0,
+        "raw": 0.9999999999999999,
+        "score": 1.0,
+        "flags": [],
+        "degraded": null
+      },
+      {
+        "station_id": "GLOFAS-SINOS",
+        "expected": 1,
+        "present": 1,
+        "availability": 1.0,
+        "flag_rate": 0.0,
+        "agreement": 1.0,
+        "freshness": 1.0,
+        "raw": 0.9999999999999999,
+        "score": 1.0,
+        "flags": [],
+        "degraded": null
+      },
+      {
+        "station_id": "GLOFAS-GRAVATAI",
+        "expected": 1,
+        "present": 1,
+        "availability": 1.0,
+        "flag_rate": 0.0,
+        "agreement": 1.0,
+        "freshness": 1.0,
+        "raw": 0.9999999999999999,
+        "score": 1.0,
+        "flags": [],
+        "degraded": null
+      }
+    ],
+    "dissents": [],
+    "degradations": []
+  },
+  "readings": [
+    {
+      "station_id": "A801",
+      "variable": "precipitation",
+      "ts_utc": 1715644800,
+      "source": "inmet",
+      "value_milli": 0,
+      "datum_id": null,
+      "raw_payload_sha256": "8403b891ed73b95eff839290e622b7d84a81a8223dedfed5b532c5ae4d01aefc"
+    },
+    {
+      "station_id": "A801",
+      "variable": "precipitation",
+      "ts_utc": 1715648400,
+      "source": "inmet",
+      "value_milli": 0,
+      "datum_id": null,
+      "raw_payload_sha256": "f605332c6b266b0fbcb0588b631ede330643c966eac240a6794aadad8d62c8f1"
+    },
+    {
+      "station_id": "A801",
+      "variable": "precipitation",
+      "ts_utc": 1715652000,
+      "source": "inmet",
+      "value_milli": 0,
+      "datum_id": null,
+      "raw_payload_sha256": "a183a9526108f83653d7879d047097cf07ba6353e5e85e37938fd21aed4a3051"
+    },
+    {
+      "station_id": "A801",
+      "variable": "precipitation",
+      "ts_utc": 1715655600,
+      "source": "inmet",
+      "value_milli": 0,
+      "datum_id": null,
+      "raw_payload_sha256": "7ba60eb7260d8f927fd17a8875caff85fb50f8d6ae26f50690d600f0b2921439"
+    },
+    {
+      "station_id": "A801",
+      "variable": "precipitation",
+      "ts_utc": 1715659200,
+      "source": "inmet",
+      "value_milli": 0,
+      "datum_id": null,
+      "raw_payload_sha256": "4a33d434976ab3ecdc09f8e6f6ec6e1c0f4865efda6a638295676970f41c0c52"
+    },
+    {
+      "station_id": "A801",
+      "variable": "precipitation",
+      "ts_utc": 1715662800,
+      "source": "inmet",
+      "value_milli": 0,
+      "datum_id": null,
+      "raw_payload_sha256": "fbe6181d3d1ebbba06140842f53ab84ef9423a6e23ff8b9f3eece31d553078b6"
+    },
+    {
+      "station_id": "A801",
+      "variable": "precipitation",
+      "ts_utc": 1715666400,
+      "source": "inmet",
+      "value_milli": 0,
+      "datum_id": null,
+      "raw_payload_sha256": "3eaedf62c30be444c97e9686784c0ebae12baaac6dee1516b239f9b8bdab23fc"
+    },
+    {
+      "station_id": "A801",
+      "variable": "precipitation",
+      "ts_utc": 1715670000,
+      "source": "inmet",
+      "value_milli": 0,
+      "datum_id": null,
+      "raw_payload_sha256": "c8bfcf0b8b655b8935622d3e1c61d21808e657eee5c877a8ff2bca1afae76ada"
+    },
+    {
+      "station_id": "A801",
+      "variable": "precipitation",
+      "ts_utc": 1715673600,
+      "source": "inmet",
+      "value_milli": 0,
+      "datum_id": null,
+      "raw_payload_sha256": "c9c76ea4ebb31d337d91c4af2ba0d75973d3d7be29038a1b4018d59952092192"
+    },
+    {
+      "station_id": "A801",
+      "variable": "precipitation",
+      "ts_utc": 1715677200,
+      "source": "inmet",
+      "value_milli": 0,
+      "datum_id": null,
+      "raw_payload_sha256": "3834407509065e72485b50d34c21ee42fd5186ed05cb8eecbe4022320b5b30f1"
+    },
+    {
+      "station_id": "A801",
+      "variable": "precipitation",
+      "ts_utc": 1715680800,
+      "source": "inmet",
+      "value_milli": 0,
+      "datum_id": null,
+      "raw_payload_sha256": "2f6abc11079247d9dde803441a730bbd7e208b9a30ec9ae36844fae6bf892b48"
+    },
+    {
+      "station_id": "A801",
+      "variable": "precipitation",
+      "ts_utc": 1715684400,
+      "source": "inmet",
+      "value_milli": 0,
+      "datum_id": null,
+      "raw_payload_sha256": "8ebf97cbca83cb83af268337d172d74f484b7f836208fcdf1aea959c55e75e88"
+    },
+    {
+      "station_id": "A801",
+      "variable": "precipitation",
+      "ts_utc": 1715688000,
+      "source": "inmet",
+      "value_milli": 0,
+      "datum_id": null,
+      "raw_payload_sha256": "f2e7fb2ce8ebc095ae8997914ec739756ac714d31dc8c02b521cdf03adef37d9"
+    },
+    {
+      "station_id": "A801",
+      "variable": "precipitation",
+      "ts_utc": 1715691600,
+      "source": "inmet",
+      "value_milli": 0,
+      "datum_id": null,
+      "raw_payload_sha256": "c2f2216d1da5d63bfe147e49df37f691b3e59b622e3e38240af29608b6522cdb"
+    },
+    {
+      "station_id": "A801",
+      "variable": "precipitation",
+      "ts_utc": 1715695200,
+      "source": "inmet",
+      "value_milli": 0,
+      "datum_id": null,
+      "raw_payload_sha256": "a7303498fcd50976b8794a7df411119fd9e94bd79a9826ecad1f6ae67dafd79a"
+    },
+    {
+      "station_id": "A801",
+      "variable": "precipitation",
+      "ts_utc": 1715698800,
+      "source": "inmet",
+      "value_milli": 0,
+      "datum_id": null,
+      "raw_payload_sha256": "f8aaf1f29ab445009d1da6c0bf2f5db24862d0de28c222ccd2f0a13f718183ea"
+    },
+    {
+      "station_id": "A801",
+      "variable": "precipitation",
+      "ts_utc": 1715702400,
+      "source": "inmet",
+      "value_milli": 0,
+      "datum_id": null,
+      "raw_payload_sha256": "e93da119d02b988807b8d34d53bbaf5fb15ddd66167f908aa5560c8671782dcd"
+    },
+    {
+      "station_id": "A801",
+      "variable": "precipitation",
+      "ts_utc": 1715706000,
+      "source": "inmet",
+      "value_milli": 0,
+      "datum_id": null,
+      "raw_payload_sha256": "0dab9eef0c6e2563b4fe58906009ea3c2f3445ec9e1558695a53282d02602900"
+    },
+    {
+      "station_id": "A801",
+      "variable": "precipitation",
+      "ts_utc": 1715709600,
+      "source": "inmet",
+      "value_milli": 0,
+      "datum_id": null,
+      "raw_payload_sha256": "f1157559a1a912b98295d5ba3a5e19b37b272386f5704e5c3c9479d20cefddfe"
+    },
+    {
+      "station_id": "A801",
+      "variable": "precipitation",
+      "ts_utc": 1715713200,
+      "source": "inmet",
+      "value_milli": 0,
+      "datum_id": null,
+      "raw_payload_sha256": "c8b0d2b9fc089fd67ddff7fa8db69512c933e46a4dc4c6a8c0020a2a014c361a"
+    },
+    {
+      "station_id": "A801",
+      "variable": "precipitation",
+      "ts_utc": 1715716800,
+      "source": "inmet",
+      "value_milli": 0,
+      "datum_id": null,
+      "raw_payload_sha256": "3e0c1aa2225ddcd9e3375a681dbe3d83985811ccb00b5f1af891a83298cc081c"
+    },
+    {
+      "station_id": "A801",
+      "variable": "precipitation",
+      "ts_utc": 1715720400,
+      "source": "inmet",
+      "value_milli": 0,
+      "datum_id": null,
+      "raw_payload_sha256": "b3260b28977ae35f903b7afea06a6cc8287c485377d12c2cc0473a33318c18d6"
+    },
+    {
+      "station_id": "A801",
+      "variable": "precipitation",
+      "ts_utc": 1715724000,
+      "source": "inmet",
+      "value_milli": 0,
+      "datum_id": null,
+      "raw_payload_sha256": "3799bfb9cc5cd7aa34f6c1b3814a3ef0693996a2d0ce0b204c46341b33d138aa"
+    },
+    {
+      "station_id": "A801",
+      "variable": "precipitation",
+      "ts_utc": 1715727600,
+      "source": "inmet",
+      "value_milli": 0,
+      "datum_id": null,
+      "raw_payload_sha256": "b6f4005890c185bf5679222d03438bb83c9106e89e2d6f38b85b6005bdb4a325"
+    },
+    {
+      "station_id": "A837",
+      "variable": "precipitation",
+      "ts_utc": 1715644800,
+      "source": "inmet",
+      "value_milli": 0,
+      "datum_id": null,
+      "raw_payload_sha256": "86f9ddda8e250d34098df3c170254c19609367468937dd817a0c20b508912af7"
+    },
+    {
+      "station_id": "A837",
+      "variable": "precipitation",
+      "ts_utc": 1715648400,
+      "source": "inmet",
+      "value_milli": 0,
+      "datum_id": null,
+      "raw_payload_sha256": "479cfbca1c736b98233ca79bbf1bb748ef5e13cbb004731c0b51bd5607c12ba3"
+    },
+    {
+      "station_id": "A837",
+      "variable": "precipitation",
+      "ts_utc": 1715652000,
+      "source": "inmet",
+      "value_milli": 0,
+      "datum_id": null,
+      "raw_payload_sha256": "01168fb301db4c74d132a4ac9cac7c57cac4adc289e1a6bfd9d9d97384ef8cc5"
+    },
+    {
+      "station_id": "A837",
+      "variable": "precipitation",
+      "ts_utc": 1715655600,
+      "source": "inmet",
+      "value_milli": 0,
+      "datum_id": null,
+      "raw_payload_sha256": "b82076d9794f3dd28e224bab6f9f47e459607e33e0dbabb606a6b46883c896b4"
+    },
+    {
+      "station_id": "A837",
+      "variable": "precipitation",
+      "ts_utc": 1715659200,
+      "source": "inmet",
+      "value_milli": 200,
+      "datum_id": null,
+      "raw_payload_sha256": "5882f76207d01baec98cec547717bd8c0f2d261cbac1ed494d2b2d1fb06b86c4"
+    },
+    {
+      "station_id": "A837",
+      "variable": "precipitation",
+      "ts_utc": 1715662800,
+      "source": "inmet",
+      "value_milli": 0,
+      "datum_id": null,
+      "raw_payload_sha256": "331274c3edec7e082d98c48b742c42845bcf1bbfbdefc705592915b59586f487"
+    },
+    {
+      "station_id": "A837",
+      "variable": "precipitation",
+      "ts_utc": 1715666400,
+      "source": "inmet",
+      "value_milli": 0,
+      "datum_id": null,
+      "raw_payload_sha256": "beafbf7763da4486f867afb8f6d287689f0804c2acdf5f1c36cee92acd6ed1ce"
+    },
+    {
+      "station_id": "A837",
+      "variable": "precipitation",
+      "ts_utc": 1715670000,
+      "source": "inmet",
+      "value_milli": 0,
+      "datum_id": null,
+      "raw_payload_sha256": "b17c41e566d61d94eff3e21eefb4647dff81c9386a26cb3203d5820afb932d69"
+    },
+    {
+      "station_id": "A837",
+      "variable": "precipitation",
+      "ts_utc": 1715673600,
+      "source": "inmet",
+      "value_milli": 0,
+      "datum_id": null,
+      "raw_payload_sha256": "389eb8881b8bb9aff1afccab51e73854b519422f5d06070b29689c67e81a2d15"
+    },
+    {
+      "station_id": "A837",
+      "variable": "precipitation",
+      "ts_utc": 1715677200,
+      "source": "inmet",
+      "value_milli": 0,
+      "datum_id": null,
+      "raw_payload_sha256": "fe0c7873527ab64cc32c6c78171d68a11444d017ee95d2c71fe2390f097c4649"
+    },
+    {
+      "station_id": "A837",
+      "variable": "precipitation",
+      "ts_utc": 1715680800,
+      "source": "inmet",
+      "value_milli": 0,
+      "datum_id": null,
+      "raw_payload_sha256": "6dc5c499c304c046419eeca86b75e4b97cb5aaafe944c1fb78ae734a43e40beb"
+    },
+    {
+      "station_id": "A837",
+      "variable": "precipitation",
+      "ts_utc": 1715684400,
+      "source": "inmet",
+      "value_milli": 0,
+      "datum_id": null,
+      "raw_payload_sha256": "4611880f008f463f7a45c5a803aac369dac1c6826fcb4e28578effe98ef3a3e7"
+    },
+    {
+      "station_id": "A837",
+      "variable": "precipitation",
+      "ts_utc": 1715688000,
+      "source": "inmet",
+      "value_milli": 0,
+      "datum_id": null,
+      "raw_payload_sha256": "d2010d1fed2c7198d86282074205cadfb12eabb508b015a89e97a505268c76c5"
+    },
+    {
+      "station_id": "A837",
+      "variable": "precipitation",
+      "ts_utc": 1715691600,
+      "source": "inmet",
+      "value_milli": 0,
+      "datum_id": null,
+      "raw_payload_sha256": "ae8cce5a2fe5dbfe47f4cdabf56aca0a53a508fe1c00fe0d215a2c28b188a756"
+    },
+    {
+      "station_id": "A837",
+      "variable": "precipitation",
+      "ts_utc": 1715695200,
+      "source": "inmet",
+      "value_milli": 0,
+      "datum_id": null,
+      "raw_payload_sha256": "96fd2bff35bb7a80cab0e9c9dceb6814482874e93f302a8892f1a7a139acf317"
+    },
+    {
+      "station_id": "A837",
+      "variable": "precipitation",
+      "ts_utc": 1715698800,
+      "source": "inmet",
+      "value_milli": 0,
+      "datum_id": null,
+      "raw_payload_sha256": "61703057c209150ae5062f5050c05c6e1859cdd15e9e93c02849f1b03140e87d"
+    },
+    {
+      "station_id": "A837",
+      "variable": "precipitation",
+      "ts_utc": 1715702400,
+      "source": "inmet",
+      "value_milli": 0,
+      "datum_id": null,
+      "raw_payload_sha256": "6aecd5867a314a2a86256b6e20f04d540f7eacf3b91a3b821e78d7e98fbbd34d"
+    },
+    {
+      "station_id": "A837",
+      "variable": "precipitation",
+      "ts_utc": 1715706000,
+      "source": "inmet",
+      "value_milli": 0,
+      "datum_id": null,
+      "raw_payload_sha256": "9734b7005f59774a41e482eb412fce7445a8a28b1d9e2049c19a0b524b2cc782"
+    },
+    {
+      "station_id": "A837",
+      "variable": "precipitation",
+      "ts_utc": 1715709600,
+      "source": "inmet",
+      "value_milli": 0,
+      "datum_id": null,
+      "raw_payload_sha256": "e888af2aa046e7b1975caf6d6c1b6edb6cb676c8bbaa5fecae951966a5dd50b1"
+    },
+    {
+      "station_id": "A837",
+      "variable": "precipitation",
+      "ts_utc": 1715713200,
+      "source": "inmet",
+      "value_milli": 0,
+      "datum_id": null,
+      "raw_payload_sha256": "a69769e36604144e82ad61eb7fb5504f8543e3f3dd160a76e11ee86a4316c80e"
+    },
+    {
+      "station_id": "A837",
+      "variable": "precipitation",
+      "ts_utc": 1715716800,
+      "source": "inmet",
+      "value_milli": 0,
+      "datum_id": null,
+      "raw_payload_sha256": "70c16ec53467745300d979a9522205e200c92346e2c7a5a2fbe2335a584eeac2"
+    },
+    {
+      "station_id": "A837",
+      "variable": "precipitation",
+      "ts_utc": 1715720400,
+      "source": "inmet",
+      "value_milli": 0,
+      "datum_id": null,
+      "raw_payload_sha256": "7284effccb6dd59c22bdbd27da8fbac45f5dea57f5d142fb4bd4d98579c07cc4"
+    },
+    {
+      "station_id": "A837",
+      "variable": "precipitation",
+      "ts_utc": 1715724000,
+      "source": "inmet",
+      "value_milli": 0,
+      "datum_id": null,
+      "raw_payload_sha256": "ec605a6926af4c54f5feb8ee3397fadee738cd7d48ba098fff15312b226ab8db"
+    },
+    {
+      "station_id": "A837",
+      "variable": "precipitation",
+      "ts_utc": 1715727600,
+      "source": "inmet",
+      "value_milli": 0,
+      "datum_id": null,
+      "raw_payload_sha256": "58d30be2e7cbe65f172fc7cd23011d061d310f7f4df279d1a6b13750b62a1995"
+    },
+    {
+      "station_id": "A840",
+      "variable": "precipitation",
+      "ts_utc": 1715644800,
+      "source": "inmet",
+      "value_milli": 0,
+      "datum_id": null,
+      "raw_payload_sha256": "8f6cc92e52244170b884bd518d69b824af5b021e5a78c8da29399c55ec2faee0"
+    },
+    {
+      "station_id": "A840",
+      "variable": "precipitation",
+      "ts_utc": 1715648400,
+      "source": "inmet",
+      "value_milli": 0,
+      "datum_id": null,
+      "raw_payload_sha256": "7ba29308c531939fec0b889eb2e290e5c9af072fcb11441243314a6563aa6935"
+    },
+    {
+      "station_id": "A840",
+      "variable": "precipitation",
+      "ts_utc": 1715652000,
+      "source": "inmet",
+      "value_milli": 0,
+      "datum_id": null,
+      "raw_payload_sha256": "94e1d829ddb03db79a54f54edaeb26cae9b63c04a29cfc25f5009badb7b65b74"
+    },
+    {
+      "station_id": "A840",
+      "variable": "precipitation",
+      "ts_utc": 1715655600,
+      "source": "inmet",
+      "value_milli": 0,
+      "datum_id": null,
+      "raw_payload_sha256": "0e9f92864a81fded315f7de76815b01a5c63614e1d261fdb7ef69b7e85388b85"
+    },
+    {
+      "station_id": "A840",
+      "variable": "precipitation",
+      "ts_utc": 1715659200,
+      "source": "inmet",
+      "value_milli": 0,
+      "datum_id": null,
+      "raw_payload_sha256": "735c6a54e95dfa0e4397cdab74007370d86c01e4194e8639fe3c04a2ec7ca16c"
+    },
+    {
+      "station_id": "A840",
+      "variable": "precipitation",
+      "ts_utc": 1715662800,
+      "source": "inmet",
+      "value_milli": 0,
+      "datum_id": null,
+      "raw_payload_sha256": "01ccfac99ddef2af334e36569a3c4a2b0abbf4626d132e34458bf9fd88d5e16e"
+    },
+    {
+      "station_id": "A840",
+      "variable": "precipitation",
+      "ts_utc": 1715666400,
+      "source": "inmet",
+      "value_milli": 0,
+      "datum_id": null,
+      "raw_payload_sha256": "ec8cc5b53ab6a161d3b50aa01dfdb59f67841321bfa56c06df71fe6b73d112d0"
+    },
+    {
+      "station_id": "A840",
+      "variable": "precipitation",
+      "ts_utc": 1715670000,
+      "source": "inmet",
+      "value_milli": 0,
+      "datum_id": null,
+      "raw_payload_sha256": "6a235d294b1343c5524e3306bc0c127a691f9ce5c21e3b8303d319d38200c343"
+    },
+    {
+      "station_id": "A840",
+      "variable": "precipitation",
+      "ts_utc": 1715673600,
+      "source": "inmet",
+      "value_milli": 0,
+      "datum_id": null,
+      "raw_payload_sha256": "30dd84e2a07b6bd13d0f2579baf538f521e6a7b2c036bc095582ade7ecd0012b"
+    },
+    {
+      "station_id": "A840",
+      "variable": "precipitation",
+      "ts_utc": 1715677200,
+      "source": "inmet",
+      "value_milli": 0,
+      "datum_id": null,
+      "raw_payload_sha256": "3ec874888661fb215a2d81d271b4acb91250fcf8e7924e8b7e460d2ef2f0f88d"
+    },
+    {
+      "station_id": "A840",
+      "variable": "precipitation",
+      "ts_utc": 1715680800,
+      "source": "inmet",
+      "value_milli": 0,
+      "datum_id": null,
+      "raw_payload_sha256": "f394bbce19c56166efddb8f95b4e71ef6a7ef6e198f7784ec5cdd4160f5fc868"
+    },
+    {
+      "station_id": "A840",
+      "variable": "precipitation",
+      "ts_utc": 1715684400,
+      "source": "inmet",
+      "value_milli": 0,
+      "datum_id": null,
+      "raw_payload_sha256": "9f3f3472d92314ec94e9195e6cc350407d9bf4f038b8702caf10f2fc777f5627"
+    },
+    {
+      "station_id": "A840",
+      "variable": "precipitation",
+      "ts_utc": 1715688000,
+      "source": "inmet",
+      "value_milli": 0,
+      "datum_id": null,
+      "raw_payload_sha256": "0aa601887272f5ef1abd03354fbebb92548a451881c67aadddc9ec892a46d030"
+    },
+    {
+      "station_id": "A840",
+      "variable": "precipitation",
+      "ts_utc": 1715691600,
+      "source": "inmet",
+      "value_milli": 0,
+      "datum_id": null,
+      "raw_payload_sha256": "098fdf2659c0eeaab9ddd1e4af4d14ed44f9637d78c03634c8a0db40df79fb44"
+    },
+    {
+      "station_id": "A840",
+      "variable": "precipitation",
+      "ts_utc": 1715695200,
+      "source": "inmet",
+      "value_milli": 0,
+      "datum_id": null,
+      "raw_payload_sha256": "49b7a9a6064e0ff36da4c9b68ab1b593e899f5bf3612a44e914ea59a10916e2a"
+    },
+    {
+      "station_id": "A840",
+      "variable": "precipitation",
+      "ts_utc": 1715698800,
+      "source": "inmet",
+      "value_milli": 0,
+      "datum_id": null,
+      "raw_payload_sha256": "a00b5fa155b5c5018181dda304cefe225eb449ea5306d070b83e576541c44fea"
+    },
+    {
+      "station_id": "A840",
+      "variable": "precipitation",
+      "ts_utc": 1715702400,
+      "source": "inmet",
+      "value_milli": 0,
+      "datum_id": null,
+      "raw_payload_sha256": "7b1571d288345207bb26d4d6dcb9c3b16f083b05d893e00441a22b5faa117fc4"
+    },
+    {
+      "station_id": "A840",
+      "variable": "precipitation",
+      "ts_utc": 1715706000,
+      "source": "inmet",
+      "value_milli": 0,
+      "datum_id": null,
+      "raw_payload_sha256": "b247f20d000ca6fdca86474a9a2debfee6f33e9e7f790293c4d1376461712232"
+    },
+    {
+      "station_id": "A840",
+      "variable": "precipitation",
+      "ts_utc": 1715709600,
+      "source": "inmet",
+      "value_milli": 0,
+      "datum_id": null,
+      "raw_payload_sha256": "ba7d8c7acd6a1e6c401601b78ad92ccaf93b6e4ccb3d3ad64e2be16216da42f0"
+    },
+    {
+      "station_id": "A840",
+      "variable": "precipitation",
+      "ts_utc": 1715713200,
+      "source": "inmet",
+      "value_milli": 0,
+      "datum_id": null,
+      "raw_payload_sha256": "39d52551bfd4f44573a206d4af1ed0c2124ea97d595f43cddbd81257f4eaf8fe"
+    },
+    {
+      "station_id": "A840",
+      "variable": "precipitation",
+      "ts_utc": 1715716800,
+      "source": "inmet",
+      "value_milli": 0,
+      "datum_id": null,
+      "raw_payload_sha256": "21e91e85342e0dfeb2537faf9741074894184985270b53dbaef4f13e368ac629"
+    },
+    {
+      "station_id": "A840",
+      "variable": "precipitation",
+      "ts_utc": 1715720400,
+      "source": "inmet",
+      "value_milli": 0,
+      "datum_id": null,
+      "raw_payload_sha256": "7c3b791bd1a15ca311bd85826e2c490e413e8711d0629a9779a5adec1c00ca23"
+    },
+    {
+      "station_id": "A840",
+      "variable": "precipitation",
+      "ts_utc": 1715724000,
+      "source": "inmet",
+      "value_milli": 0,
+      "datum_id": null,
+      "raw_payload_sha256": "0b43bbd76e5545bad82c1829f7defe952c4f285bf5b9dd9fd0f3ca01ddc518fe"
+    },
+    {
+      "station_id": "A840",
+      "variable": "precipitation",
+      "ts_utc": 1715727600,
+      "source": "inmet",
+      "value_milli": 0,
+      "datum_id": null,
+      "raw_payload_sha256": "bd6472628378ceeb1fcc48a4297719312eeba1d55b6211ac70f9322b52e30c3d"
+    },
+    {
+      "station_id": "A879",
+      "variable": "precipitation",
+      "ts_utc": 1715644800,
+      "source": "inmet",
+      "value_milli": 2200,
+      "datum_id": null,
+      "raw_payload_sha256": "09685ba971e9867b6693311f556800daf1dfca29ee41605cab1b5adf933a57c6"
+    },
+    {
+      "station_id": "A879",
+      "variable": "precipitation",
+      "ts_utc": 1715648400,
+      "source": "inmet",
+      "value_milli": 2200,
+      "datum_id": null,
+      "raw_payload_sha256": "fd8a111e2407c0b5512bed595d0ab95892477ee09ebae8d88e053fc3a9f65cd4"
+    },
+    {
+      "station_id": "A879",
+      "variable": "precipitation",
+      "ts_utc": 1715652000,
+      "source": "inmet",
+      "value_milli": 200,
+      "datum_id": null,
+      "raw_payload_sha256": "93be9f91903b264a26785a5ec9bd9c866897bddf6b27ac1ec3aed89965fb7024"
+    },
+    {
+      "station_id": "A879",
+      "variable": "precipitation",
+      "ts_utc": 1715655600,
+      "source": "inmet",
+      "value_milli": 200,
+      "datum_id": null,
+      "raw_payload_sha256": "bd0e24feb9c7539004b493fb29b56053eef9c0feb649495e2519276c79b2adf9"
+    },
+    {
+      "station_id": "A879",
+      "variable": "precipitation",
+      "ts_utc": 1715659200,
+      "source": "inmet",
+      "value_milli": 400,
+      "datum_id": null,
+      "raw_payload_sha256": "c9e81ac8658c28d1cadae5fd737e22b2d2d7d12331fbe13f7affa6b70082bd7f"
+    },
+    {
+      "station_id": "A879",
+      "variable": "precipitation",
+      "ts_utc": 1715662800,
+      "source": "inmet",
+      "value_milli": 0,
+      "datum_id": null,
+      "raw_payload_sha256": "1bc68a599fbfaa283d643fb233c6d2955a9088dd63d5c643f250258a141f869b"
+    },
+    {
+      "station_id": "A879",
+      "variable": "precipitation",
+      "ts_utc": 1715666400,
+      "source": "inmet",
+      "value_milli": 200,
+      "datum_id": null,
+      "raw_payload_sha256": "f709b0776a5fbdf8f52957bfa3aab040b171c36f78fd0a5632ccdf044a082607"
+    },
+    {
+      "station_id": "A879",
+      "variable": "precipitation",
+      "ts_utc": 1715670000,
+      "source": "inmet",
+      "value_milli": 200,
+      "datum_id": null,
+      "raw_payload_sha256": "c7a75b245bf9a65e4d3d3ff70f4cad4d6a458b57cef3cebdabd42148388ab639"
+    },
+    {
+      "station_id": "A879",
+      "variable": "precipitation",
+      "ts_utc": 1715673600,
+      "source": "inmet",
+      "value_milli": 1000,
+      "datum_id": null,
+      "raw_payload_sha256": "a8606b9df6d870b3e79249d2297a812c18d5c7d61fa89a8a254202cd1f342cf2"
+    },
+    {
+      "station_id": "A879",
+      "variable": "precipitation",
+      "ts_utc": 1715677200,
+      "source": "inmet",
+      "value_milli": 400,
+      "datum_id": null,
+      "raw_payload_sha256": "ffcb61da4c27e38e276979b5239a05b79225f14daaa6e991aa7112f91d4d681f"
+    },
+    {
+      "station_id": "A879",
+      "variable": "precipitation",
+      "ts_utc": 1715680800,
+      "source": "inmet",
+      "value_milli": 0,
+      "datum_id": null,
+      "raw_payload_sha256": "543434effb5a7ba5a8977a063e634a3d4e90386012709655f31ff68e6af24558"
+    },
+    {
+      "station_id": "A879",
+      "variable": "precipitation",
+      "ts_utc": 1715684400,
+      "source": "inmet",
+      "value_milli": 0,
+      "datum_id": null,
+      "raw_payload_sha256": "3fdc437b0a47a8efe419feb3df27f9a6231ff2b8b362bc812a314acac9d97c6b"
+    },
+    {
+      "station_id": "A879",
+      "variable": "precipitation",
+      "ts_utc": 1715688000,
+      "source": "inmet",
+      "value_milli": 0,
+      "datum_id": null,
+      "raw_payload_sha256": "8e63ee3298e16c73352f057b85c77bb779554929799b7b595be63a44bd1bda81"
+    },
+    {
+      "station_id": "A879",
+      "variable": "precipitation",
+      "ts_utc": 1715691600,
+      "source": "inmet",
+      "value_milli": 0,
+      "datum_id": null,
+      "raw_payload_sha256": "515b999e1e823fc9b9d2b2703217a6e697b7f0736a1e1b787464cd4454c19f54"
+    },
+    {
+      "station_id": "A879",
+      "variable": "precipitation",
+      "ts_utc": 1715695200,
+      "source": "inmet",
+      "value_milli": 0,
+      "datum_id": null,
+      "raw_payload_sha256": "a8d11c58454747b4549446dd241dfc8804a7ffbd91fa976bbd4d73e266e407e2"
+    },
+    {
+      "station_id": "A879",
+      "variable": "precipitation",
+      "ts_utc": 1715698800,
+      "source": "inmet",
+      "value_milli": 0,
+      "datum_id": null,
+      "raw_payload_sha256": "449d778892ade082f865f1d069d4bb3eb42910c602d9c90f5bee38f19b9ca9b1"
+    },
+    {
+      "station_id": "A879",
+      "variable": "precipitation",
+      "ts_utc": 1715702400,
+      "source": "inmet",
+      "value_milli": 0,
+      "datum_id": null,
+      "raw_payload_sha256": "c1d668a1e71d30592495171817a89697deec1720433d8cad78bf43d45294e76f"
+    },
+    {
+      "station_id": "A879",
+      "variable": "precipitation",
+      "ts_utc": 1715706000,
+      "source": "inmet",
+      "value_milli": 0,
+      "datum_id": null,
+      "raw_payload_sha256": "23defc9e46eac3ec9441e75899d8bf9e7f677cca5c7ad0a23c0332e2417cac36"
+    },
+    {
+      "station_id": "A879",
+      "variable": "precipitation",
+      "ts_utc": 1715709600,
+      "source": "inmet",
+      "value_milli": 0,
+      "datum_id": null,
+      "raw_payload_sha256": "1f0d642db0a4a588362207021d49ef5c89839c75d4ade7f8f56c26b664dc63ba"
+    },
+    {
+      "station_id": "A879",
+      "variable": "precipitation",
+      "ts_utc": 1715713200,
+      "source": "inmet",
+      "value_milli": 0,
+      "datum_id": null,
+      "raw_payload_sha256": "e721a1df393e26ad50792dfd6f4822f2dfce7e921704ae1771fa26f86ab5149e"
+    },
+    {
+      "station_id": "A879",
+      "variable": "precipitation",
+      "ts_utc": 1715716800,
+      "source": "inmet",
+      "value_milli": 0,
+      "datum_id": null,
+      "raw_payload_sha256": "f5ceffeb8f5b6fefae9534a5a5b340319a583852d3a8b007a0107c7a50252649"
+    },
+    {
+      "station_id": "A879",
+      "variable": "precipitation",
+      "ts_utc": 1715720400,
+      "source": "inmet",
+      "value_milli": 0,
+      "datum_id": null,
+      "raw_payload_sha256": "8176faa057f7c14cf74f8b63911dca05df3423e6ad652aff7536ed58326f5e08"
+    },
+    {
+      "station_id": "A879",
+      "variable": "precipitation",
+      "ts_utc": 1715724000,
+      "source": "inmet",
+      "value_milli": 0,
+      "datum_id": null,
+      "raw_payload_sha256": "31fc35c3417b7b1939d679f715cfcfe90d9d0d89dab431b61db3fc8584198cee"
+    },
+    {
+      "station_id": "A879",
+      "variable": "precipitation",
+      "ts_utc": 1715727600,
+      "source": "inmet",
+      "value_milli": 0,
+      "datum_id": null,
+      "raw_payload_sha256": "344b2f7e19578a2834622accce44eac1703ce7391de89fe383cd15bb7ac0b0c4"
+    },
+    {
+      "station_id": "A882",
+      "variable": "precipitation",
+      "ts_utc": 1715644800,
+      "source": "inmet",
+      "value_milli": 0,
+      "datum_id": null,
+      "raw_payload_sha256": "edaa8765080787237ddfc81353ce56e388c03df7c64478889ffbadef0e61eab4"
+    },
+    {
+      "station_id": "A882",
+      "variable": "precipitation",
+      "ts_utc": 1715648400,
+      "source": "inmet",
+      "value_milli": 0,
+      "datum_id": null,
+      "raw_payload_sha256": "31fcce53ace40071a645ae9ae14e5d0bb60a1a70448d6f1d1c7c0a282d18995c"
+    },
+    {
+      "station_id": "A882",
+      "variable": "precipitation",
+      "ts_utc": 1715652000,
+      "source": "inmet",
+      "value_milli": 0,
+      "datum_id": null,
+      "raw_payload_sha256": "43dc4a079e4bc0783b0eb040b648a56d49db410d8763e7017173ed9773b98e3a"
+    },
+    {
+      "station_id": "A882",
+      "variable": "precipitation",
+      "ts_utc": 1715655600,
+      "source": "inmet",
+      "value_milli": 0,
+      "datum_id": null,
+      "raw_payload_sha256": "8de8c622784d8a05cbfe10a1568e149c523f94165ee80da7bf532ccaa9d090f0"
+    },
+    {
+      "station_id": "A882",
+      "variable": "precipitation",
+      "ts_utc": 1715659200,
+      "source": "inmet",
+      "value_milli": 0,
+      "datum_id": null,
+      "raw_payload_sha256": "e5aa0b901f32a76d9df61a24556628e901a9fa59512ba9aeece6a1bcb4a1a514"
+    },
+    {
+      "station_id": "A882",
+      "variable": "precipitation",
+      "ts_utc": 1715662800,
+      "source": "inmet",
+      "value_milli": 0,
+      "datum_id": null,
+      "raw_payload_sha256": "549acc0b6353a4cd8a415b1a006fdf88bc460ce5a90ce1f10e4119b2eb9cfd21"
+    },
+    {
+      "station_id": "A882",
+      "variable": "precipitation",
+      "ts_utc": 1715666400,
+      "source": "inmet",
+      "value_milli": 0,
+      "datum_id": null,
+      "raw_payload_sha256": "9bb9665dce36cff40b1ba69c8be847b1f05b1f199063e5d8cd06143f2ee4e8a1"
+    },
+    {
+      "station_id": "A882",
+      "variable": "precipitation",
+      "ts_utc": 1715670000,
+      "source": "inmet",
+      "value_milli": 0,
+      "datum_id": null,
+      "raw_payload_sha256": "066ec414a22651698d13571f4c7be1946b4571a0cb04a6f0b05017d130eb4e0f"
+    },
+    {
+      "station_id": "A882",
+      "variable": "precipitation",
+      "ts_utc": 1715673600,
+      "source": "inmet",
+      "value_milli": 0,
+      "datum_id": null,
+      "raw_payload_sha256": "8f0b0581b0b30278bb19dc19b75053b4e7267b1e3b007e90deb8dee1208bf6d4"
+    },
+    {
+      "station_id": "A882",
+      "variable": "precipitation",
+      "ts_utc": 1715677200,
+      "source": "inmet",
+      "value_milli": 0,
+      "datum_id": null,
+      "raw_payload_sha256": "4d73b53080a784d468bf993a5910f3af544038effe6b18d888203ca56c18303c"
+    },
+    {
+      "station_id": "A882",
+      "variable": "precipitation",
+      "ts_utc": 1715680800,
+      "source": "inmet",
+      "value_milli": 0,
+      "datum_id": null,
+      "raw_payload_sha256": "f8521dc99d8eabe0a46141b2036d9b60739108093b0630c84c0225c87cb13382"
+    },
+    {
+      "station_id": "A882",
+      "variable": "precipitation",
+      "ts_utc": 1715684400,
+      "source": "inmet",
+      "value_milli": 0,
+      "datum_id": null,
+      "raw_payload_sha256": "2cf56fdc665344dd4094fe5add5a859ecfd4cfed61a5ddd7334329c5491d36fc"
+    },
+    {
+      "station_id": "A882",
+      "variable": "precipitation",
+      "ts_utc": 1715688000,
+      "source": "inmet",
+      "value_milli": 0,
+      "datum_id": null,
+      "raw_payload_sha256": "2f0b72a247b139609b801215bad5b3a3d6d434b37ed49bd3e1e940df847af81a"
+    },
+    {
+      "station_id": "A882",
+      "variable": "precipitation",
+      "ts_utc": 1715691600,
+      "source": "inmet",
+      "value_milli": 0,
+      "datum_id": null,
+      "raw_payload_sha256": "ccd5b5adf4afbbfa9dd860e5fa2a7f078e001e47ab69a9a03bc90df269507b16"
+    },
+    {
+      "station_id": "A882",
+      "variable": "precipitation",
+      "ts_utc": 1715695200,
+      "source": "inmet",
+      "value_milli": 0,
+      "datum_id": null,
+      "raw_payload_sha256": "e9a2625f7735f01cda26e703b821f82e2ec86e802668c16a14af142598d44a0d"
+    },
+    {
+      "station_id": "A882",
+      "variable": "precipitation",
+      "ts_utc": 1715698800,
+      "source": "inmet",
+      "value_milli": 0,
+      "datum_id": null,
+      "raw_payload_sha256": "f90643f04107ac16bcef203458d0bd47b449ce855647f25e9cee5d78f9e938eb"
+    },
+    {
+      "station_id": "A882",
+      "variable": "precipitation",
+      "ts_utc": 1715702400,
+      "source": "inmet",
+      "value_milli": 200,
+      "datum_id": null,
+      "raw_payload_sha256": "1cf2c46a731313664f4aa216ef1967eb5af2fd31c6ba5457380a66465a1c28b6"
+    },
+    {
+      "station_id": "A882",
+      "variable": "precipitation",
+      "ts_utc": 1715706000,
+      "source": "inmet",
+      "value_milli": 0,
+      "datum_id": null,
+      "raw_payload_sha256": "077b336f86cdf5353f090af1f1b957ac1a0f98d0c2afab6efc4ca59e0a14339e"
+    },
+    {
+      "station_id": "A882",
+      "variable": "precipitation",
+      "ts_utc": 1715709600,
+      "source": "inmet",
+      "value_milli": 0,
+      "datum_id": null,
+      "raw_payload_sha256": "ab410c1d6afe77240790ec2525820dd27a25e35456b76f012d11e22338da85f7"
+    },
+    {
+      "station_id": "A882",
+      "variable": "precipitation",
+      "ts_utc": 1715713200,
+      "source": "inmet",
+      "value_milli": 0,
+      "datum_id": null,
+      "raw_payload_sha256": "ff7753072d90b7ee6c72e896143ecae1b02881df62ec384a17b28065687c8e27"
+    },
+    {
+      "station_id": "A882",
+      "variable": "precipitation",
+      "ts_utc": 1715716800,
+      "source": "inmet",
+      "value_milli": 0,
+      "datum_id": null,
+      "raw_payload_sha256": "586cc37ad1ede0142e36d21701d3dd30d19c7934335b5e7da0e3cc4601f065f8"
+    },
+    {
+      "station_id": "A882",
+      "variable": "precipitation",
+      "ts_utc": 1715720400,
+      "source": "inmet",
+      "value_milli": 0,
+      "datum_id": null,
+      "raw_payload_sha256": "4be37eafc55aa45d5125dfd9ee251098e1e51f0bf603cdf4b03fa553efae709e"
+    },
+    {
+      "station_id": "A882",
+      "variable": "precipitation",
+      "ts_utc": 1715724000,
+      "source": "inmet",
+      "value_milli": 0,
+      "datum_id": null,
+      "raw_payload_sha256": "c308a19eb431f9cf0e7a3118f8a6bd65014e34c2f20cf13bd90a2ecdfe59a6ae"
+    },
+    {
+      "station_id": "A882",
+      "variable": "precipitation",
+      "ts_utc": 1715727600,
+      "source": "inmet",
+      "value_milli": 0,
+      "datum_id": null,
+      "raw_payload_sha256": "fe0d117baaca35acdc023bbaed3122c430f6d063cfb54b04f56cd6f76a7dc502"
+    },
+    {
+      "station_id": "B807",
+      "variable": "precipitation",
+      "ts_utc": 1715644800,
+      "source": "inmet",
+      "value_milli": 0,
+      "datum_id": null,
+      "raw_payload_sha256": "fdbb89649861a29c4ca357374b39982e2403971f60eb614304a9c96d751c5a67"
+    },
+    {
+      "station_id": "B807",
+      "variable": "precipitation",
+      "ts_utc": 1715648400,
+      "source": "inmet",
+      "value_milli": 0,
+      "datum_id": null,
+      "raw_payload_sha256": "1baee83e6bb9ea5dd40ba6cf57acd04bb8021a6110a7ff6b937b1325ec280436"
+    },
+    {
+      "station_id": "B807",
+      "variable": "precipitation",
+      "ts_utc": 1715652000,
+      "source": "inmet",
+      "value_milli": 0,
+      "datum_id": null,
+      "raw_payload_sha256": "a2380d32a4bb7118c79593a1be941f8fc890fe00fa93aef0db8075a4ea6c2390"
+    },
+    {
+      "station_id": "B807",
+      "variable": "precipitation",
+      "ts_utc": 1715655600,
+      "source": "inmet",
+      "value_milli": 0,
+      "datum_id": null,
+      "raw_payload_sha256": "b855c5b9dde59ab5f9ec720fcb3bc3c9a902eb57910bbbfb9d2d4c6701693216"
+    },
+    {
+      "station_id": "B807",
+      "variable": "precipitation",
+      "ts_utc": 1715659200,
+      "source": "inmet",
+      "value_milli": 0,
+      "datum_id": null,
+      "raw_payload_sha256": "873f98fa6ff0e14433c71714ac3d973ef9b8caeff1187d6d036880d3333d7a8f"
+    },
+    {
+      "station_id": "B807",
+      "variable": "precipitation",
+      "ts_utc": 1715662800,
+      "source": "inmet",
+      "value_milli": 0,
+      "datum_id": null,
+      "raw_payload_sha256": "bddb29c8fe3bdb70b15ce306373c749f7571703c13d094e907ef93d2c5e8a13a"
+    },
+    {
+      "station_id": "B807",
+      "variable": "precipitation",
+      "ts_utc": 1715666400,
+      "source": "inmet",
+      "value_milli": 0,
+      "datum_id": null,
+      "raw_payload_sha256": "276b605596ece52e5f97c7dd820a409c476cf706e8d4ae04bfbc7d792d0533f8"
+    },
+    {
+      "station_id": "B807",
+      "variable": "precipitation",
+      "ts_utc": 1715670000,
+      "source": "inmet",
+      "value_milli": 0,
+      "datum_id": null,
+      "raw_payload_sha256": "3391c39b637ef2369e86e3c4222d4576cc7a64c5758bded904e3174bdde83963"
+    },
+    {
+      "station_id": "B807",
+      "variable": "precipitation",
+      "ts_utc": 1715673600,
+      "source": "inmet",
+      "value_milli": 0,
+      "datum_id": null,
+      "raw_payload_sha256": "6926e6e3e9d89ddc0af9471b7b38b6d1b6e7fdf1e12dc304aefd3a399728364b"
+    },
+    {
+      "station_id": "B807",
+      "variable": "precipitation",
+      "ts_utc": 1715677200,
+      "source": "inmet",
+      "value_milli": 0,
+      "datum_id": null,
+      "raw_payload_sha256": "bb68ce2139cd42077d07379cbe257a33d1adaf28aae41c9bcc1a3bd5b92d89e7"
+    },
+    {
+      "station_id": "B807",
+      "variable": "precipitation",
+      "ts_utc": 1715680800,
+      "source": "inmet",
+      "value_milli": 0,
+      "datum_id": null,
+      "raw_payload_sha256": "2a4159957ce6cb5321da18ca10e1e4cbb3dc12cf715594e6cb37d80adf0a31a2"
+    },
+    {
+      "station_id": "B807",
+      "variable": "precipitation",
+      "ts_utc": 1715684400,
+      "source": "inmet",
+      "value_milli": 0,
+      "datum_id": null,
+      "raw_payload_sha256": "ec08ecff7bade94d5453bc7102775993d288bad9d2a126c4cabefabb6e204a9e"
+    },
+    {
+      "station_id": "B807",
+      "variable": "precipitation",
+      "ts_utc": 1715688000,
+      "source": "inmet",
+      "value_milli": 0,
+      "datum_id": null,
+      "raw_payload_sha256": "79330e82a75f3edcd6e72c2856492cfe0bff0e789f0bf0d7639683dee0cf3e79"
+    },
+    {
+      "station_id": "B807",
+      "variable": "precipitation",
+      "ts_utc": 1715691600,
+      "source": "inmet",
+      "value_milli": 0,
+      "datum_id": null,
+      "raw_payload_sha256": "5e2e5d9d043eb71774a696f9ffc48d5d9d6d62c1f84df4539131754725f7cfa9"
+    },
+    {
+      "station_id": "B807",
+      "variable": "precipitation",
+      "ts_utc": 1715695200,
+      "source": "inmet",
+      "value_milli": 0,
+      "datum_id": null,
+      "raw_payload_sha256": "bfea8036e3e2a5a164cc8bdb8bba937b41745bb105a14cf006f42460b410152b"
+    },
+    {
+      "station_id": "B807",
+      "variable": "precipitation",
+      "ts_utc": 1715698800,
+      "source": "inmet",
+      "value_milli": 0,
+      "datum_id": null,
+      "raw_payload_sha256": "77e798f375aef547f71b4d7ea0c0d8a9b10d1c78203b5262a43c0ab955fec469"
+    },
+    {
+      "station_id": "B807",
+      "variable": "precipitation",
+      "ts_utc": 1715702400,
+      "source": "inmet",
+      "value_milli": 0,
+      "datum_id": null,
+      "raw_payload_sha256": "c060fe823d3413399837686cc2caef9b2ffcb464c8693eece901ad3569a29928"
+    },
+    {
+      "station_id": "B807",
+      "variable": "precipitation",
+      "ts_utc": 1715706000,
+      "source": "inmet",
+      "value_milli": 0,
+      "datum_id": null,
+      "raw_payload_sha256": "2e2f2a77575cfd5a353aef0e502491136f1e7db44add718414291f6ea61e6367"
+    },
+    {
+      "station_id": "B807",
+      "variable": "precipitation",
+      "ts_utc": 1715709600,
+      "source": "inmet",
+      "value_milli": 0,
+      "datum_id": null,
+      "raw_payload_sha256": "a7475d362926dc27934405669655471fd8524e9eb2be562c8f2a84fc1917b14a"
+    },
+    {
+      "station_id": "B807",
+      "variable": "precipitation",
+      "ts_utc": 1715713200,
+      "source": "inmet",
+      "value_milli": 0,
+      "datum_id": null,
+      "raw_payload_sha256": "618fca2598de124d9d9c1a479dad699324d19407329803291766b31909cc009a"
+    },
+    {
+      "station_id": "B807",
+      "variable": "precipitation",
+      "ts_utc": 1715716800,
+      "source": "inmet",
+      "value_milli": 0,
+      "datum_id": null,
+      "raw_payload_sha256": "bf56d6143bfa3d69d0bebfccad537d1d6f3140af1fc581401bf02ad7850d4a19"
+    },
+    {
+      "station_id": "B807",
+      "variable": "precipitation",
+      "ts_utc": 1715720400,
+      "source": "inmet",
+      "value_milli": 0,
+      "datum_id": null,
+      "raw_payload_sha256": "10792265e7c5eb4213669ae5b369ea8a722dbe62d7867a96939569420547e0ca"
+    },
+    {
+      "station_id": "B807",
+      "variable": "precipitation",
+      "ts_utc": 1715724000,
+      "source": "inmet",
+      "value_milli": 0,
+      "datum_id": null,
+      "raw_payload_sha256": "76a6aa2a0ea5d50fd90ca5b4e41bbe531f06690799168def61138e2bce44532e"
+    },
+    {
+      "station_id": "B807",
+      "variable": "precipitation",
+      "ts_utc": 1715727600,
+      "source": "inmet",
+      "value_milli": 0,
+      "datum_id": null,
+      "raw_payload_sha256": "56c871290f77e9be143d1fc659e5e0dd52a72950628710dfe1a612a25313cfc5"
+    },
+    {
+      "station_id": "GLOFAS-CAI",
+      "variable": "river_discharge",
+      "ts_utc": 1715644800,
+      "source": "open_meteo_glofas",
+      "value_milli": 1366730,
+      "datum_id": null,
+      "raw_payload_sha256": "85c3b282fee9346501f07740a6f2a926b18317d7f577626e8b287f6083d7086f"
+    },
+    {
+      "station_id": "GLOFAS-GRAVATAI",
+      "variable": "river_discharge",
+      "ts_utc": 1715644800,
+      "source": "open_meteo_glofas",
+      "value_milli": 225990,
+      "datum_id": null,
+      "raw_payload_sha256": "77623fbbeb3dd41a7f59442b45f8c2cd5b7fb5c24e8dfc8df7fc326d7c8fbb3d"
+    },
+    {
+      "station_id": "GLOFAS-GUAIBA",
+      "variable": "river_discharge",
+      "ts_utc": 1715644800,
+      "source": "open_meteo_glofas",
+      "value_milli": 15558650,
+      "datum_id": null,
+      "raw_payload_sha256": "d2e2d0380ef204b21c815a3594747c4aa35d2072af6d815e08340dac877beafe"
+    },
+    {
+      "station_id": "GLOFAS-JACUI",
+      "variable": "river_discharge",
+      "ts_utc": 1715644800,
+      "source": "open_meteo_glofas",
+      "value_milli": 12792810,
+      "datum_id": null,
+      "raw_payload_sha256": "e17dd7fa8570ed639e6d27b8b795777ed7cd663c1fc9bcaea0c6be3a3fbc0c4a"
+    },
+    {
+      "station_id": "GLOFAS-SINOS",
+      "variable": "river_discharge",
+      "ts_utc": 1715644800,
+      "source": "open_meteo_glofas",
+      "value_milli": 876000,
+      "datum_id": null,
+      "raw_payload_sha256": "ac18445a164e6e96f275a0d7cd8b9852c6bd4b760f1995af1c215e1e308a50c2"
+    },
+    {
+      "station_id": "GLOFAS-TAQUARI",
+      "variable": "river_discharge",
+      "ts_utc": 1715644800,
+      "source": "open_meteo_glofas",
+      "value_milli": 7293570,
+      "datum_id": null,
+      "raw_payload_sha256": "4d780d0410eb7225bbb0acbbf987529b66eb81109102fc61019f6fdce092dc59"
+    }
+  ]
+}

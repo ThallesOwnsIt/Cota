@@ -10,10 +10,10 @@
     "station_set_hash": "da21592e7d974a944a6ea685abbed982d0baee45bb582c2f6bca1fd69c529c32",
     "prev_batch_root": "bcaebdf280d0bd8e54c4b5cd3841a861e8fdad8e714db7e70f0fb48320de48f5"
   },
-  "batch_account": "3d8dZfdtfZ1gzFw7nnFNXnDAwxbbpTCUKyaC6Qhs95ia",
-  "tx_signature": "5sEdM6PGRpqfKqMJQtvWRGLutdgSMqhNSZ8U1brGiMvv1wMZw8rho2idqBhzaLH6Uk6nYEuR9GkJYqM1YwrZWepD",
+  "record_index": 121,
+  "tx_signature": "2q9YRExBPsGMajhRJkQccGesjHQG6wkrCjrBzKHwxUGuVJD31UtbDaxSzQS37cztvjCGM3aDUHkPdB7U8133h439",
   "cluster": "devnet",
-  "explorer": "https://explorer.solana.com/tx/5sEdM6PGRpqfKqMJQtvWRGLutdgSMqhNSZ8U1brGiMvv1wMZw8rho2idqBhzaLH6Uk6nYEuR9GkJYqM1YwrZWepD?cluster=devnet",
+  "explorer": "https://explorer.solana.com/tx/2q9YRExBPsGMajhRJkQccGesjHQG6wkrCjrBzKHwxUGuVJD31UtbDaxSzQS37cztvjCGM3aDUHkPdB7U8133h439?cluster=devnet",
   "members": [
     {
       "member": "GS3uQUPgfCDXqtbpD6vPyNpQgRcDUFj1fhF4wYGk9ist",
@@ -30,16 +30,16 @@
   ],
   "signatures": [
     {
-      "member": "AFbz6rqf4u7pexBHadriqd9VNDh74KGqEeZG5eeQKTs3",
-      "signature": "d15912f9fba3e34c568b12c39b9c81aa5b19a7b2cb9b06675af122d9c778c3dadfe761872d2633bef69f26546ba3745a586c69340c3e0fcd5bb94fc29f53280c"
+      "member": "B4FwxN42zWyiSKU7qwvbpchy7uDD8ugnzX43B9mPd38L",
+      "signature": "7cacad1e452074b16fdd8f044e9e7878ddc56553b56d794f8588abe1bcdbab4482479e9fbe19cdd57e8169e4611bca5944254ddd6eb5d084b8ba12e1ac277e02"
     },
     {
       "member": "GS3uQUPgfCDXqtbpD6vPyNpQgRcDUFj1fhF4wYGk9ist",
-      "signature": "37fecb2d71bf9f3bbf3f0848d790f6472310f5845b8a4f090e5d2a3e5df4b33d9afc761c5c6e226eeb049b1e92ab025dff65d57325fcaeba874111345d11e60b"
+      "signature": "9da3d93e04f7f9845b896be93163ddd2002df5462ffca64ab5a351cac7d1ad35eb0d8e28a2ea047e7f28bde2748e2614a9b3929493ab0c2c2d0b6cdfebd18f0b"
     },
     {
-      "member": "B4FwxN42zWyiSKU7qwvbpchy7uDD8ugnzX43B9mPd38L",
-      "signature": "d0dc6ce95d5fe58b76ab7728b5bbf841f7810b0a7defb1706d13cd22530f1afe31fc4d7dda6ae338b836c7df8a41f5eb27873b73814d0e8ce420b2315129c702"
+      "member": "AFbz6rqf4u7pexBHadriqd9VNDh74KGqEeZG5eeQKTs3",
+      "signature": "d524522090634e5a2e781a6a0f610f718c3c77dc9683e020eb1c3f812eb3c893f782d2cb1030d5c02b3cf32e66eb545baa7ccbc0ce92ff40050a920aa6501b0b"
     }
   ],
   "quality": {
@@ -207,8 +207,8 @@
         "station_id": "A882",
         "reason": "unavailable",
         "score_milli": 545,
-        "tx_signature": "38dJfgmp5mi5ahEymfZ1xLi7ZAZfegnGcbsRV6kJp38ySmyzY643FvTqwVLXon9reAwBVqR4mr3jT1iGpJ9GJpr1",
-        "explorer": "https://explorer.solana.com/tx/38dJfgmp5mi5ahEymfZ1xLi7ZAZfegnGcbsRV6kJp38ySmyzY643FvTqwVLXon9reAwBVqR4mr3jT1iGpJ9GJpr1?cluster=devnet"
+        "tx_signature": "3v7tXSsjGD24xxi6w3xFpXfTosNerqAKWdoTjdoF6TQTbS7zUmpWgX5PXSDRRS1p3U2Rzn4C9RbrMEruhRujavrp",
+        "explorer": "https://explorer.solana.com/tx/3v7tXSsjGD24xxi6w3xFpXfTosNerqAKWdoTjdoF6TQTbS7zUmpWgX5PXSDRRS1p3U2Rzn4C9RbrMEruhRujavrp?cluster=devnet"
       }
     ]
   },
