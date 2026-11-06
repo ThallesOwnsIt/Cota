@@ -1295,7 +1295,14 @@ function renderStamp() {
       `Último carimbo: ${nf0.format(t.records)} registros, raiz <span class="hash">${short(t.root, 12)}</span>, enviado em ${when} · ${status}.`,
       `Latest stamp: ${nf0.format(t.records)} records, root <span class="hash">${short(t.root, 12)}</span>, sent ${when} · ${status}.`,
     )}
-    <a href="data/timestamps/${t.file}" download>${L("arquivo", "file")}</a> · <a href="data/timestamps/${t.file}.ots" download>${L("prova .ots", ".ots proof")}</a> · <a href="https://opentimestamps.org" target="_blank" rel="noopener">${L("conferir em opentimestamps.org", "check on opentimestamps.org")} ↗</a></p>`;
+    <a href="data/timestamps/${t.file}" download>${L("arquivo", "file")}</a> · <a href="data/timestamps/${t.file}.ots" download>${L("prova .ots", ".ots proof")}</a> · <a href="https://opentimestamps.org" target="_blank" rel="noopener">${L("conferir em opentimestamps.org", "check on opentimestamps.org")} ↗</a></p>${
+      B.archive
+        ? `<p class="sub">${L(
+            `Os dados completos também têm cópia permanente fora do GitHub: ${nf0.format(B.archive.files)} arquivos no Arweave (${nf0.format(B.archive.bytes / 1024)} KiB comprimidos) e o repositório no Software Heritage. Qualquer cópia pode ser conferida contra a cadeia.`,
+            `The complete data also has permanent copies outside GitHub: ${nf0.format(B.archive.files)} files on Arweave (${nf0.format(B.archive.bytes / 1024)} KiB compressed) and the repository on Software Heritage. Any copy can be checked against the chain.`,
+          )} <a href="https://github.com/ThallesOwnsIt/Cota/blob/main/data/ledger/archive.json" target="_blank" rel="noopener">${L("lista no Arweave", "Arweave list")} ↗</a> · <a href="https://archive.softwareheritage.org/browse/origin/?origin_url=https://github.com/ThallesOwnsIt/Cota" target="_blank" rel="noopener">Software Heritage ↗</a></p>`
+        : ""
+    }`;
 }
 
 // ---- who can change the program ----------------------------------------------------------------

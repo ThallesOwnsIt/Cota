@@ -102,6 +102,20 @@ Repository secrets (Settings → Secrets and variables → Actions): `NODE_1_KEY
 the contents of `keys/node-N.json` and `keys/operator.json`; `ANA_IDENTIFICADOR` and `ANA_SENHA`, the HidroWebService login used
 by the nodes to read the river gauges (locally they go in `.env`, which git ignores). The operator is the committee authority (`cota-admin set-authority`).
 
+## Copies outside GitHub
+
+GitHub alone would be a single point of failure for the data whose hashes are on-chain. Every run also:
+
+- uploads the ledger's new or changed files to **Arweave** (permanent storage) through ArDrive Turbo, gzipped, each tagged
+  with `App-Name: Cota`, `Cota-Path` and `Cota-SHA256`; items up to 105 KiB are free, and all of Cota so far is about 1.6 MB.
+  `data/ledger/archive.json` maps each path to its Arweave id (read it at `https://arweave.net/<id>`, then gunzip); the uploads
+  are signed by `7kw7om2uMrnSaJBZXriH6TAVpQrsN7Eoq7dtsqgb6Lww`, so they can also be listed by owner on any gateway's GraphQL;
+- asks [Software Heritage](https://archive.softwareheritage.org/browse/origin/?origin_url=https://github.com/ThallesOwnsIt/Cota)
+  to save the public repository.
+
+Any copy can be checked against the chain: the readings against each batch's Merkle root, the records against the
+accumulator's peaks, the accumulator against its Bitcoin timestamp. `scripts/archive/archive.mjs`.
+
 ## Who can change the program
 
 Program v2's upgrade authority is the vault of a [Squads](https://squads.so) v4 multisig (`config/upgrade-multisig.json`): an

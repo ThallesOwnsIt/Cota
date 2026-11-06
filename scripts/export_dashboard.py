@@ -155,6 +155,8 @@ def main() -> None:
         },
         "outlook": export_outlook(outlooks, parts),
         "timestamps": timestamps,
+        # Copy of the ledger on Arweave (scripts/archive/archive.mjs): how much, and who signs the uploads.
+        "archive": archive_summary(),
         # Who can change program v2: a multisig (scripts/squads/squads.mjs). The browser checks it live.
         "upgrade": json.loads((ROOT / "config/upgrade-multisig.json").read_text()) if (ROOT / "config/upgrade-multisig.json").exists() else None,
         "vaults": vaults,
@@ -404,6 +406,14 @@ def collect(ledger: Path) -> dict:
         "stage_series": stage_series,
         "leaves": [r["leaf"] for r in stored],
     }
+
+
+def archive_summary() -> dict | None:
+    p = LEDGER / "archive.json"
+    if not p.exists():
+        return None
+    m = json.loads(p.read_text())
+    return {"signer": m.get("signer"), "files": len(m["files"]) + len(m["records"]), "bytes": m["bytes"], "gateway": m["gateway"]}
 
 
 def stage_series_tail(series: list[list[int]]) -> list[list[int]]:

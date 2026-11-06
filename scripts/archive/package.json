@@ -1,0 +1,10 @@
+{
+  "name": "cota-archive",
+  "private": true,
+  "type": "module",
+  "description": "Permanent copy of the ledger on Arweave (ArDrive Turbo)",
+  "dependencies": {
+    "@ardrive/turbo-sdk": "2.2.0",
+    "bs58": "^6.0.0"
+  }
+}

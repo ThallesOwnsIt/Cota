@@ -8,7 +8,8 @@
 #     vaults when there are new triggers.
 #
 # Secrets: NODE_1_KEY, NODE_2_KEY, NODE_3_KEY and OPERATOR_KEY (contents of the JSON keypairs);
-#          ANA_IDENTIFICADOR and ANA_SENHA (HidroWebService login, river level from gauges).
+#          ANA_IDENTIFICADOR and ANA_SENHA (HidroWebService login, river level from gauges);
+#          ARCHIVE_KEY (keys/archive.json: signs the free Arweave uploads, holds no balance).
 # Safety switch: only runs with the repository variable COTA_LIVE_ENABLED = true (turn it on after
 # setting up the secrets and handing the committee authority to the operator).
 name: Cota ao vivo
@@ -144,6 +145,21 @@ jobs:
           fi
           target/release/cota-audit --rpc "$RPC"
           python3 scripts/export_dashboard.py
+      # Permanent copies outside GitHub: the day's new or changed ledger files on Arweave (free items, the map
+      # path -> id goes to data/ledger/archive.json), and a save request of the public repository to Software
+      # Heritage. Neither can stop the run.
+      - name: Cópia permanente
+        if: always()
+        continue-on-error: true
+        env:
+          ARCHIVE_KEY: ${{ secrets.ARCHIVE_KEY }}
+        run: |
+          if [[ -n "$ARCHIVE_KEY" ]]; then
+            (cd scripts/archive && npm ci --silent && node archive.mjs)
+          else
+            echo "sem ARCHIVE_KEY: cópia no Arweave pulada"
+          fi
+          curl -s -m 60 -X POST "https://archive.softwareheritage.org/api/1/origin/save/git/url/https://github.com/${GITHUB_REPOSITORY}/" | head -c 300 || true
       - name: Commit
         if: always()
         run: |
