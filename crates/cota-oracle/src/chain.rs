@@ -40,6 +40,17 @@ pub fn payout_pda(vault: &Pubkey, trigger_leaf: &[u8; 32]) -> Pubkey {
     Pubkey::find_program_address(&[cota_v2::PAYOUT_SEED, vault.as_ref(), trigger_leaf], &PROGRAM_ID).0
 }
 
+/// The program's ProgramData account, which holds its upgrade authority (the admin).
+pub fn program_data_pda() -> Pubkey {
+    Pubkey::find_program_address(&[PROGRAM_ID.as_ref()], &solana_sdk_ids::bpf_loader_upgradeable::ID).0
+}
+
+/// Accounts of the admin-only instructions: signed by the program's upgrade authority (the Squads vault on
+/// devnet, through a multisig proposal), not by the operator.
+fn admin_only(admin: Pubkey) -> Vec<anchor_lang::solana_program::instruction::AccountMeta> {
+    acc::AdminOnly { admin, registry: registry_pda(), program: PROGRAM_ID, program_data: program_data_pda() }.to_account_metas(None)
+}
+
 fn authority_only(authority: Pubkey) -> Vec<anchor_lang::solana_program::instruction::AccountMeta> {
     acc::AuthorityOnly { authority, registry: registry_pda() }.to_account_metas(None)
 }
@@ -65,8 +76,14 @@ pub fn init_registry_instruction(authority: Pubkey, members: Vec<Pubkey>, thresh
     )
 }
 
-pub fn set_authority_instruction(authority: Pubkey, new_authority: Pubkey) -> Instruction {
-    Instruction::new_with_bytes(PROGRAM_ID, &ix::SetAuthority { new_authority }.data(), authority_only(authority))
+/// Admin only.
+pub fn set_authority_instruction(admin: Pubkey, new_authority: Pubkey) -> Instruction {
+    Instruction::new_with_bytes(PROGRAM_ID, &ix::SetAuthority { new_authority }.data(), admin_only(admin))
+}
+
+/// Admin only.
+pub fn rotate_member_instruction(admin: Pubkey, old: Pubkey, new: Pubkey) -> Instruction {
+    Instruction::new_with_bytes(PROGRAM_ID, &ix::RotateMember { old, new }.data(), admin_only(admin))
 }
 
 pub fn register_station_instruction(authority: Pubkey, st: &StationConfig) -> Instruction {
@@ -82,13 +99,16 @@ pub fn register_station_instruction(authority: Pubkey, st: &StationConfig) -> In
     Instruction::new_with_bytes(PROGRAM_ID, &ix::RegisterStation { station }.data(), authority_only(authority))
 }
 
-pub fn set_alert_rule_instruction(authority: Pubkey, station_id: &str, threshold_milli: i64, level: u8) -> Instruction {
+/// Admin only.
+pub fn set_alert_rule_instruction(admin: Pubkey, station_id: &str, threshold_milli: i64, level: u8) -> Instruction {
     Instruction::new_with_bytes(
         PROGRAM_ID,
         &ix::SetAlertRule { station_id: station_id.to_string(), threshold_milli, level }.data(),
         acc::SetAlertRule {
-            authority,
+            admin,
             registry: registry_pda(),
+            program: PROGRAM_ID,
+            program_data: program_data_pda(),
             rule: alert_rule_pda(station_id),
             system_program: system_program::ID,
         }
@@ -96,13 +116,21 @@ pub fn set_alert_rule_instruction(authority: Pubkey, station_id: &str, threshold
     )
 }
 
-pub fn set_outlook_rule_instruction(authority: Pubkey, args: OutlookRuleArgs) -> Instruction {
+/// Admin only.
+pub fn set_outlook_rule_instruction(admin: Pubkey, args: OutlookRuleArgs) -> Instruction {
     let rule = outlook_rule_pda(&args.region);
     Instruction::new_with_bytes(
         PROGRAM_ID,
         &ix::SetOutlookRule { args }.data(),
-        acc::SetOutlookRule { authority, registry: registry_pda(), rule, system_program: system_program::ID }
-            .to_account_metas(None),
+        acc::SetOutlookRule {
+            admin,
+            registry: registry_pda(),
+            program: PROGRAM_ID,
+            program_data: program_data_pda(),
+            rule,
+            system_program: system_program::ID,
+        }
+        .to_account_metas(None),
     )
 }
 

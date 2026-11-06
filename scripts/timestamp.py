@@ -101,6 +101,8 @@ def main() -> None:
         st = status(f)
         if st["bitcoin_block"] is None:
             ots("upgrade", str(f))
+            # The client keeps the previous proof as `.bak`; the new one contains it.
+            f.with_name(f.name + ".bak").unlink(missing_ok=True)
             st = status(f)
         text = (OUT / f.name.removesuffix(".ots")).read_text()
         fields = dict(line.split(None, 1) for line in text.splitlines()[1:] if line.strip())

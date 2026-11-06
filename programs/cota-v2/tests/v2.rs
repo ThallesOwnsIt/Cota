@@ -28,7 +28,10 @@ const T0: i64 = 1_714_521_600; // 2024-05-01T00:00Z
 
 struct Env {
     svm: LiteSVM,
+    /// The operator: routine records (forecasts, stations, degradations).
     authority: Keypair,
+    /// The program's upgrade authority (the multisig vault on devnet): members, operator and rules.
+    admin: Keypair,
     oracles: Vec<SigningKey>,
     /// Reference accumulator, fed with the records the program emitted.
     mmr: Mmr,
@@ -46,6 +49,9 @@ fn outlook_rule_pda(region: &str) -> Pubkey {
 }
 fn vault_pda(creator: &Pubkey, id: u64) -> Pubkey {
     Pubkey::find_program_address(&[cota_v2::VAULT_SEED, creator.as_ref(), &id.to_le_bytes()], &cota_v2::id()).0
+}
+fn program_data_pda() -> Pubkey {
+    Pubkey::find_program_address(&[cota_v2::id().as_ref()], &solana_sdk_ids::bpf_loader_upgradeable::ID).0
 }
 fn payout_pda(vault: &Pubkey, leaf: &[u8; 32]) -> Pubkey {
     Pubkey::find_program_address(&[cota_v2::PAYOUT_SEED, vault.as_ref(), leaf], &cota_v2::id()).0
@@ -67,10 +73,18 @@ impl Env {
         let mut svm = LiteSVM::new();
         let bytes = include_bytes!(concat!(env!("CARGO_TARGET_TMPDIR"), "/../deploy/cota_v2.so"));
         svm.add_program(cota_v2::id(), bytes).unwrap();
+        // LiteSVM deploys with no upgrade authority; set one, as the multisig vault is on devnet.
+        // ProgramData = u32 tag ‖ u64 slot ‖ Option<Pubkey> authority ‖ code.
+        let admin = Keypair::new();
+        let mut pd = svm.get_account(&program_data_pda()).unwrap();
+        pd.data[12] = 1;
+        pd.data[13..45].copy_from_slice(admin.pubkey().as_ref());
+        svm.set_account(program_data_pda(), pd).unwrap();
         let authority = Keypair::new();
         svm.airdrop(&authority.pubkey(), 100_000_000_000).unwrap();
+        svm.airdrop(&admin.pubkey(), 10_000_000_000).unwrap();
         let oracles: Vec<SigningKey> = (1..=3u8).map(|i| SigningKey::from_bytes(&[i; 32])).collect();
-        let mut env = Self { svm, authority, oracles, mmr: Mmr::new(), records: vec![] };
+        let mut env = Self { svm, authority, admin, oracles, mmr: Mmr::new(), records: vec![] };
         let members = env.oracles.iter().map(|k| Pubkey::new_from_array(k.verifying_key().to_bytes())).collect();
         let i = Instruction::new_with_bytes(
             cota_v2::id(),
@@ -82,11 +96,18 @@ impl Env {
         env
     }
 
-    /// Sends the instructions; replays every `RecordAppended` into the reference MMR and checks the peaks.
     fn send(&mut self, ixs: &[Instruction]) -> Result<(), TransactionError> {
+        self.send_signed(ixs, &[])
+    }
+
+    /// Sends the instructions, signed by the operator (fee payer) and `extra`; replays every `RecordAppended`
+    /// into the reference MMR and checks the peaks.
+    fn send_signed(&mut self, ixs: &[Instruction], extra: &[&Keypair]) -> Result<(), TransactionError> {
         let payer = self.authority.pubkey();
         let msg = Message::new_with_blockhash(ixs, Some(&payer), &self.svm.latest_blockhash());
-        let tx = VersionedTransaction::try_new(VersionedMessage::Legacy(msg), &[&self.authority]).unwrap();
+        let mut signers = vec![&self.authority];
+        signers.extend(extra.iter().copied().filter(|k| k.pubkey() != payer));
+        let tx = VersionedTransaction::try_new(VersionedMessage::Legacy(msg), &signers).unwrap();
         let res = self.svm.send_transaction(tx);
         self.svm.expire_blockhash();
         let meta = res.map_err(|e| e.err)?;
@@ -130,6 +151,11 @@ impl Env {
             instructions: solana_instructions_sysvar::ID,
         }
         .to_account_metas(None)
+    }
+
+    /// Accounts of an admin-only instruction, signed by `admin`.
+    fn admin_accounts(&self, admin: Pubkey) -> Vec<anchor_lang::solana_program::instruction::AccountMeta> {
+        acc::AdminOnly { admin, registry: registry_pda(), program: cota_v2::id(), program_data: program_data_pda() }.to_account_metas(None)
     }
 
     fn authority_accounts(&self) -> Vec<anchor_lang::solana_program::instruction::AccountMeta> {
@@ -191,18 +217,25 @@ impl Env {
     }
 
     fn set_alert_rule(&mut self, station: &str, threshold_milli: i64) {
+        let admin = self.admin.insecure_clone();
+        self.set_alert_rule_as(&admin, station, threshold_milli).unwrap();
+    }
+
+    fn set_alert_rule_as(&mut self, signer: &Keypair, station: &str, threshold_milli: i64) -> Result<(), TransactionError> {
         let i = Instruction::new_with_bytes(
             cota_v2::id(),
             &ix::SetAlertRule { station_id: station.into(), threshold_milli, level: 1 }.data(),
             acc::SetAlertRule {
-                authority: self.authority.pubkey(),
+                admin: signer.pubkey(),
                 registry: registry_pda(),
+                program: cota_v2::id(),
+                program_data: program_data_pda(),
                 rule: alert_rule_pda(station),
                 system_program: system_program::ID,
             }
             .to_account_metas(None),
         );
-        self.send(&[i]).unwrap();
+        self.send_signed(&[i], &[signer])
     }
 
     fn set_outlook_rule(&mut self) {
@@ -212,14 +245,17 @@ impl Env {
             cota_v2::id(),
             &ix::SetOutlookRule { args }.data(),
             acc::SetOutlookRule {
-                authority: self.authority.pubkey(),
+                admin: self.admin.pubkey(),
                 registry: registry_pda(),
+                program: cota_v2::id(),
+                program_data: program_data_pda(),
                 rule: outlook_rule_pda("guaiba"),
                 system_program: system_program::ID,
             }
             .to_account_metas(None),
         );
-        self.send(&[i]).unwrap();
+        let admin = self.admin.insecure_clone();
+        self.send_signed(&[i], &[&admin]).unwrap();
     }
 
     fn outlook(&mut self, rain_mean_milli: i64) -> Result<(), TransactionError> {
@@ -593,8 +629,13 @@ fn authority_handover_takes_the_power_away_from_the_old_key() {
     let mut env = Env::new();
     let operator = Keypair::new();
     env.svm.airdrop(&operator.pubkey(), 1_000_000_000).unwrap();
-    let i = Instruction::new_with_bytes(cota_v2::id(), &ix::SetAuthority { new_authority: operator.pubkey() }.data(), env.authority_accounts());
-    env.send(&[i]).unwrap();
+    // The operator cannot hand its role on by itself; the admin (upgrade authority) can.
+    let old = env.authority.pubkey();
+    let i = Instruction::new_with_bytes(cota_v2::id(), &ix::SetAuthority { new_authority: operator.pubkey() }.data(), env.admin_accounts(old));
+    assert_eq!(env.send(&[i]), Err(custom0(code(cota_v2::error::CotaError::Unauthorized))));
+    let admin = env.admin.insecure_clone();
+    let i = Instruction::new_with_bytes(cota_v2::id(), &ix::SetAuthority { new_authority: operator.pubkey() }.data(), env.admin_accounts(admin.pubkey()));
+    env.send_signed(&[i], &[&admin]).unwrap();
     assert_eq!(env.registry().authority, operator.pubkey());
     // The old key can no longer register stations (nor forecasts, rules or degradations).
     let station = StationArgs { station_id: "X".into(), name: "x".into(), source: 0, variable: 0, lat_e6: 0, lon_e6: 0, datum_id: None };
@@ -712,4 +753,88 @@ fn vault_ignores_triggers_before_accept_from_and_stays_closed_until_expiry() {
     env.svm.set_sysvar(&clock);
     env.send(&[close]).unwrap();
     assert!(env.svm.get_account(&vault).is_none_or(|a| a.lamports == 0));
+}
+
+#[test]
+fn a_leaked_operator_key_cannot_take_over_the_committee_or_the_rules() {
+    // Audit finding: with the operator key alone, an attacker used to be able to swap 2 of the 3 committee
+    // members for their own keys and then forge the committee's signatures. Now that needs the admin.
+    let mut env = Env::new();
+    use cota_v2::error::CotaError::*;
+    let attacker = Keypair::new();
+    let old_member = Pubkey::new_from_array(env.oracles[0].verifying_key().to_bytes());
+    let operator = env.authority.pubkey();
+    let rotate = |admin: Pubkey, env: &Env| {
+        Instruction::new_with_bytes(cota_v2::id(), &ix::RotateMember { old: old_member, new: attacker.pubkey() }.data(), env.admin_accounts(admin))
+    };
+    // The operator, passing itself as "admin": refused, it is not the program's upgrade authority.
+    let i = rotate(operator, &env);
+    assert_eq!(env.send(&[i]), Err(custom0(code(Unauthorized))));
+    // A fake ProgramData account (any other account) is refused too.
+    let mut metas = env.admin_accounts(operator);
+    metas[3].pubkey = registry_pda();
+    let i = Instruction::new_with_bytes(cota_v2::id(), &ix::RotateMember { old: old_member, new: attacker.pubkey() }.data(), metas);
+    assert!(env.send(&[i]).is_err());
+    // Nor can the operator create the rules that decide when vaults pay.
+    let op = env.authority.insecure_clone();
+    assert_eq!(env.set_alert_rule_as(&op, "GLOFAS-GUAIBA", 1), Err(custom0(code(Unauthorized))));
+    assert!(env.registry().members.contains(&old_member));
+
+    // The admin (the multisig, on devnet) can replace a member.
+    let admin = env.admin.insecure_clone();
+    let i = rotate(admin.pubkey(), &env);
+    env.send_signed(&[i], &[&admin]).unwrap();
+    assert_eq!(env.registry().members[0], attacker.pubkey());
+}
+
+#[test]
+fn the_same_event_never_pays_twice_even_without_cooldown() {
+    // Audit finding: a committee-signed outlook can be resubmitted by anyone until the next batch, and each copy
+    // is a different record. With a zero cooldown each copy used to pay.
+    let mut env = Env::new();
+    use cota_v2::error::CotaError::*;
+    env.set_outlook_rule();
+    let ben = Keypair::new().pubkey();
+    let creator = env.authority.pubkey();
+    let args = VaultArgs {
+        vault_id: 42,
+        beneficiary: ben,
+        kind: cota_v2::TRIGGER_EARLY_WARNING,
+        subject: "guaiba".into(),
+        payout_lamports: 1_000_000_000,
+        cooldown_secs: 0,
+        accept_from: 0,
+        expires_at: i64::MAX,
+        deposit_lamports: 5_000_000_000,
+    };
+    let i = Instruction::new_with_bytes(
+        cota_v2::id(),
+        &ix::CreateVault { args }.data(),
+        acc::CreateVault { creator, vault: vault_pda(&creator, 42), system_program: system_program::ID }.to_account_metas(None),
+    );
+    env.send(&[i]).unwrap();
+    let vault = vault_pda(&creator, 42);
+    env.next_day();
+    env.outlook(95_000).unwrap();
+    let first = env.last_record().0;
+    // On a real cluster the resubmission lands in a later slot, so its record (which carries the slot) is a
+    // different leaf. LiteSVM's clock does not move by itself: move it.
+    let mut clock = env.svm.get_sysvar::<anchor_lang::prelude::Clock>();
+    clock.slot += 1;
+    clock.unix_timestamp += 1;
+    env.svm.set_sysvar(&clock);
+    env.outlook(95_000).unwrap(); // the same signed outlook, resubmitted: a second record of the same event
+    let copy = env.last_record().0;
+    assert_ne!(first, copy);
+    let i = env.payout_ix(vault, ben, env.proof(first));
+    env.send(&[i]).unwrap();
+    let i = env.payout_ix(vault, ben, env.proof(copy));
+    assert_eq!(env.send(&[i]), Err(custom0(code(CooldownActive))));
+    // The next day's event pays (zero cooldown).
+    env.next_day();
+    env.outlook(96_000).unwrap();
+    let next = env.last_record().0;
+    let i = env.payout_ix(vault, ben, env.proof(next));
+    env.send(&[i]).unwrap();
+    assert_eq!(env.svm.get_balance(&ben), Some(2_000_000_000));
 }

@@ -113,6 +113,10 @@ How an upgrade is done: `scripts/squads/squads.mjs` (write the buffer, hand it t
 execute). Today the three member keys belong to the same person (on separate files); before real money, they should move to
 separate devices and people. Program v1 (the archive) is still upgradeable by its deployer.
 
+The same upgrade authority is the program's **admin**: only it can replace committee members or the operator, or create the
+alert rules. The operator key (in CI) only records forecasts, stations and degradation reports. Security review, findings and
+residual risks: [`docs/security-review.md`](docs/security-review.md).
+
 ## Known limits
 
 - The three oracles, and the three keys of the upgrade multisig, are held by the same person today (separate GitHub Actions jobs,

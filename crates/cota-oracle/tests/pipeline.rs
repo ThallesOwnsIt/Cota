@@ -156,6 +156,12 @@ fn vault_payout_with_a_proof_from_the_ledger() {
     svm.add_program(chain::PROGRAM_ID, include_bytes!("../../../target/deploy/cota_v2.so")).unwrap();
     let payer = Keypair::new();
     svm.airdrop(&payer.pubkey(), 20_000_000_000).unwrap();
+    // The flow rule is admin-only: give the program an upgrade authority (the payer, here), as the multisig
+    // vault is on devnet. ProgramData = u32 tag ‖ u64 slot ‖ Option<Pubkey> authority ‖ code.
+    let mut pd = svm.get_account(&chain::program_data_pda()).unwrap();
+    pd.data[12] = 1;
+    pd.data[13..45].copy_from_slice(payer.pubkey().as_ref());
+    svm.set_account(chain::program_data_pda(), pd).unwrap();
     let ledger = std::env::temp_dir().join(format!("cota-ledger-vault-{}", std::process::id()));
     let _ = std::fs::remove_dir_all(&ledger);
     let nodes: Vec<SigningKey> = (1..=3u8).map(|i| SigningKey::from_bytes(&[i; 32])).collect();

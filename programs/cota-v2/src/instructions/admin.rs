@@ -44,7 +44,8 @@ pub fn handle_init_registry(ctx: Context<InitRegistry>, members: Vec<Pubkey>, th
     Ok(())
 }
 
-/// Authority-only instructions that change the registry.
+/// Routine instructions of the operator (the registry's `authority`): station records, forecasts,
+/// degradation reports. None of them can change who signs or what the rules are.
 #[derive(Accounts)]
 pub struct AuthorityOnly<'info> {
     pub authority: Signer<'info>,
@@ -52,8 +53,22 @@ pub struct AuthorityOnly<'info> {
     pub registry: Account<'info, Registry>,
 }
 
+/// Instructions that change who signs or who operates: only the program's upgrade authority (a multisig with a
+/// time lock on devnet) may run them. The operator key, which signs every day from automation, cannot replace
+/// committee members, so a leaked operator key cannot forge the committee's signatures.
+#[derive(Accounts)]
+pub struct AdminOnly<'info> {
+    pub admin: Signer<'info>,
+    #[account(mut, seeds = [REGISTRY_SEED], bump = registry.bump)]
+    pub registry: Account<'info, Registry>,
+    #[account(constraint = program.programdata_address()? == Some(program_data.key()) @ CotaError::Unauthorized)]
+    pub program: Program<'info, crate::program::CotaV2>,
+    #[account(constraint = program_data.upgrade_authority_address == Some(admin.key()) @ CotaError::Unauthorized)]
+    pub program_data: Account<'info, ProgramData>,
+}
+
 /// Replaces a node's key (leaked key or replaced operator). Its position in the signer bitmap is kept.
-pub fn handle_rotate_member(ctx: Context<AuthorityOnly>, old: Pubkey, new: Pubkey) -> Result<()> {
+pub fn handle_rotate_member(ctx: Context<AdminOnly>, old: Pubkey, new: Pubkey) -> Result<()> {
     let r = &mut ctx.accounts.registry;
     let index = r.members.iter().position(|m| *m == old).ok_or(CotaError::MemberNotFound)?;
     require!(!r.members.contains(&new), CotaError::InvalidCommittee);
@@ -62,8 +77,8 @@ pub fn handle_rotate_member(ctx: Context<AuthorityOnly>, old: Pubkey, new: Pubke
     Ok(())
 }
 
-/// Hands the committee authority to another key, without touching the program's upgrade authority.
-pub fn handle_set_authority(ctx: Context<AuthorityOnly>, new_authority: Pubkey) -> Result<()> {
+/// Hands the operator role to another key. Admin only: the operator cannot pass its role on by itself.
+pub fn handle_set_authority(ctx: Context<AdminOnly>, new_authority: Pubkey) -> Result<()> {
     let r = &mut ctx.accounts.registry;
     let old = r.authority;
     r.authority = new_authority;
@@ -88,15 +103,20 @@ pub fn handle_register_station(ctx: Context<AuthorityOnly>, station: StationArgs
     Ok(())
 }
 
-/// Sets a station's flow-alert threshold. `init` makes the rule immutable.
+/// Sets a station's flow-alert threshold. `init` makes the rule immutable. Admin only: rules decide when
+/// vaults pay, so the operator cannot create or front-run them.
 #[derive(Accounts)]
 #[instruction(station_id: String)]
 pub struct SetAlertRule<'info> {
     #[account(mut)]
-    pub authority: Signer<'info>,
-    #[account(seeds = [REGISTRY_SEED], bump = registry.bump, has_one = authority @ CotaError::Unauthorized)]
+    pub admin: Signer<'info>,
+    #[account(seeds = [REGISTRY_SEED], bump = registry.bump)]
     pub registry: Account<'info, Registry>,
-    #[account(init, payer = authority, space = 8 + AlertRule::INIT_SPACE, seeds = [ALERT_RULE_SEED, station_id.as_bytes()], bump)]
+    #[account(constraint = program.programdata_address()? == Some(program_data.key()) @ CotaError::Unauthorized)]
+    pub program: Program<'info, crate::program::CotaV2>,
+    #[account(constraint = program_data.upgrade_authority_address == Some(admin.key()) @ CotaError::Unauthorized)]
+    pub program_data: Account<'info, ProgramData>,
+    #[account(init, payer = admin, space = 8 + AlertRule::INIT_SPACE, seeds = [ALERT_RULE_SEED, station_id.as_bytes()], bump)]
     pub rule: Account<'info, AlertRule>,
     pub system_program: Program<'info, System>,
 }
@@ -122,15 +142,19 @@ pub struct OutlookRuleArgs {
     pub rule_sha256: [u8; 32],
 }
 
-/// Sets a region's early-warning rule. `init` makes the rule immutable.
+/// Sets a region's early-warning rule. `init` makes the rule immutable. Admin only, like the flow rule.
 #[derive(Accounts)]
 #[instruction(args: OutlookRuleArgs)]
 pub struct SetOutlookRule<'info> {
     #[account(mut)]
-    pub authority: Signer<'info>,
-    #[account(seeds = [REGISTRY_SEED], bump = registry.bump, has_one = authority @ CotaError::Unauthorized)]
+    pub admin: Signer<'info>,
+    #[account(seeds = [REGISTRY_SEED], bump = registry.bump)]
     pub registry: Account<'info, Registry>,
-    #[account(init, payer = authority, space = 8 + OutlookRule::INIT_SPACE, seeds = [OUTLOOK_RULE_SEED, args.region.as_bytes()], bump)]
+    #[account(constraint = program.programdata_address()? == Some(program_data.key()) @ CotaError::Unauthorized)]
+    pub program: Program<'info, crate::program::CotaV2>,
+    #[account(constraint = program_data.upgrade_authority_address == Some(admin.key()) @ CotaError::Unauthorized)]
+    pub program_data: Account<'info, ProgramData>,
+    #[account(init, payer = admin, space = 8 + OutlookRule::INIT_SPACE, seeds = [OUTLOOK_RULE_SEED, args.region.as_bytes()], bump)]
     pub rule: Account<'info, OutlookRule>,
     pub system_program: Program<'info, System>,
 }

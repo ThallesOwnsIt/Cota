@@ -141,8 +141,12 @@ pub fn handle_trigger_payout(ctx: Context<TriggerPayout>, proof: TriggerProof) -
     };
     require!(subject == vault.subject, CotaError::TriggerMismatch);
     require!(recorded_at >= vault.accept_from, CotaError::TriggerTooEarly);
+    // One payout per event: a later event, past the cooldown. Strictly later, so that a second record of the
+    // same event (an outlook resubmitted before the next batch, or the +24 h and +48 h forecasts of the same
+    // day) never pays twice, even with a zero cooldown.
     require!(
-        vault.payouts == 0 || event_at >= vault.last_event_at.saturating_add(vault.cooldown_secs),
+        vault.payouts == 0
+            || (event_at > vault.last_event_at && event_at >= vault.last_event_at.saturating_add(vault.cooldown_secs)),
         CotaError::CooldownActive
     );
 

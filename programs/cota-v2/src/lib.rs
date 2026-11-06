@@ -29,12 +29,12 @@ pub mod cota_v2 {
     }
 
     /// Replaces a member's key, keeping its position.
-    pub fn rotate_member(ctx: Context<AuthorityOnly>, old: Pubkey, new: Pubkey) -> Result<()> {
+    pub fn rotate_member(ctx: Context<AdminOnly>, old: Pubkey, new: Pubkey) -> Result<()> {
         instructions::handle_rotate_member(ctx, old, new)
     }
 
-    /// Hands the committee authority to another key.
-    pub fn set_authority(ctx: Context<AuthorityOnly>, new_authority: Pubkey) -> Result<()> {
+    /// Hands the operator role to another key (admin only).
+    pub fn set_authority(ctx: Context<AdminOnly>, new_authority: Pubkey) -> Result<()> {
         instructions::handle_set_authority(ctx, new_authority)
     }
 

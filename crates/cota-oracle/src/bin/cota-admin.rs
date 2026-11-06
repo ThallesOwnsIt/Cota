@@ -41,6 +41,7 @@ enum Cmd {
         config: PathBuf,
     },
     /// Fixes on-chain the alert threshold set during training (the manifest's `alert_rule`).
+    /// Admin only: `--payer` must be the program's upgrade authority (on devnet a multisig: use a proposal).
     SetAlertRule {
         #[arg(long, default_value = "ml/models/manifest.json")]
         manifest: PathBuf,
@@ -53,6 +54,7 @@ enum Cmd {
         cluster: String,
     },
     /// Hands the committee authority to another key (e.g. the GitHub Actions operator).
+    /// Admin only: `--payer` must be the program's upgrade authority (on devnet a multisig: use a proposal).
     SetAuthority {
         /// Keypair or public key (base58) of the new authority.
         #[arg(long)]
@@ -60,6 +62,7 @@ enum Cmd {
     },
     /// Shows the committee state and the wallet balance.
     /// Fixes (once) the early-warning rule from `ml/models/outlook-rule.json`.
+    /// Admin only, like `set-alert-rule`.
     SetOutlookRule {
         #[arg(long, default_value = "ml/models/outlook-rule.json")]
         rule: PathBuf,
