@@ -1,0 +1,1550 @@
+{
+  "batch_id": 37,
+  "day": "2026-11-05",
+  "header": {
+    "batch_id": 37,
+    "t_start": 1793836800,
+    "t_end": 1793923200,
+    "leaf_count": 149,
+    "merkle_root": "fc764e3cb15f7592bf44f898a78970dc2afde328e107618415be942ad5a6014e",
+    "station_set_hash": "c8494b55ff8d1b97b1322dc9b73947dc559603a0a0813dc8ea36330e754321c7",
+    "prev_batch_root": "a8a273318696968201ac126799c54bbff2018421c82140226a9e412e1893b8d2"
+  },
+  "record_index": 134,
+  "tx_signature": "2W787bPDsnCrvhX1Wb7AZ7Yv1RRYdkwhbT2ZXhK5T36ibhr2N7pbBHbHHJfjjtKgibRp2uLVwyeCBFj1RY4ZHfaW",
+  "cluster": "devnet",
+  "explorer": "https://explorer.solana.com/tx/2W787bPDsnCrvhX1Wb7AZ7Yv1RRYdkwhbT2ZXhK5T36ibhr2N7pbBHbHHJfjjtKgibRp2uLVwyeCBFj1RY4ZHfaW?cluster=devnet",
+  "members": [
+    {
+      "member": "GS3uQUPgfCDXqtbpD6vPyNpQgRcDUFj1fhF4wYGk9ist",
+      "status": "signed"
+    },
+    {
+      "member": "B4FwxN42zWyiSKU7qwvbpchy7uDD8ugnzX43B9mPd38L",
+      "status": "signed"
+    },
+    {
+      "member": "AFbz6rqf4u7pexBHadriqd9VNDh74KGqEeZG5eeQKTs3",
+      "status": "signed"
+    }
+  ],
+  "signatures": [
+    {
+      "member": "AFbz6rqf4u7pexBHadriqd9VNDh74KGqEeZG5eeQKTs3",
+      "signature": "0d5f536472137f694ab821636d2f6c2d3118485720bbb168eab54121ad1be9af893d3311883a451dbf745c8699134a281bccd6020fcd8b568b0b7d65f028e20a"
+    },
+    {
+      "member": "B4FwxN42zWyiSKU7qwvbpchy7uDD8ugnzX43B9mPd38L",
+      "signature": "5c96489742d86cb18635247858290a3a5b19bf0d26328226c518981b250662f85913ddf29fda5d94a30e17446a258c42e025da5a5bf185c8c495685971016208"
+    },
+    {
+      "member": "GS3uQUPgfCDXqtbpD6vPyNpQgRcDUFj1fhF4wYGk9ist",
+      "signature": "bedc36ecbf20242eb274dfedf230082101e8bb83eafdccfa705a6ef1db50a932c93f71242a3efd85ce4e6ea17b563e04a516c178a24a20d891bd0fc967500109"
+    }
+  ],
+  "quality": {
+    "stations": [
+      {
+        "station_id": "GLOFAS-GUAIBA",
+        "expected": 1,
+        "present": 1,
+        "availability": 1.0,
+        "flag_rate": 0.0,
+        "agreement": 1.0,
+        "freshness": 1.0,
+        "raw": 0.9999999999999999,
+        "score": 1.0,
+        "flags": [],
+        "degraded": null
+      },
+      {
+        "station_id": "GLOFAS-JACUI",
+        "expected": 1,
+        "present": 1,
+        "availability": 1.0,
+        "flag_rate": 0.0,
+        "agreement": 1.0,
+        "freshness": 1.0,
+        "raw": 0.9999999999999999,
+        "score": 1.0,
+        "flags": [],
+        "degraded": null
+      },
+      {
+        "station_id": "GLOFAS-TAQUARI",
+        "expected": 1,
+        "present": 1,
+        "availability": 1.0,
+        "flag_rate": 0.0,
+        "agreement": 1.0,
+        "freshness": 1.0,
+        "raw": 0.9999999999999999,
+        "score": 1.0,
+        "flags": [],
+        "degraded": null
+      },
+      {
+        "station_id": "GLOFAS-CAI",
+        "expected": 1,
+        "present": 1,
+        "availability": 1.0,
+        "flag_rate": 0.0,
+        "agreement": 1.0,
+        "freshness": 1.0,
+        "raw": 0.9999999999999999,
+        "score": 1.0,
+        "flags": [],
+        "degraded": null
+      },
+      {
+        "station_id": "GLOFAS-SINOS",
+        "expected": 1,
+        "present": 1,
+        "availability": 1.0,
+        "flag_rate": 0.0,
+        "agreement": 1.0,
+        "freshness": 1.0,
+        "raw": 0.9999999999999999,
+        "score": 1.0,
+        "flags": [],
+        "degraded": null
+      },
+      {
+        "station_id": "GLOFAS-GRAVATAI",
+        "expected": 1,
+        "present": 1,
+        "availability": 1.0,
+        "flag_rate": 0.0,
+        "agreement": 1.0,
+        "freshness": 1.0,
+        "raw": 0.9999999999999999,
+        "score": 1.0,
+        "flags": [],
+        "degraded": null
+      },
+      {
+        "station_id": "ANA-87450004",
+        "expected": 24,
+        "present": 24,
+        "availability": 1.0,
+        "flag_rate": 0.0,
+        "agreement": 1.0,
+        "freshness": 1.0,
+        "raw": 0.9999999999999999,
+        "score": 0.9999999999999999,
+        "flags": [],
+        "degraded": null
+      },
+      {
+        "station_id": "ANA-85930001",
+        "expected": 24,
+        "present": 23,
+        "availability": 0.9583333333333334,
+        "flag_rate": 0.0,
+        "agreement": 1.0,
+        "freshness": 1.0,
+        "raw": 0.9708333333333332,
+        "score": 0.9708333333333332,
+        "flags": [],
+        "degraded": null
+      },
+      {
+        "station_id": "ANA-86879300",
+        "expected": 24,
+        "present": 24,
+        "availability": 1.0,
+        "flag_rate": 0.0,
+        "agreement": 1.0,
+        "freshness": 1.0,
+        "raw": 0.9999999999999999,
+        "score": 0.9999999999999999,
+        "flags": [],
+        "degraded": null
+      },
+      {
+        "station_id": "ANA-87270000",
+        "expected": 24,
+        "present": 24,
+        "availability": 1.0,
+        "flag_rate": 0.0,
+        "agreement": 1.0,
+        "freshness": 1.0,
+        "raw": 0.9999999999999999,
+        "score": 0.9999999999999999,
+        "flags": [],
+        "degraded": null
+      },
+      {
+        "station_id": "ANA-87382000",
+        "expected": 24,
+        "present": 24,
+        "availability": 1.0,
+        "flag_rate": 0.0,
+        "agreement": 1.0,
+        "freshness": 1.0,
+        "raw": 0.9999999999999999,
+        "score": 0.9999999999999999,
+        "flags": [],
+        "degraded": null
+      },
+      {
+        "station_id": "ANA-87399000",
+        "expected": 24,
+        "present": 24,
+        "availability": 1.0,
+        "flag_rate": 0.0,
+        "agreement": 1.0,
+        "freshness": 1.0,
+        "raw": 0.9999999999999999,
+        "score": 0.9999999999999999,
+        "flags": [],
+        "degraded": null
+      }
+    ],
+    "dissents": [],
+    "degradations": []
+  },
+  "readings": [
+    {
+      "station_id": "ANA-85930001",
+      "variable": "river_stage",
+      "ts_utc": 1793836800,
+      "source": "ana",
+      "value_milli": 920,
+      "datum_id": "ANA-85930001-regua",
+      "raw_payload_sha256": "d1281ce2405a90bdce61a456c95b8bc74e0351076c0c8b32f2ba81b9cf7bb39f"
+    },
+    {
+      "station_id": "ANA-85930001",
+      "variable": "river_stage",
+      "ts_utc": 1793840400,
+      "source": "ana",
+      "value_milli": 940,
+      "datum_id": "ANA-85930001-regua",
+      "raw_payload_sha256": "40b65bf2eba7b5d8c947c716e2e01edc51d28baddafdc10a09b156383ec04c0e"
+    },
+    {
+      "station_id": "ANA-85930001",
+      "variable": "river_stage",
+      "ts_utc": 1793844000,
+      "source": "ana",
+      "value_milli": 940,
+      "datum_id": "ANA-85930001-regua",
+      "raw_payload_sha256": "f46c973d98981fb3e40c08874349327378d6cc43b8ec8a92d2e79a1c0c93c31b"
+    },
+    {
+      "station_id": "ANA-85930001",
+      "variable": "river_stage",
+      "ts_utc": 1793847600,
+      "source": "ana",
+      "value_milli": 1070,
+      "datum_id": "ANA-85930001-regua",
+      "raw_payload_sha256": "e2c87062c643c2e12a6c8720c8d0295c94420313d3bd71a0092900415fc79026"
+    },
+    {
+      "station_id": "ANA-85930001",
+      "variable": "river_stage",
+      "ts_utc": 1793851200,
+      "source": "ana",
+      "value_milli": 1050,
+      "datum_id": "ANA-85930001-regua",
+      "raw_payload_sha256": "72bfde6ce2f2880c807692722b0f3b93cc9676bf2043848b476d80997965bc5a"
+    },
+    {
+      "station_id": "ANA-85930001",
+      "variable": "river_stage",
+      "ts_utc": 1793854800,
+      "source": "ana",
+      "value_milli": 1090,
+      "datum_id": "ANA-85930001-regua",
+      "raw_payload_sha256": "c983389eeb4a294108a64ae4fd2447c96eb6fc1fdcf5d12611d171024ba377e8"
+    },
+    {
+      "station_id": "ANA-85930001",
+      "variable": "river_stage",
+      "ts_utc": 1793858400,
+      "source": "ana",
+      "value_milli": 1130,
+      "datum_id": "ANA-85930001-regua",
+      "raw_payload_sha256": "a6caa78496034d3dbd9504fb36e2feb7ec1008329861f71ddaf0cc807496b1cd"
+    },
+    {
+      "station_id": "ANA-85930001",
+      "variable": "river_stage",
+      "ts_utc": 1793862000,
+      "source": "ana",
+      "value_milli": 1210,
+      "datum_id": "ANA-85930001-regua",
+      "raw_payload_sha256": "7baa142d28eab8ee090c9cb72776607ee258912bca3f684e907f202880700f1f"
+    },
+    {
+      "station_id": "ANA-85930001",
+      "variable": "river_stage",
+      "ts_utc": 1793865600,
+      "source": "ana",
+      "value_milli": 1270,
+      "datum_id": "ANA-85930001-regua",
+      "raw_payload_sha256": "eb509454b31f930c5d73095d3f462042890c967ea0704f282cc9752b19bf3e85"
+    },
+    {
+      "station_id": "ANA-85930001",
+      "variable": "river_stage",
+      "ts_utc": 1793869200,
+      "source": "ana",
+      "value_milli": 1370,
+      "datum_id": "ANA-85930001-regua",
+      "raw_payload_sha256": "105c3f0903472404a4943ed2ee0821604c09565a799d48b6381ffcabdb51b20d"
+    },
+    {
+      "station_id": "ANA-85930001",
+      "variable": "river_stage",
+      "ts_utc": 1793872800,
+      "source": "ana",
+      "value_milli": 1420,
+      "datum_id": "ANA-85930001-regua",
+      "raw_payload_sha256": "c9e7302f1ea59588a467927cd86e85b4a601a7c5c1cef8ebc3da34b1a752f16c"
+    },
+    {
+      "station_id": "ANA-85930001",
+      "variable": "river_stage",
+      "ts_utc": 1793876400,
+      "source": "ana",
+      "value_milli": 1490,
+      "datum_id": "ANA-85930001-regua",
+      "raw_payload_sha256": "0764725654b477ca2d14bf2ece580ba143ca403e87cef0fec4740fae279739b5"
+    },
+    {
+      "station_id": "ANA-85930001",
+      "variable": "river_stage",
+      "ts_utc": 1793880000,
+      "source": "ana",
+      "value_milli": 1580,
+      "datum_id": "ANA-85930001-regua",
+      "raw_payload_sha256": "0e25a1b2fb4dadb765abe15081d06e72d2d6d96a08e196aa2c7c5180ec95b8fd"
+    },
+    {
+      "station_id": "ANA-85930001",
+      "variable": "river_stage",
+      "ts_utc": 1793883600,
+      "source": "ana",
+      "value_milli": 1660,
+      "datum_id": "ANA-85930001-regua",
+      "raw_payload_sha256": "be8ba23d3fb4c68e6181e2235f5a8c8a344e05c06ae56a8fbd9a646eca9ee3dd"
+    },
+    {
+      "station_id": "ANA-85930001",
+      "variable": "river_stage",
+      "ts_utc": 1793887200,
+      "source": "ana",
+      "value_milli": 1680,
+      "datum_id": "ANA-85930001-regua",
+      "raw_payload_sha256": "f730e57ea89716705afa99bd693f407c0fdcfc895c1327149e04c514f3ef7ec8"
+    },
+    {
+      "station_id": "ANA-85930001",
+      "variable": "river_stage",
+      "ts_utc": 1793890800,
+      "source": "ana",
+      "value_milli": 1680,
+      "datum_id": "ANA-85930001-regua",
+      "raw_payload_sha256": "497dcceb740de9f13df64dd13e5d093955afa36c03f95e343803d4f545a80aad"
+    },
+    {
+      "station_id": "ANA-85930001",
+      "variable": "river_stage",
+      "ts_utc": 1793894400,
+      "source": "ana",
+      "value_milli": 1720,
+      "datum_id": "ANA-85930001-regua",
+      "raw_payload_sha256": "7f4f665b35a0e3c5d88bd0c768e2473db5211902d44d81b9c61321111b6fadfb"
+    },
+    {
+      "station_id": "ANA-85930001",
+      "variable": "river_stage",
+      "ts_utc": 1793898000,
+      "source": "ana",
+      "value_milli": 1760,
+      "datum_id": "ANA-85930001-regua",
+      "raw_payload_sha256": "b8421ccc8f8bf662f4c70d87ed3601d4f7aa8f082e267ce4d17a8a48057eadc9"
+    },
+    {
+      "station_id": "ANA-85930001",
+      "variable": "river_stage",
+      "ts_utc": 1793905200,
+      "source": "ana",
+      "value_milli": 1840,
+      "datum_id": "ANA-85930001-regua",
+      "raw_payload_sha256": "adc1076a460b4faaf2bb29683cc923255de97e6d6367dee6b8e6c43e0c880912"
+    },
+    {
+      "station_id": "ANA-85930001",
+      "variable": "river_stage",
+      "ts_utc": 1793908800,
+      "source": "ana",
+      "value_milli": 1860,
+      "datum_id": "ANA-85930001-regua",
+      "raw_payload_sha256": "73bdef76c491559b7711c9b9c11d672a46911b020c87212f7663ee00510eef95"
+    },
+    {
+      "station_id": "ANA-85930001",
+      "variable": "river_stage",
+      "ts_utc": 1793912400,
+      "source": "ana",
+      "value_milli": 1910,
+      "datum_id": "ANA-85930001-regua",
+      "raw_payload_sha256": "c4cb53d67e570c9b7b52670084bd34b296f26f9ba86fdfbcd1c4d737dbd3d880"
+    },
+    {
+      "station_id": "ANA-85930001",
+      "variable": "river_stage",
+      "ts_utc": 1793916000,
+      "source": "ana",
+      "value_milli": 1990,
+      "datum_id": "ANA-85930001-regua",
+      "raw_payload_sha256": "449522fa1cfb0354e85081aea3b3e27c755284dc7336c7e3ffacd143a64b42f2"
+    },
+    {
+      "station_id": "ANA-85930001",
+      "variable": "river_stage",
+      "ts_utc": 1793919600,
+      "source": "ana",
+      "value_milli": 2000,
+      "datum_id": "ANA-85930001-regua",
+      "raw_payload_sha256": "07c3a31489ad8a874288c1eb00f040c672e4b9120981a48bfc6e73aab35106ad"
+    },
+    {
+      "station_id": "ANA-86879300",
+      "variable": "river_stage",
+      "ts_utc": 1793836800,
+      "source": "ana",
+      "value_milli": 13770,
+      "datum_id": "ANA-86879300-regua",
+      "raw_payload_sha256": "916911bae98d5a071f0f3f06fca3ae4bbecbef8520dfc26740fa8e38884b1a56"
+    },
+    {
+      "station_id": "ANA-86879300",
+      "variable": "river_stage",
+      "ts_utc": 1793840400,
+      "source": "ana",
+      "value_milli": 13970,
+      "datum_id": "ANA-86879300-regua",
+      "raw_payload_sha256": "1a511e4461de6fd33dae57251e0ee28f02c771aaae86beea1de155f9d629f088"
+    },
+    {
+      "station_id": "ANA-86879300",
+      "variable": "river_stage",
+      "ts_utc": 1793844000,
+      "source": "ana",
+      "value_milli": 14180,
+      "datum_id": "ANA-86879300-regua",
+      "raw_payload_sha256": "40ea4d4dd235ceb50daf99e3ee952cd6e924cd723224ab9a863b2002d547438d"
+    },
+    {
+      "station_id": "ANA-86879300",
+      "variable": "river_stage",
+      "ts_utc": 1793847600,
+      "source": "ana",
+      "value_milli": 14470,
+      "datum_id": "ANA-86879300-regua",
+      "raw_payload_sha256": "762d020cdc1b6023405f9a63a026ebf0a1394c9b5a69bef9179f41eddfffd902"
+    },
+    {
+      "station_id": "ANA-86879300",
+      "variable": "river_stage",
+      "ts_utc": 1793851200,
+      "source": "ana",
+      "value_milli": 14690,
+      "datum_id": "ANA-86879300-regua",
+      "raw_payload_sha256": "5fe8e0126128ed5d2afdf9c404cca63f72bd78352560fb37280b762219a4dbee"
+    },
+    {
+      "station_id": "ANA-86879300",
+      "variable": "river_stage",
+      "ts_utc": 1793854800,
+      "source": "ana",
+      "value_milli": 14780,
+      "datum_id": "ANA-86879300-regua",
+      "raw_payload_sha256": "db5223fc3ae2f197bea83547560cfec589f6e1a270f885fe5a2eadd131082036"
+    },
+    {
+      "station_id": "ANA-86879300",
+      "variable": "river_stage",
+      "ts_utc": 1793858400,
+      "source": "ana",
+      "value_milli": 14980,
+      "datum_id": "ANA-86879300-regua",
+      "raw_payload_sha256": "1e633e4c84740cc0b099bbac154f05f17d15f1183bac350b65fcd1123f0c820e"
+    },
+    {
+      "station_id": "ANA-86879300",
+      "variable": "river_stage",
+      "ts_utc": 1793862000,
+      "source": "ana",
+      "value_milli": 15210,
+      "datum_id": "ANA-86879300-regua",
+      "raw_payload_sha256": "b646c074cc80c788ae8008e41a5fd87e4873a121fbcd456e5c5d363726e394ff"
+    },
+    {
+      "station_id": "ANA-86879300",
+      "variable": "river_stage",
+      "ts_utc": 1793865600,
+      "source": "ana",
+      "value_milli": 15300,
+      "datum_id": "ANA-86879300-regua",
+      "raw_payload_sha256": "3aba834d27edd5c2af69918def7401b4ff823a1e29b9a5603d978aa147e601cd"
+    },
+    {
+      "station_id": "ANA-86879300",
+      "variable": "river_stage",
+      "ts_utc": 1793869200,
+      "source": "ana",
+      "value_milli": 15470,
+      "datum_id": "ANA-86879300-regua",
+      "raw_payload_sha256": "b27363ca906874ab455171e2d87f613fc4f32a8521523ec5b82653a5bb8146c4"
+    },
+    {
+      "station_id": "ANA-86879300",
+      "variable": "river_stage",
+      "ts_utc": 1793872800,
+      "source": "ana",
+      "value_milli": 15730,
+      "datum_id": "ANA-86879300-regua",
+      "raw_payload_sha256": "c29ab356f8c6d3eb673ea38a011addf2e55f8a2835cd299012018b5e3e5e360f"
+    },
+    {
+      "station_id": "ANA-86879300",
+      "variable": "river_stage",
+      "ts_utc": 1793876400,
+      "source": "ana",
+      "value_milli": 15980,
+      "datum_id": "ANA-86879300-regua",
+      "raw_payload_sha256": "08b9edebe510f02edffbc147e31276bf8d430fdbfa1fd5b341fa68ee7c436422"
+    },
+    {
+      "station_id": "ANA-86879300",
+      "variable": "river_stage",
+      "ts_utc": 1793880000,
+      "source": "ana",
+      "value_milli": 16320,
+      "datum_id": "ANA-86879300-regua",
+      "raw_payload_sha256": "e732d89335349a65d42abb4818967d7b236f190f5ba4a2189a4247573fa94dd8"
+    },
+    {
+      "station_id": "ANA-86879300",
+      "variable": "river_stage",
+      "ts_utc": 1793883600,
+      "source": "ana",
+      "value_milli": 16450,
+      "datum_id": "ANA-86879300-regua",
+      "raw_payload_sha256": "8218f7af4871638d477fc6c87cf1624a69499c057e2f856487426825d6409ef0"
+    },
+    {
+      "station_id": "ANA-86879300",
+      "variable": "river_stage",
+      "ts_utc": 1793887200,
+      "source": "ana",
+      "value_milli": 16600,
+      "datum_id": "ANA-86879300-regua",
+      "raw_payload_sha256": "3d74903f2ec54407bf5a1995cdd120febd89b149ff662d7ae21a17140264c35a"
+    },
+    {
+      "station_id": "ANA-86879300",
+      "variable": "river_stage",
+      "ts_utc": 1793890800,
+      "source": "ana",
+      "value_milli": 16720,
+      "datum_id": "ANA-86879300-regua",
+      "raw_payload_sha256": "e00cedfb72474e4a25184142b381f220270134ac02369ec5b0a12a537d20f94a"
+    },
+    {
+      "station_id": "ANA-86879300",
+      "variable": "river_stage",
+      "ts_utc": 1793894400,
+      "source": "ana",
+      "value_milli": 16740,
+      "datum_id": "ANA-86879300-regua",
+      "raw_payload_sha256": "97683e162917537fdd70de2d177e20626713667359efa01594ebea00cc091dc5"
+    },
+    {
+      "station_id": "ANA-86879300",
+      "variable": "river_stage",
+      "ts_utc": 1793898000,
+      "source": "ana",
+      "value_milli": 16730,
+      "datum_id": "ANA-86879300-regua",
+      "raw_payload_sha256": "6e07ad75849e645e859649b0821505a3e6f84179164136955568ac7bc50f74a2"
+    },
+    {
+      "station_id": "ANA-86879300",
+      "variable": "river_stage",
+      "ts_utc": 1793901600,
+      "source": "ana",
+      "value_milli": 16640,
+      "datum_id": "ANA-86879300-regua",
+      "raw_payload_sha256": "7501ec0d85fdd8f6754bd292a315e1f50b07e4456e3fda481d041c6211cb8c01"
+    },
+    {
+      "station_id": "ANA-86879300",
+      "variable": "river_stage",
+      "ts_utc": 1793905200,
+      "source": "ana",
+      "value_milli": 16480,
+      "datum_id": "ANA-86879300-regua",
+      "raw_payload_sha256": "a62fd489a4f5e7ff1e3a53b0aed29eac79748521e8129aafcce21b252b6a7173"
+    },
+    {
+      "station_id": "ANA-86879300",
+      "variable": "river_stage",
+      "ts_utc": 1793908800,
+      "source": "ana",
+      "value_milli": 16390,
+      "datum_id": "ANA-86879300-regua",
+      "raw_payload_sha256": "3aeed0e3af6f31383315569739bf22b6ec759ffd4d9daf62d30fc84418f8db58"
+    },
+    {
+      "station_id": "ANA-86879300",
+      "variable": "river_stage",
+      "ts_utc": 1793912400,
+      "source": "ana",
+      "value_milli": 16290,
+      "datum_id": "ANA-86879300-regua",
+      "raw_payload_sha256": "b68ce31a10af164db453e1d7112897b85814741d423bec78e3aa6ccc23fa53ef"
+    },
+    {
+      "station_id": "ANA-86879300",
+      "variable": "river_stage",
+      "ts_utc": 1793916000,
+      "source": "ana",
+      "value_milli": 16140,
+      "datum_id": "ANA-86879300-regua",
+      "raw_payload_sha256": "95e41fe80895ae2ccce6bdb8c866bb240fb5d16679a92c948f1683206f9940a7"
+    },
+    {
+      "station_id": "ANA-86879300",
+      "variable": "river_stage",
+      "ts_utc": 1793919600,
+      "source": "ana",
+      "value_milli": 16060,
+      "datum_id": "ANA-86879300-regua",
+      "raw_payload_sha256": "c83008012829754819c674487264dd0e82faa8fc419ebfbb00d8a8b5d282fc55"
+    },
+    {
+      "station_id": "ANA-87270000",
+      "variable": "river_stage",
+      "ts_utc": 1793836800,
+      "source": "ana",
+      "value_milli": 1740,
+      "datum_id": "ANA-87270000-regua",
+      "raw_payload_sha256": "6ef3d246b0ad2e4a08dc1cf35943f42f39ede0f9452c039f4753a3df02cbb7cd"
+    },
+    {
+      "station_id": "ANA-87270000",
+      "variable": "river_stage",
+      "ts_utc": 1793840400,
+      "source": "ana",
+      "value_milli": 1820,
+      "datum_id": "ANA-87270000-regua",
+      "raw_payload_sha256": "e2e4dc315694513471a96982cd2018dc0af3259a74a650f510d1cb49546e8fc0"
+    },
+    {
+      "station_id": "ANA-87270000",
+      "variable": "river_stage",
+      "ts_utc": 1793844000,
+      "source": "ana",
+      "value_milli": 1900,
+      "datum_id": "ANA-87270000-regua",
+      "raw_payload_sha256": "d3adc70fb2679c2216c788aaa797b0c91c4282c5ac146daf979727dd6a15b4c7"
+    },
+    {
+      "station_id": "ANA-87270000",
+      "variable": "river_stage",
+      "ts_utc": 1793847600,
+      "source": "ana",
+      "value_milli": 1990,
+      "datum_id": "ANA-87270000-regua",
+      "raw_payload_sha256": "ceb6b7d20a9020ca9b8de7519fa4a04f6467b44909057638a00e421ade0c613a"
+    },
+    {
+      "station_id": "ANA-87270000",
+      "variable": "river_stage",
+      "ts_utc": 1793851200,
+      "source": "ana",
+      "value_milli": 2070,
+      "datum_id": "ANA-87270000-regua",
+      "raw_payload_sha256": "7135639aa9012498a41490a3350f7f1738ac8982f4050872f7873b2cc0c1ba6a"
+    },
+    {
+      "station_id": "ANA-87270000",
+      "variable": "river_stage",
+      "ts_utc": 1793854800,
+      "source": "ana",
+      "value_milli": 2150,
+      "datum_id": "ANA-87270000-regua",
+      "raw_payload_sha256": "830d37a9dd23250b915e0f3d39303e3eaeca283e011d12c8cc141c17b1e570cd"
+    },
+    {
+      "station_id": "ANA-87270000",
+      "variable": "river_stage",
+      "ts_utc": 1793858400,
+      "source": "ana",
+      "value_milli": 2210,
+      "datum_id": "ANA-87270000-regua",
+      "raw_payload_sha256": "a47a30482adcd2dac5280137a1d37891f27576c212617321c5551afaa2d21929"
+    },
+    {
+      "station_id": "ANA-87270000",
+      "variable": "river_stage",
+      "ts_utc": 1793862000,
+      "source": "ana",
+      "value_milli": 2280,
+      "datum_id": "ANA-87270000-regua",
+      "raw_payload_sha256": "70024b011f1eaf59f735ffa7b9ea8d62c6af6849cfc35d4c1b199b49ccbf612c"
+    },
+    {
+      "station_id": "ANA-87270000",
+      "variable": "river_stage",
+      "ts_utc": 1793865600,
+      "source": "ana",
+      "value_milli": 2340,
+      "datum_id": "ANA-87270000-regua",
+      "raw_payload_sha256": "da525720a61a082c64b28cdfed56598d2c57226a71220c2176a683ba1edbf801"
+    },
+    {
+      "station_id": "ANA-87270000",
+      "variable": "river_stage",
+      "ts_utc": 1793869200,
+      "source": "ana",
+      "value_milli": 2400,
+      "datum_id": "ANA-87270000-regua",
+      "raw_payload_sha256": "2b8f7350883f8ef58a60d2a86606dcc88c7cd191d30042d54a7810a0ca65f69e"
+    },
+    {
+      "station_id": "ANA-87270000",
+      "variable": "river_stage",
+      "ts_utc": 1793872800,
+      "source": "ana",
+      "value_milli": 2460,
+      "datum_id": "ANA-87270000-regua",
+      "raw_payload_sha256": "cf4d2739605126835b6ec54f9ea0c87f1afa875ea9d63b90b052866e6d1c9cef"
+    },
+    {
+      "station_id": "ANA-87270000",
+      "variable": "river_stage",
+      "ts_utc": 1793876400,
+      "source": "ana",
+      "value_milli": 2510,
+      "datum_id": "ANA-87270000-regua",
+      "raw_payload_sha256": "6c0f5cb86e6e6f161b04881e1692562c50594cbd87f43dd447f294aa2ce44e31"
+    },
+    {
+      "station_id": "ANA-87270000",
+      "variable": "river_stage",
+      "ts_utc": 1793880000,
+      "source": "ana",
+      "value_milli": 2550,
+      "datum_id": "ANA-87270000-regua",
+      "raw_payload_sha256": "d15a7862823baa146fac46a5468622398aad62f887e44b24838b29072e208581"
+    },
+    {
+      "station_id": "ANA-87270000",
+      "variable": "river_stage",
+      "ts_utc": 1793883600,
+      "source": "ana",
+      "value_milli": 2580,
+      "datum_id": "ANA-87270000-regua",
+      "raw_payload_sha256": "c09f31beef64e3fb13055e7b2b61ab638f6a9c70d6f85872b51630de21054083"
+    },
+    {
+      "station_id": "ANA-87270000",
+      "variable": "river_stage",
+      "ts_utc": 1793887200,
+      "source": "ana",
+      "value_milli": 2600,
+      "datum_id": "ANA-87270000-regua",
+      "raw_payload_sha256": "d1cf39fc3e9044c220939b0c712f24545df4165b814299a29731795c14cf0417"
+    },
+    {
+      "station_id": "ANA-87270000",
+      "variable": "river_stage",
+      "ts_utc": 1793890800,
+      "source": "ana",
+      "value_milli": 2610,
+      "datum_id": "ANA-87270000-regua",
+      "raw_payload_sha256": "dcb927046c4341c40a551bbb7bc972b07c918652ef8793c5c61ba5a3db5285c2"
+    },
+    {
+      "station_id": "ANA-87270000",
+      "variable": "river_stage",
+      "ts_utc": 1793894400,
+      "source": "ana",
+      "value_milli": 2620,
+      "datum_id": "ANA-87270000-regua",
+      "raw_payload_sha256": "f76f27abf2c2a4744a8557dbf12937639031d962817e135c1a4430e35e063df9"
+    },
+    {
+      "station_id": "ANA-87270000",
+      "variable": "river_stage",
+      "ts_utc": 1793898000,
+      "source": "ana",
+      "value_milli": 2610,
+      "datum_id": "ANA-87270000-regua",
+      "raw_payload_sha256": "115791f6afb7fd7747982be5687b42b0d04346d6ba13fb29cb85f19f39e41530"
+    },
+    {
+      "station_id": "ANA-87270000",
+      "variable": "river_stage",
+      "ts_utc": 1793901600,
+      "source": "ana",
+      "value_milli": 2600,
+      "datum_id": "ANA-87270000-regua",
+      "raw_payload_sha256": "21869b97446ab86255bc15ae738393b6ca5fa124bebbb894e9a98fd768171cb2"
+    },
+    {
+      "station_id": "ANA-87270000",
+      "variable": "river_stage",
+      "ts_utc": 1793905200,
+      "source": "ana",
+      "value_milli": 2580,
+      "datum_id": "ANA-87270000-regua",
+      "raw_payload_sha256": "b2e1ba39ef47a243d68cd6c3e906d3ae1cbdeaecbf40375f7dcd1bee64fe284a"
+    },
+    {
+      "station_id": "ANA-87270000",
+      "variable": "river_stage",
+      "ts_utc": 1793908800,
+      "source": "ana",
+      "value_milli": 2560,
+      "datum_id": "ANA-87270000-regua",
+      "raw_payload_sha256": "33d23a4457f7a90a170ca6abce31c52400c76fe5dfa6801d416abb3188b57958"
+    },
+    {
+      "station_id": "ANA-87270000",
+      "variable": "river_stage",
+      "ts_utc": 1793912400,
+      "source": "ana",
+      "value_milli": 2540,
+      "datum_id": "ANA-87270000-regua",
+      "raw_payload_sha256": "24033e0e40dcc4339c2c09f85d5493e00277dff0b364f8d01daec99f8108d02e"
+    },
+    {
+      "station_id": "ANA-87270000",
+      "variable": "river_stage",
+      "ts_utc": 1793916000,
+      "source": "ana",
+      "value_milli": 2510,
+      "datum_id": "ANA-87270000-regua",
+      "raw_payload_sha256": "4351fd83d4488195bbddc87c1c89e7cbfb58c344dbb7c56dc8fee57c4051d702"
+    },
+    {
+      "station_id": "ANA-87270000",
+      "variable": "river_stage",
+      "ts_utc": 1793919600,
+      "source": "ana",
+      "value_milli": 2490,
+      "datum_id": "ANA-87270000-regua",
+      "raw_payload_sha256": "bf5634c2c07a7b39d5a550b9acaf973691949cda04d37847cf6664ca0f963199"
+    },
+    {
+      "station_id": "ANA-87382000",
+      "variable": "river_stage",
+      "ts_utc": 1793836800,
+      "source": "ana",
+      "value_milli": 1900,
+      "datum_id": "ANA-87382000-regua",
+      "raw_payload_sha256": "4db398f3c277670f1ed735334a6cc8c63ffa407bb9b0b4588ea3d00dcd9ed02e"
+    },
+    {
+      "station_id": "ANA-87382000",
+      "variable": "river_stage",
+      "ts_utc": 1793840400,
+      "source": "ana",
+      "value_milli": 1910,
+      "datum_id": "ANA-87382000-regua",
+      "raw_payload_sha256": "1d35a2d4434656f1d8dd9fd7d623190423a1b901609fe80789460002a72d7cf4"
+    },
+    {
+      "station_id": "ANA-87382000",
+      "variable": "river_stage",
+      "ts_utc": 1793844000,
+      "source": "ana",
+      "value_milli": 1910,
+      "datum_id": "ANA-87382000-regua",
+      "raw_payload_sha256": "5632733f976b25e5be0bc687a05858c6168043a3483d82ce65bc8c10938e4782"
+    },
+    {
+      "station_id": "ANA-87382000",
+      "variable": "river_stage",
+      "ts_utc": 1793847600,
+      "source": "ana",
+      "value_milli": 1930,
+      "datum_id": "ANA-87382000-regua",
+      "raw_payload_sha256": "2638ea4a13e711a69a003609cd5a33e61099371a89c10410aeafeb4ad57890c5"
+    },
+    {
+      "station_id": "ANA-87382000",
+      "variable": "river_stage",
+      "ts_utc": 1793851200,
+      "source": "ana",
+      "value_milli": 1950,
+      "datum_id": "ANA-87382000-regua",
+      "raw_payload_sha256": "e2af37914749f94489008316c0abbdb21624b5d97c0a8cab5140218ef3c0b6da"
+    },
+    {
+      "station_id": "ANA-87382000",
+      "variable": "river_stage",
+      "ts_utc": 1793854800,
+      "source": "ana",
+      "value_milli": 1980,
+      "datum_id": "ANA-87382000-regua",
+      "raw_payload_sha256": "a4341f926a15e3641e02c435df9aeb2ebb0e516e2bffb9639051a1e17f5cbbe1"
+    },
+    {
+      "station_id": "ANA-87382000",
+      "variable": "river_stage",
+      "ts_utc": 1793858400,
+      "source": "ana",
+      "value_milli": 2010,
+      "datum_id": "ANA-87382000-regua",
+      "raw_payload_sha256": "635dec711c080468c611871f36dd3038eff4eea390b452bd5c0a0bbedef17b1e"
+    },
+    {
+      "station_id": "ANA-87382000",
+      "variable": "river_stage",
+      "ts_utc": 1793862000,
+      "source": "ana",
+      "value_milli": 2030,
+      "datum_id": "ANA-87382000-regua",
+      "raw_payload_sha256": "212da037ae8b2e697c146857fb239bf2f59ac1a35c29403a785f268750e656b3"
+    },
+    {
+      "station_id": "ANA-87382000",
+      "variable": "river_stage",
+      "ts_utc": 1793865600,
+      "source": "ana",
+      "value_milli": 2060,
+      "datum_id": "ANA-87382000-regua",
+      "raw_payload_sha256": "4ecbd29501b577bb6d83c2ea9943d2e22e1caa28ed3326a70993efe15f4d995f"
+    },
+    {
+      "station_id": "ANA-87382000",
+      "variable": "river_stage",
+      "ts_utc": 1793869200,
+      "source": "ana",
+      "value_milli": 2090,
+      "datum_id": "ANA-87382000-regua",
+      "raw_payload_sha256": "72394b906769b056cc7ecf56fd7239d13ec4f86de146e5acc711699887f4b184"
+    },
+    {
+      "station_id": "ANA-87382000",
+      "variable": "river_stage",
+      "ts_utc": 1793872800,
+      "source": "ana",
+      "value_milli": 2130,
+      "datum_id": "ANA-87382000-regua",
+      "raw_payload_sha256": "d483e1dd4599a2ebf73cef59422068cc612b9579678350918bb4998ddd55bc12"
+    },
+    {
+      "station_id": "ANA-87382000",
+      "variable": "river_stage",
+      "ts_utc": 1793876400,
+      "source": "ana",
+      "value_milli": 2150,
+      "datum_id": "ANA-87382000-regua",
+      "raw_payload_sha256": "b9f177c39a7d1611c8952db1d29a97de87f4e0ab09428eab60e7bb521f973339"
+    },
+    {
+      "station_id": "ANA-87382000",
+      "variable": "river_stage",
+      "ts_utc": 1793880000,
+      "source": "ana",
+      "value_milli": 2170,
+      "datum_id": "ANA-87382000-regua",
+      "raw_payload_sha256": "e4a36167085be334229f9deee03789e06f7d6c20f557289d6d7ed36d8ef771ce"
+    },
+    {
+      "station_id": "ANA-87382000",
+      "variable": "river_stage",
+      "ts_utc": 1793883600,
+      "source": "ana",
+      "value_milli": 2190,
+      "datum_id": "ANA-87382000-regua",
+      "raw_payload_sha256": "43800ec00f8b3f4f6784daa84a279882e2654c98a43d45742479802c568a1681"
+    },
+    {
+      "station_id": "ANA-87382000",
+      "variable": "river_stage",
+      "ts_utc": 1793887200,
+      "source": "ana",
+      "value_milli": 2200,
+      "datum_id": "ANA-87382000-regua",
+      "raw_payload_sha256": "c4d7ef5c67d5f00e9702c3587e8fce79e4dadf7c533a1cf95f2af3da92cac02d"
+    },
+    {
+      "station_id": "ANA-87382000",
+      "variable": "river_stage",
+      "ts_utc": 1793890800,
+      "source": "ana",
+      "value_milli": 2220,
+      "datum_id": "ANA-87382000-regua",
+      "raw_payload_sha256": "d2b6f5f8a0581d159b5728a66f7fbbbaa540539e1e881dc0d3e83f872c352e06"
+    },
+    {
+      "station_id": "ANA-87382000",
+      "variable": "river_stage",
+      "ts_utc": 1793894400,
+      "source": "ana",
+      "value_milli": 2230,
+      "datum_id": "ANA-87382000-regua",
+      "raw_payload_sha256": "993da3e89b1c9e17a541bfb65ed9feb3b2ff38a207117552d378030b956b6d90"
+    },
+    {
+      "station_id": "ANA-87382000",
+      "variable": "river_stage",
+      "ts_utc": 1793898000,
+      "source": "ana",
+      "value_milli": 2240,
+      "datum_id": "ANA-87382000-regua",
+      "raw_payload_sha256": "1e2b5c68083b7695488924ec45f692b259b6107ae76bc21ca0c27338235a5a43"
+    },
+    {
+      "station_id": "ANA-87382000",
+      "variable": "river_stage",
+      "ts_utc": 1793901600,
+      "source": "ana",
+      "value_milli": 2250,
+      "datum_id": "ANA-87382000-regua",
+      "raw_payload_sha256": "0820fbe5afa91d129df7b4753fab69b3d4fab01860b2d71bcb9494dbf4793030"
+    },
+    {
+      "station_id": "ANA-87382000",
+      "variable": "river_stage",
+      "ts_utc": 1793905200,
+      "source": "ana",
+      "value_milli": 2260,
+      "datum_id": "ANA-87382000-regua",
+      "raw_payload_sha256": "e05de28268586d0a61dc56e96ed9d6a00c00c3b46c084307a8d78cae93eb5ff0"
+    },
+    {
+      "station_id": "ANA-87382000",
+      "variable": "river_stage",
+      "ts_utc": 1793908800,
+      "source": "ana",
+      "value_milli": 2260,
+      "datum_id": "ANA-87382000-regua",
+      "raw_payload_sha256": "36808d76d994892ec3c868c071f3a323d584ad103ed14f8ec12403de03af19e5"
+    },
+    {
+      "station_id": "ANA-87382000",
+      "variable": "river_stage",
+      "ts_utc": 1793912400,
+      "source": "ana",
+      "value_milli": 2260,
+      "datum_id": "ANA-87382000-regua",
+      "raw_payload_sha256": "c866df06a53eeb30f330621f496471260f1286806367345f8dcff1ae0d08312f"
+    },
+    {
+      "station_id": "ANA-87382000",
+      "variable": "river_stage",
+      "ts_utc": 1793916000,
+      "source": "ana",
+      "value_milli": 2270,
+      "datum_id": "ANA-87382000-regua",
+      "raw_payload_sha256": "d2e8df93882cb426c36e11b1ad946264d09ef42c83215d8cbf0c3cc6233a1958"
+    },
+    {
+      "station_id": "ANA-87382000",
+      "variable": "river_stage",
+      "ts_utc": 1793919600,
+      "source": "ana",
+      "value_milli": 2280,
+      "datum_id": "ANA-87382000-regua",
+      "raw_payload_sha256": "320e51515dee6a9ee832964194501c5b09c1b8b325a38cda63769b6cb002990e"
+    },
+    {
+      "station_id": "ANA-87399000",
+      "variable": "river_stage",
+      "ts_utc": 1793836800,
+      "source": "ana",
+      "value_milli": 2380,
+      "datum_id": "ANA-87399000-regua",
+      "raw_payload_sha256": "fa38f6dced02e5ed8bd0750357baae67e9eaa088ec4354d53a85f2de35eefb8e"
+    },
+    {
+      "station_id": "ANA-87399000",
+      "variable": "river_stage",
+      "ts_utc": 1793840400,
+      "source": "ana",
+      "value_milli": 2380,
+      "datum_id": "ANA-87399000-regua",
+      "raw_payload_sha256": "b6bb48fd34ca94844a65aaada3105a043e8f0bf5be3a9e731219ef24f82d8c56"
+    },
+    {
+      "station_id": "ANA-87399000",
+      "variable": "river_stage",
+      "ts_utc": 1793844000,
+      "source": "ana",
+      "value_milli": 2380,
+      "datum_id": "ANA-87399000-regua",
+      "raw_payload_sha256": "7ec2f8b199c10d8b44b1ed9a0e03b35fbd22a734c32a7536b8689b6c4a9609b8"
+    },
+    {
+      "station_id": "ANA-87399000",
+      "variable": "river_stage",
+      "ts_utc": 1793847600,
+      "source": "ana",
+      "value_milli": 2370,
+      "datum_id": "ANA-87399000-regua",
+      "raw_payload_sha256": "34aeb93cbde8adcab422abe13e9a5680fb4767fa5ecde6667b8881efc5e141b1"
+    },
+    {
+      "station_id": "ANA-87399000",
+      "variable": "river_stage",
+      "ts_utc": 1793851200,
+      "source": "ana",
+      "value_milli": 2370,
+      "datum_id": "ANA-87399000-regua",
+      "raw_payload_sha256": "7d4db6800af41e7b208c3a18413dd44883c0b21a987626564f44a9e37e394d8d"
+    },
+    {
+      "station_id": "ANA-87399000",
+      "variable": "river_stage",
+      "ts_utc": 1793854800,
+      "source": "ana",
+      "value_milli": 2370,
+      "datum_id": "ANA-87399000-regua",
+      "raw_payload_sha256": "e6e37e891d6425d03c05df006eb456268f2e73082d7c998a6f94e44dab99f6ba"
+    },
+    {
+      "station_id": "ANA-87399000",
+      "variable": "river_stage",
+      "ts_utc": 1793858400,
+      "source": "ana",
+      "value_milli": 2370,
+      "datum_id": "ANA-87399000-regua",
+      "raw_payload_sha256": "c6a16099c524138c49a1ebddd65878876bc3228f3afe7c4d4c6f901f515ff1e2"
+    },
+    {
+      "station_id": "ANA-87399000",
+      "variable": "river_stage",
+      "ts_utc": 1793862000,
+      "source": "ana",
+      "value_milli": 2370,
+      "datum_id": "ANA-87399000-regua",
+      "raw_payload_sha256": "c407c0cbf94c153e4e0776bd6cedcdae63bc83b2039d33e7bf903eec9102382a"
+    },
+    {
+      "station_id": "ANA-87399000",
+      "variable": "river_stage",
+      "ts_utc": 1793865600,
+      "source": "ana",
+      "value_milli": 2370,
+      "datum_id": "ANA-87399000-regua",
+      "raw_payload_sha256": "7f422ff78ec0a57fc26dbacc607df05bce7473fe87bb945b953e9191a3734417"
+    },
+    {
+      "station_id": "ANA-87399000",
+      "variable": "river_stage",
+      "ts_utc": 1793869200,
+      "source": "ana",
+      "value_milli": 2360,
+      "datum_id": "ANA-87399000-regua",
+      "raw_payload_sha256": "0304e7065fd05fd0b62f6085f2ee87c4920e35d98ed3bbfc61beb5b78d265f97"
+    },
+    {
+      "station_id": "ANA-87399000",
+      "variable": "river_stage",
+      "ts_utc": 1793872800,
+      "source": "ana",
+      "value_milli": 2360,
+      "datum_id": "ANA-87399000-regua",
+      "raw_payload_sha256": "c902842b2d799d4f2137ef792dfebd9b2baafe709bf177ad710ad153cdccaa7f"
+    },
+    {
+      "station_id": "ANA-87399000",
+      "variable": "river_stage",
+      "ts_utc": 1793876400,
+      "source": "ana",
+      "value_milli": 2360,
+      "datum_id": "ANA-87399000-regua",
+      "raw_payload_sha256": "722971b8ee88e00d0a74d3667f8073252e59a259f100c0dbcbb2f99684c8d525"
+    },
+    {
+      "station_id": "ANA-87399000",
+      "variable": "river_stage",
+      "ts_utc": 1793880000,
+      "source": "ana",
+      "value_milli": 2360,
+      "datum_id": "ANA-87399000-regua",
+      "raw_payload_sha256": "4797e712cd16b064763a055cf0968a19217dda429df2c19416041406872364f3"
+    },
+    {
+      "station_id": "ANA-87399000",
+      "variable": "river_stage",
+      "ts_utc": 1793883600,
+      "source": "ana",
+      "value_milli": 2360,
+      "datum_id": "ANA-87399000-regua",
+      "raw_payload_sha256": "8724bc763605f0c3169f1731832b2f35f31f58f3b24b41096a9951241ce6be42"
+    },
+    {
+      "station_id": "ANA-87399000",
+      "variable": "river_stage",
+      "ts_utc": 1793887200,
+      "source": "ana",
+      "value_milli": 2360,
+      "datum_id": "ANA-87399000-regua",
+      "raw_payload_sha256": "a4cb0881644066babc01f1051a43d979520383bd3029c9a37ed9f7d3843c4d5a"
+    },
+    {
+      "station_id": "ANA-87399000",
+      "variable": "river_stage",
+      "ts_utc": 1793890800,
+      "source": "ana",
+      "value_milli": 2360,
+      "datum_id": "ANA-87399000-regua",
+      "raw_payload_sha256": "a5347b5f0963c45de1847dde0a0d8a8c16e0f619117390cde02ec98766f8f5a5"
+    },
+    {
+      "station_id": "ANA-87399000",
+      "variable": "river_stage",
+      "ts_utc": 1793894400,
+      "source": "ana",
+      "value_milli": 2360,
+      "datum_id": "ANA-87399000-regua",
+      "raw_payload_sha256": "cb40d4256bb55fe325ac96c485bcea584b810c99458e4ec8800300104da27785"
+    },
+    {
+      "station_id": "ANA-87399000",
+      "variable": "river_stage",
+      "ts_utc": 1793898000,
+      "source": "ana",
+      "value_milli": 2360,
+      "datum_id": "ANA-87399000-regua",
+      "raw_payload_sha256": "4f0ebd8eea4d4e1277d36aec2f764d0d86e0d69e9cde037897ff62daeb6f87bc"
+    },
+    {
+      "station_id": "ANA-87399000",
+      "variable": "river_stage",
+      "ts_utc": 1793901600,
+      "source": "ana",
+      "value_milli": 2360,
+      "datum_id": "ANA-87399000-regua",
+      "raw_payload_sha256": "ed9c94d237c5064a19f067b343c63e69ded546819e99d8fe15a46b6217ea5e98"
+    },
+    {
+      "station_id": "ANA-87399000",
+      "variable": "river_stage",
+      "ts_utc": 1793905200,
+      "source": "ana",
+      "value_milli": 2360,
+      "datum_id": "ANA-87399000-regua",
+      "raw_payload_sha256": "6a1cfbe940f2d02507f3a420c197c404dc5caea2fb81844f86d719d888665861"
+    },
+    {
+      "station_id": "ANA-87399000",
+      "variable": "river_stage",
+      "ts_utc": 1793908800,
+      "source": "ana",
+      "value_milli": 2350,
+      "datum_id": "ANA-87399000-regua",
+      "raw_payload_sha256": "decab7c16a3b49bceaf60e0d25e942e5a536b79e61be4a82b5b4478067658bf6"
+    },
+    {
+      "station_id": "ANA-87399000",
+      "variable": "river_stage",
+      "ts_utc": 1793912400,
+      "source": "ana",
+      "value_milli": 2350,
+      "datum_id": "ANA-87399000-regua",
+      "raw_payload_sha256": "22066253b1a25554b7848305db0730acdb8d1fa8bc9e012333703bc12b7e4c58"
+    },
+    {
+      "station_id": "ANA-87399000",
+      "variable": "river_stage",
+      "ts_utc": 1793916000,
+      "source": "ana",
+      "value_milli": 2350,
+      "datum_id": "ANA-87399000-regua",
+      "raw_payload_sha256": "90c769b3f472b78b1ae7808aa42602413898db80901c1b610fa7a2a20fc005e3"
+    },
+    {
+      "station_id": "ANA-87399000",
+      "variable": "river_stage",
+      "ts_utc": 1793919600,
+      "source": "ana",
+      "value_milli": 2350,
+      "datum_id": "ANA-87399000-regua",
+      "raw_payload_sha256": "33b87eca8940b8010c7291b2b09f6066940c681bcd7dd11a3289405eb5d40cac"
+    },
+    {
+      "station_id": "ANA-87450004",
+      "variable": "river_stage",
+      "ts_utc": 1793836800,
+      "source": "ana",
+      "value_milli": 1040,
+      "datum_id": "ANA-87450004-regua",
+      "raw_payload_sha256": "a2d76725f0e36b855ab6c5d4ab6cd57f6065be55f781b1b3676cc814178ff7d3"
+    },
+    {
+      "station_id": "ANA-87450004",
+      "variable": "river_stage",
+      "ts_utc": 1793840400,
+      "source": "ana",
+      "value_milli": 1090,
+      "datum_id": "ANA-87450004-regua",
+      "raw_payload_sha256": "f7a4576396c7798a30d9ae9eecfc72c25eb4706a53447d792a3dc30968408761"
+    },
+    {
+      "station_id": "ANA-87450004",
+      "variable": "river_stage",
+      "ts_utc": 1793844000,
+      "source": "ana",
+      "value_milli": 1130,
+      "datum_id": "ANA-87450004-regua",
+      "raw_payload_sha256": "c1e91d517eed8bf1a2eb9b5d6ff1b462f268a7a0c3965471eedcb501209ec144"
+    },
+    {
+      "station_id": "ANA-87450004",
+      "variable": "river_stage",
+      "ts_utc": 1793847600,
+      "source": "ana",
+      "value_milli": 1150,
+      "datum_id": "ANA-87450004-regua",
+      "raw_payload_sha256": "597cc2e672aa6bf9cd5aaf4ffee9f4cdf8eb0d36fc809cf1bb5afada1fbfdc25"
+    },
+    {
+      "station_id": "ANA-87450004",
+      "variable": "river_stage",
+      "ts_utc": 1793851200,
+      "source": "ana",
+      "value_milli": 1160,
+      "datum_id": "ANA-87450004-regua",
+      "raw_payload_sha256": "aa9278ad809601fa95be556e2778c5ee3da4ebb832243a6e24bd5618fcd76c28"
+    },
+    {
+      "station_id": "ANA-87450004",
+      "variable": "river_stage",
+      "ts_utc": 1793854800,
+      "source": "ana",
+      "value_milli": 1190,
+      "datum_id": "ANA-87450004-regua",
+      "raw_payload_sha256": "5a68b7028a2106fed9aac333a704602a1410fce0d9e1d2de194bddfee0ff806a"
+    },
+    {
+      "station_id": "ANA-87450004",
+      "variable": "river_stage",
+      "ts_utc": 1793858400,
+      "source": "ana",
+      "value_milli": 1240,
+      "datum_id": "ANA-87450004-regua",
+      "raw_payload_sha256": "3e9a17766f93f54969b0632baf05cb275d10af03f550ed0f65acd9de3410a139"
+    },
+    {
+      "station_id": "ANA-87450004",
+      "variable": "river_stage",
+      "ts_utc": 1793862000,
+      "source": "ana",
+      "value_milli": 1270,
+      "datum_id": "ANA-87450004-regua",
+      "raw_payload_sha256": "e7fb1fd0fae0512abd267279eb5c59ba21a2630683d703737f1cea6e26e4a894"
+    },
+    {
+      "station_id": "ANA-87450004",
+      "variable": "river_stage",
+      "ts_utc": 1793865600,
+      "source": "ana",
+      "value_milli": 1300,
+      "datum_id": "ANA-87450004-regua",
+      "raw_payload_sha256": "fcd33f24a594d361ff6ba3aa8f82035f9142bb33ac68d2199104bbb181dc8dd9"
+    },
+    {
+      "station_id": "ANA-87450004",
+      "variable": "river_stage",
+      "ts_utc": 1793869200,
+      "source": "ana",
+      "value_milli": 1310,
+      "datum_id": "ANA-87450004-regua",
+      "raw_payload_sha256": "153e8e1d1fec794d8a64aa6ebb1f9ed899936837396054b4e227bd98f2084e35"
+    },
+    {
+      "station_id": "ANA-87450004",
+      "variable": "river_stage",
+      "ts_utc": 1793872800,
+      "source": "ana",
+      "value_milli": 1320,
+      "datum_id": "ANA-87450004-regua",
+      "raw_payload_sha256": "d4c4a3f80a8f1b658f29cef7ab0a4b53af54ed31d4bb1e863be4928aec2abc21"
+    },
+    {
+      "station_id": "ANA-87450004",
+      "variable": "river_stage",
+      "ts_utc": 1793876400,
+      "source": "ana",
+      "value_milli": 1320,
+      "datum_id": "ANA-87450004-regua",
+      "raw_payload_sha256": "d0e7769ec75bd94e66d8e99ea038b4c57f19bacfef21bb175d14cde74a3c46e4"
+    },
+    {
+      "station_id": "ANA-87450004",
+      "variable": "river_stage",
+      "ts_utc": 1793880000,
+      "source": "ana",
+      "value_milli": 1310,
+      "datum_id": "ANA-87450004-regua",
+      "raw_payload_sha256": "695760c4460edd9fc9275fc01f4c855894961864cd56bba86add3aad756f9118"
+    },
+    {
+      "station_id": "ANA-87450004",
+      "variable": "river_stage",
+      "ts_utc": 1793883600,
+      "source": "ana",
+      "value_milli": 1300,
+      "datum_id": "ANA-87450004-regua",
+      "raw_payload_sha256": "5aff8ff1ae5fb4823b8cef0c8872e525cc06c53731396a24f67463164fb04aa5"
+    },
+    {
+      "station_id": "ANA-87450004",
+      "variable": "river_stage",
+      "ts_utc": 1793887200,
+      "source": "ana",
+      "value_milli": 1290,
+      "datum_id": "ANA-87450004-regua",
+      "raw_payload_sha256": "65a6c142d5debd23dc089fcab2375b102dd6339d5e4aaed685a37101bd8ca11a"
+    },
+    {
+      "station_id": "ANA-87450004",
+      "variable": "river_stage",
+      "ts_utc": 1793890800,
+      "source": "ana",
+      "value_milli": 1290,
+      "datum_id": "ANA-87450004-regua",
+      "raw_payload_sha256": "0f608956db1b52c382bdf8202cf58ffb79b29b0dfb1efc52e7a38ad54ea52e3f"
+    },
+    {
+      "station_id": "ANA-87450004",
+      "variable": "river_stage",
+      "ts_utc": 1793894400,
+      "source": "ana",
+      "value_milli": 1280,
+      "datum_id": "ANA-87450004-regua",
+      "raw_payload_sha256": "938792c1d113a2ab0f258082ad30b2ed761ccf55b3fc19a847b30b0c36147f5a"
+    },
+    {
+      "station_id": "ANA-87450004",
+      "variable": "river_stage",
+      "ts_utc": 1793898000,
+      "source": "ana",
+      "value_milli": 1270,
+      "datum_id": "ANA-87450004-regua",
+      "raw_payload_sha256": "98662bf17178180563e9fd95407d67ec8a904d5318e5038fa42f62c369fac483"
+    },
+    {
+      "station_id": "ANA-87450004",
+      "variable": "river_stage",
+      "ts_utc": 1793901600,
+      "source": "ana",
+      "value_milli": 1290,
+      "datum_id": "ANA-87450004-regua",
+      "raw_payload_sha256": "e26194184748d3509f3eac0198cc01b9d3b7607df609b193db96a98de93c3b74"
+    },
+    {
+      "station_id": "ANA-87450004",
+      "variable": "river_stage",
+      "ts_utc": 1793905200,
+      "source": "ana",
+      "value_milli": 1330,
+      "datum_id": "ANA-87450004-regua",
+      "raw_payload_sha256": "7237df18bf8373fc958d4f7c2836d33ab9d0936ead05ce28eaf79d85a92945bf"
+    },
+    {
+      "station_id": "ANA-87450004",
+      "variable": "river_stage",
+      "ts_utc": 1793908800,
+      "source": "ana",
+      "value_milli": 1350,
+      "datum_id": "ANA-87450004-regua",
+      "raw_payload_sha256": "d3f90623814dbc62d90e7d1a3f9b18d8fb9bd2fbcde27c19ccb2e3d3b58e48fc"
+    },
+    {
+      "station_id": "ANA-87450004",
+      "variable": "river_stage",
+      "ts_utc": 1793912400,
+      "source": "ana",
+      "value_milli": 1370,
+      "datum_id": "ANA-87450004-regua",
+      "raw_payload_sha256": "a979c1c546da73262f92015036677af281baf0a46a09185a4ca2126b10314613"
+    },
+    {
+      "station_id": "ANA-87450004",
+      "variable": "river_stage",
+      "ts_utc": 1793916000,
+      "source": "ana",
+      "value_milli": 1360,
+      "datum_id": "ANA-87450004-regua",
+      "raw_payload_sha256": "38cb87d94192fde5a1dd08581105c84efb83879327d12974b4de2400ad957e36"
+    },
+    {
+      "station_id": "ANA-87450004",
+      "variable": "river_stage",
+      "ts_utc": 1793919600,
+      "source": "ana",
+      "value_milli": 1370,
+      "datum_id": "ANA-87450004-regua",
+      "raw_payload_sha256": "4b797e010cb4f78adf1ba6ba54b6c60212fec01534d95752420f67d10208b167"
+    },
+    {
+      "station_id": "GLOFAS-CAI",
+      "variable": "river_discharge",
+      "ts_utc": 1793836800,
+      "source": "open_meteo_glofas",
+      "value_milli": 342560,
+      "datum_id": null,
+      "raw_payload_sha256": "4153b4c13a20e5ae9089aec63050a688d90886f65856d4262b840bb93246f55b"
+    },
+    {
+      "station_id": "GLOFAS-GRAVATAI",
+      "variable": "river_discharge",
+      "ts_utc": 1793836800,
+      "source": "open_meteo_glofas",
+      "value_milli": 40110,
+      "datum_id": null,
+      "raw_payload_sha256": "b3dadf07bf6b88f70c6e77f0e53d9cf1dedfc72779e5bb68d36073ae984a7204"
+    },
+    {
+      "station_id": "GLOFAS-GUAIBA",
+      "variable": "river_discharge",
+      "ts_utc": 1793836800,
+      "source": "open_meteo_glofas",
+      "value_milli": 1985100,
+      "datum_id": null,
+      "raw_payload_sha256": "5a20b3371ae49dd13a45f99d756348a151e12eda0e8545d5d602c97e871b519c"
+    },
+    {
+      "station_id": "GLOFAS-JACUI",
+      "variable": "river_discharge",
+      "ts_utc": 1793836800,
+      "source": "open_meteo_glofas",
+      "value_milli": 1971420,
+      "datum_id": null,
+      "raw_payload_sha256": "04ea090a722f2842e9f7fa740b70781e1aef1f426b2d361a6eb1e1b9965d6d66"
+    },
+    {
+      "station_id": "GLOFAS-SINOS",
+      "variable": "river_discharge",
+      "ts_utc": 1793836800,
+      "source": "open_meteo_glofas",
+      "value_milli": 283450,
+      "datum_id": null,
+      "raw_payload_sha256": "2df7f5fc27d4087944a41e3b01f6d3c0edd90bf69665c89e494698052284c98a"
+    },
+    {
+      "station_id": "GLOFAS-TAQUARI",
+      "variable": "river_discharge",
+      "ts_utc": 1793836800,
+      "source": "open_meteo_glofas",
+      "value_milli": 1551390,
+      "datum_id": null,
+      "raw_payload_sha256": "03542173cd486d8e519bb90700dd7ff3ade698dd3408e73f92916f9c459cf378"
+    }
+  ]
+}

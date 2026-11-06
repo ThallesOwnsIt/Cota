@@ -2,14 +2,15 @@
   "program": "FnjR7wG5zicqWJ6KQuWQ5UcqqhcSghrYozVgMmmDFNwR",
   "registry": "6CNtD18LQ4bBZTGK1C2Z6RuJrSwyxCD3ToRpiWE3y9bR",
   "accumulator": {
-    "records": 134,
-    "on_chain": 134,
+    "records": 136,
+    "on_chain": 136,
     "peaks_match": true,
-    "root": "7f55d0b91b0d474e2df4c13bd91c2eafa056c878e724c317b9618955c64585f8",
+    "root": "6ae55ce1ac0a56c583e00c91d035512c311605e8ba19d627f42879c309f3c2f7",
     "kinds": {
-      "batch": 36,
+      "batch": 37,
       "degradation": 3,
       "forecast": 72,
+      "outlook": 1,
       "public_alert": 5,
       "station": 18
     }
@@ -408,6 +409,17 @@
       "t_end": 1716681600,
       "slot": 519073653,
       "committed_at": 1793914165,
+      "signers": 7,
+      "problems": []
+    },
+    {
+      "batch_id": 37,
+      "record_index": 134,
+      "day": "2026-11-05",
+      "t_start": 1793836800,
+      "t_end": 1793923200,
+      "slot": 519158512,
+      "committed_at": 1793934418,
       "signers": 7,
       "problems": []
     }
@@ -1763,7 +1775,17 @@
       "problems": []
     }
   ],
-  "outlooks": [],
+  "outlooks": [
+    {
+      "day": "2026-11-05",
+      "record_index": 135,
+      "rain_mean_milli": 7838,
+      "triggered": false,
+      "slot": 519158520,
+      "next_batch_slot": null,
+      "problems": []
+    }
+  ],
   "vaults": [
     {
       "name": "ao-vivo",
@@ -1784,7 +1806,7 @@
   "summary": {
     "alerts": 31,
     "alerts_recorded_before_observation": 31,
-    "batches": 36,
+    "batches": 37,
     "batches_with_problems": 0,
     "early_warnings": 0,
     "forecasts": 72,
@@ -1792,11 +1814,11 @@
     "forecasts_observed": 69,
     "forecasts_recorded_before_observation": 69,
     "forecasts_with_problems": 0,
-    "outlooks": 0,
+    "outlooks": 1,
     "outlooks_with_problems": 0,
     "public_alerts": 5,
     "public_alerts_with_problems": 0,
-    "records": 134,
+    "records": 136,
     "unmatched": 0,
     "vault_payouts": 3,
     "vaults": 2,
