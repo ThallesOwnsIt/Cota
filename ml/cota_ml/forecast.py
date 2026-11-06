@@ -61,7 +61,9 @@ def load_ledger(ledger: Path, until: date, archive: Path | None = None) -> tuple
 
 
 def forecast(readings: list[dict], last: dict, day: date, models, widen, manifest) -> dict | None:
-    table = feature_table(daily_table(pl.DataFrame(readings))).filter(pl.col("day") == day)
+    # Types inferred from every row: older readings have no `datum_id` (rain, discharge), the river gauges do,
+    # and the first ones only show up after hundreds of rows.
+    table = feature_table(daily_table(pl.DataFrame(readings, infer_schema_length=None))).filter(pl.col("day") == day)
     if table.is_empty() or table["lq0"][0] is None:
         return None  # no Guaíba discharge on that day: there is no honest forecast to make
 
