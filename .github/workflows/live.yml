@@ -9,7 +9,8 @@
 #
 # Secrets: NODE_1_KEY, NODE_2_KEY, NODE_3_KEY and OPERATOR_KEY (contents of the JSON keypairs);
 #          ANA_IDENTIFICADOR and ANA_SENHA (HidroWebService login, river level from gauges);
-#          ARCHIVE_KEY (keys/archive.json: signs the free Arweave uploads, holds no balance).
+#          ARCHIVE_KEY (keys/archive.json: signs the free Arweave uploads, holds no balance);
+#          RPC_URL (optional: a dedicated devnet RPC endpoint).
 # Safety switch: only runs with the repository variable COTA_LIVE_ENABLED = true (turn it on after
 # setting up the secrets and handing the committee authority to the operator).
 name: Cota ao vivo
@@ -27,7 +28,9 @@ permissions:
   contents: write
 
 env:
-  RPC: https://api.devnet.solana.com
+  # A dedicated RPC (e.g. Helius' free plan) in the RPC_URL secret, if set; the public devnet RPC otherwise,
+  # which throttles bursts (the tools retry on 429). The dashboard always reads the public one.
+  RPC: ${{ secrets.RPC_URL || 'https://api.devnet.solana.com' }}
   CLUSTER: devnet
   CARGO_TERM_COLOR: never
 
@@ -102,6 +105,11 @@ jobs:
         with:
           pattern: node-*
           path: data/nodes
+      # Independent nodes run by other institutions publish their signatures elsewhere (config/nodes.toml);
+      # they count only if their keys are committee members on-chain.
+      - name: Nós externos
+        continue-on-error: true
+        run: python3 scripts/fetch_nodes.py
       - name: Chave do operador
         env:
           KEY: ${{ secrets.OPERATOR_KEY }}

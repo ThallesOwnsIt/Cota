@@ -1,0 +1,9 @@
+# Independent oracle nodes: where each one publishes its signatures (scripts/node_run.sh).
+# The aggregator downloads them before every run (scripts/fetch_nodes.py) and only counts signatures from keys
+# that are committee members on-chain. Adding a node here does not make it a member: that needs a multisig
+# proposal (`rotate_member`), see docs/running-a-node.md.
+#
+# [[node]]
+# name = "universidade-x"                       # folder name under data/nodes/
+# url = "https://universidade-x.github.io/cota" # folder with index.json
+# member = "<public key of the node>"           # informational; the chain decides

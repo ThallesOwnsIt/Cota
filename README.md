@@ -99,7 +99,8 @@ Vault: `cota-vault --rpc … --payer <wallet> create --name … --id 1 --kind ea
 chain what has 2 of 3 signatures, then commits `data/ledger` and `dashboard/data`.
 
 Repository secrets (Settings → Secrets and variables → Actions): `NODE_1_KEY`, `NODE_2_KEY`, `NODE_3_KEY` and `OPERATOR_KEY`, with
-the contents of `keys/node-N.json` and `keys/operator.json`; `ANA_IDENTIFICADOR` and `ANA_SENHA`, the HidroWebService login used
+the contents of `keys/node-N.json` and `keys/operator.json`; optionally `RPC_URL`, a dedicated devnet RPC endpoint (the public
+one throttles bursts); `ANA_IDENTIFICADOR` and `ANA_SENHA`, the HidroWebService login used
 by the nodes to read the river gauges (locally they go in `.env`, which git ignores). The operator is the committee authority (`cota-admin set-authority`).
 
 ## Copies outside GitHub
@@ -134,8 +135,11 @@ residual risks: [`docs/security-review.md`](docs/security-review.md).
 ## Known limits
 
 - The three oracles, and the three keys of the upgrade multisig, are held by the same person today (separate GitHub Actions jobs,
-  separate key files).
-  The next step is handing them to different institutions (civil defense, universities, NGOs).
+  separate key files). The next step is handing them to different institutions (civil defense, universities, NGOs): a node runs
+  on any machine with `scripts/node_run.sh` and publishes its signatures as static files, which the aggregator downloads
+  (`config/nodes.toml`). See [`docs/running-a-node.md`](docs/running-a-node.md).
+- GitHub's scheduler runs the workflow every 4 to 8 hours instead of every 30 minutes. Daily batches are fine; short-lived
+  warnings may be missed until nodes run on their own machines. The dashboard flags a day missing for more than 12 hours.
 - The forecast is of the **daily discharge modelled by GloFAS**, 1 and 2 days ahead, not of the river gauge level. Gauge levels
   from ANA are recorded since November 2026, but the model has not been trained on them yet.
 - ANA gauges are read once per hour (the value on the hour). If ANA is down, the batch still goes out and the hours count as

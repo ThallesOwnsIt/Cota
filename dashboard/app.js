@@ -844,6 +844,19 @@ function renderLive() {
       `Latest batch: ${dmy(d.day)} (batch ${d.batch_id}), anchored ${br(d.committed_at)} (Brasília time). ` +
         `${LV.days.length} day(s) since ${dmy(LV.days[0].day)}. Level measured on ANA gauges; flow modelled by GloFAS; INMET rain comes in about 1 month late.`,
     );
+    // Each day's batch goes in on the robot's first run after the day closes (00:00 UTC), within a few hours.
+    // A day closed more than 12 h ago and still missing means the robot or a source stopped.
+    const nextEnd = Date.parse(d.day) + 2 * 864e5;
+    const behind = Math.floor((Date.now() - nextEnd + 864e5) / 864e5);
+    if (Date.now() > nextEnd + 12 * 3600e3) {
+      $("#live-sub").insertAdjacentHTML(
+        "afterbegin",
+        `<strong class="crit-text">${L(
+          `⚠ O registro está ${behind} dia(s) atrasado: o último dia gravado é ${dmy(d.day)}. `,
+          `⚠ The record is ${behind} day(s) behind: the latest recorded day is ${dmy(d.day)}. `,
+        )}</strong>`,
+      );
+    }
     const is = LV.issues.at(-1);
     const fc = (h) => is?.horizons.find((f) => f.horizon_hours === h);
     const alerting = is?.horizons.filter((f) => f.alert) ?? [];
