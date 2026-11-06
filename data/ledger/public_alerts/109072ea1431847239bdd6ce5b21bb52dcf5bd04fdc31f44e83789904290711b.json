@@ -1,0 +1,35 @@
+{
+  "cluster": "devnet",
+  "committed_at": 1793988685,
+  "content": "{\"alterado\":false,\"aviso_cor\":\"#FFFE00\",\"codigo\":\"urn:oid:2.49.0.0.76.0.2026.28647.1\",\"created_at\":\"2026-11-06T00:00:00.000Z\",\"data_fim\":\"2026-11-08T00:00:00.000Z\",\"data_inicio\":\"2026-11-08T00:00:00.000Z\",\"descricao\":\"Ventos Costeiros\",\"encerrado\":false,\"estados\":\"Santa Catarina,Rio Grande do Sul,São Paulo,Paraná\",\"fim\":\"2026-11-08 23:59\",\"geocodes\":\"4200606,4200903,4201208,4201307,4201406,4201505,4301057,4201950,4202057,4202008,4202073,4212809,4220000,3505401,4202107,4202305,4202453,4202800,4202909,3509254,4203204,3509908,4203709,4304630,4203956,4304713,4204251,4204608,4306551,4205191,4205407,4205456,4205704,4205803,4205902,4206009,4206207,4206504,4109500,4109609,4207007,3520301,3520426,4207106,4207205,4310330,4207304,4208203,4208302,4208450,4310652,4208708,3524600,4208807,4209102,4209409,4210001,4210209,4311734,4311775,4210407,4210605,4115705,4210803,4312443,4211207,4211256,4211306,4211504,4211603,4211702,4313508,4211900,4118204,3536208,4212254,4212304,4212403,4212502,4212650,4119954,4213500,4213807,3542602,4315750,4215455,4215653,4215703,4215901,4318200,4216206,4216305,4216354,4216404,4216602,4217006,4217105,4217253,4217600,4217709,4321436,4218004,4321501,4321600,4321667,4321832,4218400,4218707,4218806,4219002,4323804\",\"hora_fim\":\"23:59\",\"hora_inicio\":\"00:00\",\"id_aviso\":28647,\"id_condicao_severa\":37,\"id_icone\":97,\"id_sequencia\":1,\"id_severidade\":6,\"id_usuario\":105,\"inicio\":\"2026-11-08 00:00\",\"instrucoes\":[\"Contate a Defesa Civil (telefone: 199).\"],\"issuer\":\"inmet\",\"mesorregioes\":\"Grande Florianópolis,Norte Catarinense,Sul Catarinense,Metropolitana de Porto Alegre,Vale do Itajaí,Litoral Sul Paulista,Metropolitana de Curitiba,Nordeste Rio-grandense\",\"microrregioes\":\"Tabuleiro,Tijucas,Florianópolis,Joinville,Araranguá,Tubarão,Osório,Itajaí,Criciúma,Registro,Blumenau,Paranaguá,Gramado-Canela,Vacaria\",\"municipios\":\"Águas Mornas - SC (4200606),Angelina - SC (4200903),Antônio Carlos - SC (4201208),Araquari - SC (4201307),Araranguá - SC (4201406),Armazém - SC (4201505),Arroio do Sal - RS (4301057),Balneário Arroio do Silva - SC (4201950),Balneário Barra do Sul - SC (4202057),Balneário Camboriú - SC (4202008),Balneário Gaivota - SC (4202073),Balneário Piçarras - SC (4212809),Balneário Rincão - SC (4220000),Barra do Turvo - SP (3505401),Barra Velha - SC (4202107),Biguaçu - SC (4202305),Bombinhas - SC (4202453),Braço do Norte - SC (4202800),Brusque - SC (4202909),Cajati - SP (3509254),Camboriú - SC (4203204),Cananéia - SP (3509908),Canelinha - SC (4203709),Capão da Canoa - RS (4304630),Capivari de Baixo - SC (4203956),Caraá - RS (4304713),Cocal do Sul - SC (4204251),Criciúma - SC (4204608),Dom Pedro de Alcântara - RS (4306551),Ermo - SC (4205191),Florianópolis - SC (4205407),Forquilhinha - SC (4205456),Garopaba - SC (4205704),Garuva - SC (4205803),Gaspar - SC (4205902),Governador Celso Ramos - SC (4206009),Gravatal - SC (4206207),Guaramirim - SC (4206504),Guaraqueçaba - PR (4109500),Guaratuba - PR (4109609),Içara - SC (4207007),Iguape - SP (3520301),Ilha Comprida - SP (3520426),Ilhota - SC (4207106),Imaruí - SC (4207205),Imbé - RS (4310330),Imbituba - SC (4207304),Itajaí - SC (4208203),Itapema - SC (4208302),Itapoá - SC (4208450),Itati - RS (4310652),Jacinto Machado - SC (4208708),Jacupiranga - SP (3524600),Jaguaruna - SC (4208807),Joinville - SC (4209102),Laguna - SC (4209409),Luiz Alves - SC (4210001),Major Gercino - SC (4210209),Mampituba - RS (4311734),Maquiné - RS (4311775),Maracajá - SC (4210407),Massaranduba - SC (4210605),Matinhos - PR (4115705),Meleiro - SC (4210803),Morrinhos do Sul - RS (4312443),Morro da Fumaça - SC (4211207),Morro Grande - SC (4211256),Navegantes - SC (4211306),Nova Trento - SC (4211504),Nova Veneza - SC (4211603),Orleans - SC (4211702),Osório - RS (4313508),Palhoça - SC (4211900),Paranaguá - PR (4118204),Pariquera-Açu - SP (3536208),Passo de Torres - SC (4212254),Paulo Lopes - SC (4212304),Pedras Grandes - SC (4212403),Penha - SC (4212502),Pescaria Brava - SC (4212650),Pontal do Paraná - PR (4119954),Porto Belo - SC (4213500),Praia Grande - SC (4213807),Registro - SP (3542602),Riozinho - RS (4315750),Sangão - SC (4215455),Santa Rosa do Sul - SC (4215653),Santo Amaro da Imperatriz - SC (4215703),São Bonifácio - SC (4215901),São Francisco de Paula - RS (4318200),São Francisco do Sul - SC (4216206),São João Batista - SC (4216305),São João do Itaperiú - SC (4216354),São João do Sul - SC (4216404),São José - SC (4216602),São Ludgero - SC (4217006),São Martinho - SC (4217105),São Pedro de Alcântara - SC (4217253),Siderópolis - SC (4217600),Sombrio - SC (4217709),Terra de Areia - RS (4321436),Tijucas - SC (4218004),Torres - RS (4321501),Tramandaí - RS (4321600),Três Cachoeiras - RS (4321667),Três Forquilhas - RS (4321832),Treze de Maio - SC (4218400),Tubarão - SC (4218707),Turvo - SC (4218806),Urussanga - SC (4219002),Xangri-lá - RS (4323804)\",\"poligono\":\"{\\\"type\\\":\\\"Polygon\\\",\\\"coordinates\\\":[[[-47.515869,-24.826625],[-47.702637,-24.637031],[-47.966309,-24.637031],[-48.460693,-25.214881],[-48.691406,-25.720735],[-48.933105,-26.539394],[-48.900146,-27.264396],[-48.988037,-28.101058],[-49.273682,-28.488005],[-49.669189,-28.8158],[-50.130615,-29.42046],[-50.339355,-29.688053],[-50.240479,-29.97397],[-50.075684,-30.040566],[-49.987793,-29.935895],[-49.625244,-29.363027],[-49.086914,-28.921631],[-48.515625,-28.430053],[-48.328857,-27.926474],[-48.251953,-27.410786],[-48.504639,-26.765231],[-48.339844,-26.066652],[-48.02124,-25.473033],[-47.537842,-25.095549],[-47.515869,-24.826625]]]}\",\"referencia\":null,\"regioes\":\"Sul,Sudeste\",\"riscos\":[\"Intensificação dos ventos nas regiões litorâneas, movimentando dunas de areia sobre construções na orla.\"],\"severidade\":\"Perigo Potencial\",\"updated_at\":\"2026-11-06T00:00:00.000Z\"}",
+  "description": "Ventos Costeiros",
+  "explorer": "https://explorer.solana.com/tx/3VzEUPpfk6dt3m1vK9yjk34mUp4jCBMDCkyVNFY1cspQh7WV8TsVcfSm34VMYjUZpNgLHHBP4bAEXMMqZTr58ibN?cluster=devnet",
+  "header": {
+    "alert_id": "urn:oid:2.49.0.0.76.0.2026.28647.1",
+    "content_sha256": "109072ea1431847239bdd6ce5b21bb52dcf5bd04fdc31f44e83789904290711b",
+    "expires": 1794193140,
+    "issuer": "inmet",
+    "onset": 1794106800,
+    "severity": 1
+  },
+  "observations": [
+    {
+      "member": "AFbz6rqf4u7pexBHadriqd9VNDh74KGqEeZG5eeQKTs3",
+      "seen_at": 1793988570
+    },
+    {
+      "member": "B4FwxN42zWyiSKU7qwvbpchy7uDD8ugnzX43B9mPd38L",
+      "seen_at": 1793988565
+    },
+    {
+      "member": "GS3uQUPgfCDXqtbpD6vPyNpQgRcDUFj1fhF4wYGk9ist",
+      "seen_at": 1793988573
+    }
+  ],
+  "record_index": 142,
+  "severity_label": "Perigo Potencial",
+  "signers": 7,
+  "slot": 519384950,
+  "states": "Santa Catarina,Rio Grande do Sul,São Paulo,Paraná",
+  "tx_signature": "3VzEUPpfk6dt3m1vK9yjk34mUp4jCBMDCkyVNFY1cspQh7WV8TsVcfSm34VMYjUZpNgLHHBP4bAEXMMqZTr58ibN"
+}
