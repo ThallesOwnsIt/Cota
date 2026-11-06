@@ -23,6 +23,15 @@
       "proposal": 2,
       "what": "time lock 60 s -> 86400 s",
       "tx": "3k5W79zJPfuf3T1phK9J4z2xSX3HdkD9gC8Bc9KmpDMnmPZYjw5W4FA9BbpXh5dBLQHaLiAb9Af352Zy1KHZjsky"
+    },
+    {
+      "proposal": 3,
+      "what": "security fixes of docs/security-review.md (admin-only members, operator and rules; one payout per event)",
+      "buffer": "GPAj1y9xSStkVrrtBTmNVLPj7ikQ798Q4M9e2g4kF2Gv",
+      "so_sha256_prefix": "d4dad4f23b93b38b",
+      "approved_at": "2026-11-06T00:40:26Z",
+      "executable_from": "2026-11-07T00:40:26Z",
+      "status": "waiting"
     }
   ]
 }
