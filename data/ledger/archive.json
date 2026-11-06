@@ -3,9 +3,9 @@
  "note": "path -> Arweave id of its latest gzipped copy; records.jsonl in chunks",
  "files": {
   "data/ledger/audit.json": {
-   "sha256": "f2f9eccd482b9d974d9021cd0d8b3a816c1e8f918c96bc16f7fd11120306bce1",
-   "id": "450iI3gUpHfZ8Xbpxr-5CEDhFGa3UYLmw-pYEVQRWo0",
-   "bytes": 4914
+   "sha256": "47e1f83da028d8f36eb244080daf8817c563ac518d328c9434adcc57a59640df",
+   "id": "n4Q2F8fpXopDcWQ5fk0K-tDNn3vDdUM8anaw08PmgJc",
+   "bytes": 5133
   },
   "data/ledger/batches/00001.json": {
    "sha256": "c764b273b95f359854739c3ec9a3a5f202234c144ab3eb7dbfdf32efb8b6941e",
@@ -408,14 +408,14 @@
    "bytes": 234
   },
   "data/ledger/timestamps/000134.txt.ots": {
-   "sha256": "46223dd227c241beb9dd90255992360fdd79e916a18ef9002a76a5666f3032f9",
-   "id": "kkMTbOL7j1HXQbUhqXYmQL68SLIyGpFW3RFvDCCMeMc",
-   "bytes": 635
+   "sha256": "892bed4e965061632e98969a8dc736592a6d8cc8131f7f994638c4789cf08fa9",
+   "id": "bxyXlM7AGT5FFA2XOjT5UoR-_V3Lw2krxwzOmLSlgsg",
+   "bytes": 1536
   },
   "data/ledger/timestamps/index.json": {
-   "sha256": "cc2bc0a60b6812fe2f687c710cc109f69d696723e857c38329b33507c98dacf7",
-   "id": "V9mQvNCIS3xIAShQdpqqnajG_DZ0PavA8r86xPzvcNE",
-   "bytes": 242
+   "sha256": "c48394127f99d27242559f4fd7011c691073460fd4dd0b30d23a57f779e44d23",
+   "id": "40xrtEkSBX0IEe0OJ1LSbqlV7ewMS6Ik08kWfl03N1I",
+   "bytes": 240
   },
   "data/ledger/vaults/ao-vivo.json": {
    "sha256": "a4dfa4a9757bce2133115d431d1df7f2ea466c6004176e1869365b4eaf116c62",
@@ -1216,6 +1216,56 @@
    "sha256": "8888ada30ac69303f5cdf7434e8749230a4bf2a6cdcf17540b9665ee1d65871e",
    "id": "59VXToi_jTX8_Mr2_eYmeCXgo5eLVq6FuMSF6bayAmI",
    "bytes": 978
+  },
+  "data/ledger/batches/00037.json": {
+   "sha256": "608f3aeeaa3ff0951e77109bbaba9d28f895f73ed0af0a4cc8334a550f574023",
+   "id": "IatchY6vC6OLV1_vVS92ntdCoLDOwkXiBTer29uYC6g",
+   "bytes": 8242
+  },
+  "data/ledger/forecasts/2026-11-05.json": {
+   "sha256": "ddfc14fa4b42c1c46b1fda7cf52fe6ff8752a667f687fc37f942f87926a0efd2",
+   "id": "rpdtKCAN3kkOKp3yibTbW25cd2Ue98wmpJWwn_xHb6o",
+   "bytes": 912
+  },
+  "data/ledger/outlooks/2026-11-05.json": {
+   "sha256": "5b0735813fb9668ba0888aa28c9144b2cc3ab06b36925891be4ae6e5b8a4c615",
+   "id": "we7paVsYYqskEnfNxUw0cGHagJKJNmRBSYEAyp71wmg",
+   "bytes": 942
+  },
+  "data/ledger/public_alerts/0bfa0af212a34211bc16885ea5574d012cc913ff2606b8ea78cd84e90621451a.json": {
+   "sha256": "327d31e46e510f2258c008432ce3a845caf2757c05998c92cda1183d3978e53b",
+   "id": "Ft1tcnUWKBwk-iCZnqVYnjn7ViGmQ3fr-46Sj_AUUN8",
+   "bytes": 1575
+  },
+  "data/ledger/public_alerts/109072ea1431847239bdd6ce5b21bb52dcf5bd04fdc31f44e83789904290711b.json": {
+   "sha256": "355c584e9d9fb1277a6808c7bde14c19df1327012a1561cd9913591821e16c67",
+   "id": "ljSkPjza_yiot9pL9HFCEJIoUckJNTpIWCnbErf8_m8",
+   "bytes": 3221
+  },
+  "data/ledger/public_alerts/1dbf00637919af40c801b72290b69127da743caf37af8cc4070da05269531f51.json": {
+   "sha256": "b0483615e7c885f6ef8764cee188a589213d54cae69fb69446d1b70f6ee308ab",
+   "id": "xcvEz0X6rChiw7_yzAnLYq2GRnoqWz2uZn-TlArmJ1g",
+   "bytes": 13732
+  },
+  "data/ledger/public_alerts/8434957fff40df2f9768c3c96a5bd3c01bbc8030a7b71a33af27cb255ac938ee.json": {
+   "sha256": "f1ab136a48714e6049e3a6ffe7b5db2a59e5204fcf0ea3e5e7b9dbe4bbc3520d",
+   "id": "uPz0k7YZYYrVIHt4Z0NE4hvS913Qw-qzsdpynSxY-Jo",
+   "bytes": 6270
+  },
+  "data/ledger/public_alerts/9d177016c71a01a8a6bbd809eeb1e6b27478674f443a8342479afb21fe1cd531.json": {
+   "sha256": "abfb9fe65c917ecea5311c0920e4edf9539094aba2359501907537a94987bbaa",
+   "id": "0UJYiwPybMCwq8jcwT2Z2LZRkVgS8_ds-Gt02UVRP_E",
+   "bytes": 42592
+  },
+  "data/ledger/public_alerts/d6a3b1d8d100b7e57e6d3037f58ed5a69c368a4432c31e69728d2d83000d32ef.json": {
+   "sha256": "0c75daa1a6ca33dc3610bb847cc21f7a2e3db998b353a57a888b6ae3a07a81b6",
+   "id": "4IWAM0U-oS0u6bqmRXu--2Pr_kfEtWTtDolWPCpg6a8",
+   "bytes": 6470
+  },
+  "data/ledger/public_alerts/fef967218f2d80a2059fde615827ec61b6c673f059e3d7e2ea67b4a988c20162.json": {
+   "sha256": "8e1cac402d00c210263c547815ca33dce47fb2a855a5c3db9b241b6e70305b5b",
+   "id": "ApnfcoNIaTaA6u4Nxoq9Z6fxiRUitJzeYgTnQ-q-3Gs",
+   "bytes": 16702
   }
  },
  "records": [
@@ -1225,8 +1275,15 @@
    "sha256": "d0c443381b487b11a3e0c5c446b11a6a052a934cdfc59e326c4bb88f6239cbc8",
    "id": "fWqtxfxDUUZSo6Uci2E9OsRcgmwhwj0cjLYR8o205Xo",
    "bytes": 24201
+  },
+  {
+   "from": 134,
+   "to": 144,
+   "sha256": "576239279cba37dab1d0c6f5bb6a7b1ce28ecb0517470e221e8a50d1a7c6373a",
+   "id": "BrBok2pW0G6cgYt-sDPfexI9lC3UUa3RAw3hKRa9Tvw",
+   "bytes": 2246
   }
  ],
- "bytes": 1646952,
+ "bytes": 1756765,
  "signer": "7kw7om2uMrnSaJBZXriH6TAVpQrsN7Eoq7dtsqgb6Lww"
 }
