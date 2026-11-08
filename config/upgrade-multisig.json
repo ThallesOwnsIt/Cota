@@ -31,7 +31,10 @@
       "so_sha256_prefix": "d4dad4f23b93b38b",
       "approved_at": "2026-11-06T00:40:26Z",
       "executable_from": "2026-11-07T00:40:26Z",
-      "status": "waiting"
+      "status": "executed",
+      "slot": 519957316,
+      "tx": "5a3CmHeTS4sBHghZCiwGY2ZH5ofk8VZwPbuRqCYmgetuYqYDKjAdAncLUNZ8874MtDr5HkQXhBfqFb5Ta4Tt4pUg",
+      "note": "program data extended by 70000 bytes first (the new code is larger); extending only adds space"
     }
   ]
 }

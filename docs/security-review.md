@@ -124,4 +124,6 @@ Built from this commit and proposed as a multisig upgrade of program v2. It wait
 executed, which is the protection working as intended: anyone can compare the proposed buffer with this code
 during the wait. Proposal 3 (buffer `GPAj1y9xSStkVrrtBTmNVLPj7ikQ798Q4M9e2g4kF2Gv`, SHA-256 of the code starting `d4dad4f2`) was approved by 2 of 3 on
 2026-11-06 00:40 UTC and can be executed from 2026-11-07 00:40 UTC: `node scripts/squads/squads.mjs execute --index 3`.
-Until then the program on devnet still has F1 and F2; no vault there holds real money. Status in `config/upgrade-multisig.json`.
+Executed on 2026-11-08 (slot 519957316) after the full wait, once the program account was extended to fit the larger code.
+The code on-chain was compared byte for byte with the reviewed build, and F1 was checked on devnet: the operator key
+trying `set_authority` gets `Unauthorized`.

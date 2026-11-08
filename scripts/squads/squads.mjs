@@ -135,6 +135,17 @@ async function proposeUpgrade() {
   const { multisigPda, vaultPda, programId } = settings();
   if (!arg("buffer")) throw new Error("--buffer é obrigatório");
   const buffer = new PublicKey(arg("buffer"));
+  // The program account must already have room for the new code, or the upgrade fails only at execution, a day
+  // later. Buffer = 37-byte header + code; ProgramData = 45-byte header + reserved space.
+  const [buf, pd] = await Promise.all([connection.getAccountInfo(buffer), connection.getAccountInfo(programData(programId))]);
+  if (!buf || !pd) throw new Error("buffer ou programa não encontrado");
+  const code = buf.data.length - 37;
+  const room = pd.data.length - 45;
+  if (code > room) {
+    throw new Error(
+      `o código novo (${code} bytes) não cabe no espaço do programa (${room}); antes, rode: solana program extend ${programId.toBase58()} ${code - room + 4096}`,
+    );
+  }
   // BPF upgradeable loader, instruction 3 = Upgrade.
   const upgrade = new TransactionInstruction({
     programId: LOADER,
