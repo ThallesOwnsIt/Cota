@@ -1213,9 +1213,9 @@
    "bytes": 837
   },
   "config/upgrade-multisig.json": {
-   "sha256": "8888ada30ac69303f5cdf7434e8749230a4bf2a6cdcf17540b9665ee1d65871e",
-   "id": "59VXToi_jTX8_Mr2_eYmeCXgo5eLVq6FuMSF6bayAmI",
-   "bytes": 978
+   "sha256": "4ff4ece493c9161f8151c016de03d63bac08e226be7fa81c6a7e6fb9883f2f4c",
+   "id": "k8qynKpxIN3o4PklXUK_nCZHwfOU8wTpuDvh9e-r7Oo",
+   "bytes": 1122
   },
   "data/ledger/batches/00037.json": {
    "sha256": "608f3aeeaa3ff0951e77109bbaba9d28f895f73ed0af0a4cc8334a550f574023",
@@ -1370,6 +1370,6 @@
    "bytes": 979
   }
  ],
- "bytes": 1862070,
+ "bytes": 1863192,
  "signer": "7kw7om2uMrnSaJBZXriH6TAVpQrsN7Eoq7dtsqgb6Lww"
 }
