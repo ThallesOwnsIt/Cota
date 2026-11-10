@@ -1,0 +1,39 @@
+{
+  "based_on_batch_id": 41,
+  "cluster": "devnet",
+  "committed_at": 1794270945,
+  "content": "{\"issued_at\":1794268800,\"models\":{\"ecmwf_ifs025\":{\"A801\":[0,5,28,0,9],\"A837\":[0,21,30,15,15],\"A840\":[0,3,47,19,9],\"A879\":[0,3,69,9,14],\"A882\":[0,33,35,1,12],\"B807\":[0,5,28,0,9]},\"gfs_global\":{\"A801\":[0,0,3,0,0],\"A837\":[0,0,43,0,10],\"A840\":[0,1,6,0,15],\"A879\":[0,2,60,2,22],\"A882\":[0,0,2,0,0],\"B807\":[0,0,2,0,2]},\"icon_global\":{\"A801\":[0,0,0,0,0],\"A837\":[0,6,11,0,7],\"A840\":[0,2,2,0,0],\"A879\":[0,0,0,0,0],\"A882\":[0,2,0,0,0],\"B807\":[0,0,0,0,0]}},\"region\":\"guaiba\",\"rule_sha256\":\"cf517e266d9491bf323f06cd9b4badf646d847885dc6b3da9628d543de1b860d\",\"run\":\"2026-11-09T00:00Z\",\"unit\":\"0.1 mm/dia\",\"window\":[\"2026-11-10\",\"2026-11-14\"]}",
+  "day": "2026-11-09",
+  "explorer": "https://explorer.solana.com/tx/62XKYHZ6Uvhp52E7k95fTESVJeBq4EgJYazYxSJFeCSSTLNDcVdHuiGFfQpzkXye5ZbAKipAxtbvervAKGLfxdFs?cluster=devnet",
+  "header": {
+    "content_sha256": "7085dc9d2173a19494aed0298871667ce3dad19c4468e9344c42c3bf2bfa29e5",
+    "issued_at": 1794268800,
+    "models": 3,
+    "rain_max_milli": 6983,
+    "rain_mean_milli": 3438,
+    "rain_min_milli": 500,
+    "region": "guaiba",
+    "window_end": 1794700800
+  },
+  "observations": [
+    {
+      "member": "AFbz6rqf4u7pexBHadriqd9VNDh74KGqEeZG5eeQKTs3",
+      "seen_at": 1794270839
+    },
+    {
+      "member": "B4FwxN42zWyiSKU7qwvbpchy7uDD8ugnzX43B9mPd38L",
+      "seen_at": 1794270814
+    },
+    {
+      "member": "GS3uQUPgfCDXqtbpD6vPyNpQgRcDUFj1fhF4wYGk9ist",
+      "seen_at": 1794270832
+    }
+  ],
+  "record_index": 161,
+  "rule": "96uZCzGuXuCHht7P8wsa6V3XZcC2ThGMna1T5rWFANNF",
+  "signers": 7,
+  "slot": 520564345,
+  "threshold_milli": 90000,
+  "triggered": false,
+  "tx_signature": "62XKYHZ6Uvhp52E7k95fTESVJeBq4EgJYazYxSJFeCSSTLNDcVdHuiGFfQpzkXye5ZbAKipAxtbvervAKGLfxdFs"
+}
