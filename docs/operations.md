@@ -94,19 +94,55 @@ A late batch is not lost. The next round anchors every closed day that is waitin
 
 | Key | Where it lives | What to do |
 |---|---|---|
-| Node (`node-N.json`) | Server, GitHub secret `NODE_N_KEY` | Replace the member on-chain (`rotate_member`), through a multisig proposal. Then put the new key on the server and in the secret. One node alone cannot sign anything (2 of 3). |
-| Operator (`operator.json`) | Server, GitHub secret `OPERATOR_KEY` | Hand the authority to a new key (`set_authority`), through a multisig proposal. Since F1 this key cannot touch the committee, the rules or the vaults; a thief can only spend its SOL and record routine data. |
+| Node (`node-N.json`) | Server, GitHub secret `NODE_N_KEY` | Replace the member on-chain (`rotate-member`), through a multisig proposal (below). Then put the new key on the server and in the secret. One node alone cannot sign anything (2 of 3). |
+| Operator (`operator.json`) | Server, GitHub secret `OPERATOR_KEY` | Hand the authority to a new key (`set-authority`), through a multisig proposal (below). Since F1 this key cannot touch the committee, the rules or the vaults; a thief can only spend its SOL and record routine data. |
 | Git deploy key | Server (`/etc/cota/secrets/deploy_key`) | Delete it in GitHub (repository → Settings → Deploy keys). Delete the file and run `deploy/install.sh` again, which creates a new one. Add the new one. |
 | Arweave signer (`archive.json`) | Server, GitHub secret `ARCHIVE_KEY` | It holds no money and only signs free uploads. Generate another and update both places; the manifest keeps the old uploads. |
-| Multisig member (`upgrader-N.json` or the main wallet) | Offline | Replace the member with a multisig config proposal, approved by the other two (see the gap below). With two keys lost, the program can no longer be upgraded: that is why the offline copies matter. |
+| Multisig member (`upgrader-N.json` or the main wallet) | Offline | Replace the member with `squads.mjs propose-member`, approved by the other two (below). With two keys lost, the program can no longer be upgraded: that is why the offline copies matter. |
 
-**Known gap.** `scripts/squads/squads.mjs` proposes program upgrades and time-lock changes only. Two kinds of
-proposal still have to be built:
-- a proposal that runs an admin instruction of the program (`rotate_member`, `set_authority`, new rules);
-- a proposal that replaces a member of the multisig itself.
+### Replacing a node or the operator through the multisig
 
-This is planned for step 1.7 of the plan, the one about separating keys. Until then, replacing a node, the
-operator or a multisig member needs that tool written first.
+`cota-admin --as-multisig` builds the admin instruction with the multisig's vault as admin and writes it to a file,
+without sending anything. `squads.mjs propose-ix` checks the file and turns it into a proposal. The vault's address
+is in `config/upgrade-multisig.json` (`vault`).
+
+```sh
+VAULT=ApMyXiwmTaum9kRyDWXzRHePsMVqP9tYzQ93ngZrmTNC
+# a node: the old key (file or public key) → the new public key
+target/release/cota-admin --rpc "$RPC" --as-multisig $VAULT --out ix.json rotate-member --old keys/node-3.json --new <NEW_PUBKEY>
+# or the operator
+target/release/cota-admin --rpc "$RPC" --as-multisig $VAULT --out ix.json set-authority --new <NEW_PUBKEY>
+
+node scripts/squads/squads.mjs propose-ix --file ix.json --dry-run   # simulates only, proposes nothing
+node scripts/squads/squads.mjs propose-ix --file ix.json             # proposes; your wallet is the 1st approval
+node scripts/squads/squads.mjs approve --index N --member keys/upgrader-2.json
+node scripts/squads/squads.mjs execute --index N                     # after the 24-hour wait
+```
+
+Checks along the way:
+- `cota-admin` refuses to build the change if the old key is not a member, or if the new one already is.
+- `propose-ix` accepts only an instruction of Cota's program whose only signer is the vault.
+- Before proposing, `propose-ix` simulates the instruction on the chain as if the vault had signed. An instruction
+  that would fail after the wait (wrong member, wrong state) fails right there, with the program's error.
+- Rules (`set-alert-rule`, `set-outlook-rule`) work the same way. They create an account whose rent the vault
+  pays, so `propose-ix` asks for SOL in the vault first.
+
+After a node's key is replaced, put the new key on the server (`/etc/cota/secrets/node-N.json`) and in the GitHub
+secret `NODE_N_KEY`. After the operator's, in `operator.json` and `OPERATOR_KEY`.
+
+### Replacing a member of the multisig itself
+
+For one of the three upgrade keys, handed to another person or institution, or lost:
+
+```sh
+node scripts/squads/squads.mjs propose-member --add <NEW_PUBKEY> --remove <OLD_PUBKEY> --dry-run   # shows the change
+node scripts/squads/squads.mjs propose-member --add <NEW_PUBKEY> --remove <OLD_PUBKEY>
+```
+
+Approve and execute it like any proposal.
+- It adds before removing, and refuses any change that would leave fewer members than the threshold (2).
+- When it is executed, Squads makes every proposal opened before it stale: approve or execute those first.
+- `execute` writes the new members to `config/upgrade-multisig.json`.
 
 ## Updating
 

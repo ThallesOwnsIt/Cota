@@ -5,6 +5,16 @@
 //   node squads.mjs propose-upgrade --buffer ADDR  proposes upgrading program v2 to the code in a buffer
 //   node squads.mjs propose-time-lock --seconds N [--allow-lower]
 //                                                  proposes a new wait before approved proposals can run
+//   node squads.mjs propose-ix --file IX.json [--dry-run]
+//                                                  proposes an admin instruction of program v2 (rotate_member,
+//                                                  set_authority, new rules), built by
+//                                                  `cota-admin --as-multisig VAULT --out IX.json <command>`.
+//                                                  It is simulated first, as if the vault had signed: an
+//                                                  instruction that would fail is never proposed.
+//   node squads.mjs propose-member [--add PUBKEY] [--remove PUBKEY] [--dry-run]
+//                                                  proposes changing the multisig's own members (a key handed to
+//                                                  another person or institution, or a lost one); adding first, so
+//                                                  the multisig never has fewer members than its threshold
 //   node squads.mjs approve --index N --member KEYFILE
 //   node squads.mjs execute --index N              runs an approved proposal once its wait is over
 //
@@ -25,11 +35,14 @@ import * as multisig from "@sqds/multisig";
 import {
   Connection,
   Keypair,
+  LAMPORTS_PER_SOL,
   PublicKey,
+  SystemProgram,
   SYSVAR_CLOCK_PUBKEY,
   SYSVAR_RENT_PUBKEY,
   TransactionInstruction,
   TransactionMessage,
+  VersionedTransaction,
 } from "@solana/web3.js";
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "../..");
@@ -199,6 +212,108 @@ async function proposeTimeLock() {
   );
 }
 
+/** Proposes an admin instruction of program v2, from the JSON written by `cota-admin --as-multisig`. */
+async function proposeIx() {
+  const { multisigPda, vaultPda, programId } = settings();
+  if (!arg("file")) throw new Error("--file é obrigatório (gerado por cota-admin --as-multisig VAULT --out ARQUIVO)");
+  const spec = JSON.parse(fs.readFileSync(arg("file"), "utf8"));
+  // The file is checked before anything goes on-chain: only our program, and only our vault as signer.
+  if (spec.program_id !== programId.toBase58()) throw new Error(`a instrução é do programa ${spec.program_id}, não do Cota (${programId.toBase58()})`);
+  const signers = spec.accounts.filter((a) => a.is_signer).map((a) => a.pubkey);
+  if (signers.length !== 1 || signers[0] !== vaultPda.toBase58()) {
+    throw new Error(`o único assinante deve ser o cofre da multisig ${vaultPda.toBase58()}; veio: ${signers.join(", ") || "nenhum"}`);
+  }
+  const ix = new TransactionInstruction({
+    programId,
+    data: Buffer.from(spec.data_hex, "hex"),
+    keys: spec.accounts.map((a) => ({ pubkey: new PublicKey(a.pubkey), isSigner: a.is_signer, isWritable: a.is_writable })),
+  });
+  console.log(`instrução: ${spec.description}`);
+
+  // An instruction that creates an account (a new rule) makes the vault pay its rent when it runs.
+  if (spec.accounts.some((a) => a.pubkey === SystemProgram.programId.toBase58())) {
+    const balance = (await connection.getBalance(vaultPda)) / LAMPORTS_PER_SOL;
+    console.log(`  cria uma conta: o aluguel sai do cofre, que tem ${balance} SOL`);
+    if (balance < 0.01) throw new Error(`o cofre ${vaultPda.toBase58()} precisa de saldo para o aluguel; transfira ~0,01 SOL para ele antes`);
+  }
+
+  // Simulation as if the vault had signed (signatures are not checked in a simulation): the program runs the
+  // instruction against the current state and nothing is written. An instruction that would fail at execution,
+  // after the 24-hour wait, fails here instead.
+  const message = new TransactionMessage({
+    payerKey: payer().publicKey,
+    recentBlockhash: (await connection.getLatestBlockhash()).blockhash,
+    instructions: [ix],
+  }).compileToV0Message();
+  const sim = await connection.simulateTransaction(new VersionedTransaction(message), { sigVerify: false, replaceRecentBlockhash: true });
+  const logs = (sim.value.logs ?? []).filter((l) => l.includes("Program log:") || l.includes("failed") || l.includes("success"));
+  if (sim.value.err) {
+    throw new Error(`a simulação falhou: ${JSON.stringify(sim.value.err)}\n${logs.join("\n")}`);
+  }
+  console.log(`  simulação: ok (${sim.value.unitsConsumed} unidades de computação)`);
+  logs.forEach((l) => console.log(`    ${l}`));
+  if (process.argv.includes("--dry-run")) {
+    console.log("--dry-run: nada foi proposto");
+    return;
+  }
+
+  await propose(multisigPda, async (index) =>
+    multisig.rpc.vaultTransactionCreate({
+      connection,
+      feePayer: payer(),
+      multisigPda,
+      transactionIndex: index,
+      creator: payer().publicKey,
+      vaultIndex: 0,
+      ephemeralSigners: 0,
+      transactionMessage: new TransactionMessage({
+        payerKey: vaultPda,
+        recentBlockhash: (await connection.getLatestBlockhash()).blockhash,
+        instructions: [ix],
+      }),
+      memo: spec.description.slice(0, 200),
+    }),
+  );
+}
+
+/** Proposes adding and/or removing members of the multisig itself. */
+async function proposeMember() {
+  const { multisigPda } = settings();
+  const add = arg("add");
+  const remove = arg("remove");
+  if (!add && !remove) throw new Error("informe --add PUBKEY e/ou --remove PUBKEY");
+  const ms = await multisig.accounts.Multisig.fromAccountAddress(connection, multisigPda);
+  const members = ms.members.map((m) => m.key.toBase58());
+  const actions = [];
+  // Adding before removing: at no point does the multisig have fewer members than its threshold.
+  if (add) {
+    const key = new PublicKey(add);
+    if (members.includes(key.toBase58())) throw new Error(`${key.toBase58()} já é membro`);
+    actions.push({ __kind: "AddMember", newMember: { key, permissions: multisig.types.Permissions.all() } });
+  }
+  if (remove) {
+    const key = new PublicKey(remove);
+    if (!members.includes(key.toBase58())) throw new Error(`${key.toBase58()} não é membro (membros: ${members.join(", ")})`);
+    actions.push({ __kind: "RemoveMember", oldMember: key });
+  }
+  const after = members.length + (add ? 1 : 0) - (remove ? 1 : 0);
+  if (after < ms.threshold) throw new Error(`ficariam ${after} membros para um limiar de ${ms.threshold}`);
+  console.log(`membros hoje (${ms.threshold} de ${members.length}): ${members.join(", ")}`);
+  if (add) console.log(`  + ${add}`);
+  if (remove) console.log(`  − ${remove}`);
+  console.log(`depois: ${ms.threshold} de ${after}`);
+  // Squads marks every proposal older than an executed config change as stale: approve or execute those first.
+  console.log("atenção: quando esta mudança for executada, as propostas abertas antes dela deixam de valer (regra do Squads)");
+  if (process.argv.includes("--dry-run")) {
+    console.log("--dry-run: nada foi proposto");
+    return;
+  }
+  const memo = [add && `add ${add}`, remove && `remove ${remove}`].filter(Boolean).join(", ");
+  await propose(multisigPda, (index) =>
+    multisig.rpc.configTransactionCreate({ connection, feePayer: payer(), multisigPda, transactionIndex: index, creator: payer().publicKey, actions, memo }),
+  );
+}
+
 /** Creates the transaction and its proposal; the creator (first member) approves it right away. */
 async function propose(multisigPda, createTx) {
   const index = await nextIndex(multisigPda);
@@ -261,13 +376,15 @@ async function status() {
   console.log(`programa    ${programId.toBase58()}: autoridade de upgrade ${auth ?? "nenhuma (congelado)"}${auth === vaultPda.toBase58() ? " = cofre da multisig" : ""}`);
 }
 
-const commands = { create, status, "propose-upgrade": proposeUpgrade, "propose-time-lock": proposeTimeLock, approve, execute };
+const commands = { create, status, "propose-upgrade": proposeUpgrade, "propose-time-lock": proposeTimeLock, "propose-ix": proposeIx, "propose-member": proposeMember, approve, execute };
 const cmd = commands[process.argv[2]];
 if (!cmd) {
   console.error(`uso: node squads.mjs ${Object.keys(commands).join("|")} [opções]`);
   process.exit(2);
 }
 cmd().catch((e) => {
-  console.error(e.logs ? `${e.message}\n${e.logs.join("\n")}` : e);
+  // The message is enough to act on; the stack trace only with DEBUG=1.
+  const text = e instanceof Error && !process.env.DEBUG ? `erro: ${e.message}` : e;
+  console.error(e.logs ? `${text}\n${e.logs.join("\n")}` : text);
   process.exit(1);
 });

@@ -52,9 +52,12 @@ the chain, and a tampered file simply fails.
 
 1. Send the project the node's **public key** and the URL of the published folder.
 2. The URL goes into `config/nodes.toml`; the aggregator downloads it before every run (`scripts/fetch_nodes.py`).
-3. The key becomes a member through a multisig proposal (`rotate_member`, replacing one of the current keys):
-   2 of 3 signatures and a public 24 h wait, as for any change to the committee. A member key cannot be added by
-   the operator alone (see `docs/security-review.md`, F1).
+3. The key becomes a member through a multisig proposal, replacing one of the current keys: 2 of 3 signatures
+   and a public 24 h wait, as for any change to the committee. A member key cannot be added by the operator alone
+   (see `docs/security-review.md`, F1). The proposal is built with
+   `cota-admin --as-multisig <VAULT> --out ix.json rotate-member --old <current key> --new <node's public key>` and
+   opened with `node scripts/squads/squads.mjs propose-ix --file ix.json`. It is simulated first: an instruction
+   that would fail is never proposed. The full path is in `docs/operations.md`.
 
 Until step 3, the node's signatures are downloaded but do not count. The committee holds at most 8 members; today
 it can only grow by replacing a key (an `add_member` instruction is future work).
