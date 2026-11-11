@@ -1,0 +1,18 @@
+# One live round of Cota (scripts/live/round.sh all): the nodes and the aggregator, each in its container.
+# Started by cota-round.timer; run one by hand with `systemctl start cota-round`, logs with `journalctl -u cota-round`.
+[Unit]
+Description=Cota: one live round (nodes, chain, ledger)
+Requires=docker.service
+After=docker.service network-online.target
+Wants=network-online.target
+
+[Service]
+Type=oneshot
+User=cota
+Group=cota
+WorkingDirectory=/srv/cota
+EnvironmentFile=/etc/cota/cota.env
+Environment="COMPOSE=docker compose --env-file /etc/cota/cota.env -f /srv/cota/deploy/compose.yml"
+ExecStart=/srv/cota/scripts/live/round.sh all
+TimeoutStartSec=50min
+Nice=5

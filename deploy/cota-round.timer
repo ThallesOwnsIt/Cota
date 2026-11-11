@@ -1,0 +1,11 @@
+# Every 30 minutes (at :05 and :35, in any timezone). Persistent: a round missed while the machine was off runs at boot.
+[Unit]
+Description=Cota: a live round every 30 minutes
+
+[Timer]
+OnCalendar=*:05/30
+RandomizedDelaySec=60
+Persistent=true
+
+[Install]
+WantedBy=timers.target

@@ -1,0 +1,97 @@
+# The server image (deploy/Dockerfile), built here and published at ghcr.io/<owner>/cota, so that small servers
+# (a VPS with little bandwidth, a mini server at home) and the institutions running a node only download the result.
+# Built natively for amd64 and arm64, then joined in one multi-platform tag: src-<hash of the sources>
+# (deploy/image-tag.sh, the same the server computes) and latest.
+name: Imagem do servidor
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - Cargo.toml
+      - Cargo.lock
+      - crates/**
+      - programs/**
+      - deploy/Dockerfile
+      - deploy/Dockerfile.dockerignore
+      - deploy/image-tag.sh
+      - .github/workflows/image.yml
+  workflow_dispatch:
+
+concurrency:
+  group: cota-image
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+  packages: write
+
+jobs:
+  build:
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - platform: linux/amd64
+            runner: ubuntu-latest
+          - platform: linux/arm64
+            runner: ubuntu-24.04-arm
+    runs-on: ${{ matrix.runner }}
+    steps:
+      - uses: actions/checkout@v4
+      # Registry names must be lowercase.
+      - run: echo "IMAGE=ghcr.io/${GITHUB_REPOSITORY_OWNER,,}/cota" >> "$GITHUB_ENV"
+      - uses: docker/setup-buildx-action@v3
+      - uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+      - id: build
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          file: deploy/Dockerfile
+          platforms: ${{ matrix.platform }}
+          labels: |
+            org.opencontainers.image.source=https://github.com/${{ github.repository }}
+            org.opencontainers.image.revision=${{ github.sha }}
+            org.opencontainers.image.licenses=MIT
+          outputs: type=image,name=${{ env.IMAGE }},push-by-digest=true,name-canonical=true,push=true
+          cache-from: type=gha,scope=${{ matrix.platform }}
+          cache-to: type=gha,mode=max,scope=${{ matrix.platform }}
+      - run: |
+          mkdir -p /tmp/digests
+          digest="${{ steps.build.outputs.digest }}"
+          touch "/tmp/digests/${digest#sha256:}"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: digest-${{ strategy.job-index }}
+          path: /tmp/digests/*
+          retention-days: 1
+
+  publish:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: digest-*
+          path: /tmp/digests
+          merge-multiple: true
+      - uses: docker/setup-buildx-action@v3
+      - uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+      - name: Etiquetas src-<hash> e latest
+        run: |
+          image="ghcr.io/${GITHUB_REPOSITORY_OWNER,,}/cota"
+          tag=$(deploy/image-tag.sh)
+          refs=()
+          for d in /tmp/digests/*; do refs+=("$image@sha256:$(basename "$d")"); done
+          docker buildx imagetools create -t "$image:$tag" -t "$image:latest" "${refs[@]}"
+          docker buildx imagetools inspect "$image:$tag"
+          echo "### Imagem publicada: \`$image:$tag\`" >> "$GITHUB_STEP_SUMMARY"

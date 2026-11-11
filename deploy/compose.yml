@@ -1,0 +1,70 @@
+# Cota's live round on a server: one container per oracle node (each one sees only its own key) and one for the
+# aggregator. Nothing runs permanently: scripts/live/round.sh all starts each step with `docker compose run`, every
+# 30 minutes, from the systemd timer (deploy/cota-round.timer). See docs/server.md.
+#
+# Settings come from the environment file given with --env-file (on the server /etc/cota/cota.env, from
+# deploy/cota.env.example): COTA_IMAGE/COTA_IMAGE_TAG (the image of this checkout, deploy/image-tag.sh), COTA_SECRETS
+# (the folder with the keys), RPC, the ANA login, PUSH, VERCEL_DEPLOY_HOOK.
+name: cota
+
+x-run: &run
+  # Pulled (or built) by deploy/install.sh and deploy/update.sh, never in the middle of a round.
+  image: ${COTA_IMAGE:-ghcr.io/thallesownsit/cota}:${COTA_IMAGE_TAG:-latest}
+  pull_policy: never
+  working_dir: /work
+  volumes:
+    - ..:/work
+
+x-env: &env
+  RPC: ${RPC:-https://api.devnet.solana.com}
+  CLUSTER: ${CLUSTER:-devnet}
+  SECRETS: /run/secrets
+  UV_CACHE_DIR: /work/.cache/uv
+  npm_config_cache: /work/.cache/npm
+
+x-node-env: &node-env
+  <<: *env
+  ANA_IDENTIFICADOR: ${ANA_IDENTIFICADOR:-}
+  ANA_SENHA: ${ANA_SENHA:-}
+
+services:
+  aggregate:
+    <<: *run
+    build:
+      context: ..
+      dockerfile: deploy/Dockerfile
+      args:
+        COTA_UID: ${COTA_UID:-10001}
+        COTA_GID: ${COTA_GID:-10001}
+    environment:
+      <<: *env
+      PUSH: ${PUSH:-1}
+      VERCEL_DEPLOY_HOOK: ${VERCEL_DEPLOY_HOOK:-}
+      GIT_SSH_COMMAND: ssh -i /run/secrets/deploy_key -o IdentitiesOnly=yes -o UserKnownHostsFile=/work/.cache/known_hosts -o StrictHostKeyChecking=accept-new
+    secrets:
+      - { source: operator, target: operator.json }
+      - { source: archive, target: archive.json }
+      - { source: deploy_key, target: deploy_key }
+
+  node-1:
+    <<: *run
+    environment: *node-env
+    secrets: [{ source: node-1, target: node-1.json }]
+
+  node-2:
+    <<: *run
+    environment: *node-env
+    secrets: [{ source: node-2, target: node-2.json }]
+
+  node-3:
+    <<: *run
+    environment: *node-env
+    secrets: [{ source: node-3, target: node-3.json }]
+
+secrets:
+  operator: { file: "${COTA_SECRETS:-/etc/cota/secrets}/operator.json" }
+  archive: { file: "${COTA_SECRETS:-/etc/cota/secrets}/archive.json" }
+  deploy_key: { file: "${COTA_SECRETS:-/etc/cota/secrets}/deploy_key" }
+  node-1: { file: "${COTA_SECRETS:-/etc/cota/secrets}/node-1.json" }
+  node-2: { file: "${COTA_SECRETS:-/etc/cota/secrets}/node-2.json" }
+  node-3: { file: "${COTA_SECRETS:-/etc/cota/secrets}/node-3.json" }

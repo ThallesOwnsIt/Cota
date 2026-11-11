@@ -1,0 +1,7 @@
+# Only what the Rust build needs goes into the build context: never keys/, .env or the ledger.
+*
+!Cargo.toml
+!Cargo.lock
+!crates/
+!programs/
+**/target

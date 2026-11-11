@@ -14,6 +14,7 @@
 # Variables (all optional):
 #   RPC, CLUSTER         Solana endpoint and cluster name (default: public devnet)
 #   DAY                  the day to sign and anchor; set but empty means "no day" (default: asked to the chain)
+#   SETTLE_MIN           minutes after 00:00 UTC before yesterday is signed (default 60)
 #   BIN                  folder with the cota-oracle binaries (default target/release)
 #   SECRETS              folder with node-1.json … node-3.json, operator.json, archive.json (default keys)
 #   KEY, OUT             node: its keypair (default $SECRETS/node-<i>.json) and output folder
@@ -44,9 +45,19 @@ plan() {
   # DAY set (even empty) wins: in GitHub Actions the plan job decides once for every job of the run.
   if [[ -n ${DAY+x} ]]; then
     echo "$DAY"
-  else
-    python3 -I scripts/registry_day.py --rpc "$RPC"
+    return
   fi
+  local day now
+  day=$(python3 -I scripts/registry_day.py --rpc "$RPC")
+  # The day closes at 00:00 UTC, but the sources publish its last hours with some delay: yesterday is signed only
+  # SETTLE_MIN minutes after midnight (default 60), so every node sees the complete day.
+  now=$(date -u +%H:%M)
+  if [[ -n $day && $day == "$(date -u -d yesterday +%F)" ]] &&
+    (( 10#${now%:*} * 60 + 10#${now#*:} < ${SETTLE_MIN:-60} )); then
+    log "$day fechou há menos de ${SETTLE_MIN:-60} min; as fontes ainda publicam as últimas horas"
+    day=""
+  fi
+  echo "$day"
 }
 
 node() {

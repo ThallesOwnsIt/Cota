@@ -11,7 +11,8 @@
 #          ARCHIVE_KEY (keys/archive.json: signs the free Arweave uploads, holds no balance);
 #          RPC_URL (optional: a dedicated devnet RPC endpoint);
 #          VERCEL_DEPLOY_HOOK (optional: rebuilds the site after each push).
-# Safety switch: only runs with the repository variable COTA_LIVE_ENABLED = true.
+# Safety switch: only runs with the repository variable COTA_LIVE_ENABLED = true. With COTA_BACKUP_MODE = true the
+# server (docs/server.md) is the primary and this workflow only acts when the server falls behind.
 name: Cota ao vivo
 
 on:
@@ -39,13 +40,28 @@ jobs:
     runs-on: ubuntu-latest
     outputs:
       day: ${{ steps.next.outputs.day }}
+      run: ${{ steps.next.outputs.run }}
     steps:
       - uses: actions/checkout@v4
       - id: next
-        run: echo "day=$(scripts/live/round.sh plan)" >> "$GITHUB_OUTPUT"
+        env:
+          BACKUP: ${{ vars.COTA_BACKUP_MODE == 'true' && github.event_name == 'schedule' }}
+        run: |
+          day=$(scripts/live/round.sh plan)
+          run=true
+          # Backup mode (repository variable COTA_BACKUP_MODE = true): the server runs the rounds, and GitHub only
+          # steps in when a closed day is still not anchored at 03:00 UTC (the server does it soon after 01:00).
+          # A manual run (workflow_dispatch) always runs.
+          if [[ $BACKUP == true ]] && { [[ -z $day ]] || (( 10#$(date -u +%H) < 3 )); }; then
+            run=false
+            echo "modo reserva: o servidor está em dia; nada a fazer"
+          fi
+          echo "day=$day" >> "$GITHUB_OUTPUT"
+          echo "run=$run" >> "$GITHUB_OUTPUT"
 
   node:
     needs: plan
+    if: needs.plan.outputs.run == 'true'
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
@@ -85,7 +101,7 @@ jobs:
   aggregate:
     needs: [plan, node]
     # One node being down must not stop the system: the 2-of-3 threshold decides.
-    if: always() && needs.plan.result == 'success'
+    if: always() && needs.plan.result == 'success' && needs.plan.outputs.run == 'true'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
