@@ -131,3 +131,9 @@ jobs:
         run: scripts/live/round.sh aggregate
       - run: rm -f keys/operator.json
         if: always()
+      # Read-only: shows in the run's log whether everything is in order (late batch, ledger vs chain, SOL left,
+      # sources up, Bitcoin stamp).
+      - name: Diagnóstico
+        if: always()
+        continue-on-error: true
+        run: scripts/live/round.sh doctor

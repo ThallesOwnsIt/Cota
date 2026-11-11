@@ -8,8 +8,9 @@
 #   round.sh anchor      takes to the chain whatever has quorum, forecasts discharge, cranks the vaults
 #   round.sh publish     Bitcoin stamp, audit, dashboard data, Arweave copy, commit and push
 #   round.sh aggregate   anchor + publish, for one day (GitHub Actions)
+#   round.sh doctor      read-only health check (scripts/doctor.py)
 #   round.sh all         the whole round under a lock: nodes 1-3 in parallel and anchor, repeated while closed
-#                        days are waiting (at most MAX_DAYS), then publish once
+#                        days are waiting (at most MAX_DAYS), then publish once and the health check
 #
 # Variables (all optional):
 #   RPC, CLUSTER         Solana endpoint and cluster name (default: public devnet)
@@ -25,7 +26,8 @@
 #                        laptop never uploads anything permanent nor touches the shared ledger history
 #   ARCHIVE_KEY          publish: JSON of the Arweave signer (default: $SECRETS/archive.json, if present)
 #   VERCEL_DEPLOY_HOOK   publish: URL that rebuilds the site after a push
-#   HEALTHCHECK_URL      all: ping URL (healthchecks.io) told when the round starts, succeeds or fails
+#   HEALTHCHECK_URL      all: ping URL (healthchecks.io) told when the round starts, succeeds or fails, with the
+#                        health check's report as the message
 #   COMPOSE              all: run each step in its own container, e.g. "docker compose -f deploy/compose.yml"
 #   MAX_DAYS             all: closed days anchored in one round (default 7)
 set -euo pipefail
@@ -205,9 +207,14 @@ step() {
   fi
 }
 
+doctor() {
+  python3 scripts/doctor.py "$@"
+}
+
+# ping_health <suffix> [message]: "" = success, /start, /fail.
 ping_health() {
   if [[ -n ${HEALTHCHECK_URL:-} ]]; then
-    curl -fsS -m 10 --retry 3 "$HEALTHCHECK_URL$1" >/dev/null || warn "healthcheck: sem resposta"
+    curl -fsS -m 10 --retry 3 --data-raw "${2:-}" "$HEALTHCHECK_URL$1" >/dev/null || warn "healthcheck: sem resposta"
   fi
 }
 
@@ -244,13 +251,19 @@ all() {
   done
   unset DAY
   step aggregate publish || rc=1
-  if [[ $rc == 0 ]]; then ping_health ""; else ping_health /fail; fi
+  # The health check's failures (a late batch, a ledger that does not match the chain, no SOL) fail the round;
+  # its warnings do not. Its report goes with the ping, so the alert e-mail already says what is wrong.
+  local report health=0
+  report=$(step aggregate doctor 2>&1) || health=$?
+  printf '%s\n' "$report" >&2
+  [[ $health -ge 2 ]] && rc=1
+  if [[ $rc == 0 ]]; then ping_health "" "$report"; else ping_health /fail "$report"; fi
   return $rc
 }
 
 cmd=${1:-}
 shift || true
 case $cmd in
-  plan | node | anchor | publish | aggregate | all) "$cmd" "$@" ;;
-  *) echo "uso: $0 plan|node [i]|anchor|publish|aggregate|all" >&2; exit 2 ;;
+  plan | node | anchor | publish | aggregate | doctor | all) "$cmd" "$@" ;;
+  *) echo "uso: $0 plan|node [i]|anchor|publish|aggregate|doctor|all" >&2; exit 2 ;;
 esac

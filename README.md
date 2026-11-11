@@ -132,6 +132,15 @@ The same upgrade authority is the program's **admin**: only it can replace commi
 alert rules. The operator key (in CI) only records forecasts, stations and degradation reports. Security review, findings and
 residual risks: [`docs/security-review.md`](docs/security-review.md).
 
+## Operating
+
+- One live round is `scripts/live/round.sh`, the same script everywhere.
+- On a server, it runs every 30 minutes in Docker containers. Each node's container sees only its own key. GitHub
+  builds the image, and GitHub Actions stays as the backup. See [`docs/server.md`](docs/server.md).
+- `python3 scripts/doctor.py` is a read-only health check. It reports a late batch, a ledger that differs from the
+  chain, the SOL left, sources down and missing Bitcoin stamps. It also runs at the end of every round.
+- What to do in each case: [`docs/operations.md`](docs/operations.md).
+
 ## Known limits
 
 - The three oracles, and the three keys of the upgrade multisig, are held by the same person today (separate GitHub Actions jobs,
@@ -139,7 +148,8 @@ residual risks: [`docs/security-review.md`](docs/security-review.md).
   on any machine with `scripts/node_run.sh` and publishes its signatures as static files, which the aggregator downloads
   (`config/nodes.toml`). See [`docs/running-a-node.md`](docs/running-a-node.md).
 - GitHub's scheduler runs the workflow every 4 to 8 hours instead of every 30 minutes. Daily batches are fine; short-lived
-  warnings may be missed until nodes run on their own machines. The dashboard flags a day missing for more than 12 hours.
+  warnings may be missed. A server (`docs/server.md`) runs the rounds on time, and GitHub then acts only as the backup. The
+  dashboard flags a day missing for more than 12 hours.
 - The forecast is of the **daily discharge modelled by GloFAS**, 1 and 2 days ahead, not of the river gauge level. Gauge levels
   from ANA are recorded since November 2026, but the model has not been trained on them yet.
 - ANA gauges are read once per hour (the value on the hour). If ANA is down, the batch still goes out and the hours count as
