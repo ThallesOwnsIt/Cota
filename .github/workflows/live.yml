@@ -137,3 +137,9 @@ jobs:
         if: always()
         continue-on-error: true
         run: scripts/live/round.sh doctor
+      # The JavaScript verifier the site runs (verifier/verify.js), on the whole ledger: a second implementation,
+      # independent of cota-audit, agreeing that every record is in the tree kept on-chain.
+      - name: Conferência independente (verify.js)
+        if: always()
+        continue-on-error: true
+        run: node verifier/check.mjs

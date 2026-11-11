@@ -23,8 +23,9 @@ when the Guaíba reached 5.35 m and it was hard to piece together what had been 
   so it can't be tuned afterwards. Out of sample (Feb 2024 – Oct 2026) it warned of all three floods.
 - **Official warnings kept.** INMET warnings for Rio Grande do Sul are attested by the committee with a hash of their content, so a
   copy survives after INMET takes them down.
-- **Verify in the browser.** The dashboard recomputes Merkle proofs and hashes and checks them against the chain. Tick "Simulate
-  tampering" and the proof fails.
+- **Verify in the browser, or without the site.** The site recomputes Merkle proofs and hashes and checks them against the chain.
+  Tick "Simulate tampering" and the proof fails. `node verifier/check.mjs` checks every record of the ledger against the chain
+  with the same code, no site involved.
 - **Parametric vaults.** Funds can be locked with a written condition ("if an early warning is issued for the Guaíba, pay this
   wallet"). When the trigger appears on-chain, the program pays by itself, once per event. Test SOL only.
 
@@ -73,9 +74,10 @@ April–May 2024 flood, with the Merkle proofs and the accumulator check against
 | `crates/cota-quality` | Sensor rules, MAD between nodes, confidence index C_s |
 | `crates/cota-oracle` | Nodes, aggregator, admin, INMET warnings (`cota-alerts`), forecast rain (`cota-outlook`), vaults (`cota-vault`), audit (`cota-audit`) |
 | `ml/` | Training, evaluation and forecasting (Python/uv); `cota_ml.outlook` calibrates the rain rule and runs the backtest |
-| `dashboard/` | Static dashboard (HTML/JS) |
+| `verifier/` | `verify.js`, the proof checker the site runs in the browser, and `check.mjs`, which runs it on the whole ledger |
+| `dashboard/data/` | Data for the site, written by the live rounds (the site's code is in a private repository) |
 | `data/ledger/` | State: every anchored batch, forecast and warning, with explorer links |
-| `scripts/` | `live/round.sh` (one live round, the same on the server, in GitHub Actions and on a laptop), `live.sh` (a local round), `node_run.sh` (an independent node), `replay.sh`, `export_dashboard.py`, `timestamp.py` (OpenTimestamps), `build_map.py` (basin map, run once) |
+| `scripts/` | `live/round.sh` (one live round, the same on the server, in GitHub Actions and on a laptop), `live.sh` (a local round), `node_run.sh` (an independent node), `replay.sh`, `export_dashboard.py`, `timestamp.py` (OpenTimestamps), `doctor.py` (health check) |
 
 ## Running
 
@@ -83,7 +85,7 @@ April–May 2024 flood, with the Merkle proofs and the accumulator check against
 cargo test --workspace                     # program (LiteSVM), oracles, quality
 (cd ml && uv run pytest)                   # formats and no leakage from the future
 scripts/live.sh                            # a live round: warnings, pending day(s), audit, dashboard data (nothing permanent: PUSH=0)
-python3 -m http.server -d dashboard 8000   # local dashboard
+node verifier/check.mjs                    # every record of the ledger against the chain, with the site's verifier
 ```
 
 Flood replay: `RPC=… CLUSTER=devnet PAYER=… scripts/replay.sh 2024-04-20 2024-05-25`.
@@ -131,6 +133,19 @@ separate devices and people. Program v1 (the archive) is still upgradeable by it
 The same upgrade authority is the program's **admin**: only it can replace committee members or the operator, or create the
 alert rules. The operator key (in CI) only records forecasts, stations and degradation reports. Security review, findings and
 residual risks: [`docs/security-review.md`](docs/security-review.md).
+
+## What is open
+
+- **Open, MIT:** everything needed to check Cota without trusting it:
+  - the on-chain programs, the formats and the oracles;
+  - the server tooling;
+  - the verifier;
+  - the data.
+- **Private:** the site's code (layout and texts).
+
+The site cannot hide what it checks:
+- its `verify.js` is this repository's file, at a commit linked in its footer with the file's SHA-256;
+- `node verifier/check.mjs` repeats every check with no site at all.
 
 ## Operating
 

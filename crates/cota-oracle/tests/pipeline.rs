@@ -214,7 +214,7 @@ fn vault_payout_with_a_proof_from_the_ledger() {
     // The proof is built from the ledger alone, after many more records were appended.
     let proof = records::proof(&records::load(&ledger).unwrap(), alert_index).unwrap();
     send(&mut svm, &payer, &ledger, &[chain::trigger_payout_instruction(payer.pubkey(), vault, ben, proof)]);
-    // For the dashboard's JS check (dashboard/verify.js against the same bytes): COTA_KEEP_LEDGER=dir.
+    // For the JS verifier's check (verifier/check.mjs against the same bytes): COTA_KEEP_LEDGER=dir.
     if let Ok(dir) = std::env::var("COTA_KEEP_LEDGER") {
         let reg = registry(&svm);
         std::fs::create_dir_all(&dir).unwrap();
