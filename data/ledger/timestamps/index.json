@@ -40,5 +40,12 @@
   "root": "a91201846b3670b9c561ff4b49e923ba05189afa757ef284ee664d26c2f3c1f7",
   "stamped": "2026-11-10T00:36:02+00:00",
   "bitcoin_block": 975235
+ },
+ {
+  "file": "000172.txt",
+  "records": 172,
+  "root": "c094deb36566a8864e1e36f15779168aefc45ca2b1e877e62647e0b4d36c5c7b",
+  "stamped": "2026-11-11T01:34:50+00:00",
+  "bitcoin_block": null
  }
 ]

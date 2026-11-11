@@ -31,37 +31,37 @@
       "run": 1
     },
     "ANA-85930001": {
-      "score": 0.9981770833333332,
-      "last_ts": 1794265200,
-      "last_value": 1680,
+      "score": 0.9990885416666666,
+      "last_ts": 1794351600,
+      "last_value": 1490,
       "run": 1
     },
     "ANA-86879300": {
       "score": 1.0,
-      "last_ts": 1794265200,
-      "last_value": 13020,
+      "last_ts": 1794351600,
+      "last_value": 12940,
       "run": 1
     },
     "ANA-87270000": {
       "score": 1.0,
-      "last_ts": 1794265200,
-      "last_value": 2020,
+      "last_ts": 1794351600,
+      "last_value": 1630,
       "run": 1
     },
     "ANA-87382000": {
       "score": 1.0,
-      "last_ts": 1794265200,
-      "last_value": 2540,
+      "last_ts": 1794351600,
+      "last_value": 2450,
       "run": 1
     },
     "ANA-87399000": {
       "score": 1.0,
-      "last_ts": 1794265200,
-      "last_value": 2260,
-      "run": 5
+      "last_ts": 1794351600,
+      "last_value": 2220,
+      "run": 2
     },
     "ANA-87450004": {
-      "score": 0.9854166666666666,
+      "score": 0.5927083333333333,
       "last_ts": 1794261600,
       "last_value": 1330,
       "run": 1
@@ -74,38 +74,38 @@
     },
     "GLOFAS-CAI": {
       "score": 1.0,
-      "last_ts": 1794182400,
-      "last_value": 267530,
+      "last_ts": 1794268800,
+      "last_value": 249030,
       "run": 1
     },
     "GLOFAS-GRAVATAI": {
       "score": 1.0,
-      "last_ts": 1794182400,
-      "last_value": 43460,
+      "last_ts": 1794268800,
+      "last_value": 28440,
       "run": 1
     },
     "GLOFAS-GUAIBA": {
       "score": 1.0,
-      "last_ts": 1794182400,
-      "last_value": 3836070,
+      "last_ts": 1794268800,
+      "last_value": 4774290,
       "run": 1
     },
     "GLOFAS-JACUI": {
       "score": 1.0,
-      "last_ts": 1794182400,
-      "last_value": 3410930,
+      "last_ts": 1794268800,
+      "last_value": 4254980,
       "run": 1
     },
     "GLOFAS-SINOS": {
       "score": 1.0,
-      "last_ts": 1794182400,
-      "last_value": 151760,
+      "last_ts": 1794268800,
+      "last_value": 140580,
       "run": 1
     },
     "GLOFAS-TAQUARI": {
       "score": 1.0,
-      "last_ts": 1794182400,
-      "last_value": 1948840,
+      "last_ts": 1794268800,
+      "last_value": 2665860,
       "run": 1
     }
   }
