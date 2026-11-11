@@ -75,14 +75,14 @@ April–May 2024 flood, with the Merkle proofs and the accumulator check against
 | `ml/` | Training, evaluation and forecasting (Python/uv); `cota_ml.outlook` calibrates the rain rule and runs the backtest |
 | `dashboard/` | Static dashboard (HTML/JS) |
 | `data/ledger/` | State: every anchored batch, forecast and warning, with explorer links |
-| `scripts/` | `replay.sh`, `live.sh`, `export_dashboard.py`, `next_day.py`, `timestamp.py` (OpenTimestamps), `build_map.py` (basin map, run once) |
+| `scripts/` | `live/round.sh` (one live round, the same on the server, in GitHub Actions and on a laptop), `live.sh` (a local round), `node_run.sh` (an independent node), `replay.sh`, `export_dashboard.py`, `timestamp.py` (OpenTimestamps), `build_map.py` (basin map, run once) |
 
 ## Running
 
 ```sh
 cargo test --workspace                     # program (LiteSVM), oracles, quality
 (cd ml && uv run pytest)                   # formats and no leakage from the future
-scripts/live.sh all                        # warnings + pending day(s) + audit + dashboard data
+scripts/live.sh                            # a live round: warnings, pending day(s), audit, dashboard data (nothing permanent: PUSH=0)
 python3 -m http.server -d dashboard 8000   # local dashboard
 ```
 

@@ -1,18 +1,17 @@
-# Cota live mode, every 30 minutes:
-#   - 3 node jobs, one per key (each one only sees its own secret): they check INMET's
-#     warnings and, if there is a closed UTC day not yet anchored, sign its batch and the
-#     rain forecast for the next 5 days (that day's 00Z run, Open-Meteo);
-#   - 1 aggregator: takes to the chain whatever has ≥ 2 of 3 signatures (the program applies the
-#     early-warning rule to the forecast rain), forecasts discharge, audits and commits
-#     the ledger and the dashboard data (Vercel redeploys on every push); cranks the parametric
-#     vaults when there are new triggers.
+# Cota live mode, every 30 minutes. Every step is scripts/live/round.sh, the same round the server runs:
+#   - plan: the closed UTC day the chain is waiting a batch for (if any), decided once for the whole run;
+#   - 3 node jobs, one per key (each one only sees its own secret): INMET's warnings, the day's batch and the rain
+#     forecast for the next 5 days, each signed by the node;
+#   - 1 aggregator: takes to the chain whatever has ≥ 2 of 3 signatures (the program applies the early-warning rule
+#     to the forecast rain), forecasts discharge, cranks the parametric vaults, stamps the accumulator's root in
+#     Bitcoin, audits, copies the new ledger files to Arweave and commits the ledger and the dashboard data.
 #
 # Secrets: NODE_1_KEY, NODE_2_KEY, NODE_3_KEY and OPERATOR_KEY (contents of the JSON keypairs);
 #          ANA_IDENTIFICADOR and ANA_SENHA (HidroWebService login, river level from gauges);
 #          ARCHIVE_KEY (keys/archive.json: signs the free Arweave uploads, holds no balance);
-#          RPC_URL (optional: a dedicated devnet RPC endpoint).
-# Safety switch: only runs with the repository variable COTA_LIVE_ENABLED = true (turn it on after
-# setting up the secrets and handing the committee authority to the operator).
+#          RPC_URL (optional: a dedicated devnet RPC endpoint);
+#          VERCEL_DEPLOY_HOOK (optional: rebuilds the site after each push).
+# Safety switch: only runs with the repository variable COTA_LIVE_ENABLED = true.
 name: Cota ao vivo
 
 on:
@@ -43,7 +42,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - id: next
-        run: echo "day=$(python3 scripts/next_day.py)" >> "$GITHUB_OUTPUT"
+        run: echo "day=$(scripts/live/round.sh plan)" >> "$GITHUB_OUTPUT"
 
   node:
     needs: plan
@@ -64,27 +63,22 @@ jobs:
         run: |
           umask 077
           mkdir -p keys && printf '%s' "$KEY" > keys/node.json
-      - name: Avisos do INMET
-        run: target/release/cota-alerts observe --key keys/node.json --out out/alerts
-      - name: Lote de ${{ needs.plan.outputs.day }}
-        if: needs.plan.outputs.day != ''
+      - name: Nó ${{ matrix.node }} (dia ${{ needs.plan.outputs.day || 'nenhum' }})
         env:
+          DAY: ${{ needs.plan.outputs.day }}
+          KEY: keys/node.json
+          OUT: data/nodes/node-${{ matrix.node }}
           ANA_IDENTIFICADOR: ${{ secrets.ANA_IDENTIFICADOR }}
           ANA_SENHA: ${{ secrets.ANA_SENHA }}
-        run: >
-          target/release/cota-node --key keys/node.json --day "${{ needs.plan.outputs.day }}"
-          --rpc "$RPC" --config config/stations-live.toml --out out
-      - name: Chuva prevista após ${{ needs.plan.outputs.day }}
-        if: needs.plan.outputs.day != ''
-        # Without the forecast, the node's batch still counts.
-        continue-on-error: true
-        run: target/release/cota-outlook observe --key keys/node.json --day "${{ needs.plan.outputs.day }}" --out out/outlook
+        run: scripts/live/round.sh node
       - run: rm -f keys/node.json
         if: always()
+      # Even if the batch failed, the warnings this node signed still count.
       - uses: actions/upload-artifact@v4
+        if: always()
         with:
           name: node-${{ matrix.node }}
-          path: out/
+          path: data/nodes/node-${{ matrix.node }}/
           retention-days: 3
           if-no-files-found: ignore
 
@@ -105,76 +99,19 @@ jobs:
         with:
           pattern: node-*
           path: data/nodes
-      # Independent nodes run by other institutions publish their signatures elsewhere (config/nodes.toml);
-      # they count only if their keys are committee members on-chain.
-      - name: Nós externos
-        continue-on-error: true
-        run: python3 scripts/fetch_nodes.py
       - name: Chave do operador
         env:
           KEY: ${{ secrets.OPERATOR_KEY }}
         run: |
           umask 077
           mkdir -p keys && printf '%s' "$KEY" > keys/operator.json
-      - name: Avisos oficiais com quórum
-        run: target/release/cota-alerts anchor --rpc "$RPC" --cluster "$CLUSTER" --payer keys/operator.json
-      - name: Lote, qualidade, previsão e alerta de ${{ needs.plan.outputs.day }}
-        if: needs.plan.outputs.day != ''
-        run: |
-          day="${{ needs.plan.outputs.day }}"
-          target/release/cota-aggregator --rpc "$RPC" --cluster "$CLUSTER" --payer keys/operator.json \
-            --config config/stations-live.toml
-          target/release/cota-outlook anchor --rpc "$RPC" --cluster "$CLUSTER" --payer keys/operator.json || true
-          (cd ml && uv run python -m cota_ml.forecast --day "$day")
-          if [[ -f "data/forecasts/$day.json" ]]; then
-            target/release/cota-admin --rpc "$RPC" --payer keys/operator.json \
-              commit-forecast --file "data/forecasts/$day.json" --cluster "$CLUSTER"
-          fi
-      # Parametric vaults: the program decides; the operator only pays the crank's fee.
-      - name: Cofres
-        continue-on-error: true
-        run: target/release/cota-vault --rpc "$RPC" --cluster "$CLUSTER" --payer keys/operator.json crank
+      - name: Cadeia, previsão, cofres, carimbo, auditoria, cópia permanente e commit
+        env:
+          DAY: ${{ needs.plan.outputs.day }}
+          PAYER: keys/operator.json
+          PUSH: "1"
+          ARCHIVE_KEY: ${{ secrets.ARCHIVE_KEY }}
+          VERCEL_DEPLOY_HOOK: ${{ secrets.VERCEL_DEPLOY_HOOK }}
+        run: scripts/live/round.sh aggregate
       - run: rm -f keys/operator.json
         if: always()
-      # Daily copy of the accumulator's root in Bitcoin (free OpenTimestamps calendars): it survives a
-      # devnet reset. Also completes the proofs still waiting for their Bitcoin block.
-      - name: Carimbo no Bitcoin
-        if: always()
-        continue-on-error: true
-        run: python3 scripts/timestamp.py
-      # These run even if the batch fails: an official warning already anchored must not go
-      # unrecorded.
-      - name: Auditoria e dados do dashboard
-        if: always()
-        run: |
-          if [[ -z "$(git status --porcelain data/ledger)" ]]; then
-            echo "nada novo no ledger"
-            exit 0
-          fi
-          target/release/cota-audit --rpc "$RPC"
-          python3 scripts/export_dashboard.py
-      # Permanent copies outside GitHub: the day's new or changed ledger files on Arweave (free items, the map
-      # path -> id goes to data/ledger/archive.json), and a save request of the public repository to Software
-      # Heritage. Neither can stop the run.
-      - name: Cópia permanente
-        if: always()
-        continue-on-error: true
-        env:
-          ARCHIVE_KEY: ${{ secrets.ARCHIVE_KEY }}
-        run: |
-          if [[ -n "$ARCHIVE_KEY" ]]; then
-            (cd scripts/archive && npm ci --silent && node archive.mjs)
-          else
-            echo "sem ARCHIVE_KEY: cópia no Arweave pulada"
-          fi
-          curl -s -m 60 -X POST "https://archive.softwareheritage.org/api/1/origin/save/git/url/https://github.com/${GITHUB_REPOSITORY}/" | head -c 300 || true
-      - name: Commit
-        if: always()
-        run: |
-          git add data/ledger dashboard/data
-          if git diff --cached --quiet; then exit 0; fi
-          git config user.name "cota-bot"
-          git config user.email "cota-bot@users.noreply.github.com"
-          git commit -q -m "ao vivo: $(date -u +%FT%H:%MZ)"
-          for i in 1 2 3; do git pull -q --rebase && git push -q && exit 0; sleep 5; done
-          exit 1
