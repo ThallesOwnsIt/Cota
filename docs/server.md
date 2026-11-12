@@ -51,9 +51,14 @@ tied to a person, and root is no longer a way in.
    ```sh
    adduser thalles                        # asks for a password: the one sudo will ask for
    usermod -aG sudo thalles
-   install -d -m 700 -o thalles -g thalles /home/thalles/.ssh
-   install -m 600 -o thalles -g thalles /root/.ssh/authorized_keys /home/thalles/.ssh/authorized_keys
+   mkdir -p /home/thalles/.ssh
+   cp /root/.ssh/authorized_keys /home/thalles/.ssh/authorized_keys
+   chown -R thalles:thalles /home/thalles/.ssh
+   chmod 700 /home/thalles/.ssh && chmod 600 /home/thalles/.ssh/authorized_keys
+   stat -c '%a %U:%G %n' /home/thalles/.ssh /home/thalles/.ssh/authorized_keys   # 700 and 600, both thalles
    ```
+   If the new user is refused, `journalctl -u ssh --since -15min | grep thalles` says why. "Permission denied" on
+   `authorized_keys` means the folder or the file does not belong to the user.
 2. **Keep the root session open.** In another terminal, check that the new user gets in and that sudo works:
    `ssh thalles@SERVER`, then `sudo whoami` (answers `root`).
 3. Only then turn root's login off:
