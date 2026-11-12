@@ -53,9 +53,12 @@ copy `/etc/cota`, run the installer, turn the timer on.
 - **One step by hand:**
 
   ```sh
-  runuser -u cota -- docker compose --env-file /etc/cota/cota.env -f /srv/cota/deploy/compose.yml \
+  cd /srv/cota && runuser -u cota -- docker compose --env-file /etc/cota/cota.env -f deploy/compose.yml \
     run --rm aggregate plan
   ```
+
+  The `cd` matters when you are root. `docker compose` reads the current folder when it starts, and the user `cota`
+  cannot read `/root`; without it, the command fails with "stat .: permission denied".
 
   Other steps: `node 1`, `anchor`, `publish`; with `-e PUSH=0` nothing is committed.
 
