@@ -68,8 +68,8 @@ def main() -> None:
         issue_days = {i["issue_day"] for i in issues}
         issues += [i for i in part["issues"] if i["issue_day"] not in issue_days]
         alerts += part["alerts"]
-        outlook_days = {o["day"] for o in outlooks}
-        outlooks += [o for o in part["outlooks"] if o["day"] not in outlook_days]
+        outlook_days = {(o["region"], o["day"]) for o in outlooks}
+        outlooks += [o for o in part["outlooks"] if (o["region"], o["day"]) not in outlook_days]
         # Vaults only from the current program: v1's receive no more triggers, and v2's replay vault
         # reproduces the same payouts.
         if part is cur:
@@ -160,6 +160,7 @@ def main() -> None:
             "locations": export_locations(gauges_now),
         },
         "outlook": export_outlook(outlooks, parts),
+        "external_forecasts": export_external(),
         "timestamps": timestamps,
         # Copy of the ledger on Arweave (scripts/archive/archive.mjs): how much, and who signs the uploads.
         "archive": archive_summary(),
@@ -410,6 +411,7 @@ def collect(ledger: Path) -> dict:
         outlooks.append(
             {
                 "day": e["day"],
+                "region": h.get("region", "guaiba"),
                 "protocol": proto,
                 **({"record": e["record"]} if proto == "v1" else {"record_index": e["record_index"], "record": record_hex(e["record_index"])}),
                 **{k: h[k] for k in ("issued_at", "window_end", "models", "rain_mean_milli", "rain_min_milli", "rain_max_milli", "content_sha256")},
@@ -531,7 +533,73 @@ def export_outlook(live: list[dict], parts: list[dict]) -> dict:
                 for d in bt["days"]
             ],
         },
-        "live": live,
+        "live": [o for o in live if o["region"] == "guaiba"],
+        "subbasins": export_subbasins(live),
+    }
+
+
+def export_subbasins(live: list[dict]) -> list[dict]:
+    """Sub-basin rules (ml/models/outlook-rules), their out-of-sample test and their anchored outlooks. A rule not
+    on-chain yet has no outlooks: it goes through the multisig first."""
+    report = ROOT / "ml/reports/subbasin-rules.json"
+    names = {k: v["name"] for k, v in json.loads(report.read_text())["subbasins"].items()} if report.exists() else {}
+    out = []
+    for path in sorted((ROOT / "ml/models/outlook-rules").glob("*.json")):
+        rule = json.loads(path.read_text())
+        spec = rule["spec"]
+        region = spec["region"]
+        out.append(
+            {
+                "region": region,
+                "name": names.get(region, region),
+                "rule_sha256": rule["rule_sha256"],
+                "threshold_mm": spec["threshold_mm"],
+                "window_days": spec["window_days"],
+                "points": [p["id"] for p in spec["points"]],
+                "target": spec["target"],
+                "calibration": {k: spec["calibration"][k] for k in ("years", "data", "threshold_mm", "csi")},
+                "backtest": spec.get("backtest"),
+                "live": [o for o in live if o["region"] == region],
+            }
+        )
+    return out
+
+
+def export_external() -> dict | None:
+    """Third-party forecasts kept in the ledger (external_forecasts/), signed by the committee: the latest one in
+    full, a short history, and the files themselves (with their Bitcoin proofs) for download."""
+    src = LEDGER / "external_forecasts" / "glofas"
+    files = sorted(src.glob("*.json")) if src.exists() else []
+    if not files:
+        return None
+    dest = OUT / "external_forecasts" / "glofas"
+    dest.mkdir(parents=True, exist_ok=True)
+    history = []
+    for f in files:
+        for g in (f, f.with_name(f.name + ".ots")):
+            if g.exists():
+                (dest / g.name).write_bytes(g.read_bytes())
+        e = json.loads(f.read_text())
+        c = json.loads(e["content"])
+        outlet = next((p for p in c["points"] if p["id"] == TARGET), c["points"][0])
+        history.append(
+            {
+                "day": e["day"],
+                "quorum": e["quorum"],
+                "signatures": len(e["signatures"]),
+                "stamped": f.with_name(f.name + ".ots").exists(),
+                "file": f"external_forecasts/glofas/{f.name}",
+                "peak_median_milli": max((d["median"] for d in outlet["days"] if d["median"] is not None), default=None),
+                "peak_max_milli": max((d["max"] for d in outlet["days"] if d["max"] is not None), default=None),
+            }
+        )
+    latest = json.loads(files[-1].read_text())
+    content = json.loads(latest["content"])
+    return {
+        "source": "glofas",
+        "provider": content["provider"],
+        "latest": {**history[-1], "threshold": latest["threshold"], "content_sha256": latest["header"]["content_sha256"], "points": content["points"]},
+        "history": history[-30:],
     }
 
 
