@@ -3,6 +3,7 @@
 pub mod aggregate;
 pub mod attest;
 pub mod chain;
+pub mod extforecast;
 pub mod inmet_alerts;
 pub mod keys;
 pub mod ledger;

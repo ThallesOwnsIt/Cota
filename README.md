@@ -72,7 +72,7 @@ April–May 2024 flood, with the Merkle proofs and the accumulator check against
 | `crates/cota-core` | Canonical formats (Borsh), Merkle tree, signed message |
 | `crates/cota-ingest` | INMET ingestion (yearly zip), ANA telemetric gauges (HidroWebService) and GloFAS (Open-Meteo) |
 | `crates/cota-quality` | Sensor rules, MAD between nodes, confidence index C_s |
-| `crates/cota-oracle` | Nodes, aggregator, admin, INMET warnings (`cota-alerts`), forecast rain (`cota-outlook`), vaults (`cota-vault`), audit (`cota-audit`) |
+| `crates/cota-oracle` | Nodes, aggregator, admin, INMET warnings (`cota-alerts`), forecast rain (`cota-outlook`), third-party forecasts (`cota-extforecast`, GloFAS for now), vaults (`cota-vault`), audit (`cota-audit`) |
 | `ml/` | Training, evaluation and forecasting (Python/uv); `cota_ml.outlook` calibrates the rain rule and runs the backtest |
 | `verifier/` | `verify.js`, the proof checker the site runs in the browser, and `check.mjs`, which runs it on the whole ledger |
 | `dashboard/data/` | Data for the site, written by the live rounds (the site's code is in a private repository) |

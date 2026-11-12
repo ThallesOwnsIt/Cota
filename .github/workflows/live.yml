@@ -72,7 +72,7 @@ jobs:
       - uses: Swatinem/rust-cache@v2
         with:
           shared-key: cota
-      - run: cargo build --release -p cota-oracle --bin cota-node --bin cota-alerts --bin cota-outlook
+      - run: cargo build --release -p cota-oracle --bin cota-node --bin cota-alerts --bin cota-outlook --bin cota-extforecast
       - name: Chave do nó
         env:
           KEY: ${{ secrets[format('NODE_{0}_KEY', matrix.node)] }}

@@ -13,6 +13,7 @@ To check one: drop `NNNNNN.txt` and `NNNNNN.txt.ots` on https://opentimestamps.o
 (same algorithm as `cota_core::mmr::bag`), not taken from the audit.
 
 Output in data/ledger/timestamps/: one `.txt` + `.txt.ots` per stamped root, and `index.json`.
+Third-party forecasts kept in data/ledger/external_forecasts/ get one `.json.ots` each, next to the file.
 """
 
 from __future__ import annotations
@@ -118,6 +119,25 @@ def main() -> None:
     (OUT / "index.json").write_text(json.dumps(index, indent=1) + "\n")
     done = sum(1 for i in index if i["bitcoin_block"])
     print(f"{len(index)} carimbo(s), {done} já confirmado(s) no Bitcoin")
+
+    # 3. Third-party forecasts (external_forecasts/), outside the accumulator until program v3 records them: each
+    #    file gets its own proof as soon as it appears, and pending proofs are upgraded like the roots'.
+    ext = LEDGER / "external_forecasts"
+    sent = upgraded = 0
+    for f in sorted(ext.rglob("*.json")) if ext.exists() else []:
+        proof = f.with_name(f.name + ".ots")
+        if not proof.exists():
+            r = ots("stamp", str(f))
+            if r.returncode == 0:
+                sent += 1
+            else:
+                print(f"aviso: ots stamp de {f.relative_to(LEDGER)} falhou: {r.stderr.strip()}")
+        elif status(proof)["bitcoin_block"] is None:
+            ots("upgrade", str(proof))
+            proof.with_name(proof.name + ".bak").unlink(missing_ok=True)
+            upgraded += status(proof)["bitcoin_block"] is not None
+    if sent or upgraded:
+        print(f"previsões de terceiros: {sent} carimbo(s) enviado(s), {upgraded} confirmado(s) no Bitcoin")
 
 
 if __name__ == "__main__":

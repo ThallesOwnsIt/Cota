@@ -76,6 +76,8 @@ node() {
       { warn "lote de $day: o nó não conseguiu assinar"; rc=1; }
     # Without the rain forecast, the node's batch still counts.
     "$BIN/cota-outlook" observe --key "$key" --day "$day" --out "$out/outlook" || warn "chuva prevista indisponível"
+    # Third-party forecast (GloFAS discharge, 30 days), signed for the ledger until program v3 records it.
+    "$BIN/cota-extforecast" observe --key "$key" --day "$day" --out "$out/extforecast" || warn "previsão GloFAS indisponível"
   else
     log "nenhum dia fechado à espera de lote"
   fi
@@ -98,6 +100,7 @@ anchor() {
     if "$BIN/cota-aggregator" --rpc "$RPC" --cluster "$CLUSTER" --payer "$payer" --config config/stations-live.toml; then
       # The program applies the early-warning rule to the forecast rain of the day just anchored.
       "$BIN/cota-outlook" anchor --rpc "$RPC" --cluster "$CLUSTER" --payer "$payer" || warn "perspectiva de chuva: falhou"
+      "$BIN/cota-extforecast" collect --rpc "$RPC" || warn "previsões de terceiros: falhou"
       if (cd ml && uv run python -m cota_ml.forecast --day "$day"); then
         if [[ -f data/forecasts/$day.json ]]; then
           "$BIN/cota-admin" --rpc "$RPC" --payer "$payer" commit-forecast --file "data/forecasts/$day.json" --cluster "$CLUSTER" ||
