@@ -30,6 +30,8 @@ OUT = ROOT / "dashboard/data"
 TARGET = "GLOFAS-GUAIBA"
 # Cais Mauá gauge (ANA): the level Porto Alegre's civil defense follows.
 STAGE_MAIN = "ANA-87450004"
+# Places and their official levels (config/locations.toml, checked by scripts/check_locations.py).
+LOCATIONS = tomllib.loads((ROOT / "config/locations.toml").read_text())["location"] if (ROOT / "config/locations.toml").exists() else []
 # River-level plausibility (hand-written; the same file and rule as cota-quality, see stage_spikes).
 STAGE_LIMITS = tomllib.loads((ROOT / "config/stage-limits.toml").read_text()) if (ROOT / "config/stage-limits.toml").exists() else {}
 # Days of Cais Mauá hourly readings in the live-mode chart.
@@ -84,6 +86,7 @@ def main() -> None:
     outlooks.sort(key=lambda o: o["day"], reverse=True)
 
     stage_series = sorted(p for part in parts for p in part["stage_series"])
+    gauges_now = {k: v for part in parts for k, v in part["gauges_now"].items()}
     replay_days = [d for d in days if d["day"] < LIVE_FROM]
     live_days = [d for d in days if d["day"] >= LIVE_FROM]
     replay_issues = [i for i in issues if i["issue_day"] < LIVE_FROM]
@@ -154,6 +157,7 @@ def main() -> None:
             "stations": [{k: s[k] for k in ("id", "name", "source", "variable", "lat", "lon")} for s in live_stations],
             "stage_main": STAGE_MAIN,
             "stage_series": stage_series_tail(stage_series),
+            "locations": export_locations(gauges_now),
         },
         "outlook": export_outlook(outlooks, parts),
         "timestamps": timestamps,
@@ -219,6 +223,14 @@ def collect(ledger: Path) -> dict:
             if r["variable"] == "river_stage":
                 gauges.setdefault(r["station_id"], []).append((r["ts_utc"], r["value_milli"]))
     implausible = {(sid, t) for sid, pts in gauges.items() for t in stage_spikes(sid, sorted(pts))}
+    # Each gauge's latest plausible reading and the one about 24 h before it (within 3 h), for the places.
+    gauges_now = {}
+    for sid, pts in gauges.items():
+        good = sorted(p for p in pts if (sid, p[0]) not in implausible)
+        if good:
+            t, v = good[-1]
+            near = [pv for pt, pv in good if abs(pt - (t - 86_400)) <= 3 * 3600]
+            gauges_now[sid] = {"ts": t, "value_milli": v, "change_24h_milli": v - near[0] if near else None}
 
     days = []
     stage_series: list[list[int]] = []
@@ -444,8 +456,33 @@ def collect(ledger: Path) -> dict:
         "outlook_rule_account": rule_account,
         "vaults": vaults,
         "stage_series": stage_series,
+        "gauges_now": gauges_now,
         "leaves": [r["leaf"] for r in stored],
     }
+
+
+def export_locations(gauges_now: dict) -> list[dict]:
+    """Each place with its gauge's latest plausible level, the change in 24 h and, only when its levels come from an
+    official document, its situation: "inundacao" at or above flood, "alerta", "atencao", else "normal"."""
+    out = []
+    for p in LOCATIONS:
+        levels = {k[:-2]: round(p[k] * 1000) for k in ("attention_m", "alert_m", "flood_m", "record_m") if k in p}
+        now = gauges_now.get(p["gauge"])
+        state = None
+        if p.get("confirmed") and now and levels:
+            v = now["value_milli"]
+            state = next((name for key, name in (("flood", "inundacao"), ("alert", "alerta"), ("attention", "atencao")) if key in levels and v >= levels[key]), "normal")
+        out.append(
+            {
+                **{k: p[k] for k in ("id", "name", "river", "gauge") },
+                "confirmed": bool(p.get("confirmed")),
+                "levels_milli": levels,
+                **{k: p[k] for k in ("source", "source_url", "checked", "note") if k in p},
+                "now": now,
+                "state": state,
+            }
+        )
+    return out
 
 
 def archive_summary() -> dict | None:

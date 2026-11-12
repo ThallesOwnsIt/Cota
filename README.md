@@ -76,6 +76,7 @@ April–May 2024 flood, with the Merkle proofs and the accumulator check against
 | `ml/` | Training, evaluation and forecasting (Python/uv); `cota_ml.outlook` calibrates the rain rule and runs the backtest |
 | `verifier/` | `verify.js`, the proof checker the site runs in the browser, and `check.mjs`, which runs it on the whole ledger |
 | `dashboard/data/` | Data for the site, written by the live rounds (the site's code is in a private repository) |
+| `config/` | Gauges (`stations-live.toml`), places and their official levels (`locations.toml`, checked by `scripts/check_locations.py`), river-level plausibility (`stage-limits.toml`) |
 | `data/ledger/` | State: every anchored batch, forecast and warning, with explorer links |
 | `scripts/` | `live/round.sh` (one live round, the same on the server, in GitHub Actions and on a laptop), `live.sh` (a local round), `node_run.sh` (an independent node), `replay.sh`, `export_dashboard.py`, `timestamp.py` (OpenTimestamps), `doctor.py` (health check) |
 
