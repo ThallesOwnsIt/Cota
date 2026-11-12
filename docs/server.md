@@ -42,6 +42,31 @@ copy `/etc/cota`, run the installer, turn the timer on.
    `systemctl start cota-round && journalctl -u cota-round -f`.
 7. Turn the rounds on: `ENABLE=1 bash /srv/cota/deploy/install.sh`.
 
+## A personal admin user instead of root
+
+Once the server works, log in as your own user and use `sudo`, and turn off root's login. Every action is then
+tied to a person, and root is no longer a way in.
+
+1. As root, create the user, let it use sudo and give it your SSH key:
+   ```sh
+   adduser thalles                        # asks for a password: the one sudo will ask for
+   usermod -aG sudo thalles
+   install -d -m 700 -o thalles -g thalles /home/thalles/.ssh
+   install -m 600 -o thalles -g thalles /root/.ssh/authorized_keys /home/thalles/.ssh/authorized_keys
+   ```
+2. **Keep the root session open.** In another terminal, check that the new user gets in and that sudo works:
+   `ssh thalles@SERVER`, then `sudo whoami` (answers `root`).
+3. Only then turn root's login off:
+   ```sh
+   sudo sed -i 's/^PermitRootLogin .*/PermitRootLogin no/' /etc/ssh/sshd_config.d/10-cota.conf
+   sudo sshd -t && sudo systemctl reload ssh
+   ```
+   `deploy/install.sh` keeps it off when run again.
+
+From then on, every root command in this guide runs with `sudo` (or after `sudo -i`). Keys are copied to your home
+folder first and then moved into place:
+`scp node-1.json thalles@SERVER:` followed by `sudo install -m 600 -o cota -g cota node-1.json /etc/cota/secrets/`.
+
 ## Day to day
 
 - **Logs:** `journalctl -u cota-round --since today`.

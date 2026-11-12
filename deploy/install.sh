@@ -53,17 +53,22 @@ fi
 free -h | sed -n '1,3p'
 
 say "ssh"
-if [[ -s /root/.ssh/authorized_keys ]]; then
+CONF_SSH=/etc/ssh/sshd_config.d/10-cota.conf
+# Root logs in with a key only; once a personal admin user exists and root login was turned off ("no", see
+# docs/server.md), running the installer again keeps it off.
+root_login=prohibit-password
+grep -q '^PermitRootLogin no' "$CONF_SSH" 2>/dev/null && root_login=no
+if [[ -s /root/.ssh/authorized_keys || $root_login == no ]]; then
   # sshd keeps the first value it reads, and sshd_config.d/ is read in order, before sshd_config: 10- wins over
   # the cloud image's 50-cloud-init.conf.
-  cat > /etc/ssh/sshd_config.d/10-cota.conf <<'CONF'
+  cat > "$CONF_SSH" <<CONF
 PasswordAuthentication no
 KbdInteractiveAuthentication no
-PermitRootLogin prohibit-password
+PermitRootLogin $root_login
 CONF
   sshd -t
   systemctl reload ssh 2>/dev/null || systemctl reload sshd
-  echo "login só com chave"
+  echo "login só com chave (root: $root_login)"
 else
   echo "root não tem chave autorizada: login por senha mantido (copie a sua chave e rode de novo)"
 fi
