@@ -91,6 +91,10 @@ anchor() {
   "$BIN/cota-alerts" anchor --rpc "$RPC" --cluster "$CLUSTER" --payer "$payer" || { warn "avisos oficiais: falhou"; rc=1; }
   day=$(plan) || { warn "não consegui consultar a cadeia"; return 1; }
   if [[ -n $day ]]; then
+    # A gauge added to the catalog gets its on-chain station record before its first batch (only the missing
+    # ones are sent; routine records, signed by the operator).
+    "$BIN/cota-admin" --rpc "$RPC" --payer "$payer" register-stations --config config/stations-live.toml ||
+      warn "registro de estações novas: falhou (o lote segue)"
     if "$BIN/cota-aggregator" --rpc "$RPC" --cluster "$CLUSTER" --payer "$payer" --config config/stations-live.toml; then
       # The program applies the early-warning rule to the forecast rain of the day just anchored.
       "$BIN/cota-outlook" anchor --rpc "$RPC" --cluster "$CLUSTER" --payer "$payer" || warn "perspectiva de chuva: falhou"

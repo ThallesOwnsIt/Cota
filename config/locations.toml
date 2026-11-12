@@ -1,0 +1,155 @@
+# Places Cota watches: one reference gauge (config/stations-live.toml) per place, with its official levels where
+# they exist. Levels are in metres on the gauge's own scale; each gauge has its own zero, so levels of different
+# gauges are never compared.
+#
+# Only levels from an official document (`confirmed = true`: SGB, Defesa Civil) turn into "normal / attention /
+# alert / flood" on the dashboard. The others show the level and its change only ("cota em confirmação") until an
+# official source is found. Every level carries its source and the date it was checked.
+#
+# scripts/check_locations.py checks this file:
+# - every gauge exists in the catalog;
+# - the levels are in order;
+# - confirmed levels have a source;
+# - the recent median level is below the lowest level. A level copied from another gauge's scale shows up here.
+#
+# Changes go through review like code: a wrong level means a wrong alert.
+
+[[location]]
+id = "porto-alegre-cais-maua"
+name = "Porto Alegre (Cais Mauá)"
+river = "Guaíba"
+gauge = "ANA-87450004"
+alert_m = 2.60
+flood_m = 3.00
+record_m = 5.37              # 05/05/2024, SGB's revised figure (study of Sep 2024)
+confirmed = true
+source = "SGB, boletim SACE Guaíba de 30/07/2026"
+source_url = "https://www.sgb.gov.br/sace/boletins/Guaiba/20260730_12-20260730%20-%20122755.pdf"
+checked = "2026-11-12"
+
+[[location]]
+id = "porto-alegre-gasometro"
+name = "Porto Alegre (Usina do Gasômetro)"
+river = "Guaíba"
+gauge = "ANA-87450020"
+confirmed = false
+# A 2025 report gives 3.60 m as the flood level here, but this gauge reads ~0.4 m below Cais Mauá: 3.60 m here
+# would be ~4.0 m at Cais Mauá, against the official 3.00 m. Left out until the SGB confirms it.
+note = "cota de 3,60 m de reportagem descartada: não bate com o zero desta régua"
+checked = "2026-11-12"
+
+[[location]]
+id = "mucum"
+name = "Muçum"
+river = "Taquari"
+gauge = "ANA-86510000"
+attention_m = 5.00
+alert_m = 9.00
+flood_m = 18.00
+confirmed = true
+source = "SGB, cotas do SACE no Taquari em Muçum (XXV SBRH, 2024)"
+source_url = "https://rigeo.sgb.gov.br/bitstream/doc/25208/1/2024_artigo_xxv_sbrh_sgb-cprm_af_cotas_sace_taquari_mucum.pdf"
+checked = "2026-11-12"
+
+[[location]]
+id = "encantado"
+name = "Encantado"
+river = "Taquari"
+gauge = "ANA-86720000"
+confirmed = false
+checked = "2026-11-12"
+
+[[location]]
+id = "estrela-lajeado"
+name = "Estrela / Lajeado"
+river = "Taquari"
+gauge = "ANA-86879300"
+attention_m = 15.00
+alert_m = 17.00
+flood_m = 19.00
+confirmed = false
+# From an SGB chart of 2023, consistent with the gauge (median 13.4 m in Nov 2026). A 2025 bulletin gave
+# 6 / 9 / 15 m, which cannot be this gauge's scale (it would be above flood on an ordinary day).
+source = "gráfico do SGB, 2023 (a confirmar no boletim vigente)"
+checked = "2026-11-12"
+
+[[location]]
+id = "bom-retiro-do-sul"
+name = "Bom Retiro do Sul"
+river = "Taquari"
+gauge = "ANA-86881000"
+confirmed = false
+checked = "2026-11-12"
+
+[[location]]
+id = "taquari"
+name = "Taquari"
+river = "Taquari"
+gauge = "ANA-86950000"
+confirmed = false
+checked = "2026-11-12"
+
+[[location]]
+id = "cachoeira-do-sul"
+name = "Cachoeira do Sul"
+river = "Jacuí"
+gauge = "ANA-85642000"
+confirmed = false
+checked = "2026-11-12"
+
+[[location]]
+id = "sao-jeronimo"
+name = "São Jerônimo"
+river = "Jacuí"
+gauge = "ANA-85930001"
+confirmed = false
+checked = "2026-11-12"
+
+[[location]]
+id = "sao-leopoldo"
+name = "São Leopoldo"
+river = "Sinos"
+gauge = "ANA-87382000"
+attention_m = 4.00
+flood_m = 4.50
+confirmed = false
+source = "reportagens de 2024 a 2026 (Defesa Civil); falta documento oficial"
+checked = "2026-11-12"
+
+[[location]]
+id = "campo-bom"
+name = "Campo Bom"
+river = "Sinos"
+gauge = "ANA-87380000"
+confirmed = false
+checked = "2026-11-12"
+
+[[location]]
+id = "montenegro"
+name = "Montenegro"
+river = "Caí"
+gauge = "ANA-87270000"
+flood_m = 6.00
+confirmed = true
+source = "SGB, determinação da cota de inundação do rio Caí; Defesa Civil RS"
+source_url = "https://rigeo.sgb.gov.br/bitstream/doc/22446/1/determinacao_cota_inundacao_rio_cai.pdf"
+checked = "2026-11-12"
+
+[[location]]
+id = "sao-sebastiao-do-cai"
+name = "São Sebastião do Caí"
+river = "Caí"
+gauge = "ANA-87170000"
+flood_m = 10.00
+confirmed = true
+source = "SGB, determinação da cota de inundação do rio Caí"
+source_url = "https://rigeo.sgb.gov.br/bitstream/doc/22446/1/determinacao_cota_inundacao_rio_cai.pdf"
+checked = "2026-11-12"
+
+[[location]]
+id = "gravatai"
+name = "Gravataí"
+river = "Gravataí"
+gauge = "ANA-87399000"
+confirmed = false
+checked = "2026-11-12"

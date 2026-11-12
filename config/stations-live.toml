@@ -107,3 +107,78 @@ variable = "river_stage"
 lat = -29.9644
 lon = -50.9778
 datum_id = "ANA-87399000-regua"
+
+# First batch of Etapa 2 (12/11/2026): SGB gauges of the official warning system (SACE). Positions from ANA's
+# station inventory (HidroInventarioEstacoes).
+
+[[station]]
+id = "ANA-86510000"
+name = "Taquari em Muçum (ANA)"
+source = "ana"
+variable = "river_stage"
+lat = -29.1672
+lon = -51.8686
+datum_id = "ANA-86510000-regua"
+
+[[station]]
+id = "ANA-86720000"
+name = "Taquari em Encantado (ANA)"
+source = "ana"
+variable = "river_stage"
+lat = -29.2344
+lon = -51.8550
+datum_id = "ANA-86720000-regua"
+
+[[station]]
+id = "ANA-86881000"
+name = "Taquari em Bom Retiro do Sul (ANA)"
+source = "ana"
+variable = "river_stage"
+lat = -29.6081
+lon = -51.9511
+datum_id = "ANA-86881000-regua"
+
+[[station]]
+id = "ANA-86950000"
+name = "Taquari em Taquari (ANA)"
+source = "ana"
+variable = "river_stage"
+lat = -29.8069
+lon = -51.8758
+datum_id = "ANA-86950000-regua"
+
+[[station]]
+id = "ANA-85642000"
+name = "Jacuí em Cachoeira do Sul (Passo São Lourenço) (ANA)"
+source = "ana"
+variable = "river_stage"
+lat = -30.0078
+lon = -53.0156
+datum_id = "ANA-85642000-regua"
+
+[[station]]
+id = "ANA-87380000"
+name = "Sinos em Campo Bom (ANA)"
+source = "ana"
+variable = "river_stage"
+lat = -29.6917
+lon = -51.0461
+datum_id = "ANA-87380000-regua"
+
+[[station]]
+id = "ANA-87170000"
+name = "Caí em São Sebastião do Caí (Barca do Caí) (ANA)"
+source = "ana"
+variable = "river_stage"
+lat = -29.5900
+lon = -51.3833
+datum_id = "ANA-87170000-regua"
+
+[[station]]
+id = "ANA-87450020"
+name = "Guaíba na Usina do Gasômetro, Porto Alegre (ANA)"
+source = "ana"
+variable = "river_stage"
+lat = -30.0347
+lon = -51.2419
+datum_id = "ANA-87450020-regua"
