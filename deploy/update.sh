@@ -16,8 +16,9 @@ image=$(grep "^COTA_IMAGE=" "$ENV_FILE" | cut -d= -f2)
 if [[ ${COTA_BUILD:-0} == 1 ]]; then
   COTA_IMAGE_TAG=$tag docker compose --env-file "$ENV_FILE" -f deploy/compose.yml build -q aggregate
 elif ! docker pull -q "$image:$tag"; then
-  echo "a imagem $image:$tag ainda não está no GitHub (o workflow \"Imagem do servidor\" leva ~15 min depois do push);" \
-    "as rodadas seguem com a anterior. Rode de novo depois." >&2
+  echo "não consegui baixar $image:$tag. Ou a rede falhou (veja o erro acima), ou a imagem desta versão ainda está" \
+    "sendo montada no GitHub (workflow \"Imagem do servidor\", ~15 min depois do push). As rodadas seguem com a" \
+    "imagem anterior; rode de novo depois." >&2
   exit 1
 fi
 sed -i "s|^COTA_IMAGE_TAG=.*|COTA_IMAGE_TAG=$tag|" "$ENV_FILE"
