@@ -1,0 +1,86 @@
+{
+  "rule_sha256": "d4d5c16154e687cbaff5bbbdea70f7f2961335d54f99f6786986dd8c12083494",
+  "spec": {
+    "region": "taquari",
+    "points": [
+      {
+        "id": "bom-jesus",
+        "lat": -28.668,
+        "lon": -50.432
+      },
+      {
+        "id": "vacaria",
+        "lat": -28.512,
+        "lon": -50.934
+      },
+      {
+        "id": "nova-prata",
+        "lat": -28.783,
+        "lon": -51.61
+      },
+      {
+        "id": "bento-goncalves",
+        "lat": -29.171,
+        "lon": -51.519
+      },
+      {
+        "id": "soledade",
+        "lat": -28.83,
+        "lon": -52.51
+      },
+      {
+        "id": "encantado",
+        "lat": -29.236,
+        "lon": -51.87
+      },
+      {
+        "id": "lajeado",
+        "lat": -29.467,
+        "lon": -51.961
+      }
+    ],
+    "models": [
+      "ecmwf_ifs025",
+      "gfs_global",
+      "icon_global"
+    ],
+    "min_models": 2,
+    "run_hour_utc": 0,
+    "window_days": 5,
+    "aggregation": "por modelo: soma horária de D+1..D+5 (UTC) em cada ponto, arredondada a 0,1 mm por dia; média dos pontos; depois média dos modelos",
+    "threshold_mm": 80,
+    "target": {
+      "station_id": "GLOFAS-TAQUARI",
+      "threshold_m3s": 4368.4,
+      "within_days": 7
+    },
+    "calibration": {
+      "years": [
+        2015,
+        2023
+      ],
+      "data": "chuva da reanálise ERA5 (Open-Meteo) + vazão GloFAS",
+      "threshold_mm": 80,
+      "csi": 0.35,
+      "hits": 48,
+      "false_alarms": 59,
+      "misses": 30,
+      "days": 3246,
+      "flood_days": 78
+    },
+    "backtest": {
+      "period": [
+        "2024-02-15",
+        "2026-11-10"
+      ],
+      "days": 981,
+      "hits": 18,
+      "false_alarms": 13,
+      "misses": 22,
+      "csi": 0.34,
+      "floods": 6,
+      "floods_warned": 6,
+      "false_alarm_runs": 8
+    }
+  }
+}

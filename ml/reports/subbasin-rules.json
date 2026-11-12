@@ -1,0 +1,567 @@
+{
+ "method": "The same method as the basin-wide rule (cota_ml.outlook), one sub-basin at a time:\n\n1. Flood of a sub-basin: GloFAS discharge at its point above that point's own 99th percentile (2015–2023) within\n   7 days.\n2. Calibration (2015–2023): the rain over the next 5 days, averaged over points inside the sub-basin, that\n   maximizes CSI. The rain is the ERA5 reanalysis (Open-Meteo archive), because INMET's stations do not cover the\n   sub-basins; the basin-wide rule is recalibrated the same way as a check on the method (it used INMET).\n3. Out-of-sample test (Feb 2024 → `--end`): the same threshold on the rain the models actually forecast then\n   (Open-Meteo Previous Runs, as in cota_ml.outlook).",
+ "subbasins": {
+  "taquari": {
+   "name": "Taquari-Antas",
+   "target": "GLOFAS-TAQUARI",
+   "flood_m3s_p99": 4368,
+   "points": [
+    "bom-jesus",
+    "vacaria",
+    "nova-prata",
+    "bento-goncalves",
+    "soledade",
+    "encantado",
+    "lajeado"
+   ],
+   "calibration": {
+    "threshold_mm": 80,
+    "csi": 0.35,
+    "hits": 48,
+    "false_alarms": 59,
+    "misses": 30,
+    "days": 3246,
+    "flood_days": 78
+   },
+   "backtest": {
+    "period": [
+     "2024-02-15",
+     "2026-11-10"
+    ],
+    "contingency": {
+     "days": 981,
+     "hits": 18,
+     "false_alarms": 13,
+     "misses": 22,
+     "csi": 0.34
+    },
+    "floods": [
+     {
+      "first_day": "2024-05-04",
+      "last_day": "2024-05-07",
+      "peak_m3s": 6965,
+      "first_alert": "2024-04-27",
+      "lead_days": 7
+     },
+     {
+      "first_day": "2024-05-13",
+      "last_day": "2024-05-15",
+      "peak_m3s": 7294,
+      "first_alert": "2024-05-07",
+      "lead_days": 6
+     },
+     {
+      "first_day": "2025-06-21",
+      "last_day": "2025-06-21",
+      "peak_m3s": 4752,
+      "first_alert": "2025-06-14",
+      "lead_days": 7
+     },
+     {
+      "first_day": "2025-07-01",
+      "last_day": "2025-07-01",
+      "peak_m3s": 4852,
+      "first_alert": "2025-06-26",
+      "lead_days": 5
+     },
+     {
+      "first_day": "2026-09-01",
+      "last_day": "2026-09-02",
+      "peak_m3s": 5081,
+      "first_alert": "2026-08-25",
+      "lead_days": 7
+     },
+     {
+      "first_day": "2026-10-01",
+      "last_day": "2026-10-01",
+      "peak_m3s": 5648,
+      "first_alert": "2026-09-25",
+      "lead_days": 6
+     }
+    ],
+    "false_alarm_runs": [
+     [
+      "2024-03-17",
+      "2024-03-17"
+     ],
+     [
+      "2024-04-25",
+      "2024-04-26"
+     ],
+     [
+      "2024-06-14",
+      "2024-06-16"
+     ],
+     [
+      "2025-11-04",
+      "2025-11-05"
+     ],
+     [
+      "2026-06-27",
+      "2026-06-27"
+     ],
+     [
+      "2026-07-19",
+      "2026-07-19"
+     ],
+     [
+      "2026-08-11",
+      "2026-08-11"
+     ],
+     [
+      "2026-11-02",
+      "2026-11-03"
+     ]
+    ]
+   }
+  },
+  "cai": {
+   "name": "Caí",
+   "target": "GLOFAS-CAI",
+   "flood_m3s_p99": 680,
+   "points": [
+    "sao-francisco-de-paula",
+    "canela",
+    "nova-petropolis",
+    "feliz",
+    "montenegro"
+   ],
+   "calibration": {
+    "threshold_mm": 95,
+    "csi": 0.353,
+    "hits": 30,
+    "false_alarms": 38,
+    "misses": 17,
+    "days": 3246,
+    "flood_days": 47
+   },
+   "backtest": {
+    "period": [
+     "2024-02-15",
+     "2026-11-10"
+    ],
+    "contingency": {
+     "days": 980,
+     "hits": 10,
+     "false_alarms": 10,
+     "misses": 15,
+     "csi": 0.286
+    },
+    "floods": [
+     {
+      "first_day": "2024-05-04",
+      "last_day": "2024-05-08",
+      "peak_m3s": 1090,
+      "first_alert": "2024-04-27",
+      "lead_days": 7
+     },
+     {
+      "first_day": "2024-05-13",
+      "last_day": "2024-05-18",
+      "peak_m3s": 1367,
+      "first_alert": "2024-05-08",
+      "lead_days": 5
+     },
+     {
+      "first_day": "2025-07-01",
+      "last_day": "2025-07-01",
+      "peak_m3s": 704,
+      "first_alert": "2025-06-26",
+      "lead_days": 5
+     },
+     {
+      "first_day": "2026-10-01",
+      "last_day": "2026-10-01",
+      "peak_m3s": 795,
+      "first_alert": "2026-09-25",
+      "lead_days": 6
+     }
+    ],
+    "false_alarm_runs": [
+     [
+      "2024-04-26",
+      "2024-04-26"
+     ],
+     [
+      "2024-06-14",
+      "2024-06-15"
+     ],
+     [
+      "2025-02-14",
+      "2025-02-14"
+     ],
+     [
+      "2025-06-15",
+      "2025-06-15"
+     ],
+     [
+      "2025-11-03",
+      "2025-11-03"
+     ],
+     [
+      "2026-07-19",
+      "2026-07-19"
+     ],
+     [
+      "2026-08-25",
+      "2026-08-27"
+     ]
+    ]
+   }
+  },
+  "sinos": {
+   "name": "Sinos",
+   "target": "GLOFAS-SINOS",
+   "flood_m3s_p99": 484,
+   "points": [
+    "caraa",
+    "rolante",
+    "taquara",
+    "gramado",
+    "novo-hamburgo"
+   ],
+   "calibration": {
+    "threshold_mm": 95,
+    "csi": 0.356,
+    "hits": 36,
+    "false_alarms": 30,
+    "misses": 35,
+    "days": 3246,
+    "flood_days": 71
+   },
+   "backtest": {
+    "period": [
+     "2024-02-15",
+     "2026-11-10"
+    ],
+    "contingency": {
+     "days": 983,
+     "hits": 10,
+     "false_alarms": 5,
+     "misses": 17,
+     "csi": 0.312
+    },
+    "floods": [
+     {
+      "first_day": "2024-05-04",
+      "last_day": "2024-05-04",
+      "peak_m3s": 573,
+      "first_alert": "2024-04-27",
+      "lead_days": 7
+     },
+     {
+      "first_day": "2024-05-06",
+      "last_day": "2024-05-07",
+      "peak_m3s": 660,
+      "first_alert": "2024-04-29",
+      "lead_days": 7
+     },
+     {
+      "first_day": "2024-05-13",
+      "last_day": "2024-05-17",
+      "peak_m3s": 876,
+      "first_alert": "2024-05-08",
+      "lead_days": 5
+     },
+     {
+      "first_day": "2025-07-01",
+      "last_day": "2025-07-01",
+      "peak_m3s": 488,
+      "first_alert": "2025-06-27",
+      "lead_days": 4
+     },
+     {
+      "first_day": "2026-10-01",
+      "last_day": "2026-10-01",
+      "peak_m3s": 491,
+      "first_alert": "2026-09-27",
+      "lead_days": 4
+     }
+    ],
+    "false_alarm_runs": [
+     [
+      "2024-06-14",
+      "2024-06-15"
+     ],
+     [
+      "2026-08-25",
+      "2026-08-27"
+     ]
+    ]
+   }
+  },
+  "gravatai": {
+   "name": "Gravataí",
+   "target": "GLOFAS-GRAVATAI",
+   "flood_m3s_p99": 193,
+   "points": [
+    "santo-antonio-da-patrulha",
+    "glorinha",
+    "gravatai",
+    "cachoeirinha"
+   ],
+   "calibration": {
+    "threshold_mm": 85,
+    "csi": 0.282,
+    "hits": 35,
+    "false_alarms": 61,
+    "misses": 28,
+    "days": 3246,
+    "flood_days": 63
+   },
+   "backtest": {
+    "period": [
+     "2024-02-15",
+     "2026-11-10"
+    ],
+    "contingency": {
+     "days": 984,
+     "hits": 11,
+     "false_alarms": 10,
+     "misses": 10,
+     "csi": 0.355
+    },
+    "floods": [
+     {
+      "first_day": "2024-05-03",
+      "last_day": "2024-05-04",
+      "peak_m3s": 261,
+      "first_alert": "2024-04-26",
+      "lead_days": 7
+     },
+     {
+      "first_day": "2024-05-07",
+      "last_day": "2024-05-07",
+      "peak_m3s": 262,
+      "first_alert": "2024-04-30",
+      "lead_days": 7
+     },
+     {
+      "first_day": "2024-05-13",
+      "last_day": "2024-05-17",
+      "peak_m3s": 283,
+      "first_alert": "2024-05-08",
+      "lead_days": 5
+     },
+     {
+      "first_day": "2026-10-01",
+      "last_day": "2026-10-01",
+      "peak_m3s": 194,
+      "first_alert": "2026-09-26",
+      "lead_days": 5
+     }
+    ],
+    "false_alarm_runs": [
+     [
+      "2024-06-14",
+      "2024-06-15"
+     ],
+     [
+      "2025-06-15",
+      "2025-06-17"
+     ],
+     [
+      "2025-11-03",
+      "2025-11-03"
+     ],
+     [
+      "2026-07-19",
+      "2026-07-19"
+     ],
+     [
+      "2026-08-25",
+      "2026-08-27"
+     ]
+    ]
+   }
+  },
+  "jacui": {
+   "name": "Jacuí",
+   "target": "GLOFAS-JACUI",
+   "flood_m3s_p99": 8151,
+   "points": [
+    "espumoso",
+    "julio-de-castilhos",
+    "santa-maria",
+    "sobradinho",
+    "cachoeira-do-sul",
+    "santa-cruz-do-sul",
+    "rio-pardo"
+   ],
+   "calibration": {
+    "threshold_mm": 90,
+    "csi": 0.213,
+    "hits": 20,
+    "false_alarms": 39,
+    "misses": 35,
+    "days": 3246,
+    "flood_days": 55
+   },
+   "backtest": {
+    "period": [
+     "2024-02-15",
+     "2026-11-10"
+    ],
+    "contingency": {
+     "days": 978,
+     "hits": 12,
+     "false_alarms": 14,
+     "misses": 10,
+     "csi": 0.333
+    },
+    "floods": [
+     {
+      "first_day": "2024-05-04",
+      "last_day": "2024-05-10",
+      "peak_m3s": 12676,
+      "first_alert": "2024-04-27",
+      "lead_days": 7
+     },
+     {
+      "first_day": "2024-05-12",
+      "last_day": "2024-05-16",
+      "peak_m3s": 12793,
+      "first_alert": "2024-05-09",
+      "lead_days": 3
+     },
+     {
+      "first_day": "2025-06-21",
+      "last_day": "2025-06-21",
+      "peak_m3s": 8278,
+      "first_alert": "2025-06-14",
+      "lead_days": 7
+     },
+     {
+      "first_day": "2026-10-01",
+      "last_day": "2026-10-02",
+      "peak_m3s": 9615,
+      "first_alert": "2026-09-25",
+      "lead_days": 6
+     }
+    ],
+    "false_alarm_runs": [
+     [
+      "2024-03-14",
+      "2024-03-17"
+     ],
+     [
+      "2024-04-25",
+      "2024-04-26"
+     ],
+     [
+      "2024-05-20",
+      "2024-05-20"
+     ],
+     [
+      "2024-06-14",
+      "2024-06-15"
+     ],
+     [
+      "2025-02-14",
+      "2025-02-14"
+     ],
+     [
+      "2025-06-13",
+      "2025-06-13"
+     ],
+     [
+      "2025-12-20",
+      "2025-12-20"
+     ],
+     [
+      "2026-07-17",
+      "2026-07-17"
+     ],
+     [
+      "2026-07-19",
+      "2026-07-19"
+     ]
+    ]
+   }
+  },
+  "guaiba-era5": {
+   "name": "Guaíba (bacia inteira, conferência do método)",
+   "target": "GLOFAS-GUAIBA",
+   "flood_m3s_p99": 9498,
+   "points": [
+    "A801",
+    "B807",
+    "A840",
+    "A879",
+    "A882",
+    "A837"
+   ],
+   "calibration": {
+    "threshold_mm": 95,
+    "csi": 0.315,
+    "hits": 28,
+    "false_alarms": 34,
+    "misses": 27,
+    "days": 3246,
+    "flood_days": 55
+   },
+   "backtest": {
+    "period": [
+     "2024-02-15",
+     "2026-11-10"
+    ],
+    "contingency": {
+     "days": 977,
+     "hits": 5,
+     "false_alarms": 9,
+     "misses": 10,
+     "csi": 0.208
+    },
+    "floods": [
+     {
+      "first_day": "2024-05-04",
+      "last_day": "2024-05-10",
+      "peak_m3s": 15240,
+      "first_alert": "2024-04-27",
+      "lead_days": 7
+     },
+     {
+      "first_day": "2024-05-12",
+      "last_day": "2024-05-17",
+      "peak_m3s": 15559,
+      "first_alert": "2024-05-09",
+      "lead_days": 3
+     },
+     {
+      "first_day": "2026-10-01",
+      "last_day": "2026-10-03",
+      "peak_m3s": 11428,
+      "first_alert": null,
+      "lead_days": null
+     }
+    ],
+    "false_alarm_runs": [
+     [
+      "2024-04-26",
+      "2024-04-26"
+     ],
+     [
+      "2024-06-14",
+      "2024-06-15"
+     ],
+     [
+      "2025-06-15",
+      "2025-06-16"
+     ],
+     [
+      "2025-06-27",
+      "2025-06-27"
+     ],
+     [
+      "2026-07-19",
+      "2026-07-19"
+     ],
+     [
+      "2026-08-26",
+      "2026-08-27"
+     ]
+    ]
+   }
+  }
+ }
+}

@@ -67,6 +67,32 @@ impl Rule {
     }
 }
 
+/// The basin-wide rule's region: its outlooks keep their original file name (`<day>.json`).
+pub const MAIN_REGION: &str = "guaiba";
+
+/// File of one region's outlook for day `day`, at the nodes and in the ledger.
+pub fn file_name(region: &str, day: NaiveDate) -> String {
+    if region == MAIN_REGION {
+        format!("{day}.json")
+    } else {
+        format!("{region}-{day}.json")
+    }
+}
+
+/// The basin-wide rule plus every sub-basin rule in `dir` (sorted by file name), each checked by `load_rule`.
+pub fn load_rules(main: &Path, dir: &Path) -> Result<Vec<Rule>> {
+    let mut rules = vec![load_rule(main)?];
+    if dir.is_dir() {
+        let mut files: Vec<_> = std::fs::read_dir(dir)?.map(|e| e.map(|e| e.path())).collect::<std::io::Result<_>>()?;
+        files.retain(|f| f.extension().is_some_and(|e| e == "json"));
+        files.sort();
+        for f in files {
+            rules.push(load_rule(&f)?);
+        }
+    }
+    Ok(rules)
+}
+
 /// Reads the rule and checks that the declared hash is that of the specification's canonical JSON
 /// (the same one Python writes and that goes on-chain).
 pub fn load_rule(path: &Path) -> Result<Rule> {
@@ -233,6 +259,20 @@ impl Attestation for SignedOutlook {
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    #[test]
+    fn every_sub_basin_rule_has_its_hash_and_fits_the_program() {
+        let root = Path::new(env!("CARGO_MANIFEST_DIR")).join("../..");
+        let rules = load_rules(&root.join("ml/models/outlook-rule.json"), &root.join("ml/models/outlook-rules")).unwrap();
+        let mut regions: Vec<&str> = rules.iter().map(|r| r.spec.region.as_str()).collect();
+        assert!(rules.len() >= 6, "{regions:?}");
+        assert!(regions.iter().all(|r| !r.is_empty() && r.len() <= 16), "{regions:?}");
+        regions.sort();
+        regions.dedup();
+        assert_eq!(regions.len(), rules.len(), "regiões repetidas");
+        assert_eq!(file_name("guaiba", NaiveDate::from_ymd_opt(2026, 11, 12).unwrap()), "2026-11-12.json");
+        assert_eq!(file_name("cai", NaiveDate::from_ymd_opt(2026, 11, 12).unwrap()), "cai-2026-11-12.json");
+    }
 
     fn rule() -> Rule {
         let root = Path::new(env!("CARGO_MANIFEST_DIR")).join("../../ml/models/outlook-rule.json");

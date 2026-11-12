@@ -29,11 +29,15 @@ enum Cmd {
         /// Day D (UTC) that has just closed; the window is D+1..D+5.
         #[arg(long)]
         day: NaiveDate,
+        /// The basin-wide rule.
         #[arg(long, default_value = "ml/models/outlook-rule.json")]
         rule: PathBuf,
+        /// Sub-basin rules (one outlook per region); a missing folder means the basin-wide rule only.
+        #[arg(long, default_value = "ml/models/outlook-rules")]
+        rules_dir: PathBuf,
         #[arg(long)]
         out: PathBuf,
-        /// Reads the daily totals (`outlook::Totals`) from a file instead of the API (tests).
+        /// Reads the daily totals (`outlook::Totals`) from a file instead of the API (tests; basin-wide rule only).
         #[arg(long)]
         input: Option<PathBuf>,
     },
@@ -53,36 +57,52 @@ enum Cmd {
 
 fn main() -> Result<()> {
     match Args::parse().cmd {
-        Cmd::Observe { key, day, rule, out, input } => observe(&key, day, &rule, &out, input.as_deref()),
+        Cmd::Observe { key, day, rule, rules_dir, out, input } => observe(&key, day, &rule, &rules_dir, &out, input.as_deref()),
         Cmd::Anchor { rpc, cluster, payer, nodes_dir, ledger } => anchor(&rpc, &cluster, &payer, &nodes_dir, &ledger),
     }
 }
 
-fn observe(key: &Path, day: NaiveDate, rule: &Path, out: &Path, input: Option<&Path>) -> Result<()> {
+fn observe(key: &Path, day: NaiveDate, rule: &Path, rules_dir: &Path, out: &Path, input: Option<&Path>) -> Result<()> {
     let key = keys::load_signing_key(key)?;
-    let rule = outlook::load_rule(rule)?;
-    let file = out.join(format!("{day}.json"));
-    if file.exists() {
-        eprintln!("perspectiva de {day} já assinada");
-        return Ok(());
+    let rules = if input.is_some() { vec![outlook::load_rule(rule)?] } else { outlook::load_rules(rule, rules_dir)? };
+    let http = cota_ingest::http_client()?;
+    let mut failed = 0;
+    for rule in &rules {
+        let region = &rule.spec.region;
+        let file = out.join(outlook::file_name(region, day));
+        if file.exists() {
+            eprintln!("perspectiva {region} de {day} já assinada");
+            continue;
+        }
+        let totals = match input {
+            Some(p) => serde_json::from_str(&std::fs::read_to_string(p)?)?,
+            None => outlook::fetch(&http, rule, day),
+        };
+        // One region without data does not stop the others.
+        let o = match outlook::summarize(rule, day, &totals) {
+            Ok(o) => o,
+            Err(e) => {
+                eprintln!("perspectiva {region} de {day}: {e:#}");
+                failed += 1;
+                continue;
+            }
+        };
+        std::fs::create_dir_all(out)?;
+        std::fs::write(&file, serde_json::to_string_pretty(&outlook::sign(&key, &o, chrono::Utc::now().timestamp()))?)?;
+        eprintln!(
+            "[{}] {day} {region}: chuva prevista em {} dias {:.1} mm (modelos {}: {:.1}–{:.1} mm), limiar {} mm",
+            &keys::pubkey_base58(&key)[..8],
+            rule.spec.window_days,
+            o.header.rain_mean_milli as f64 / 1000.0,
+            o.header.models,
+            o.header.rain_min_milli as f64 / 1000.0,
+            o.header.rain_max_milli as f64 / 1000.0,
+            rule.spec.threshold_mm,
+        );
     }
-    let totals = match input {
-        Some(p) => serde_json::from_str(&std::fs::read_to_string(p)?)?,
-        None => outlook::fetch(&cota_ingest::http_client()?, &rule, day),
-    };
-    let o = outlook::summarize(&rule, day, &totals)?;
-    std::fs::create_dir_all(out)?;
-    std::fs::write(&file, serde_json::to_string_pretty(&outlook::sign(&key, &o, chrono::Utc::now().timestamp()))?)?;
-    eprintln!(
-        "[{}] {day}: chuva prevista em {} dias {:.1} mm (modelos {}: {:.1}–{:.1} mm), limiar {} mm",
-        &keys::pubkey_base58(&key)[..8],
-        rule.spec.window_days,
-        o.header.rain_mean_milli as f64 / 1000.0,
-        o.header.models,
-        o.header.rain_min_milli as f64 / 1000.0,
-        o.header.rain_max_milli as f64 / 1000.0,
-        rule.spec.threshold_mm,
-    );
+    if failed == rules.len() {
+        bail!("nenhuma perspectiva de chuva assinada para {day}");
+    }
     Ok(())
 }
 
@@ -118,7 +138,7 @@ fn anchor(rpc_url: &str, cluster: &str, payer: &Path, nodes_dir: &Path, ledger: 
     for a in attest::select(&members, committee.threshold as usize, &subs)? {
         let h = &a.header;
         let day = day_of(h.issued_at);
-        let file = out_dir.join(format!("{day}.json"));
+        let file = out_dir.join(outlook::file_name(&h.region, day));
         if file.exists() {
             continue;
         }
@@ -129,7 +149,13 @@ fn anchor(rpc_url: &str, cluster: &str, payer: &Path, nodes_dir: &Path, ledger: 
             Some(s) => (s.index, s.tx),
             None if h.issued_at != committee.last_t_end => {
                 // The program only accepts the outlook for the day that has just been anchored.
-                eprintln!("perspectiva de {day} fora de hora (último lote termina em {}); ignorada", committee.last_t_end);
+                eprintln!("perspectiva {} de {day} fora de hora (último lote termina em {}); ignorada", h.region, committee.last_t_end);
+                continue;
+            }
+            // A sub-basin rule goes on-chain through the multisig (24 h wait): until it is there, its outlooks stay
+            // with the nodes instead of failing the round.
+            None if rpc.account_data(&chain::outlook_rule_pda(&h.region))?.is_none() => {
+                eprintln!("perspectiva {} de {day}: a regra ainda não está na cadeia; fica com os nós", h.region);
                 continue;
             }
             None => {
@@ -160,7 +186,8 @@ fn anchor(rpc_url: &str, cluster: &str, payer: &Path, nodes_dir: &Path, ledger: 
         });
         std::fs::write(&file, serde_json::to_string_pretty(&entry)?)?;
         eprintln!(
-            "perspectiva de {day}: {:.1} mm em 5 dias (limiar {:.0}) → {} — slot {}, {} assinatura(s)",
+            "perspectiva {} de {day}: {:.1} mm em 5 dias (limiar {:.0}) → {} — slot {}, {} assinatura(s)",
+            h.region,
             rec.header.rain_mean_milli as f64 / 1000.0,
             rec.threshold_milli as f64 / 1000.0,
             if rec.triggered { "ALERTA ANTECIPADO" } else { "sem alerta" },

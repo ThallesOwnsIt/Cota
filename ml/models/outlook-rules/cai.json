@@ -1,0 +1,76 @@
+{
+  "rule_sha256": "f6d5b344a183c5be024d357b7acdff4fc9608accd9b83fb42d08c8350ab44fa7",
+  "spec": {
+    "region": "cai",
+    "points": [
+      {
+        "id": "sao-francisco-de-paula",
+        "lat": -29.448,
+        "lon": -50.584
+      },
+      {
+        "id": "canela",
+        "lat": -29.365,
+        "lon": -50.812
+      },
+      {
+        "id": "nova-petropolis",
+        "lat": -29.376,
+        "lon": -51.114
+      },
+      {
+        "id": "feliz",
+        "lat": -29.452,
+        "lon": -51.306
+      },
+      {
+        "id": "montenegro",
+        "lat": -29.689,
+        "lon": -51.461
+      }
+    ],
+    "models": [
+      "ecmwf_ifs025",
+      "gfs_global",
+      "icon_global"
+    ],
+    "min_models": 2,
+    "run_hour_utc": 0,
+    "window_days": 5,
+    "aggregation": "por modelo: soma horária de D+1..D+5 (UTC) em cada ponto, arredondada a 0,1 mm por dia; média dos pontos; depois média dos modelos",
+    "threshold_mm": 95,
+    "target": {
+      "station_id": "GLOFAS-CAI",
+      "threshold_m3s": 680.2,
+      "within_days": 7
+    },
+    "calibration": {
+      "years": [
+        2015,
+        2023
+      ],
+      "data": "chuva da reanálise ERA5 (Open-Meteo) + vazão GloFAS",
+      "threshold_mm": 95,
+      "csi": 0.353,
+      "hits": 30,
+      "false_alarms": 38,
+      "misses": 17,
+      "days": 3246,
+      "flood_days": 47
+    },
+    "backtest": {
+      "period": [
+        "2024-02-15",
+        "2026-11-10"
+      ],
+      "days": 980,
+      "hits": 10,
+      "false_alarms": 10,
+      "misses": 15,
+      "csi": 0.286,
+      "floods": 4,
+      "floods_warned": 4,
+      "false_alarm_runs": 7
+    }
+  }
+}

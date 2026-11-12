@@ -1,0 +1,71 @@
+{
+  "rule_sha256": "715013b7e52d54b3dd74e44d49794039c7381042c4291a52be0fd4883d553276",
+  "spec": {
+    "region": "gravatai",
+    "points": [
+      {
+        "id": "santo-antonio-da-patrulha",
+        "lat": -29.818,
+        "lon": -50.52
+      },
+      {
+        "id": "glorinha",
+        "lat": -29.879,
+        "lon": -50.79
+      },
+      {
+        "id": "gravatai",
+        "lat": -29.944,
+        "lon": -50.992
+      },
+      {
+        "id": "cachoeirinha",
+        "lat": -29.951,
+        "lon": -51.094
+      }
+    ],
+    "models": [
+      "ecmwf_ifs025",
+      "gfs_global",
+      "icon_global"
+    ],
+    "min_models": 2,
+    "run_hour_utc": 0,
+    "window_days": 5,
+    "aggregation": "por modelo: soma horária de D+1..D+5 (UTC) em cada ponto, arredondada a 0,1 mm por dia; média dos pontos; depois média dos modelos",
+    "threshold_mm": 85,
+    "target": {
+      "station_id": "GLOFAS-GRAVATAI",
+      "threshold_m3s": 192.7,
+      "within_days": 7
+    },
+    "calibration": {
+      "years": [
+        2015,
+        2023
+      ],
+      "data": "chuva da reanálise ERA5 (Open-Meteo) + vazão GloFAS",
+      "threshold_mm": 85,
+      "csi": 0.282,
+      "hits": 35,
+      "false_alarms": 61,
+      "misses": 28,
+      "days": 3246,
+      "flood_days": 63
+    },
+    "backtest": {
+      "period": [
+        "2024-02-15",
+        "2026-11-10"
+      ],
+      "days": 984,
+      "hits": 11,
+      "false_alarms": 10,
+      "misses": 10,
+      "csi": 0.355,
+      "floods": 4,
+      "floods_warned": 4,
+      "false_alarm_runs": 5
+    }
+  }
+}

@@ -1,0 +1,86 @@
+{
+  "rule_sha256": "f012ea9fef7dbc39989d1df555b4ea65e9f82554dc3c743b823d441591143949",
+  "spec": {
+    "region": "jacui",
+    "points": [
+      {
+        "id": "espumoso",
+        "lat": -28.725,
+        "lon": -52.85
+      },
+      {
+        "id": "julio-de-castilhos",
+        "lat": -29.227,
+        "lon": -53.681
+      },
+      {
+        "id": "santa-maria",
+        "lat": -29.687,
+        "lon": -53.807
+      },
+      {
+        "id": "sobradinho",
+        "lat": -29.421,
+        "lon": -53.026
+      },
+      {
+        "id": "cachoeira-do-sul",
+        "lat": -30.03,
+        "lon": -52.894
+      },
+      {
+        "id": "santa-cruz-do-sul",
+        "lat": -29.718,
+        "lon": -52.426
+      },
+      {
+        "id": "rio-pardo",
+        "lat": -29.99,
+        "lon": -52.378
+      }
+    ],
+    "models": [
+      "ecmwf_ifs025",
+      "gfs_global",
+      "icon_global"
+    ],
+    "min_models": 2,
+    "run_hour_utc": 0,
+    "window_days": 5,
+    "aggregation": "por modelo: soma horária de D+1..D+5 (UTC) em cada ponto, arredondada a 0,1 mm por dia; média dos pontos; depois média dos modelos",
+    "threshold_mm": 90,
+    "target": {
+      "station_id": "GLOFAS-JACUI",
+      "threshold_m3s": 8151.3,
+      "within_days": 7
+    },
+    "calibration": {
+      "years": [
+        2015,
+        2023
+      ],
+      "data": "chuva da reanálise ERA5 (Open-Meteo) + vazão GloFAS",
+      "threshold_mm": 90,
+      "csi": 0.213,
+      "hits": 20,
+      "false_alarms": 39,
+      "misses": 35,
+      "days": 3246,
+      "flood_days": 55
+    },
+    "backtest": {
+      "period": [
+        "2024-02-15",
+        "2026-11-10"
+      ],
+      "days": 978,
+      "hits": 12,
+      "false_alarms": 14,
+      "misses": 10,
+      "csi": 0.333,
+      "floods": 4,
+      "floods_warned": 4,
+      "false_alarm_runs": 9
+    }
+  }
+}

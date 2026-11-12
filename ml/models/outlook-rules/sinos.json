@@ -1,0 +1,76 @@
+{
+  "rule_sha256": "3d5dda09a1896ad7f8c56c80519018604d3ac07084f0cabe99271cad445db690",
+  "spec": {
+    "region": "sinos",
+    "points": [
+      {
+        "id": "caraa",
+        "lat": -29.788,
+        "lon": -50.432
+      },
+      {
+        "id": "rolante",
+        "lat": -29.65,
+        "lon": -50.576
+      },
+      {
+        "id": "taquara",
+        "lat": -29.65,
+        "lon": -50.78
+      },
+      {
+        "id": "gramado",
+        "lat": -29.379,
+        "lon": -50.874
+      },
+      {
+        "id": "novo-hamburgo",
+        "lat": -29.678,
+        "lon": -51.13
+      }
+    ],
+    "models": [
+      "ecmwf_ifs025",
+      "gfs_global",
+      "icon_global"
+    ],
+    "min_models": 2,
+    "run_hour_utc": 0,
+    "window_days": 5,
+    "aggregation": "por modelo: soma horária de D+1..D+5 (UTC) em cada ponto, arredondada a 0,1 mm por dia; média dos pontos; depois média dos modelos",
+    "threshold_mm": 95,
+    "target": {
+      "station_id": "GLOFAS-SINOS",
+      "threshold_m3s": 484.0,
+      "within_days": 7
+    },
+    "calibration": {
+      "years": [
+        2015,
+        2023
+      ],
+      "data": "chuva da reanálise ERA5 (Open-Meteo) + vazão GloFAS",
+      "threshold_mm": 95,
+      "csi": 0.356,
+      "hits": 36,
+      "false_alarms": 30,
+      "misses": 35,
+      "days": 3246,
+      "flood_days": 71
+    },
+    "backtest": {
+      "period": [
+        "2024-02-15",
+        "2026-11-10"
+      ],
+      "days": 983,
+      "hits": 10,
+      "false_alarms": 5,
+      "misses": 17,
+      "csi": 0.312,
+      "floods": 5,
+      "floods_warned": 5,
+      "false_alarm_runs": 2
+    }
+  }
+}
