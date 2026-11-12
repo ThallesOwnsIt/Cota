@@ -10,7 +10,7 @@
 
 Every day Cota records river levels, rain, forecasts and official warnings for the Guaíba basin (Porto Alegre, Brazil) in a public
 log on Solana that nobody can change afterwards, so anyone can check what was known, and when. It started from the May 2024 flood,
-when the Guaíba reached 5.35 m and it was hard to piece together what had been forecast and announced beforehand.
+when the Guaíba reached 5.37 m and it was hard to piece together what had been forecast and announced beforehand.
 
 - **Three oracles, two signatures.** A blockchain can't see the weather. Each of Cota's three oracles fetches data on its own from
   INMET rain gauges, ANA river gauges, GloFAS river discharge and Open-Meteo forecasts, and signs what it saw. The program only records a value that
