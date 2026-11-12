@@ -1,0 +1,18 @@
+# Plausibility of river-level readings (ANA gauges). Written by hand, unlike quality-limits.toml next to it, which
+# training regenerates. Read by cota-quality (Limits::load) and by scripts/export_dashboard.py, so the flag
+# recorded on-chain and the levels the dashboard shows follow the same rule.
+#
+# A reading is an isolated spike when reaching it from the previous plausible reading, and coming back from it to
+# the next one, would both need the river to move faster than its rate below, in opposite directions, and by more
+# than floor_mm. The reading stays in the record: it is what the source published. It is flagged (reason Jump)
+# and left out of the dashboard's levels.
+#
+# Real case: Cais Mauá on 11/11/2026: 1.33 m, then 29 h without data, then 7.65 m, then 0.94 m.
+
+floor_mm = 300            # moves under 30 cm never count: the wind moves the Guaíba that much
+default_rate_mm_h = 2000  # rivers: up to 2 m per hour, so a real flash flood is never flagged
+
+[rate_mm_h]
+# The Guaíba is a lake: a few centimetres per hour, even in May 2024.
+"ANA-87450004" = 150      # Cais Mauá
+"ANA-87450020" = 150      # Usina do Gasômetro

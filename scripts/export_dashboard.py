@@ -30,6 +30,8 @@ OUT = ROOT / "dashboard/data"
 TARGET = "GLOFAS-GUAIBA"
 # Cais Mauá gauge (ANA): the level Porto Alegre's civil defense follows.
 STAGE_MAIN = "ANA-87450004"
+# River-level plausibility (hand-written; the same file and rule as cota-quality, see stage_spikes).
+STAGE_LIMITS = tomllib.loads((ROOT / "config/stage-limits.toml").read_text()) if (ROOT / "config/stage-limits.toml").exists() else {}
 # Days of Cais Mauá hourly readings in the live-mode chart.
 STAGE_SERIES_DAYS = 60
 RPC = "https://api.devnet.solana.com"
@@ -170,6 +172,30 @@ def main() -> None:
     )
 
 
+def stage_spikes(sid: str, points: list[tuple[int, int]]) -> set[int]:
+    """Timestamps of isolated spikes in one gauge's sorted series, by the same rule as cota-quality's stage_spikes:
+    reaching the reading from the previous plausible one and coming back from it to the next would both need the
+    river to move faster than its limit, in opposite directions, and by more than the floor."""
+    floor = STAGE_LIMITS.get("floor_mm", 300)
+    rate = STAGE_LIMITS.get("rate_mm_h", {}).get(sid, STAGE_LIMITS.get("default_rate_mm_h", 2000))
+    too_fast = lambda dv, dt: abs(dv) > floor and abs(dv) > rate * dt / 3600  # noqa: E731
+    out: set[int] = set()
+    prev = None
+    for i, (t, v) in enumerate(points):
+        if prev is None:
+            prev = (t, v)
+            continue
+        if i + 1 >= len(points):
+            break
+        tn, vn = points[i + 1]
+        up, down = v - prev[1], vn - v
+        if up * down < 0 and too_fast(up, t - prev[0]) and too_fast(down, tn - t):
+            out.add(t)
+        else:
+            prev = (t, v)
+    return out
+
+
 def collect(ledger: Path) -> dict:
     """Everything one ledger contributes. v2 if it has the accumulator's records, v1 otherwise."""
     audit = json.loads((ledger / "audit.json").read_text())
@@ -185,6 +211,15 @@ def collect(ledger: Path) -> dict:
     audit_batches = {b["batch_id"]: b for b in audit["batches"]}
     audit_forecasts = {f[key]: f for f in audit["forecasts"]}
 
+    # Implausible river levels, judged over each gauge's whole series (a spike at midnight needs the next day's
+    # first reading): left out of the levels below, and listed per day.
+    gauges: dict[str, list[tuple[int, int]]] = {}
+    for path in sorted((ledger / "batches").glob("*.json")):
+        for r in json.loads(path.read_text())["readings"]:
+            if r["variable"] == "river_stage":
+                gauges.setdefault(r["station_id"], []).append((r["ts_utc"], r["value_milli"]))
+    implausible = {(sid, t) for sid, pts in gauges.items() for t in stage_spikes(sid, sorted(pts))}
+
     days = []
     stage_series: list[list[int]] = []
     members = None
@@ -196,9 +231,12 @@ def collect(ledger: Path) -> dict:
         hours: dict[str, int] = {}
         guaiba = None
         stage: dict[str, list[int]] = {}
+        dropped: list[dict] = []
         flow: dict[str, int] = {}
         for r in e["readings"]:
-            if r["variable"] == "river_stage":
+            if r["variable"] == "river_stage" and (r["station_id"], r["ts_utc"]) in implausible:
+                dropped.append({"station_id": r["station_id"], "ts_utc": r["ts_utc"], "value_milli": r["value_milli"]})
+            elif r["variable"] == "river_stage":
                 stage.setdefault(r["station_id"], []).append(r["value_milli"])
                 if r["station_id"] == STAGE_MAIN:
                     stage_series.append([r["ts_utc"], r["value_milli"]])
@@ -236,6 +274,8 @@ def collect(ledger: Path) -> dict:
                     if stage
                     else {}
                 ),
+                # Readings left out as isolated spikes (still in the batch: it is what the source published).
+                **({"stage_implausible": dropped} if dropped else {}),
                 "rain_milli": rain,
                 "rain_hours": hours,
                 "quality": [
