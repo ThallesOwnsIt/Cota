@@ -1208,9 +1208,9 @@
    "bytes": 846
   },
   "config/stations-live.toml": {
-   "sha256": "e212b4e58d561d3afbc947659f271524ac99df92441f0c32154c485710adb354",
-   "id": "enTrbC_z7LCuNlqY7c5E3h9xEek_QIyDxfxmSQB7zUU",
-   "bytes": 837
+   "sha256": "699d3ee00741e52cc486e52b8d54c4749b62ee96f4b4fc206b878f3ab680bf0e",
+   "id": "jiPbSu3QBkw87H-UOxEqA82Mfrfo4G8TvPh1GQnkWeQ",
+   "bytes": 1180
   },
   "config/upgrade-multisig.json": {
    "sha256": "4ff4ece493c9161f8151c016de03d63bac08e226be7fa81c6a7e6fb9883f2f4c",
@@ -1532,6 +1532,6 @@
    "bytes": 986
   }
  ],
- "bytes": 2018084,
+ "bytes": 2019264,
  "signer": "7kw7om2uMrnSaJBZXriH6TAVpQrsN7Eoq7dtsqgb6Lww"
 }
