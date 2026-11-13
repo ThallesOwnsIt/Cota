@@ -101,7 +101,8 @@ anchor() {
       # The program applies the early-warning rule to the forecast rain of the day just anchored.
       "$BIN/cota-outlook" anchor --rpc "$RPC" --cluster "$CLUSTER" --payer "$payer" || warn "perspectiva de chuva: falhou"
       "$BIN/cota-extforecast" collect --rpc "$RPC" || warn "previsões de terceiros: falhou"
-      if (cd ml && uv run python -m cota_ml.forecast --day "$day"); then
+      # --frozen: uses ml/uv.lock as committed and never rewrites it, so the checkout stays clean for the pull.
+      if (cd ml && uv run --frozen python -m cota_ml.forecast --day "$day"); then
         if [[ -f data/forecasts/$day.json ]]; then
           "$BIN/cota-admin" --rpc "$RPC" --payer "$payer" commit-forecast --file "data/forecasts/$day.json" --cluster "$CLUSTER" ||
             { warn "previsão de vazão de $day: não foi gravada"; rc=1; }
@@ -138,23 +139,38 @@ publish() {
   fi
   archive || warn "cópia no Arweave: falhou"
   git add data/ledger dashboard/data
-  if git diff --cached --quiet; then
+  if ! git diff --cached --quiet; then
+    bot_git commit -q -m "ao vivo: $(date -u +%FT%H:%MZ)"
+  fi
+  # Sends every commit GitHub does not have yet: this round's and any an earlier round failed to send, even when
+  # this round had nothing new. Without an upstream (unusual), it tries anyway.
+  local pending
+  pending=$(git rev-list --count '@{u}..HEAD' 2>/dev/null || echo 1)
+  if [[ $pending == 0 ]]; then
     return $rc
   fi
-  git -c user.name=cota-bot -c user.email=cota-bot@users.noreply.github.com commit -q -m "ao vivo: $(date -u +%FT%H:%MZ)"
   local n
   for n in 1 2 3; do
-    if git pull -q --rebase && git push -q; then
-      log "ledger enviado"
+    # The rebase rewrites the round's commits on top of GitHub's, so it needs the bot's identity too (a container
+    # has none). --autostash: a tracked file changed by a tool must not block the pull. -X theirs: where GitHub
+    # wrote the same ledger file (a backup run copying the same records from the chain, a stamp of the same
+    # root), the round's own version, made first and with the batch's data, wins; the round only commits
+    # data/ledger and dashboard/data, so code is never touched.
+    if bot_git pull -q --rebase --autostash -X theirs && git push -q; then
+      log "ledger enviado ($pending commit(s))"
       after_push
       return $rc
     fi
     git rebase --abort 2>/dev/null || true
     sleep 5
   done
-  warn "push falhou três vezes; o commit fica para a próxima rodada"
+  warn "push falhou três vezes; $pending commit(s) esperam a próxima rodada"
+  git status --short | head -5 >&2
   return 1
 }
+
+# git as the bot: commits and rebases need an identity, and the container has none.
+bot_git() { git -c user.name=cota-bot -c user.email=cota-bot@users.noreply.github.com "$@"; }
 
 # Permanent copies outside GitHub: the new or changed ledger files on Arweave (free items; the map path -> id goes
 # to data/ledger/archive.json, committed with the ledger).

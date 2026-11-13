@@ -9,7 +9,7 @@ Checks:
   saldo     the operator (who pays the fees) has SOL left
   fontes    ANA, INMET, Open-Meteo, the Solana RPC and GitHub answer
   carimbo   the accumulator's root was stamped in Bitcoin in the last days
-  ledger    the ledger was committed recently
+  ledger    the ledger was committed recently, and every local commit reached GitHub
   disco     free space where the checkout lives
 
 Exit code: 0 all fine, 1 warnings, 2 failures. Runs with the standard library only (host, container, laptop).
@@ -189,6 +189,19 @@ def check_commit() -> tuple[str, str]:
     ts, subject = out.split(" ", 1)
     age = time.time() - int(ts)
     msg = f"último commit do ledger há {ago(age)} ({subject})"
+    # Commits made here that GitHub does not have yet (the push failed): the site and every other copy fall
+    # behind while the round still looks healthy locally.
+    try:
+        unpushed = subprocess.run(
+            ["git", "-C", str(ROOT), "log", "--reverse", "--format=%ct", "@{u}..HEAD", "--", "data/ledger"],
+            capture_output=True, text=True, timeout=30, check=True,
+        ).stdout.split()
+    except Exception:
+        unpushed = []  # no upstream (a laptop checkout, say): nothing to compare with
+    if unpushed:
+        waiting = time.time() - int(unpushed[0])
+        late = f"{len(unpushed)} commit(s) do ledger ainda não enviados ao GitHub, o mais antigo há {ago(waiting)}"
+        return (FAIL if waiting > 3600 else WARN), f"{msg}; {late}"
     return (WARN, msg + "; esperado ao menos um por dia") if age > 26 * 3600 else (OK, msg)
 
 
