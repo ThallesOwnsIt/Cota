@@ -2,17 +2,17 @@
   "program": "FnjR7wG5zicqWJ6KQuWQ5UcqqhcSghrYozVgMmmDFNwR",
   "registry": "6CNtD18LQ4bBZTGK1C2Z6RuJrSwyxCD3ToRpiWE3y9bR",
   "accumulator": {
-    "records": 177,
-    "on_chain": 177,
+    "records": 187,
+    "on_chain": 187,
     "peaks_match": true,
-    "root": "6fb02bad96ac50f1c96073009cad114eb7d6746a35e58238c6ad9230a3baf066",
+    "root": "0ab5fa5f0c9f8948c91b55ce847e62417c31b8dc7f1f272420e95e86a88d8086",
     "kinds": {
-      "batch": 43,
+      "batch": 44,
       "degradation": 4,
       "forecast": 86,
-      "outlook": 7,
+      "outlook": 8,
       "public_alert": 19,
-      "station": 18
+      "station": 26
     }
   },
   "batches": [
@@ -2238,7 +2238,7 @@
       "rain_mean_milli": 8044,
       "triggered": false,
       "slot": 521335461,
-      "next_batch_slot": null,
+      "next_batch_slot": 521653498,
       "problems": []
     }
   ],
@@ -2258,7 +2258,10 @@
       "problems": []
     }
   ],
-  "unmatched": [],
+  "unmatched": [
+    "registro 185 (batch) sem arquivo no ledger",
+    "registro 186 (outlook) sem arquivo no ledger"
+  ],
   "summary": {
     "alerts": 31,
     "alerts_recorded_before_observation": 31,
@@ -2274,8 +2277,8 @@
     "outlooks_with_problems": 0,
     "public_alerts": 19,
     "public_alerts_with_problems": 0,
-    "records": 177,
-    "unmatched": 0,
+    "records": 187,
+    "unmatched": 2,
     "vault_payouts": 3,
     "vaults": 2,
     "vaults_with_problems": 0
