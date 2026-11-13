@@ -93,7 +93,7 @@ node() {
     fday=$("$BIN/cota-ledger3" --ledger "$V3_LEDGER" forecast-day) || fday=""
     fdir="$(cd "$out" && pwd)/forecast"
     if [[ -n $fday && ! -f $fdir/$fday.json ]]; then
-      (cd ml && uv run --frozen python -m cota_ml.forecast --day "$fday" --out "$fdir") ||
+      (cd ml && uv run --frozen python -m cota_ml.forecast --day "$fday" --ledger-v3 "$(cd .. && pwd)/$V3_LEDGER" --out "$fdir") ||
         warn "livro v3 (ensaio): o modelo de vazão falhou"
     fi
     "$BIN/cota-ledger3" --ledger "$V3_LEDGER" sign --key "$key" --node-dir "$out" --rpc "$RPC" || warn "livro v3 (ensaio): o nó não assinou"

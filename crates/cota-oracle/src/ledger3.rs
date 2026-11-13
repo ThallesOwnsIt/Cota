@@ -780,6 +780,7 @@ pub fn collect(book: &mut Book, nodes_dir: &Path, now: i64) -> Result<Report> {
                 if let Body::Batch(b) = &entry.body {
                     write_batch_readings(book, nodes_dir, b)?;
                 }
+                write_content(book, nodes_dir, &entry, applied.index)?;
                 book.append(entry, &applied)?;
                 report.results.push(Collected::Appended { index: applied.index, kind, signers: signers_count });
             }
@@ -789,6 +790,89 @@ pub fn collect(book: &mut Book, nodes_dir: &Path, now: i64) -> Result<Report> {
         }
     }
     Ok(report)
+}
+
+/// The Merkle root (RFC 9162) of a forecast's features, as `cota_ml.canonical` builds it: leaf data `name=value`, or
+/// `name=null`.
+pub fn features_root(features: &Value) -> Option<Hash> {
+    let leaves: Vec<Hash> = features
+        .as_array()?
+        .iter()
+        .map(|f| {
+            let value = f["value_milli"].as_i64().map(|v| v.to_string()).unwrap_or_else(|| "null".into());
+            cota_core::merkle::hash_leaf(format!("{}={value}", f["name"].as_str().unwrap_or_default()).as_bytes())
+        })
+        .collect();
+    Some(cota_core::merkle::root_from_leaves(&leaves))
+}
+
+fn sha256_hex(text: &str) -> Hash {
+    Sha256::digest(text.as_bytes()).into()
+}
+
+fn write_json(path: &Path, value: &Value) -> Result<()> {
+    if let Some(dir) = path.parent() {
+        std::fs::create_dir_all(dir)?;
+    }
+    std::fs::write(path, serde_json::to_string_pretty(value)? + "\n")?;
+    Ok(())
+}
+
+/// The content an entry commits to by hash, from a node that has it (its hash checked here), next to the entry:
+/// `outlooks/<region>-<day>.json`, `external_forecasts/<source>/<day>.json`, `public_alerts/<sha256>.json`,
+/// `forecasts/<day>.json` (the model run: features, quantiles). Without it the entry would point to nothing.
+fn write_content(book: &Book, nodes_dir: &Path, entry: &Entry, index: u64) -> Result<()> {
+    let nodes: Vec<PathBuf> = std::fs::read_dir(nodes_dir).map(|rd| rd.filter_map(|e| e.ok().map(|e| e.path())).collect()).unwrap_or_default();
+    let day_of = |issued_at: i64| DateTime::from_timestamp(issued_at - 1, 0).map(|d| d.date_naive().to_string()).unwrap_or_default();
+    match &entry.body {
+        Body::Outlook(o) => {
+            let found = nodes.iter().flat_map(|n| read_json_files::<SignedOutlook>(&n.join("outlook"))).find(|s| s.header.content_sha256 == o.content_sha256 && sha256_hex(&s.content) == o.content_sha256);
+            if let Some(s) = found {
+                let path = book.dir.join("outlooks").join(format!("{}-{}.json", o.region, day_of(o.issued_at)));
+                write_json(&path, &serde_json::json!({ "index": index, "region": o.region, "issued_at": o.issued_at, "content_sha256": hex::encode(o.content_sha256), "content": s.content }))?;
+            }
+        }
+        Body::ExternalForecast(e) => {
+            let wanted = hex::encode(e.content_sha256);
+            let found = nodes.iter().flat_map(|n| read_json_files::<SignedForecast>(&n.join("extforecast"))).find(|s| s.header.content_sha256 == wanted && sha256_hex(&s.content) == e.content_sha256);
+            if let Some(s) = found {
+                let path = book.dir.join("external_forecasts").join(&e.source).join(format!("{}.json", day_of(e.issued_at)));
+                write_json(&path, &serde_json::json!({ "index": index, "source": e.source, "issued_at": e.issued_at, "content_sha256": wanted, "content": s.content }))?;
+            }
+        }
+        Body::PublicAlert(a) => {
+            let found = nodes.iter().flat_map(|n| read_json_files::<SignedAlert>(&n.join("alerts"))).find(|s| s.header.content_sha256 == a.content_sha256 && sha256_hex(&s.content) == a.content_sha256);
+            if let Some(s) = found {
+                let path = book.dir.join("public_alerts").join(format!("{}.json", hex::encode(a.content_sha256)));
+                write_json(
+                    &path,
+                    &serde_json::json!({
+                        "index": index, "issuer": a.issuer, "alert_id": a.alert_id, "content_sha256": hex::encode(a.content_sha256),
+                        "description": s.description, "severity_label": s.severity_label, "states": s.states, "content": s.content,
+                    }),
+                )?;
+            }
+        }
+        Body::Forecast(f) => {
+            // The run of any node with the same base and features (all of them, when they agree).
+            for n in &nodes {
+                for run in read_json_files::<Value>(&n.join("forecast")) {
+                    if run["based_on_root"].as_str() == Some(hex::encode(f.based_on_root).as_str()) && features_root(&run["features"]) == Some(f.features_root) {
+                        let day = run["issue_day"].as_str().unwrap_or_default().to_string();
+                        let path = book.dir.join("forecasts").join(format!("{day}.json"));
+                        let mut out = run.clone();
+                        let indexes = std::fs::read_to_string(&path).ok().and_then(|t| serde_json::from_str::<Value>(&t).ok()).and_then(|v| v["indexes"].as_array().cloned()).unwrap_or_default();
+                        let mut indexes: Vec<Value> = indexes.into_iter().filter(|i| i.as_u64() != Some(index)).collect();
+                        indexes.push(index.into());
+                        out["indexes"] = Value::Array(indexes);
+                        return write_json(&path, &out);
+                    }
+                }
+            }
+        }
+        _ => {}
+    }
+    Ok(())
 }
 
 /// `batches/<stream>-<id>.json`: the readings of a batch, from a node whose v2 batch has the same Merkle root.
@@ -830,6 +914,50 @@ pub fn check_readings(book: &Book) -> (usize, Vec<String>) {
             Ok(Ok(_)) => problems.push(format!("lote {} de {}: as leituras publicadas não dão a raiz assinada", b.batch_id, b.stream)),
             Ok(Err(e)) => problems.push(format!("lote {} de {}: leituras inválidas ({e})", b.batch_id, b.stream)),
             Err(e) => problems.push(format!("lote {} de {}: {e} ({})", b.batch_id, b.stream, path.display())),
+        }
+    }
+    (checked, problems)
+}
+
+/// Every published content (outlooks, third-party forecasts, warnings, flow forecast runs) gives the hash its entry
+/// committed to. Returns how many were checked and the problems found (a missing file is one).
+pub fn check_contents(book: &Book) -> (usize, Vec<String>) {
+    let mut checked = 0;
+    let mut problems = Vec::new();
+    let read = |p: PathBuf| std::fs::read_to_string(&p).ok().and_then(|t| serde_json::from_str::<Value>(&t).ok());
+    let day_of = |issued_at: i64| DateTime::from_timestamp(issued_at - 1, 0).map(|d| d.date_naive().to_string()).unwrap_or_default();
+    let base = book.ledger.genesis_index().unwrap_or(0);
+    for (i, e) in book.entries.iter().enumerate() {
+        let index = base + i as u64;
+        let (path, ok) = match &e.body {
+            Body::Outlook(o) => {
+                let p = book.dir.join("outlooks").join(format!("{}-{}.json", o.region, day_of(o.issued_at)));
+                let ok = read(p.clone()).is_some_and(|v| v["content"].as_str().is_some_and(|c| sha256_hex(c) == o.content_sha256));
+                (p, ok)
+            }
+            Body::ExternalForecast(x) => {
+                let p = book.dir.join("external_forecasts").join(&x.source).join(format!("{}.json", day_of(x.issued_at)));
+                let ok = read(p.clone()).is_some_and(|v| v["content"].as_str().is_some_and(|c| sha256_hex(c) == x.content_sha256));
+                (p, ok)
+            }
+            Body::PublicAlert(a) => {
+                let p = book.dir.join("public_alerts").join(format!("{}.json", hex::encode(a.content_sha256)));
+                let ok = read(p.clone()).is_some_and(|v| v["content"].as_str().is_some_and(|c| sha256_hex(c) == a.content_sha256));
+                (p, ok)
+            }
+            Body::Forecast(f) => {
+                // Issue day: the target minus the horizon (a +24 h forecast of D+1 was issued on D).
+                let day = DateTime::from_timestamp(f.target_ts - i64::from(f.horizon_hours) * 3600, 0).map(|d| d.date_naive().to_string()).unwrap_or_default();
+                let p = book.dir.join("forecasts").join(format!("{day}.json"));
+                let ok = read(p.clone()).is_some_and(|v| features_root(&v["features"]) == Some(f.features_root));
+                (p, ok)
+            }
+            _ => continue,
+        };
+        if ok {
+            checked += 1;
+        } else {
+            problems.push(format!("entrada {index} ({}): conteúdo ausente ou que não dá o hash assinado ({})", e.body.kind(), path.display()));
         }
     }
     (checked, problems)

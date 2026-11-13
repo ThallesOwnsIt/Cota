@@ -44,13 +44,36 @@ def checked_entries(ledger: Path, until: date) -> list[dict]:
     return out
 
 
-def load_ledger(ledger: Path, until: date, archive: Path | None = None) -> tuple[list[dict], dict]:
+def v3_entries(ledger3: Path, until: date, stream: str = "guaiba") -> list[dict]:
+    """Batches of the v3 ledger's stream (`batches/<stream>-<id>.json`) up to `until`, each checked against the root
+    the committee signed. The entries themselves (order, signatures) are checked by the cota-ledger rules."""
+    out = []
+    for p in sorted((ledger3 / "batches").glob(f"{stream}-*.json")):
+        e = json.loads(p.read_text())
+        if merkle_root([reading_bytes(r) for r in e["readings"]]).hex() != e["merkle_root"]:
+            raise SystemExit(f"livro v3, lote {e['batch_id']} de {stream}: leituras não batem com a raiz assinada")
+        if date.fromisoformat(e["day"]) <= until:
+            out.append({"batch_id": e["batch_id"], "day": e["day"], "header": {"merkle_root": e["merkle_root"]}, "readings": e["readings"]})
+    return out
+
+
+def load_ledger(ledger: Path, until: date, archive: Path | None = None, ledger3: Path | None = None) -> tuple[list[dict], dict]:
     """Readings from every batch up to `until`, checked against the anchored roots.
 
-    The forecast is recorded on `ledger`'s program, so its latest batch must be `until`. Days it does not
-    have are taken from `archive` (program v1's frozen ledger): the lags of the first live days on v2
-    come from the days v1 recorded.
+    The forecast is based on the latest batch of the ledger it is recorded in, which must be `until`: the v3 ledger
+    when `ledger3` is given, else `ledger` (v2). Days that ledger does not have come from the older ones (v2, then
+    program v1's frozen archive): the lags of the first days come from the days before them.
     """
+    if ledger3 is not None:
+        entries = v3_entries(ledger3, until)
+        if not entries or date.fromisoformat(entries[-1]["day"]) != until:
+            raise SystemExit(f"o último lote do livro v3 não é de {until}")
+        have = {e["day"] for e in entries}
+        older2 = [e for e in checked_entries(ledger, until) if e["day"] not in have] if ledger.exists() else []
+        have |= {e["day"] for e in older2}
+        older1 = [e for e in checked_entries(archive, until) if e["day"] not in have] if archive and archive.exists() else []
+        readings = [r for e in older1 + older2 + entries for r in e["readings"]]
+        return readings, entries[-1]
     entries = checked_entries(ledger, until)
     if not entries or date.fromisoformat(entries[-1]["day"]) != until:
         raise SystemExit(f"o último lote ancorado não é de {until}")
@@ -99,12 +122,13 @@ def main() -> None:
     ap.add_argument("--day", type=date.fromisoformat, required=True, help="dia de emissão (último lote ancorado)")
     ap.add_argument("--ledger", type=Path, default=ROOT / "data/ledger")
     ap.add_argument("--archive", type=Path, default=ROOT / "data/ledger-v1", help="ledger congelado da v1 (histórico)")
+    ap.add_argument("--ledger-v3", type=Path, default=None, help="livro v3: a previsão parte do último lote dele")
     ap.add_argument("--models", type=Path, default=ROOT / "ml/models")
     ap.add_argument("--out", type=Path, default=ROOT / "data/forecasts")
     args = ap.parse_args()
 
     models, widen, manifest = model.load(args.models)
-    readings, last = load_ledger(args.ledger, args.day, args.archive)
+    readings, last = load_ledger(args.ledger, args.day, args.archive, args.ledger_v3)
     result = forecast(readings, last, args.day, models, widen, manifest)
     if result is None:
         print(f"{args.day}: sem dados suficientes para prever")

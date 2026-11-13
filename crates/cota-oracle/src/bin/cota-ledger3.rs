@@ -101,7 +101,9 @@ fn main() -> Result<()> {
         }
         Cmd::Verify { rpc } => {
             let book = ledger3::Book::open(&args.ledger, &args.v2_ledger)?;
-            let (readings_ok, problems) = ledger3::check_readings(&book);
+            let (readings_ok, mut problems) = ledger3::check_readings(&book);
+            let (contents_ok, content_problems) = ledger3::check_contents(&book);
+            problems.extend(content_problems);
             match book.ledger.genesis_index() {
                 None => println!("livro v3 ainda sem registro de abertura ({} registros da v2)", book.ledger.size()),
                 Some(g) => {
@@ -122,6 +124,7 @@ fn main() -> Result<()> {
                     println!("raiz       {}", hex::encode(book.ledger.root().unwrap_or_default()));
                     println!("pontos     {} ponto(s) de controle conferido(s)", book.checkpoints.len());
                     println!("leituras   {readings_ok} lote(s) refeitos a partir das leituras publicadas, com a raiz assinada");
+                    println!("conteúdos  {contents_ok} conteúdo(s) publicado(s) com o hash assinado (chuva, GloFAS, avisos, previsões)");
                     let opened = match book.entries.first().map(|e| &e.body) {
                         Some(cota_ledger::Body::Genesis(g)) => g.members.clone(),
                         _ => Vec::new(),
