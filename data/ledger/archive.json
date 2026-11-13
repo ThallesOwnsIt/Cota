@@ -3,9 +3,9 @@
  "note": "path -> Arweave id of its latest gzipped copy; records.jsonl in chunks",
  "files": {
   "data/ledger/audit.json": {
-   "sha256": "738bc057c67c079430614a558fe569197554052ef131da72c008261dd3d4862c",
-   "id": "jU_huNn6g4IjhHhTLVHEeLq1GoBzsCXwFNiUcSqqjKw",
-   "bytes": 6118
+   "sha256": "b035bca5403ff901968aa4cddefba6d99a4c098f21235e45dd662aec4f68e354",
+   "id": "hRm-Z_M4m9yWICH1cdO_B_fwse85H2eng2qpGDa2u14",
+   "bytes": 6170
   },
   "data/ledger/batches/00001.json": {
    "sha256": "c764b273b95f359854739c3ec9a3a5f202234c144ab3eb7dbfdf32efb8b6941e",
@@ -1569,6 +1569,6 @@
    "bytes": 1977
   }
  ],
- "bytes": 2058259,
+ "bytes": 2064429,
  "signer": "7kw7om2uMrnSaJBZXriH6TAVpQrsN7Eoq7dtsqgb6Lww"
 }
