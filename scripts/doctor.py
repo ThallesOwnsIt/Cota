@@ -12,6 +12,14 @@ Checks:
   ledger    the ledger was committed recently, and every local commit reached GitHub
   disco     free space where the checkout lives
 
+After the cutover (COTA_LEDGER=v3) the chain checks give way to the v3 ledger's (V3_LEDGER, default data/ledger-v3):
+  livro     the ledger replays in full with cota-ledger3 verify (rules, signatures, checkpoints, readings, contents,
+            the opening committee against v2's on-chain)
+  lote      no closed day waits for its batch more than LATE_HOURS
+  ponto     the latest checkpoint has its Bitcoin proof, confirmed within a day
+and there is no SOL to check. During the rehearsal (COTA_V3_ENSAIO=1) `ensaio` replays data/ledger-v3-ensaio and only
+warns.
+
 Exit code: 0 all fine, 1 warnings, 2 failures. Runs with the standard library only (host, container, laptop).
 """
 
@@ -37,6 +45,12 @@ REGISTRY = "6CNtD18LQ4bBZTGK1C2Z6RuJrSwyxCD3ToRpiWE3y9bR"
 # The registry authority (keys/operator.json), which pays the live mode's fees.
 OPERATOR = "3wPjiZdtuJpmivtLCgqgL7gyeSTrbydj7U7R7wwHCe2v"
 UA = {"User-Agent": "cota-doctor"}
+V3_MODE = os.environ.get("COTA_LEDGER", "v2") == "v3"
+V3_LEDGER = ROOT / os.environ.get("V3_LEDGER", "data/ledger-v3")
+ENSAIO = ROOT / "data/ledger-v3-ensaio"
+BIN = Path(os.environ.get("BIN", ROOT / "target/release"))
+# OpenTimestamps attestation tag of a Bitcoin block header (a proof is confirmed once it holds one).
+OTS_BITCOIN = bytes.fromhex("0588960d73d71901")
 
 OK, WARN, FAIL = "ok", "aviso", "falha"
 SYMBOL = {OK: "✓", WARN: "!", FAIL: "✗"}
@@ -176,10 +190,52 @@ def check_stamp() -> tuple[str, str]:
     return OK, msg
 
 
-def check_commit() -> tuple[str, str]:
+def ledger3(*args: str) -> subprocess.CompletedProcess:
+    return subprocess.run([str(BIN / "cota-ledger3"), *args], capture_output=True, text=True, timeout=600, cwd=ROOT)
+
+
+def check_v3_ledger(path: Path, url: str, warn_only: bool = False) -> tuple[str, str]:
+    if not (path / "entries.jsonl").exists():
+        return WARN, f"{path.relative_to(ROOT)} ainda não tem entradas"
+    r = ledger3("--ledger", str(path), "verify", "--rpc", url)
+    out = {l.split(None, 1)[0]: l.split(None, 1)[1] for l in r.stdout.splitlines() if len(l.split(None, 1)) == 2}
+    if r.returncode != 0:
+        return (WARN if warn_only else FAIL), "não confere: " + " ".join((r.stderr or r.stdout).split())[-300:]
+    return OK, f"confere: {out.get('entradas', '?')}; {out.get('pontos', '?')}; relógio {out.get('relógio', '?')}"
+
+
+def check_v3_batch(path: Path, late_hours: float) -> tuple[str, str]:
+    r = ledger3("--ledger", str(path), "next-day", "--settle-min", "0")
+    if r.returncode != 0:
+        return FAIL, "não consegui consultar o livro: " + " ".join(r.stderr.split())[-200:]
+    if not r.stdout.strip():
+        return OK, "em dia: nenhum dia fechado à espera de lote"
+    day = datetime.fromisoformat(r.stdout.split()[0]).replace(tzinfo=timezone.utc).date()
+    closed = datetime(day.year, day.month, day.day, tzinfo=timezone.utc) + timedelta(days=1)
+    late = (datetime.now(timezone.utc) - closed).total_seconds()
+    msg = f"{day} fechou há {ago(late)} e ainda não tem lote"
+    return (FAIL, msg) if late > late_hours * 3600 else (OK, msg + "; dentro da janela")
+
+
+def check_v3_checkpoint(path: Path) -> tuple[str, str]:
+    files = sorted((path / "checkpoints").glob("*.json"))
+    if not files:
+        return WARN, "nenhum ponto de controle ainda"
+    last = files[-1]
+    proof = last.with_name(last.name + ".ots")
+    age = time.time() - last.stat().st_mtime
+    msg = f"último ponto de controle {last.stem.lstrip('0')} (há {ago(age)})"
+    if not proof.exists():
+        return (WARN, msg + ", sem carimbo no Bitcoin") if age > 3600 else (OK, msg + ", carimbo a caminho")
+    if OTS_BITCOIN in proof.read_bytes():
+        return OK, msg + ", carimbo confirmado no Bitcoin"
+    return (WARN, msg + ", carimbo esperando o Bitcoin há mais de 24 h") if age > 24 * 3600 else (OK, msg + ", carimbo enviado, aguardando bloco")
+
+
+def check_commit(path: str = "data/ledger") -> tuple[str, str]:
     try:
         out = subprocess.run(
-            ["git", "-C", str(ROOT), "log", "-1", "--format=%ct %s", "--", "data/ledger"],
+            ["git", "-C", str(ROOT), "log", "-1", "--format=%ct %s", "--", path],
             capture_output=True, text=True, timeout=30, check=True,
         ).stdout.strip()
     except Exception as e:
@@ -193,7 +249,7 @@ def check_commit() -> tuple[str, str]:
     # behind while the round still looks healthy locally.
     try:
         unpushed = subprocess.run(
-            ["git", "-C", str(ROOT), "log", "--reverse", "--format=%ct", "@{u}..HEAD", "--", "data/ledger"],
+            ["git", "-C", str(ROOT), "log", "--reverse", "--format=%ct", "@{u}..HEAD", "--", path],
             capture_output=True, text=True, timeout=30, check=True,
         ).stdout.split()
     except Exception:
@@ -233,19 +289,31 @@ def main() -> None:
             status, detail = FAIL, f"não consegui verificar: {type(e).__name__}: {e}"
         results.append((name, status, detail))
 
-    try:
-        reg = registry(args.rpc)
-    except Exception as e:
-        reg = None
-        results.append(("cadeia", FAIL, f"não consegui ler o registro na cadeia: {type(e).__name__}: {e}"))
-    if reg:
-        run("lote", check_batch, reg, args.late_hours)
-        run("árvore", check_tree, reg)
-    run("saldo", check_balance, args.rpc, args.operator, args.daily_sol)
-    run("fontes", check_sources, args.rpc)
-    run("carimbo", check_stamp)
-    run("ledger", check_commit)
-    run("disco", check_disk)
+    if V3_MODE:
+        # After the cutover: the v3 ledger; v2 is a frozen archive and nothing pays fees.
+        run("livro", check_v3_ledger, V3_LEDGER, args.rpc)
+        run("lote", check_v3_batch, V3_LEDGER, args.late_hours)
+        run("ponto", check_v3_checkpoint, V3_LEDGER)
+        run("fontes", check_sources, args.rpc)
+        run("ledger", check_commit, str(V3_LEDGER.relative_to(ROOT)))
+        run("disco", check_disk)
+    else:
+        try:
+            reg = registry(args.rpc)
+        except Exception as e:
+            reg = None
+            results.append(("cadeia", FAIL, f"não consegui ler o registro na cadeia: {type(e).__name__}: {e}"))
+        if reg:
+            run("lote", check_batch, reg, args.late_hours)
+            run("árvore", check_tree, reg)
+        run("saldo", check_balance, args.rpc, args.operator, args.daily_sol)
+        run("fontes", check_sources, args.rpc)
+        run("carimbo", check_stamp)
+        run("ledger", check_commit)
+        run("disco", check_disk)
+        # The rehearsal: watched, but it never fails the round.
+        if os.environ.get("COTA_V3_ENSAIO") == "1" and ENSAIO.exists():
+            run("ensaio", check_v3_ledger, ENSAIO, args.rpc, True)
 
     worst = max((s for _, s, _ in results), key=[OK, WARN, FAIL].index)
     if args.json:

@@ -150,6 +150,8 @@ pub struct Book {
     pub forecast_bases: BTreeSet<(String, u64)>,
     /// Every v2 record in the v2 ledger now (Genesis takes a prefix of them).
     v2_records: Vec<Vec<u8>>,
+    /// The v2 ledger's folder (its content files fill what a v3 entry's content is missing).
+    v2_dir: PathBuf,
 }
 
 fn decode_hex<const N: usize>(s: &str) -> Result<[u8; N]> {
@@ -212,6 +214,7 @@ impl Book {
             digests: BTreeSet::new(),
             forecast_bases: BTreeSet::new(),
             v2_records,
+            v2_dir: v2_ledger.to_path_buf(),
         };
         for r in &book.v2_records[..n] {
             book.ledger.push_v2_record(r).map_err(|e| anyhow!("{e}"))?;
@@ -629,6 +632,7 @@ impl Book {
             digests: self.digests.clone(),
             forecast_bases: self.forecast_bases.clone(),
             v2_records: Vec::new(),
+            v2_dir: self.v2_dir.clone(),
         }
     }
 }
@@ -648,6 +652,8 @@ pub enum Collected {
 pub struct Report {
     pub checkpoint: Option<(u64, usize)>,
     pub results: Vec<Collected>,
+    /// Contents filled for entries already in.
+    pub backfilled: usize,
 }
 
 fn read_node_files(nodes_dir: &Path) -> (Vec<SignedBody>, Vec<SignedCheckpoint>) {
@@ -713,6 +719,18 @@ fn order(body: &Body) -> (u8, String, u64) {
 pub fn collect(book: &mut Book, nodes_dir: &Path, now: i64) -> Result<Report> {
     let mut report = Report::default();
     let (bodies, checkpoints) = read_node_files(nodes_dir);
+
+    // 0. Contents missing for entries already in (written before contents were published): filled from the nodes or
+    //    the v2 ledger, each checked against its hash.
+    let (_, missing) = check_contents(book);
+    if !missing.is_empty() {
+        let base = book.ledger.genesis_index().unwrap_or(0);
+        for (i, e) in book.entries.iter().enumerate() {
+            write_content(book, nodes_dir, e, base + i as u64)?;
+        }
+        let (_, still) = check_contents(book);
+        report.backfilled = missing.len() - still.len();
+    }
 
     // 1. The checkpoint of the state the nodes verified.
     if let (Some(cp), Some(committee)) = (book.next_checkpoint(), book.ledger.committee().cloned()) {
@@ -830,34 +848,66 @@ fn write_json(path: &Path, value: &Value) -> Result<()> {
 /// The content an entry commits to by hash, from a node that has it (its hash checked here), next to the entry:
 /// `outlooks/<region>-<day>.json`, `external_forecasts/<source>/<day>.json`, `public_alerts/<sha256>.json`,
 /// `forecasts/<day>.json` (the model run: features, quantiles). Without it the entry would point to nothing.
+fn day_of(issued_at: i64) -> String {
+    DateTime::from_timestamp(issued_at - 1, 0).map(|d| d.date_naive().to_string()).unwrap_or_default()
+}
+
+/// A v2 content file's `content`, if it gives `hash` (the rehearsal's entries before contents were published).
+fn v2_content(path: PathBuf, hash: &Hash) -> Option<(String, Value)> {
+    let v: Value = serde_json::from_str(&std::fs::read_to_string(path).ok()?).ok()?;
+    let c = v["content"].as_str()?.to_string();
+    (sha256_hex(&c) == *hash).then_some((c, v))
+}
+
 fn write_content(book: &Book, nodes_dir: &Path, entry: &Entry, index: u64) -> Result<()> {
     let nodes: Vec<PathBuf> = std::fs::read_dir(nodes_dir).map(|rd| rd.filter_map(|e| e.ok().map(|e| e.path())).collect()).unwrap_or_default();
-    let day_of = |issued_at: i64| DateTime::from_timestamp(issued_at - 1, 0).map(|d| d.date_naive().to_string()).unwrap_or_default();
     match &entry.body {
         Body::Outlook(o) => {
-            let found = nodes.iter().flat_map(|n| read_json_files::<SignedOutlook>(&n.join("outlook"))).find(|s| s.header.content_sha256 == o.content_sha256 && sha256_hex(&s.content) == o.content_sha256);
-            if let Some(s) = found {
+            let found = nodes
+                .iter()
+                .flat_map(|n| read_json_files::<SignedOutlook>(&n.join("outlook")))
+                .find(|s| s.header.content_sha256 == o.content_sha256 && sha256_hex(&s.content) == o.content_sha256)
+                .map(|s| s.content)
+                .or_else(|| {
+                    let day = NaiveDate::parse_from_str(&day_of(o.issued_at), "%Y-%m-%d").ok()?;
+                    v2_content(book.v2_dir.join("outlooks").join(outlook::file_name(&o.region, day)), &o.content_sha256).map(|(c, _)| c)
+                });
+            if let Some(content) = found {
                 let path = book.dir.join("outlooks").join(format!("{}-{}.json", o.region, day_of(o.issued_at)));
-                write_json(&path, &serde_json::json!({ "index": index, "region": o.region, "issued_at": o.issued_at, "content_sha256": hex::encode(o.content_sha256), "content": s.content }))?;
+                write_json(&path, &serde_json::json!({ "index": index, "region": o.region, "issued_at": o.issued_at, "content_sha256": hex::encode(o.content_sha256), "content": content }))?;
             }
         }
         Body::ExternalForecast(e) => {
             let wanted = hex::encode(e.content_sha256);
-            let found = nodes.iter().flat_map(|n| read_json_files::<SignedForecast>(&n.join("extforecast"))).find(|s| s.header.content_sha256 == wanted && sha256_hex(&s.content) == e.content_sha256);
-            if let Some(s) = found {
+            let found = nodes
+                .iter()
+                .flat_map(|n| read_json_files::<SignedForecast>(&n.join("extforecast")))
+                .find(|s| s.header.content_sha256 == wanted && sha256_hex(&s.content) == e.content_sha256)
+                .map(|s| s.content)
+                .or_else(|| v2_content(book.v2_dir.join("external_forecasts").join(&e.source).join(format!("{}.json", day_of(e.issued_at))), &e.content_sha256).map(|(c, _)| c));
+            if let Some(content) = found {
                 let path = book.dir.join("external_forecasts").join(&e.source).join(format!("{}.json", day_of(e.issued_at)));
-                write_json(&path, &serde_json::json!({ "index": index, "source": e.source, "issued_at": e.issued_at, "content_sha256": wanted, "content": s.content }))?;
+                write_json(&path, &serde_json::json!({ "index": index, "source": e.source, "issued_at": e.issued_at, "content_sha256": wanted, "content": content }))?;
             }
         }
         Body::PublicAlert(a) => {
-            let found = nodes.iter().flat_map(|n| read_json_files::<SignedAlert>(&n.join("alerts"))).find(|s| s.header.content_sha256 == a.content_sha256 && sha256_hex(&s.content) == a.content_sha256);
-            if let Some(s) = found {
+            let found = nodes
+                .iter()
+                .flat_map(|n| read_json_files::<SignedAlert>(&n.join("alerts")))
+                .find(|s| s.header.content_sha256 == a.content_sha256 && sha256_hex(&s.content) == a.content_sha256)
+                .map(|s| (s.content, s.description, s.severity_label, s.states))
+                .or_else(|| {
+                    let (c, v) = v2_content(book.v2_dir.join("public_alerts").join(format!("{}.json", hex::encode(a.content_sha256))), &a.content_sha256)?;
+                    let field = |k: &str| v[k].as_str().unwrap_or_default().to_string();
+                    Some((c, field("description"), field("severity_label"), field("states")))
+                });
+            if let Some((content, description, severity_label, states)) = found {
                 let path = book.dir.join("public_alerts").join(format!("{}.json", hex::encode(a.content_sha256)));
                 write_json(
                     &path,
                     &serde_json::json!({
                         "index": index, "issuer": a.issuer, "alert_id": a.alert_id, "content_sha256": hex::encode(a.content_sha256),
-                        "description": s.description, "severity_label": s.severity_label, "states": s.states, "content": s.content,
+                        "description": description, "severity_label": severity_label, "states": states, "content": content,
                     }),
                 )?;
             }
@@ -934,7 +984,6 @@ pub fn check_contents(book: &Book) -> (usize, Vec<String>) {
     let mut checked = 0;
     let mut problems = Vec::new();
     let read = |p: PathBuf| std::fs::read_to_string(&p).ok().and_then(|t| serde_json::from_str::<Value>(&t).ok());
-    let day_of = |issued_at: i64| DateTime::from_timestamp(issued_at - 1, 0).map(|d| d.date_naive().to_string()).unwrap_or_default();
     let base = book.ledger.genesis_index().unwrap_or(0);
     for (i, e) in book.entries.iter().enumerate() {
         let index = base + i as u64;

@@ -79,6 +79,9 @@ fn main() -> Result<()> {
         Cmd::Collect { nodes_dir } => {
             let mut book = ledger3::Book::open(&args.ledger, &args.v2_ledger)?;
             let report = ledger3::collect(&mut book, &nodes_dir, chrono::Utc::now().timestamp())?;
+            if report.backfilled > 0 {
+                eprintln!("livro v3: {} conteúdo(s) que faltavam foram completados", report.backfilled);
+            }
             if let Some((size, signers)) = report.checkpoint {
                 eprintln!("livro v3: ponto de controle {size} publicado ({signers} assinaturas)");
             }
