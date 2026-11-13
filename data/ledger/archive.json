@@ -413,9 +413,9 @@
    "bytes": 1536
   },
   "data/ledger/timestamps/index.json": {
-   "sha256": "d3f47e5e99e1a11d43279f04ec2b63043fea26dc63abf939fd145cafc3465917",
-   "id": "zZMzD1SfrSU1TPrZGZ2QcaFreM4RdUB6dRKnNYFekF8",
-   "bytes": 622
+   "sha256": "cc36ab99d6e0c95f322e5a050654d8021e7967e70ddf86edd845b76bdd63b15b",
+   "id": "Zi8Hykqvp32P1b9QfpH9qCj4B4vxwbkDDMuA7aZA1JE",
+   "bytes": 617
   },
   "data/ledger/vaults/ao-vivo.json": {
    "sha256": "a4dfa4a9757bce2133115d431d1df7f2ea466c6004176e1869365b4eaf116c62",
@@ -1463,9 +1463,9 @@
    "bytes": 4809
   },
   "data/ledger/external_forecasts/glofas/2026-11-12.json.ots": {
-   "sha256": "0879fdac66a240a6527605e52a65bce61b4ec04e3e553e11c68bd5a53c69ec58",
-   "id": "9na64QbMewFs9peIQ-C6qgnNGL6CJ9G5DTPrWYsQ_rI",
-   "bytes": 670
+   "sha256": "26004b0477f179e605ea73db9a3d76163f2c7b85794501040204132086489cf7",
+   "id": "-ziyYrZYOQtNMN96rCFNuLFbSOSRr57-jj7TtDKzlXc",
+   "bytes": 2668
   },
   "data/ledger/outlooks/2026-11-12.json": {
    "sha256": "fcc1b98b81f705b454bce057602382acdc8464ea4e24ad263f62a91099c93585",
@@ -1478,9 +1478,9 @@
    "bytes": 236
   },
   "data/ledger/timestamps/000187.txt.ots": {
-   "sha256": "ca950e4041ea298ba4f564bea22a3f34e1c4ed0cc7a70f45712aacfafaa4e966",
-   "id": "7O2ypNS0_HmenMxr9TsMF4pr7IqhZltbmF6F5ZmBfMg",
-   "bytes": 668
+   "sha256": "dba6d26e12a79b6b86d9d9890a4ce35e202e367cc884f28eccd4b27705b11497",
+   "id": "gqtcUyMiOhocnNEyjoUUuAXxQK6YPslRZJbudU2Rtwg",
+   "bytes": 2673
   }
  },
  "records": [
@@ -1569,6 +1569,6 @@
    "bytes": 1977
   }
  ],
- "bytes": 2052301,
+ "bytes": 2058259,
  "signer": "7kw7om2uMrnSaJBZXriH6TAVpQrsN7Eoq7dtsqgb6Lww"
 }
