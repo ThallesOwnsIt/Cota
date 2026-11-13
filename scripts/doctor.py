@@ -253,7 +253,7 @@ def main() -> None:
     else:
         for name, status, detail in results:
             print(f"{SYMBOL[status]} {name:<8} {detail}")
-        print({OK: "\ntudo certo", WARN: "\natenção aos avisos acima", FAIL: "\nhá falhas: veja docs/operations.md"}[worst])
+        print({OK: "\ntudo certo", WARN: "\natenção aos avisos acima", FAIL: "\nhá falhas: veja o manual de operação (docs/operations.md, no repositório privado cota-site)"}[worst])
     raise SystemExit([OK, WARN, FAIL].index(worst))
 
 

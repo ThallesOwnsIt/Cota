@@ -1,5 +1,3 @@
-<p align="center"><img src="docs/logo-banner.png" alt="Cota" width="640"></p>
-
 <p align="center"><strong>Tamper-proof, publicly verifiable flood data, forecasts and warnings on Solana.</strong><br>
 <a href="https://cota-eight.vercel.app/?lang=en">cota-eight.vercel.app</a></p>
 
@@ -57,7 +55,7 @@ Cota records on Solana (devnet), so that anyone can check it, **who knew what, a
 Every one of these records is a leaf of a single append-only accumulator (a Merkle Mountain Range) whose peaks live in one account
 (program v2, `FnjR7wG5zicqWJ6KQuWQ5UcqqhcSghrYozVgMmmDFNwR`). No record creates an account, so running it costs transaction fees
 only. The ledger's `records.jsonl` rebuilds the accumulator, and the audit and the dashboard check it against the on-chain peaks.
-See [`docs/v2-accumulator.md`](docs/v2-accumulator.md). Program v1 (`4FChu6PkKzsFQRAtQt2oiGt7TuC4uZhBNSSHqDoVNFsa`, one account
+Program v1 (`4FChu6PkKzsFQRAtQt2oiGt7TuC4uZhBNSSHqDoVNFsa`, one account
 per record) is kept as a read-only archive in `data/ledger-v1`; the tools that wrote to it are at tag `v1-final`.
 
 Dashboard: **https://cota-eight.vercel.app** (Portuguese and English): live mode, early warning, vaults and the replay of the
@@ -132,8 +130,8 @@ execute). Today the three member keys belong to the same person (on separate fil
 separate devices and people. Program v1 (the archive) is still upgradeable by its deployer.
 
 The same upgrade authority is the program's **admin**: only it can replace committee members or the operator, or create the
-alert rules. The operator key (in CI) only records forecasts, stations and degradation reports. Security review, findings and
-residual risks: [`docs/security-review.md`](docs/security-review.md).
+alert rules. The operator key (in CI) only records forecasts, stations and degradation reports. A security review with its findings
+and residual risks was done; the technical documentation is private for now (see below).
 
 ## What is open
 
@@ -142,7 +140,8 @@ residual risks: [`docs/security-review.md`](docs/security-review.md).
   - the server tooling;
   - the verifier;
   - the data.
-- **Private:** the site's code (layout and texts).
+- **Private for now:** the site's code (layout and texts) and the technical documentation (design notes, runbooks,
+  security review, server and node guides).
 
 The site cannot hide what it checks:
 - its `verify.js` is this repository's file, at a commit linked in its footer with the file's SHA-256;
@@ -152,19 +151,18 @@ The site cannot hide what it checks:
 
 - One live round is `scripts/live/round.sh`, the same script everywhere.
 - On a server, it runs every 30 minutes in Docker containers. Each node's container sees only its own key. GitHub
-  builds the image, and GitHub Actions stays as the backup. See [`docs/server.md`](docs/server.md).
+  builds the image, and GitHub Actions stays as the backup.
 - `python3 scripts/doctor.py` is a read-only health check. It reports a late batch, a ledger that differs from the
   chain, the SOL left, sources down and missing Bitcoin stamps. It also runs at the end of every round.
-- What to do in each case: [`docs/operations.md`](docs/operations.md).
 
 ## Known limits
 
 - The three oracles, and the three keys of the upgrade multisig, are held by the same person today (separate GitHub Actions jobs,
   separate key files). The next step is handing them to different institutions (civil defense, universities, NGOs): a node runs
   on any machine with `scripts/node_run.sh` and publishes its signatures as static files, which the aggregator downloads
-  (`config/nodes.toml`). See [`docs/running-a-node.md`](docs/running-a-node.md).
+  (`config/nodes.toml`).
 - GitHub's scheduler runs the workflow every 4 to 8 hours instead of every 30 minutes. Daily batches are fine; short-lived
-  warnings may be missed. A server (`docs/server.md`) runs the rounds on time, and GitHub then acts only as the backup. The
+  warnings may be missed. A server runs the rounds on time, and GitHub then acts only as the backup. The
   dashboard flags a day missing for more than 12 hours.
 - The forecast is of the **daily discharge modelled by GloFAS**, 1 and 2 days ahead, not of the river gauge level. Gauge levels
   from ANA are recorded since November 2026, but the model has not been trained on them yet.
