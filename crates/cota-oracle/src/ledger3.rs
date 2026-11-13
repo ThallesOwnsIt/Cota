@@ -1059,6 +1059,99 @@ pub fn check_contents(book: &Book) -> (usize, Vec<String>) {
     (checked, problems)
 }
 
+/// One entry as JSON, for the dashboard export: its body's fields (hashes in hex), who signed (positions) and
+/// what the rules decided.
+pub fn body_json(body: &Body) -> Value {
+    use serde_json::json;
+    let h = hex::encode;
+    match body {
+        Body::Genesis(g) => json!({
+            "v2_program": base58(&g.v2_program), "v2_registry": base58(&g.v2_registry), "v2_leaf_count": g.v2_leaf_count,
+            "v2_root": h(g.v2_root), "v1_archive_sha256": h(g.v1_archive_sha256), "members": g.members.iter().map(base58).collect::<Vec<_>>(),
+            "threshold": g.threshold, "cutover_at": g.cutover_at,
+        }),
+        Body::CommitteeChange(c) => json!({ "epoch": c.epoch, "members": c.members.iter().map(base58).collect::<Vec<_>>(), "threshold": c.threshold, "announced_at": c.announced_at }),
+        Body::StreamCreate(s) => json!({ "id": s.id, "starts_at": s.starts_at }),
+        Body::RuleSet(RuleSet::FlowAlert { station_id, stream, threshold_milli, level }) => {
+            json!({ "rule": "flow_alert", "station_id": station_id, "stream": stream, "threshold_milli": threshold_milli, "level": level })
+        }
+        Body::RuleSet(RuleSet::Outlook { region, stream, threshold_milli, window_secs, min_models, spec_sha256 }) => json!({
+            "rule": "outlook", "region": region, "stream": stream, "threshold_milli": threshold_milli, "window_secs": window_secs,
+            "min_models": min_models, "spec_sha256": h(*spec_sha256),
+        }),
+        Body::RuleSet(RuleSet::ExternalSource { source, stream }) => json!({ "rule": "external_source", "source": source, "stream": stream }),
+        Body::Station(s) => json!({
+            "station_id": s.station_id, "name": s.name, "source": s.source, "variable": s.variable, "lat_e6": s.lat_e6, "lon_e6": s.lon_e6,
+            "datum_id": s.datum_id, "stream": s.stream,
+        }),
+        Body::Batch(b) => json!({
+            "stream": b.stream, "batch_id": b.batch_id, "t_start": b.t_start, "t_end": b.t_end, "leaf_count": b.leaf_count,
+            "merkle_root": h(b.merkle_root), "station_set_hash": h(b.station_set_hash), "prev_batch_root": h(b.prev_batch_root),
+        }),
+        Body::Degradation(d) => json!({ "stream": d.stream, "batch_id": d.batch_id, "station_id": d.station_id, "score_milli": d.score_milli, "reason": d.reason }),
+        Body::Forecast(f) => json!({
+            "stream": f.stream, "station_id": f.station_id, "based_on_batch_id": f.based_on_batch_id, "based_on_root": h(f.based_on_root),
+            "target_ts": f.target_ts, "horizon_hours": f.horizon_hours, "p10": f.p10, "p50": f.p50, "p90": f.p90,
+            "model_sha256": h(f.model_sha256), "features_root": h(f.features_root),
+        }),
+        Body::PublicAlert(a) => json!({
+            "issuer": a.issuer, "alert_id": a.alert_id, "content_sha256": h(a.content_sha256), "severity": a.severity, "onset": a.onset, "expires": a.expires,
+        }),
+        Body::Outlook(o) => json!({
+            "region": o.region, "issued_at": o.issued_at, "window_end": o.window_end, "models": o.models, "rain_mean_milli": o.rain_mean_milli,
+            "rain_min_milli": o.rain_min_milli, "rain_max_milli": o.rain_max_milli, "content_sha256": h(o.content_sha256),
+        }),
+        Body::ExternalForecast(e) => json!({ "source": e.source, "stream": e.stream, "issued_at": e.issued_at, "horizon_days": e.horizon_days, "content_sha256": h(e.content_sha256) }),
+        Body::Correction(c) => json!({ "corrects": c.corrects, "reason": c.reason, "content_sha256": h(c.content_sha256) }),
+    }
+}
+
+/// The ledger for the dashboard: every entry decoded, with its index, leaf, signers (positions), the outcome of the
+/// rules (forecast alert, outlook warning) and the first checkpoint that covers it; plus the committee, the
+/// checkpoints and the v2 prefix.
+pub fn export(book: &Book) -> Result<Value> {
+    use serde_json::json;
+    let base = book.ledger.genesis_index().unwrap_or(0);
+    // Replay again to get each entry's outcome (the rules' decision), cheaply: same entries, same order.
+    let mut replay = Ledger::new();
+    for r in &book.v2_records[..base as usize] {
+        replay.push_v2_record(r).map_err(|e| anyhow!("{e}"))?;
+    }
+    let mut entries = Vec::new();
+    for (i, e) in book.entries.iter().enumerate() {
+        let index = base + i as u64;
+        let applied = replay.apply_checked(e, cota_ledger::Check::Light).map_err(|r| anyhow!("entrada {index}: {r}"))?;
+        let outcome = match applied.outcome {
+            cota_ledger::Outcome::Forecast { alert } => json!({ "alert": alert.map(|(t, l)| json!({ "threshold_milli": t, "level": l })) }),
+            cota_ledger::Outcome::Outlook { triggered, threshold_milli } => json!({ "triggered": triggered, "threshold_milli": threshold_milli }),
+            cota_ledger::Outcome::CommitteeAnnounced { effective_at } => json!({ "effective_at": effective_at }),
+            _ => Value::Null,
+        };
+        let checkpoint = book.checkpoints.iter().map(|(c, _)| c).find(|c| c.size > index).map(|c| c.size);
+        entries.push(json!({
+            "index": index,
+            "leaf": hex::encode(applied.leaf),
+            "kind": e.body.kind(),
+            "epoch": e.quorum.epoch,
+            "signers": e.quorum.signatures.iter().map(|s| s.member).collect::<Vec<_>>(),
+            "checkpoint": checkpoint,
+            "body": body_json(&e.body),
+            "outcome": outcome,
+        }));
+    }
+    let committee = book.ledger.committee().map(|c| json!({ "members": c.members.iter().map(base58).collect::<Vec<_>>(), "threshold": c.threshold }));
+    Ok(json!({
+        "genesis_index": book.ledger.genesis_index(),
+        "size": book.ledger.size(),
+        "root": book.ledger.root().map(hex::encode),
+        "clock": book.ledger.clock(),
+        "epoch": book.ledger.epoch(),
+        "committee": committee,
+        "checkpoints": book.checkpoints.iter().map(|(c, s)| json!({ "size": c.size, "root": hex::encode(c.root), "signed_at": c.signed_at, "epoch": c.epoch, "signers": s.iter().map(|x| x.member).collect::<Vec<_>>() })).collect::<Vec<_>>(),
+        "entries": entries,
+    }))
+}
+
 /// For messages: a timestamp as an ISO date-time.
 pub fn iso(ts: i64) -> String {
     DateTime::from_timestamp(ts, 0).map(|d| d.format("%Y-%m-%d %H:%MZ").to_string()).unwrap_or_default()

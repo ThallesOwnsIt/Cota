@@ -62,6 +62,11 @@ enum Cmd {
         #[arg(long, default_value_t = 60)]
         settle_min: i64,
     },
+    /// Writes the ledger, every entry decoded, as JSON for the dashboard (scripts/export_dashboard.py).
+    Export {
+        #[arg(long)]
+        out: PathBuf,
+    },
     /// Prints the day whose flow forecast the nodes should make now (nothing if none).
     ForecastDay {
         #[arg(long, default_value = "config/ledger-v3.toml")]
@@ -119,6 +124,15 @@ fn main() -> Result<()> {
             if let Some((day, id, prev)) = ledger3::next_day(&cfg, &book, chrono::Utc::now().timestamp(), settle_min * 60) {
                 println!("{day} {id} {}", hex::encode(prev));
             }
+        }
+        Cmd::Export { out } => {
+            let book = ledger3::Book::open(&args.ledger, &args.v2_ledger)?;
+            let v = ledger3::export(&book)?;
+            if let Some(dir) = out.parent() {
+                std::fs::create_dir_all(dir)?;
+            }
+            std::fs::write(&out, serde_json::to_string(&v)?)?;
+            eprintln!("livro v3: {} entrada(s) exportada(s) → {}", book.entries.len(), out.display());
         }
         Cmd::ForecastDay { config } => {
             let cfg = ledger3::load_config(&config)?;
