@@ -310,6 +310,55 @@ impl Checkpoint {
     }
 }
 
+/// An entry's body as JSON (hashes in hex, keys in base58): what the dashboard export and the browser verifier show,
+/// from the same code.
+pub fn body_json(body: &Body) -> serde_json::Value {
+    use serde_json::json;
+    let h = hex::encode;
+    let base58 = |k: &Key| bs58::encode(k).into_string();
+    match body {
+        Body::Genesis(g) => json!({
+            "v2_program": base58(&g.v2_program), "v2_registry": base58(&g.v2_registry), "v2_leaf_count": g.v2_leaf_count,
+            "v2_root": h(g.v2_root), "v1_archive_sha256": h(g.v1_archive_sha256), "members": g.members.iter().map(base58).collect::<Vec<_>>(),
+            "threshold": g.threshold, "cutover_at": g.cutover_at,
+        }),
+        Body::CommitteeChange(c) => json!({ "epoch": c.epoch, "members": c.members.iter().map(base58).collect::<Vec<_>>(), "threshold": c.threshold, "announced_at": c.announced_at }),
+        Body::StreamCreate(s) => json!({ "id": s.id, "starts_at": s.starts_at }),
+        Body::RuleSet(RuleSet::FlowAlert { station_id, stream, threshold_milli, level }) => {
+            json!({ "rule": "flow_alert", "station_id": station_id, "stream": stream, "threshold_milli": threshold_milli, "level": level })
+        }
+        Body::RuleSet(RuleSet::Outlook { region, stream, threshold_milli, window_secs, min_models, spec_sha256 }) => json!({
+            "rule": "outlook", "region": region, "stream": stream, "threshold_milli": threshold_milli, "window_secs": window_secs,
+            "min_models": min_models, "spec_sha256": h(*spec_sha256),
+        }),
+        Body::RuleSet(RuleSet::ExternalSource { source, stream }) => json!({ "rule": "external_source", "source": source, "stream": stream }),
+        Body::Station(s) => json!({
+            "station_id": s.station_id, "name": s.name, "source": s.source, "variable": s.variable, "lat_e6": s.lat_e6, "lon_e6": s.lon_e6,
+            "datum_id": s.datum_id, "stream": s.stream,
+        }),
+        Body::Batch(b) => json!({
+            "stream": b.stream, "batch_id": b.batch_id, "t_start": b.t_start, "t_end": b.t_end, "leaf_count": b.leaf_count,
+            "merkle_root": h(b.merkle_root), "station_set_hash": h(b.station_set_hash), "prev_batch_root": h(b.prev_batch_root),
+        }),
+        Body::Degradation(d) => json!({ "stream": d.stream, "batch_id": d.batch_id, "station_id": d.station_id, "score_milli": d.score_milli, "reason": d.reason }),
+        Body::Forecast(f) => json!({
+            "stream": f.stream, "station_id": f.station_id, "based_on_batch_id": f.based_on_batch_id, "based_on_root": h(f.based_on_root),
+            "target_ts": f.target_ts, "horizon_hours": f.horizon_hours, "p10": f.p10, "p50": f.p50, "p90": f.p90,
+            "model_sha256": h(f.model_sha256), "features_root": h(f.features_root),
+        }),
+        Body::PublicAlert(a) => json!({
+            "issuer": a.issuer, "alert_id": a.alert_id, "content_sha256": h(a.content_sha256), "severity": a.severity, "onset": a.onset, "expires": a.expires,
+        }),
+        Body::Outlook(o) => json!({
+            "region": o.region, "issued_at": o.issued_at, "window_end": o.window_end, "models": o.models, "rain_mean_milli": o.rain_mean_milli,
+            "rain_min_milli": o.rain_min_milli, "rain_max_milli": o.rain_max_milli, "content_sha256": h(o.content_sha256),
+        }),
+        Body::ExternalForecast(e) => json!({ "source": e.source, "stream": e.stream, "issued_at": e.issued_at, "horizon_days": e.horizon_days, "content_sha256": h(e.content_sha256) }),
+        Body::Correction(c) => json!({ "corrects": c.corrects, "reason": c.reason, "content_sha256": h(c.content_sha256) }),
+    }
+}
+
+
 pub(crate) fn sha256(data: &[u8]) -> Hash {
     Sha256::digest(data).into()
 }

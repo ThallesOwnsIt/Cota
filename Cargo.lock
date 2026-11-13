@@ -1177,9 +1177,11 @@ name = "cota-ledger"
 version = "0.3.0"
 dependencies = [
  "borsh",
+ "bs58",
  "cota-core",
  "ed25519-dalek 2.2.0",
  "hex",
+ "serde_json",
  "sha2 0.10.9",
 ]
 

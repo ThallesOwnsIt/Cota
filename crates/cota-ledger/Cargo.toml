@@ -10,6 +10,8 @@ cota-core = { path = "../cota-core" }
 borsh.workspace = true
 sha2.workspace = true
 ed25519-dalek = "2"
+serde_json = "1.0.154"
+hex.workspace = true
+bs58 = "0.5.1"
 
 [dev-dependencies]
-hex.workspace = true

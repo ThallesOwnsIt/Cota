@@ -30,6 +30,9 @@ struct Input {
     trusted_members: Option<Vec<String>>,
     #[serde(default)]
     now: Option<i64>,
+    /// Leaf indexes whose entries to return decoded (`"details": {index: {kind, body, signers}}`).
+    #[serde(default)]
+    detail: Vec<u64>,
 }
 
 #[derive(Deserialize)]
@@ -99,6 +102,23 @@ fn check(input: &[u8]) -> Result<Value, String> {
         }
     };
     let l = &r.ledger;
+    // The requested entries, decoded by the same rules that checked them.
+    let base = l.genesis_index().unwrap_or(0);
+    let mut details = serde_json::Map::new();
+    for &index in &input.detail {
+        let Some(bytes) = index.checked_sub(base).and_then(|i| entries.get(i as usize)) else { continue };
+        if let Ok(e) = cota_ledger::Entry::from_bytes(bytes) {
+            details.insert(
+                index.to_string(),
+                json!({
+                    "kind": e.body.kind(),
+                    "body": cota_ledger::body_json(&e.body),
+                    "signers": e.quorum.signatures.iter().map(|s| s.member).collect::<Vec<_>>(),
+                    "leaf": hex::encode(e.leaf()),
+                }),
+            );
+        }
+    }
     let committee = l.committee().map(|c| {
         json!({ "members": c.members.iter().map(|m| bs58::encode(m).into_string()).collect::<Vec<_>>(), "threshold": c.threshold })
     });
@@ -130,6 +150,7 @@ fn check(input: &[u8]) -> Result<Value, String> {
         "checkpoints": r.checkpoints,
         "checkpoints_signed": r.checkpoints_signed,
         "last_checkpoint": last,
+        "details": details,
     }))
 }
 
