@@ -6,10 +6,14 @@
 //! 2. `verify(ptr, len)` → the length of the output JSON, at `output_ptr()`.
 //!
 //! Input: `{"mode": "light" | "full", "v2_leaves": [hex…], "entries": [hex…],
-//!          "checkpoints": [{"checkpoint": hex, "signatures": [{"member": n, "signature": hex}]}]}`
+//!          "checkpoints": [{"checkpoint": hex, "signatures": [{"member": n, "signature": hex}]}],
+//!          "trusted_members": [base58…], "now": seconds}`
+//! `trusted_members` is the first committee from a source the ledger does not control (v2's, read on-chain): without
+//! it a ledger made with any keys checks out, and the output says `"anchored": false`. `now` refuses batches dated in
+//! the future.
 //! Output: a summary of the ledger, or `{"ok": false, "error": …}` naming the first entry or checkpoint that fails.
 
-use cota_ledger::{replay, Check, Checkpoint, Hash, ReplayError, Signature};
+use cota_ledger::{replay, Anchor, Check, Checkpoint, Hash, Key, ReplayError, Signature};
 use serde::Deserialize;
 use serde_json::{json, Value};
 
@@ -22,6 +26,10 @@ struct Input {
     entries: Vec<String>,
     #[serde(default)]
     checkpoints: Vec<CheckpointIn>,
+    #[serde(default)]
+    trusted_members: Option<Vec<String>>,
+    #[serde(default)]
+    now: Option<i64>,
 }
 
 #[derive(Deserialize)]
@@ -67,8 +75,18 @@ fn check(input: &[u8]) -> Result<Value, String> {
         checkpoints.push((cp, sigs));
     }
     checkpoints.sort_by_key(|(cp, _)| cp.size);
+    let genesis_members = match &input.trusted_members {
+        None => None,
+        Some(list) => Some(
+            list.iter()
+                .map(|m| bs58::decode(m).into_vec().ok().and_then(|b| <Key>::try_from(b).ok()).ok_or(format!("chave inválida: {m}")))
+                .collect::<Result<Vec<Key>, String>>()?,
+        ),
+    };
+    let anchored = genesis_members.is_some();
+    let anchor = Anchor { genesis_members, now: input.now };
 
-    let r = match replay(&v2, &entries, &checkpoints, mode) {
+    let r = match replay(&v2, &entries, &checkpoints, mode, &anchor) {
         Ok(r) => r,
         Err(ReplayError::Entry { index, kind, refusal }) => {
             return Ok(json!({ "ok": false, "error": format!("entrada {index} ({kind}): {refusal}"), "index": index, "kind": kind }))
@@ -97,6 +115,7 @@ fn check(input: &[u8]) -> Result<Value, String> {
     Ok(json!({
         "ok": true,
         "mode": input.mode,
+        "anchored": anchored,
         "genesis_index": l.genesis_index(),
         "entries": entries.len(),
         "size": l.size(),

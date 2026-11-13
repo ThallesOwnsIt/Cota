@@ -16,7 +16,7 @@
 // Exit code 0 when everything matches, 1 otherwise. Needs Node 20+ (fetch and WebCrypto built in).
 
 import { existsSync, readdirSync, readFileSync } from "node:fs";
-import { createVerifier, ledgerInput } from "./ledger.mjs";
+import { createVerifier, ledgerInput, registryMembers } from "./ledger.mjs";
 import { decodeRecord, decodeRegistry, fetchAccount, fromHex, hashLeaf, mmrPeaks, mmrProof, mmrVerify, toHex } from "./verify.js";
 
 const REGISTRY = "6CNtD18LQ4bBZTGK1C2Z6RuJrSwyxCD3ToRpiWE3y9bR"; // PDA ["registry"] of program v2
@@ -35,6 +35,17 @@ const root = new URL("..", import.meta.url).pathname;
 const v3dirs = readdirSync(`${root}data`).filter((d) => d.startsWith("ledger-v3") && existsSync(`${root}data/${d}/entries.jsonl`));
 if (v3dirs.length) {
   const verifier = await createVerifier(readFileSync(new URL("cota_verify.wasm", import.meta.url)));
+  // The trust anchor: v2's committee on-chain; without RPC (--only-v3 offline), the list in config/ledger-v3.toml.
+  let trustedMembers;
+  let anchorSource;
+  try {
+    trustedMembers = await registryMembers(rpc);
+    anchorSource = "o comitê da v2 na cadeia";
+  } catch {
+    const cfg = readFileSync(`${root}config/ledger-v3.toml`, "utf8");
+    trustedMembers = [...cfg.slice(cfg.indexOf("members")).matchAll(/"([1-9A-HJ-NP-Za-km-z]{32,44})"/g)].slice(0, 32).map((m) => m[1]);
+    anchorSource = "config/ledger-v3.toml (sem acesso à cadeia)";
+  }
   for (const d of v3dirs) {
     const dir = `${root}data/${d}`;
     const cpDir = `${dir}/checkpoints`;
@@ -42,7 +53,7 @@ if (v3dirs.length) {
       ? readdirSync(cpDir).filter((f) => f.endsWith(".json")).map((f) => JSON.parse(readFileSync(`${cpDir}/${f}`, "utf8")))
       : [];
     const r = verifier.verify(
-      ledgerInput("full", { entriesJsonl: readFileSync(`${dir}/entries.jsonl`, "utf8"), checkpointFiles, v2Leaves: lines.map((l) => l.leaf) }),
+      ledgerInput("full", { entriesJsonl: readFileSync(`${dir}/entries.jsonl`, "utf8"), checkpointFiles, v2Leaves: lines.map((l) => l.leaf), trustedMembers }),
     );
     if (!r.ok) {
       problems.push(`${d}: ${r.error}`);
@@ -50,7 +61,7 @@ if (v3dirs.length) {
     }
     const kinds3 = Object.entries(r.kinds).map(([k, v]) => `${k} ${v}`).join(", ");
     console.log(`${d}: ${r.entries} entradas depois dos ${r.genesis_index} registros da v2 (${kinds3})`);
-    console.log(`${d}: comitê ${r.committee.threshold} de ${r.committee.members.length}, ${r.checkpoints_signed} ponto(s) de controle com assinaturas conferidas, raiz ${r.root}`);
+    console.log(`${d}: comitê ${r.committee.threshold} de ${r.committee.members.length} (o mesmo que ${anchorSource}), ${r.checkpoints_signed} ponto(s) de controle com assinaturas conferidas, raiz ${r.root}`);
   }
 }
 if (process.argv.includes("--only-v3")) {

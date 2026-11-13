@@ -9,7 +9,7 @@
 mod ledger;
 mod refusal;
 
-pub use ledger::{replay, Applied, Check, Committee, Ledger, Outcome, PendingChange, Replay, ReplayError, StreamState};
+pub use ledger::{replay, Anchor, Applied, Check, Committee, Ledger, Outcome, PendingChange, Replay, ReplayError, StreamState};
 pub use refusal::Refusal;
 
 use borsh::{BorshDeserialize, BorshSerialize};
@@ -39,6 +39,9 @@ pub const MAX_DEGRADATION_REASON: u8 = 4;
 pub const MAX_CORRECTION_REASON: u8 = 3;
 
 pub const CHECKPOINT_DOMAIN: &[u8] = b"COTA-CHECKPOINT-v3";
+/// How far after the verifier's "now" a batch window may end before it counts as dated in the future (clock skew of
+/// whoever runs the check).
+pub const FUTURE_TOLERANCE_SECS: i64 = 86_400;
 
 /// One member's signature; `member` is its position in the committee of the quorum's epoch.
 #[derive(BorshSerialize, BorshDeserialize, Clone, Debug, PartialEq, Eq)]

@@ -96,7 +96,7 @@ node() {
       (cd ml && uv run --frozen python -m cota_ml.forecast --day "$fday" --out "$fdir") ||
         warn "livro v3 (ensaio): o modelo de vazão falhou"
     fi
-    "$BIN/cota-ledger3" --ledger "$V3_LEDGER" sign --key "$key" --node-dir "$out" || warn "livro v3 (ensaio): o nó não assinou"
+    "$BIN/cota-ledger3" --ledger "$V3_LEDGER" sign --key "$key" --node-dir "$out" --rpc "$RPC" || warn "livro v3 (ensaio): o nó não assinou"
   fi
   python3 -I scripts/node_index.py "$out"
   return $rc

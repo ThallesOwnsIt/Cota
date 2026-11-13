@@ -35,12 +35,19 @@ enum Cmd {
         node_dir: PathBuf,
         #[arg(long, default_value = "config/ledger-v3.toml")]
         config: PathBuf,
+        /// RPC to read v2's committee (the trust anchor for Genesis); without it, the config's list is used.
+        #[arg(long)]
+        rpc: Option<String>,
     },
     Collect {
         #[arg(long, default_value = "data/nodes")]
         nodes_dir: PathBuf,
     },
-    Verify,
+    Verify {
+        /// RPC to compare Genesis with v2's committee on the chain.
+        #[arg(long)]
+        rpc: Option<String>,
+    },
     /// Prints the day whose flow forecast the nodes should make now (nothing if none).
     ForecastDay {
         #[arg(long, default_value = "config/ledger-v3.toml")]
@@ -51,17 +58,18 @@ enum Cmd {
 fn main() -> Result<()> {
     let args = Args::parse();
     match args.cmd {
-        Cmd::Sign { key, node_dir, config } => {
+        Cmd::Sign { key, node_dir, config, rpc } => {
             let key = keys::load_signing_key(&key)?;
             let cfg = ledger3::load_config(&config)?;
             let book = ledger3::Book::open(&args.ledger, &args.v2_ledger)?;
+            ledger3::check_trust(&cfg, &book, rpc.as_deref())?;
             let n = ledger3::sign_round(&key, &cfg, &book, &node_dir)?;
             let cp = book.next_checkpoint().map(|c| format!(", ponto de controle {}", c.size)).unwrap_or_default();
             eprintln!("[{}] livro v3: {n} entrada(s) assinada(s){cp}", &keys::pubkey_base58(&key)[..8]);
         }
         Cmd::Collect { nodes_dir } => {
             let mut book = ledger3::Book::open(&args.ledger, &args.v2_ledger)?;
-            let report = ledger3::collect(&mut book, &nodes_dir)?;
+            let report = ledger3::collect(&mut book, &nodes_dir, chrono::Utc::now().timestamp())?;
             if let Some((size, signers)) = report.checkpoint {
                 eprintln!("livro v3: ponto de controle {size} publicado ({signers} assinaturas)");
             }
@@ -91,8 +99,9 @@ fn main() -> Result<()> {
                 println!("{day}");
             }
         }
-        Cmd::Verify => {
+        Cmd::Verify { rpc } => {
             let book = ledger3::Book::open(&args.ledger, &args.v2_ledger)?;
+            let (readings_ok, problems) = ledger3::check_readings(&book);
             match book.ledger.genesis_index() {
                 None => println!("livro v3 ainda sem registro de abertura ({} registros da v2)", book.ledger.size()),
                 Some(g) => {
@@ -112,6 +121,21 @@ fn main() -> Result<()> {
                     println!("relógio    {}", ledger3::iso(book.ledger.clock()));
                     println!("raiz       {}", hex::encode(book.ledger.root().unwrap_or_default()));
                     println!("pontos     {} ponto(s) de controle conferido(s)", book.checkpoints.len());
+                    println!("leituras   {readings_ok} lote(s) refeitos a partir das leituras publicadas, com a raiz assinada");
+                    let opened = match book.entries.first().map(|e| &e.body) {
+                        Some(cota_ledger::Body::Genesis(g)) => g.members.clone(),
+                        _ => Vec::new(),
+                    };
+                    let mut bad = problems;
+                    match rpc.as_deref().map(ledger3::chain_members) {
+                        Some(Some(m)) if m == opened => println!("confiança  o comitê da abertura é o comitê da v2 na cadeia"),
+                        Some(Some(_)) => bad.push("o comitê da abertura difere do comitê da v2 na cadeia".into()),
+                        Some(None) => bad.push("não consegui ler o comitê da v2 na cadeia".into()),
+                        None => println!("confiança  (sem --rpc: o comitê da abertura não foi comparado com a cadeia)"),
+                    }
+                    if !bad.is_empty() {
+                        anyhow::bail!("{} problema(s):\n- {}", bad.len(), bad.join("\n- "));
+                    }
                     println!("tudo confere: cada entrada passou pelas regras e cada ponto de controle bate com o livro");
                 }
             }

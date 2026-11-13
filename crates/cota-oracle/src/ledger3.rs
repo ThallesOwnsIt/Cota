@@ -300,6 +300,37 @@ impl Book {
     }
 }
 
+// ---- trust ------------------------------------------------------------------------------------------
+
+/// The committee v2's registry holds on-chain (in order): the trust anchor for Genesis. `None` if the chain cannot be
+/// read now.
+pub fn chain_members(rpc_url: &str) -> Option<Vec<Key>> {
+    let rpc = crate::rpc::Rpc::new(rpc_url).ok()?;
+    let data = rpc.account_data(&crate::chain::registry_pda()).ok()??;
+    let r = crate::chain::decode_registry(&data).ok()?;
+    Some(r.members.iter().map(|m| m.to_bytes()).collect())
+}
+
+/// The committee this node will sign for: Genesis's (or, before it, the config's), checked against v2's committee on
+/// the chain, or against the config when the chain cannot be read. A node never signs on top of a ledger opened by
+/// other keys, nor an opening that names them.
+pub fn check_trust(cfg: &Config, book: &Book, rpc_url: Option<&str>) -> Result<()> {
+    let configured = cfg.genesis.members.iter().map(|m| key_from_base58(m)).collect::<Result<Vec<_>>>()?;
+    let opened = match book.entries.first().map(|e| &e.body) {
+        Some(Body::Genesis(g)) => g.members.clone(),
+        _ => configured.clone(),
+    };
+    let (trusted, source) = match rpc_url.and_then(chain_members) {
+        Some(m) => (m, "o comitê da v2 na cadeia"),
+        None => {
+            eprintln!("aviso: não consegui ler o comitê da v2 na cadeia; confiro com config/ledger-v3.toml");
+            (configured, "config/ledger-v3.toml")
+        }
+    };
+    ensure!(opened == trusted, "o comitê da abertura do livro v3 difere de {source}: não assino");
+    Ok(())
+}
+
 // ---- what a node signs ------------------------------------------------------------------------------
 
 /// A node's signature over one body.
@@ -670,7 +701,7 @@ fn order(body: &Body) -> (u8, String, u64) {
 
 /// The aggregator's round: publishes the checkpoint a majority signed for the current state, then appends every body
 /// a majority signed, in `order`, through the rules.
-pub fn collect(book: &mut Book, nodes_dir: &Path) -> Result<Report> {
+pub fn collect(book: &mut Book, nodes_dir: &Path, now: i64) -> Result<Report> {
     let mut report = Report::default();
     let (bodies, checkpoints) = read_node_files(nodes_dir);
 
@@ -735,6 +766,14 @@ pub fn collect(book: &mut Book, nodes_dir: &Path) -> Result<Report> {
             continue;
         }
         let signers_count = sigs.len();
+        // A batch window that has not ended yet: never published, even with a majority (the ledger clock must not move
+        // ahead of real time, see docs/security-review-v3.md).
+        if let Body::Batch(b) = &body {
+            if b.t_end > now + 3600 {
+                report.results.push(Collected::Refused { kind, reason: Refusal::FutureBatch });
+                continue;
+            }
+        }
         let entry = Entry { body, quorum: Quorum { committee: MAIN_COMMITTEE, epoch, signatures: sigs } };
         match book.ledger.apply(&entry) {
             Ok(applied) => {
@@ -772,6 +811,28 @@ fn write_batch_readings(book: &Book, nodes_dir: &Path, b: &cota_ledger::Batch) -
         }
     }
     Ok(())
+}
+
+/// Every batch's published readings (`batches/<stream>-<id>.json`) rebuild the Merkle root, count and station set the
+/// committee signed. Returns how many batches were checked and the problems found (a missing file is one).
+pub fn check_readings(book: &Book) -> (usize, Vec<String>) {
+    let mut checked = 0;
+    let mut problems = Vec::new();
+    for e in &book.entries {
+        let Body::Batch(b) = &e.body else { continue };
+        let path = book.dir.join("batches").join(format!("{}-{:05}.json", b.stream, b.batch_id));
+        let readings = std::fs::read_to_string(&path)
+            .map_err(|_| "arquivo ausente".to_string())
+            .and_then(|t| serde_json::from_str::<Value>(&t).map_err(|e| e.to_string()))
+            .and_then(|v| serde_json::from_value::<Vec<cota_core::Reading>>(v["readings"].clone()).map_err(|e| e.to_string()));
+        match readings.map(|r| cota_core::Batch::build(b.batch_id, b.t_start, b.t_end, b.prev_batch_root, r)) {
+            Ok(Ok(built)) if built.header.merkle_root == b.merkle_root && built.header.leaf_count == b.leaf_count && built.header.station_set_hash == b.station_set_hash => checked += 1,
+            Ok(Ok(_)) => problems.push(format!("lote {} de {}: as leituras publicadas não dão a raiz assinada", b.batch_id, b.stream)),
+            Ok(Err(e)) => problems.push(format!("lote {} de {}: leituras inválidas ({e})", b.batch_id, b.stream)),
+            Err(e) => problems.push(format!("lote {} de {}: {e} ({})", b.batch_id, b.stream, path.display())),
+        }
+    }
+    (checked, problems)
 }
 
 /// For messages: a timestamp as an ISO date-time.

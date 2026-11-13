@@ -623,32 +623,42 @@ fn a_light_replay_checks_rules_and_the_last_checkpoint_and_a_full_one_every_sign
         checkpoints.push((cp, sigs));
     }
     for check in [Check::Full, Check::Light] {
-        let r = replay(&[], &entries, &checkpoints, check).unwrap();
+        let r = replay(&[], &entries, &checkpoints, check, &Anchor::default()).unwrap();
         assert_eq!(r.ledger.root(), published.ledger.root());
         assert_eq!((r.checkpoints, r.kinds["batch"]), (3, 3));
         assert_eq!(r.checkpoints_signed, if check == Check::Full { 3 } else { 1 });
     }
-    // A forged signature on an ordinary entry: the full check finds it, the light one does not (it trusts the
-    // checkpoint for those), which is why the page offers the full check.
+    // A forged signature on an ordinary entry. With no checkpoint vouching for it, both checks refuse it (a light
+    // check verifies in full what no checkpoint covers).
     let mut forged = Entry::from_bytes(&entries[2]).unwrap();
     forged.quorum.signatures[0].signature[0] ^= 1;
     let mut tampered = entries.clone();
     tampered[2] = forged.to_bytes();
-    assert!(matches!(replay(&[], &tampered, &[], Check::Full), Err(ReplayError::Entry { index: 2, refusal: Refusal::BadSignature(0), .. })));
-    assert!(replay(&[], &tampered, &[], Check::Light).is_ok());
+    assert!(matches!(replay(&[], &tampered, &[], Check::Full, &Anchor::default()), Err(ReplayError::Entry { index: 2, refusal: Refusal::BadSignature(0), .. })));
+    assert!(replay(&[], &tampered, &[], Check::Light, &Anchor::default()).is_err());
+    // Under a checkpoint the committee signed over it (only a colluding majority would), the light check trusts the
+    // checkpoint and the full one still finds it: why the page offers "check everything".
+    let mut colluded = Ledger::new();
+    for b in &tampered {
+        colluded.apply_checked(&Entry::from_bytes(b).unwrap(), Check::Light).unwrap();
+    }
+    let cp = colluded.checkpoint(None, colluded.clock()).unwrap();
+    let over = vec![(cp.clone(), sign_cp(&cp, &published.keys))];
+    assert!(replay(&[], &tampered, &over, Check::Light, &Anchor::default()).is_ok());
+    assert!(replay(&[], &tampered, &over, Check::Full, &Anchor::default()).is_err());
     // But a forged last checkpoint is caught by both, and so is a changed entry (the root moves).
     let mut bad = checkpoints.clone();
     bad.last_mut().unwrap().1[0].signature[0] ^= 1;
-    assert!(matches!(replay(&[], &entries, &bad, Check::Light), Err(ReplayError::Checkpoint { size: 5, .. })));
+    assert!(matches!(replay(&[], &entries, &bad, Check::Light, &Anchor::default()), Err(ReplayError::Checkpoint { size: 5, .. })));
     let mut other = Entry::from_bytes(&entries[4]).unwrap();
     if let Body::Batch(b) = &mut other.body {
         b.leaf_count += 1;
     }
     let mut changed = entries.clone();
     changed[4] = other.to_bytes();
-    assert!(replay(&[], &changed, &checkpoints, Check::Light).is_err());
+    assert!(replay(&[], &changed, &checkpoints, Check::Light, &Anchor::default()).is_err());
     // A checkpoint for a size the ledger never had.
     let mut orphan = checkpoints.clone();
     orphan[2].0.size = 99;
-    assert_eq!(replay(&[], &entries, &orphan, Check::Light).unwrap_err(), ReplayError::OrphanCheckpoint { size: 99 });
+    assert_eq!(replay(&[], &entries, &orphan, Check::Light, &Anchor::default()).unwrap_err(), ReplayError::OrphanCheckpoint { size: 99 });
 }

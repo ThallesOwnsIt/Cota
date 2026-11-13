@@ -90,13 +90,26 @@ pub enum ReplayError {
     OrphanCheckpoint { size: u64 },
 }
 
+/// What a verifier trusts from outside the ledger.
+#[derive(Clone, Debug, Default)]
+pub struct Anchor {
+    /// The first committee, from a source the ledger does not control (v2's committee, on-chain). Without it, any
+    /// ledger made with any keys would check out.
+    pub genesis_members: Option<Vec<Key>>,
+    /// The real time (UTC seconds): batches whose window ends after it (plus [`FUTURE_TOLERANCE_SECS`]) are refused,
+    /// so that nobody can move the ledger clock (and the committee delay) forward.
+    pub now: Option<i64>,
+}
+
 /// Rebuilds the ledger from v2's leaves (only the prefix Genesis cites is used), the v3 entries' bytes, and the
-/// published checkpoints (sorted by size), checking each checkpoint when the replay reaches its size.
+/// published checkpoints (sorted by size), checking each checkpoint when the replay reaches its size. In a light check,
+/// the entries after the last checkpoint (which no checkpoint vouches for) get a full check.
 pub fn replay(
     v2_leaves: &[Hash],
     entries: &[Vec<u8>],
     checkpoints: &[(Checkpoint, Vec<Signature>)],
     check: Check,
+    anchor: &Anchor,
 ) -> Result<Replay, ReplayError> {
     let mut ledger = Ledger::new();
     let first = entries.first().map(|b| Entry::from_bytes(b));
@@ -118,16 +131,26 @@ pub fn replay(
     };
     let mut pending = checkpoints.iter().peekable();
     let mut prev: Option<&Checkpoint> = None;
+    let covered = checkpoints.last().map(|(cp, _)| cp.size).unwrap_or(0);
     for bytes in entries {
         let index = out.ledger.size();
         let entry = Entry::from_bytes(bytes).map_err(|refusal| ReplayError::Entry { index, kind: "?", refusal })?;
         let kind = entry.body.kind();
-        let applied = if entry.to_bytes() != *bytes {
-            Err(Refusal::Malformed)
-        } else {
-            out.ledger.apply_checked(&entry, check)
+        let refuse = |refusal| ReplayError::Entry { index, kind, refusal };
+        if entry.to_bytes() != *bytes {
+            return Err(refuse(Refusal::Malformed));
         }
-        .map_err(|refusal| ReplayError::Entry { index, kind, refusal })?;
+        match (&entry.body, anchor) {
+            (Body::Genesis(g), Anchor { genesis_members: Some(trusted), .. }) if g.members != *trusted => {
+                return Err(refuse(Refusal::UntrustedGenesis));
+            }
+            (Body::Batch(b), Anchor { now: Some(now), .. }) if b.t_end > now.saturating_add(FUTURE_TOLERANCE_SECS) => {
+                return Err(refuse(Refusal::FutureBatch));
+            }
+            _ => {}
+        }
+        let mode = if index < covered { check } else { Check::Full };
+        let applied = out.ledger.apply_checked(&entry, mode).map_err(refuse)?;
         *out.kinds.entry(kind).or_default() += 1;
         match applied.outcome {
             Outcome::Forecast { alert: Some(_) } => out.alerts_fired += 1,
@@ -248,6 +271,22 @@ fn text(s: &str, max: usize) -> Result<(), Refusal> {
         return Err(Refusal::TextTooLong);
     }
     Ok(())
+}
+
+/// Stream, region and source ids: lower-case ASCII letters, digits, '-' and '_', starting with a letter or digit.
+/// They become parts of file names, so nothing that could leave a folder ("../", "/", a leading dot).
+fn id(s: &str) -> Result<(), Refusal> {
+    text(s, MAX_ID_LEN)?;
+    let ok = s.bytes().all(|b| b.is_ascii_lowercase() || b.is_ascii_digit() || b == b'-' || b == b'_')
+        && s.as_bytes()[0].is_ascii_alphanumeric();
+    if ok { Ok(()) } else { Err(Refusal::InvalidId) }
+}
+
+/// Station ids keep upper case (`ANA-87450004`) and dots, under the same restriction.
+fn station_id(s: &str) -> Result<(), Refusal> {
+    text(s, MAX_STATION_ID_LEN)?;
+    let ok = s.bytes().all(|b| b.is_ascii_alphanumeric() || b == b'-' || b == b'_' || b == b'.') && s.as_bytes()[0].is_ascii_alphanumeric();
+    if ok { Ok(()) } else { Err(Refusal::InvalidId) }
 }
 
 impl Ledger {
@@ -402,7 +441,7 @@ impl Ledger {
             }
             Body::CommitteeChange(c) => self.committee_change(c),
             Body::StreamCreate(s) => {
-                text(&s.id, MAX_ID_LEN)?;
+                id(&s.id)?;
                 if self.streams.contains_key(&s.id) {
                     return Err(Refusal::StreamExists);
                 }
@@ -412,7 +451,7 @@ impl Ledger {
             }
             Body::RuleSet(r) => self.rule_set(r),
             Body::Station(s) => {
-                text(&s.station_id, MAX_STATION_ID_LEN)?;
+                station_id(&s.station_id)?;
                 if s.name.len() > MAX_STATION_NAME_LEN || s.datum_id.as_ref().is_some_and(|d| d.len() > MAX_DATUM_ID_LEN) {
                     return Err(Refusal::TextTooLong);
                 }
@@ -442,13 +481,13 @@ impl Ledger {
             Body::Degradation(d) => {
                 let s = self.streams.get(&d.stream).ok_or(Refusal::UnknownStream)?;
                 // Only the batch just anchored: recorded "on the spot", not rewritten later.
-                if d.batch_id + 1 != s.next_batch_id {
+                if d.batch_id.checked_add(1) != Some(s.next_batch_id) {
                     return Err(Refusal::StaleBatch);
                 }
                 if d.score_milli > 1000 || d.reason > MAX_DEGRADATION_REASON {
                     return Err(Refusal::InvalidDegradation);
                 }
-                text(&d.station_id, MAX_STATION_ID_LEN)?;
+                station_id(&d.station_id)?;
                 Ok(Outcome::None)
             }
             Body::Forecast(f) => self.forecast(f),
@@ -512,18 +551,19 @@ impl Ledger {
         if proposed == current {
             return Err(Refusal::NoChange);
         }
-        if c.epoch != epoch + 1 || c.announced_at != self.clock {
+        if epoch.checked_add(1) != Some(c.epoch) || c.announced_at != self.clock {
             return Err(Refusal::WrongAnnouncement);
         }
-        let effective_at = c.announced_at + COMMITTEE_DELAY_SECS;
+        let effective_at = c.announced_at.checked_add(COMMITTEE_DELAY_SECS).ok_or(Refusal::WrongAnnouncement)?;
         self.pending = Some(PendingChange { epoch: c.epoch, committee: proposed, effective_at });
         Ok(Outcome::CommitteeAnnounced { effective_at })
     }
 
     fn rule_set(&mut self, r: &RuleSet) -> Result<Outcome, Refusal> {
         match r {
-            RuleSet::FlowAlert { station_id, stream, threshold_milli, level } => {
-                text(station_id, MAX_STATION_ID_LEN)?;
+            RuleSet::FlowAlert { station_id: station, stream, threshold_milli, level } => {
+                let station_id = station;
+                self::station_id(station_id)?;
                 self.streams.get(stream).ok_or(Refusal::UnknownStream)?;
                 if self.alert_rules.contains_key(station_id) {
                     return Err(Refusal::RuleExists);
@@ -532,7 +572,7 @@ impl Ledger {
                 self.alert_rules.insert(station_id.clone(), rule);
             }
             RuleSet::Outlook { region, stream, threshold_milli, window_secs, min_models, .. } => {
-                text(region, MAX_ID_LEN)?;
+                id(region)?;
                 self.streams.get(stream).ok_or(Refusal::UnknownStream)?;
                 if *threshold_milli <= 0 || *window_secs <= 0 || *min_models == 0 {
                     return Err(Refusal::InvalidRule);
@@ -550,7 +590,7 @@ impl Ledger {
                 self.outlook_rules.insert(region.clone(), rule);
             }
             RuleSet::ExternalSource { source, stream } => {
-                text(source, MAX_ID_LEN)?;
+                id(source)?;
                 self.streams.get(stream).ok_or(Refusal::UnknownStream)?;
                 if self.sources.contains_key(source) {
                     return Err(Refusal::RuleExists);
@@ -562,7 +602,7 @@ impl Ledger {
     }
 
     fn forecast(&mut self, f: &Forecast) -> Result<Outcome, Refusal> {
-        text(&f.station_id, MAX_STATION_ID_LEN)?;
+        station_id(&f.station_id)?;
         let s = self.streams.get(&f.stream).ok_or(Refusal::UnknownStream)?;
         if s.next_batch_id == 1 {
             return Err(Refusal::NoBatchYet);
@@ -594,7 +634,7 @@ impl Ledger {
         }
         // Issued on the day that has just closed, with the rule's window and enough models.
         if o.issued_at != s.last_t_end
-            || o.window_end - o.issued_at != rule.window_secs
+            || o.window_end.checked_sub(o.issued_at) != Some(rule.window_secs)
             || o.models < rule.min_models
             || o.rain_min_milli < 0
             || o.rain_min_milli > o.rain_mean_milli

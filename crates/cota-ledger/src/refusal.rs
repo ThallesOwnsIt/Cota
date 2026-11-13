@@ -46,6 +46,10 @@ pub enum Refusal {
     InvalidRule,
     // checkpoints
     CheckpointMismatch,
+    // security review (Etapa 4.5)
+    InvalidId,
+    UntrustedGenesis,
+    FutureBatch,
 }
 
 impl fmt::Display for Refusal {
@@ -90,6 +94,9 @@ impl fmt::Display for Refusal {
             InvalidCorrection => write!(f, "a entrada corrigida não existe, o motivo é desconhecido ou a correção já foi feita"),
             InvalidRule => write!(f, "regra com valores inválidos"),
             CheckpointMismatch => write!(f, "o ponto de controle não confere com o livro (tamanho, raiz, época ou encadeamento)"),
+            InvalidId => write!(f, "identificador com caracteres não permitidos (só letras, números, hífen e sublinhado)"),
+            UntrustedGenesis => write!(f, "o registro de abertura tem um comitê diferente do comitê em que se confia (o da v2)"),
+            FutureBatch => write!(f, "lote com janela que termina no futuro"),
         }
     }
 }
