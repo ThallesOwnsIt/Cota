@@ -9,7 +9,7 @@
 mod ledger;
 mod refusal;
 
-pub use ledger::{Applied, Committee, Ledger, Outcome, PendingChange, StreamState};
+pub use ledger::{replay, Applied, Check, Committee, Ledger, Outcome, PendingChange, Replay, ReplayError, StreamState};
 pub use refusal::Refusal;
 
 use borsh::{BorshDeserialize, BorshSerialize};

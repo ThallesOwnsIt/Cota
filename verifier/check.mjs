@@ -9,9 +9,14 @@
 //    (Registry account), for the same number of records.
 // 3. An inclusion proof is built and checked for every record, up to its on-chain peak.
 //
+// 4. The v3 ledger (data/ledger-v3*, including the rehearsal), if present: every entry replayed with the same rules
+//    that built it (cota_verify.wasm, crates/cota-ledger) and every signature and checkpoint checked. `--only-v3`
+//    skips steps 1-3 (no RPC needed).
+//
 // Exit code 0 when everything matches, 1 otherwise. Needs Node 20+ (fetch and WebCrypto built in).
 
-import { readFileSync } from "node:fs";
+import { existsSync, readdirSync, readFileSync } from "node:fs";
+import { createVerifier, ledgerInput } from "./ledger.mjs";
 import { decodeRecord, decodeRegistry, fetchAccount, fromHex, hashLeaf, mmrPeaks, mmrProof, mmrVerify, toHex } from "./verify.js";
 
 const REGISTRY = "6CNtD18LQ4bBZTGK1C2Z6RuJrSwyxCD3ToRpiWE3y9bR"; // PDA ["registry"] of program v2
@@ -24,6 +29,38 @@ const ledger = arg("--ledger", new URL("../data/ledger", import.meta.url).pathna
 
 const lines = readFileSync(`${ledger}/records.jsonl`, "utf8").split("\n").filter(Boolean).map((l) => JSON.parse(l));
 const problems = [];
+
+// 4. The v3 ledgers, checked first so that `--only-v3` can stop here.
+const root = new URL("..", import.meta.url).pathname;
+const v3dirs = readdirSync(`${root}data`).filter((d) => d.startsWith("ledger-v3") && existsSync(`${root}data/${d}/entries.jsonl`));
+if (v3dirs.length) {
+  const verifier = await createVerifier(readFileSync(new URL("cota_verify.wasm", import.meta.url)));
+  for (const d of v3dirs) {
+    const dir = `${root}data/${d}`;
+    const cpDir = `${dir}/checkpoints`;
+    const checkpointFiles = existsSync(cpDir)
+      ? readdirSync(cpDir).filter((f) => f.endsWith(".json")).map((f) => JSON.parse(readFileSync(`${cpDir}/${f}`, "utf8")))
+      : [];
+    const r = verifier.verify(
+      ledgerInput("full", { entriesJsonl: readFileSync(`${dir}/entries.jsonl`, "utf8"), checkpointFiles, v2Leaves: lines.map((l) => l.leaf) }),
+    );
+    if (!r.ok) {
+      problems.push(`${d}: ${r.error}`);
+      continue;
+    }
+    const kinds3 = Object.entries(r.kinds).map(([k, v]) => `${k} ${v}`).join(", ");
+    console.log(`${d}: ${r.entries} entradas depois dos ${r.genesis_index} registros da v2 (${kinds3})`);
+    console.log(`${d}: comitê ${r.committee.threshold} de ${r.committee.members.length}, ${r.checkpoints_signed} ponto(s) de controle com assinaturas conferidas, raiz ${r.root}`);
+  }
+}
+if (process.argv.includes("--only-v3")) {
+  if (problems.length) {
+    console.log(`\n${problems.length} problema(s):\n- ${problems.join("\n- ")}`);
+    process.exit(1);
+  }
+  console.log(v3dirs.length ? "\ntudo confere no livro v3" : "nenhum livro v3 neste repositório");
+  process.exit(0);
+}
 
 const leaves = [];
 for (const [n, r] of lines.entries()) {

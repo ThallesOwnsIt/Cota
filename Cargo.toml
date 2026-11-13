@@ -29,3 +29,7 @@ opt-level = "z"
 
 [profile.release.package.cota-v2]
 opt-level = "z"
+
+# The browser verifier: small, and built the same everywhere (verifier/build-wasm.sh).
+[profile.release.package.cota-verify-wasm]
+opt-level = "s"

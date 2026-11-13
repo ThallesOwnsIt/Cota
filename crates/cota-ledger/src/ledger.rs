@@ -54,6 +54,114 @@ impl Committee {
     }
 }
 
+/// How much `apply_checked` and [`replay`] check.
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+pub enum Check {
+    /// Every rule and every signature: what the builder and a full verification do.
+    Full,
+    /// Every rule, the signatures of Genesis and committee changes (who may sign), and the last checkpoint's; the
+    /// other entries are trusted to carry the signatures that checkpoint vouches for. Fast enough to run on every page
+    /// load; a full check confirms it.
+    Light,
+}
+
+/// A replay's outcome: the ledger, what the rules decided, and the checkpoints checked.
+#[derive(Clone, Debug)]
+pub struct Replay {
+    pub ledger: Ledger,
+    /// Entries by kind.
+    pub kinds: BTreeMap<&'static str, u64>,
+    /// Flow forecasts whose alert rule fired, and outlooks that triggered an early warning.
+    pub alerts_fired: u64,
+    pub outlooks_triggered: u64,
+    /// Checkpoints whose signatures were verified (all of them in a full check, the last one in a light check), and
+    /// the last checkpoint with its signatures.
+    pub checkpoints_signed: u64,
+    pub checkpoints: u64,
+    pub last_checkpoint: Option<(Checkpoint, Vec<Signature>)>,
+}
+
+/// Why a replay stopped: the entry (leaf index) or checkpoint (its size), and the refusal.
+#[derive(Clone, Debug, PartialEq, Eq)]
+pub enum ReplayError {
+    Entry { index: u64, kind: &'static str, refusal: Refusal },
+    Checkpoint { size: u64, refusal: Refusal },
+    /// A checkpoint whose size no state of the ledger had.
+    OrphanCheckpoint { size: u64 },
+}
+
+/// Rebuilds the ledger from v2's leaves (only the prefix Genesis cites is used), the v3 entries' bytes, and the
+/// published checkpoints (sorted by size), checking each checkpoint when the replay reaches its size.
+pub fn replay(
+    v2_leaves: &[Hash],
+    entries: &[Vec<u8>],
+    checkpoints: &[(Checkpoint, Vec<Signature>)],
+    check: Check,
+) -> Result<Replay, ReplayError> {
+    let mut ledger = Ledger::new();
+    let first = entries.first().map(|b| Entry::from_bytes(b));
+    let n = match &first {
+        Some(Ok(Entry { body: Body::Genesis(g), .. })) => (g.v2_leaf_count as usize).min(v2_leaves.len()),
+        _ => v2_leaves.len(),
+    };
+    for leaf in &v2_leaves[..n] {
+        ledger.push_v2_leaf(*leaf).expect("before Genesis");
+    }
+    let mut out = Replay {
+        ledger,
+        kinds: BTreeMap::new(),
+        alerts_fired: 0,
+        outlooks_triggered: 0,
+        checkpoints_signed: 0,
+        checkpoints: 0,
+        last_checkpoint: None,
+    };
+    let mut pending = checkpoints.iter().peekable();
+    let mut prev: Option<&Checkpoint> = None;
+    for bytes in entries {
+        let index = out.ledger.size();
+        let entry = Entry::from_bytes(bytes).map_err(|refusal| ReplayError::Entry { index, kind: "?", refusal })?;
+        let kind = entry.body.kind();
+        let applied = if entry.to_bytes() != *bytes {
+            Err(Refusal::Malformed)
+        } else {
+            out.ledger.apply_checked(&entry, check)
+        }
+        .map_err(|refusal| ReplayError::Entry { index, kind, refusal })?;
+        *out.kinds.entry(kind).or_default() += 1;
+        match applied.outcome {
+            Outcome::Forecast { alert: Some(_) } => out.alerts_fired += 1,
+            Outcome::Outlook { triggered: true, .. } => out.outlooks_triggered += 1,
+            _ => {}
+        }
+        while let Some((cp, sigs)) = pending.next_if(|(cp, _)| cp.size == out.ledger.size()) {
+            let last = pending.peek().is_none();
+            let size = cp.size;
+            if check == Check::Full || last {
+                out.ledger.verify_checkpoint(cp, sigs, prev).map_err(|refusal| ReplayError::Checkpoint { size, refusal })?;
+                out.checkpoints_signed += 1;
+            } else {
+                // Size, root, epoch and chain, without the signatures.
+                let expected_prev = prev.map(Checkpoint::hash).unwrap_or_default();
+                if cp.log != Checkpoint::LOG
+                    || Some(cp.root) != out.ledger.root()
+                    || Some(cp.epoch) != out.ledger.epoch()
+                    || cp.prev != expected_prev
+                {
+                    return Err(ReplayError::Checkpoint { size, refusal: Refusal::CheckpointMismatch });
+                }
+            }
+            out.checkpoints += 1;
+            prev = Some(cp);
+            out.last_checkpoint = Some((cp.clone(), sigs.clone()));
+        }
+    }
+    if let Some((cp, _)) = pending.next() {
+        return Err(ReplayError::OrphanCheckpoint { size: cp.size });
+    }
+    Ok(out)
+}
+
 /// A committee announced and not yet in force.
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub struct PendingChange {
@@ -150,10 +258,15 @@ impl Ledger {
     /// Appends one of v2's records (its bytes as the program emitted them). Only before Genesis: v2 is frozen at the
     /// cutover. v2's records are checked against the program's on-chain peaks by the verifier, not here.
     pub fn push_v2_record(&mut self, record: &[u8]) -> Result<u64, Refusal> {
+        self.push_v2_leaf(cota_core::merkle::hash_leaf(record))
+    }
+
+    /// Like `push_v2_record`, from the leaf hash (what the site publishes for v2).
+    pub fn push_v2_leaf(&mut self, leaf: Hash) -> Result<u64, Refusal> {
         if self.genesis_index.is_some() {
             return Err(Refusal::GenesisAgain);
         }
-        Ok(self.append(cota_core::merkle::hash_leaf(record)))
+        Ok(self.append(leaf))
     }
 
     pub fn size(&self) -> u64 {
@@ -214,6 +327,11 @@ impl Ledger {
 
     /// Checks `entry` against the rules and, if it passes, appends it.
     pub fn apply(&mut self, entry: &Entry) -> Result<Applied, Refusal> {
+        self.apply_checked(entry, Check::Full)
+    }
+
+    /// `apply`, choosing how much to check: [`Check::Light`] skips the signatures of ordinary entries.
+    pub fn apply_checked(&mut self, entry: &Entry, check: Check) -> Result<Applied, Refusal> {
         let message = entry.body.signing_message();
         // 1. Who signed: a majority of the committee in force (Genesis: of the committee it names).
         if entry.quorum.committee != MAIN_COMMITTEE {
@@ -234,7 +352,10 @@ impl Ledger {
         if entry.quorum.epoch != epoch {
             return Err(Refusal::WrongEpoch { expected: epoch, got: entry.quorum.epoch });
         }
-        committee.verify(&message, &entry.quorum.signatures)?;
+        // Who may sign (Genesis, committee changes) is always checked; the rest only in a full check.
+        if check == Check::Full || matches!(entry.body, Body::Genesis(_) | Body::CommitteeChange(_)) {
+            committee.verify(&message, &entry.quorum.signatures)?;
+        }
         let digest = sha256(&message);
         if self.seen.contains(&digest) {
             return Err(Refusal::Duplicate);

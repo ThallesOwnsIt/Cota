@@ -168,23 +168,27 @@ fn v2_records() -> Vec<Vec<u8>> {
         .collect()
 }
 
-/// The root the v2 round stamped in Bitcoin, from `data/ledger/timestamps/<n>.txt`.
-fn stamped_root(n: usize) -> [u8; 32] {
-    let path = format!("{}/../../data/ledger/timestamps/{n:06}.txt", env!("CARGO_MANIFEST_DIR"));
-    let text = std::fs::read_to_string(path).unwrap();
-    let line = text.lines().find(|l| l.starts_with("root")).unwrap();
-    hex::decode(line.split_whitespace().last().unwrap()).unwrap().try_into().unwrap()
+/// The latest root the v2 round stamped in Bitcoin (`data/ledger/timestamps/<n>.txt`): how many records it covers and
+/// the root.
+fn latest_stamp() -> (usize, [u8; 32]) {
+    let dir = concat!(env!("CARGO_MANIFEST_DIR"), "/../../data/ledger/timestamps");
+    let mut files: Vec<_> = std::fs::read_dir(dir).unwrap().map(|e| e.unwrap().path()).filter(|p| p.extension().is_some_and(|e| e == "txt")).collect();
+    files.sort();
+    let text = std::fs::read_to_string(files.last().unwrap()).unwrap();
+    let field = |name: &str| text.lines().find(|l| l.starts_with(name)).unwrap().split_whitespace().last().unwrap().to_string();
+    (field("records").parse().unwrap(), hex::decode(field("root")).unwrap().try_into().unwrap())
 }
 
 #[test]
 fn genesis_continues_the_real_v2_accumulator() {
-    let records = v2_records();
+    let (stamped, root) = latest_stamp();
+    let records = &v2_records()[..stamped];
     let mut env = Env { ledger: Ledger::new(), keys: (1..=3).map(key).collect(), epoch: 0 };
-    for r in &records {
+    for r in records {
         env.ledger.push_v2_record(r).unwrap();
     }
     // The same root the v2 round stamped in Bitcoin for these records.
-    assert_eq!(env.ledger.root(), Some(stamped_root(records.len())));
+    assert_eq!(env.ledger.root(), Some(root));
 
     // A Genesis that does not match v2's last state is refused: wrong count, wrong root.
     let mut wrong = env.genesis(2);
@@ -588,4 +592,63 @@ fn checkpoints_are_chained_signed_and_rebuilt_by_any_verifier() {
     // Signatures over the checkpoint are not valid for anything else.
     let other = Checkpoint { signed_at: last.signed_at + 1, ..last.clone() };
     assert_eq!(env.ledger.verify_checkpoint(&other, &sigs, Some(before)), Err(Refusal::BadSignature(0)));
+}
+
+// ---- replay (what the browser and check.mjs run) ---------------------------------------------------------------
+
+#[test]
+fn a_light_replay_checks_rules_and_the_last_checkpoint_and_a_full_one_every_signature() {
+    let mut entries: Vec<Vec<u8>> = Vec::new();
+    // The published entries, as the builder appended them; `replay` rebuilds the ledger from their bytes.
+    let mut published = Env { ledger: Ledger::new(), keys: (1..=3).map(key).collect(), epoch: 0 };
+    let opening = vec![
+        published.genesis(2),
+        published.entry(Body::StreamCreate(StreamCreate { id: GUAIBA.into(), starts_at: D })),
+    ];
+    let mut checkpoints = Vec::new();
+    for e in opening {
+        published.apply(e.clone()).unwrap();
+        entries.push(e.to_bytes());
+    }
+    let sign_cp = |cp: &Checkpoint, keys: &[SigningKey]| -> Vec<cota_ledger::Signature> {
+        (0..3).map(|p| cota_ledger::Signature { member: p as u16, signature: keys[p].sign(&cp.signing_message()).to_bytes() }).collect()
+    };
+    for _ in 0..3 {
+        let b = published.entry(Body::Batch(published.next_batch(GUAIBA)));
+        published.apply(b.clone()).unwrap();
+        entries.push(b.to_bytes());
+        let prev = checkpoints.last().map(|(c, _): &(Checkpoint, Vec<cota_ledger::Signature>)| c.clone());
+        let cp = published.ledger.checkpoint(prev.as_ref(), published.ledger.clock()).unwrap();
+        let sigs = sign_cp(&cp, &published.keys);
+        checkpoints.push((cp, sigs));
+    }
+    for check in [Check::Full, Check::Light] {
+        let r = replay(&[], &entries, &checkpoints, check).unwrap();
+        assert_eq!(r.ledger.root(), published.ledger.root());
+        assert_eq!((r.checkpoints, r.kinds["batch"]), (3, 3));
+        assert_eq!(r.checkpoints_signed, if check == Check::Full { 3 } else { 1 });
+    }
+    // A forged signature on an ordinary entry: the full check finds it, the light one does not (it trusts the
+    // checkpoint for those), which is why the page offers the full check.
+    let mut forged = Entry::from_bytes(&entries[2]).unwrap();
+    forged.quorum.signatures[0].signature[0] ^= 1;
+    let mut tampered = entries.clone();
+    tampered[2] = forged.to_bytes();
+    assert!(matches!(replay(&[], &tampered, &[], Check::Full), Err(ReplayError::Entry { index: 2, refusal: Refusal::BadSignature(0), .. })));
+    assert!(replay(&[], &tampered, &[], Check::Light).is_ok());
+    // But a forged last checkpoint is caught by both, and so is a changed entry (the root moves).
+    let mut bad = checkpoints.clone();
+    bad.last_mut().unwrap().1[0].signature[0] ^= 1;
+    assert!(matches!(replay(&[], &entries, &bad, Check::Light), Err(ReplayError::Checkpoint { size: 5, .. })));
+    let mut other = Entry::from_bytes(&entries[4]).unwrap();
+    if let Body::Batch(b) = &mut other.body {
+        b.leaf_count += 1;
+    }
+    let mut changed = entries.clone();
+    changed[4] = other.to_bytes();
+    assert!(replay(&[], &changed, &checkpoints, Check::Light).is_err());
+    // A checkpoint for a size the ledger never had.
+    let mut orphan = checkpoints.clone();
+    orphan[2].0.size = 99;
+    assert_eq!(replay(&[], &entries, &orphan, Check::Light).unwrap_err(), ReplayError::OrphanCheckpoint { size: 99 });
 }

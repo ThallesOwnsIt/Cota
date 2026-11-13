@@ -1,0 +1,36 @@
+# The browser verifier (verifier/cota_verify.wasm) is the v3 ledger's rules compiled to WebAssembly. This workflow
+# rebuilds it from the code with the pinned toolchain and fails if the committed file differs, so nobody has to
+# trust the file the maintainer published; then it checks the v3 ledger in this repository with it.
+name: Verificador do livro v3
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - Cargo.toml
+      - Cargo.lock
+      - crates/cota-core/**
+      - crates/cota-ledger/**
+      - crates/cota-verify-wasm/**
+      - verifier/**
+      - .github/workflows/verifier.yml
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  rebuild:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Rust 1.99.1 com o alvo WebAssembly
+        run: rustup toolchain install 1.99.1 --profile minimal --target wasm32-unknown-unknown
+      - name: Recompila e compara com o arquivo publicado
+        run: bash verifier/build-wasm.sh --check
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Confere o livro v3 com o verificador
+        run: node verifier/check.mjs --only-v3
