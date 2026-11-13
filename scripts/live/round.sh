@@ -88,6 +88,14 @@ node() {
   # v3 rehearsal: every round (checkpoints and warnings do not wait for a closed day), on top of what this node has
   # just observed.
   if ensaio; then
+    # The flow forecast is the node's own run of the public model, on the latest batch (once per batch).
+    local fday fdir
+    fday=$("$BIN/cota-ledger3" --ledger "$V3_LEDGER" forecast-day) || fday=""
+    fdir="$(cd "$out" && pwd)/forecast"
+    if [[ -n $fday && ! -f $fdir/$fday.json ]]; then
+      (cd ml && uv run --frozen python -m cota_ml.forecast --day "$fday" --out "$fdir") ||
+        warn "livro v3 (ensaio): o modelo de vazão falhou"
+    fi
     "$BIN/cota-ledger3" --ledger "$V3_LEDGER" sign --key "$key" --node-dir "$out" || warn "livro v3 (ensaio): o nó não assinou"
   fi
   python3 -I scripts/node_index.py "$out"

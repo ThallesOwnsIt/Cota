@@ -2,8 +2,8 @@
 //!
 //! - **A node** replays the ledger with `cota_ledger` (so it signs only on top of a ledger it verified itself),
 //!   builds the bodies of what it observed on its own (the day's batch, the rain outlooks, the third-party forecast,
-//!   the official warnings, the catalog's stations, and the opening entries before Genesis), signs them, and signs
-//!   the checkpoint of the ledger as it found it.
+//!   the flow forecast of its own model run, the official warnings, the catalog's stations, and the opening entries
+//!   before Genesis), signs them, and signs the checkpoint of the ledger as it found it.
 //! - **The aggregator** replays the ledger, publishes the checkpoint a majority signed, then turns every body a
 //!   majority signed into an entry, applies it with the same rules and appends it.
 //!
@@ -146,6 +146,8 @@ pub struct Book {
     pub alert_versions: BTreeSet<Hash>,
     /// SHA-256 of the signing message of every entry: what a node does not need to sign again.
     pub digests: BTreeSet<Hash>,
+    /// (stream, batch id) of every flow forecast's base.
+    pub forecast_bases: BTreeSet<(String, u64)>,
     /// Every v2 record in the v2 ledger now (Genesis takes a prefix of them).
     v2_records: Vec<Vec<u8>>,
 }
@@ -208,6 +210,7 @@ impl Book {
             stations: BTreeMap::new(),
             alert_versions: BTreeSet::new(),
             digests: BTreeSet::new(),
+            forecast_bases: BTreeSet::new(),
             v2_records,
         };
         for r in &book.v2_records[..n] {
@@ -240,6 +243,9 @@ impl Book {
             }
             Body::PublicAlert(a) => {
                 self.alert_versions.insert(a.content_sha256);
+            }
+            Body::Forecast(f) => {
+                self.forecast_bases.insert((f.stream.clone(), f.based_on_batch_id));
             }
             _ => {}
         }
@@ -444,6 +450,58 @@ pub fn day_bodies(cfg: &Config, book: &Book, node_dir: &Path) -> Result<Vec<Body
     Ok(out)
 }
 
+/// The day whose flow forecast the nodes should make now: the day of the main stream's latest batch, if no forecast
+/// is based on it yet. The model reads that batch from the v2 ledger, where it lands at the end of the round that
+/// anchors it, so the nodes forecast one round after the batch.
+pub fn forecast_day(cfg: &Config, book: &Book) -> Option<NaiveDate> {
+    let s = book.ledger.stream(&cfg.main_stream)?;
+    if s.next_batch_id == 1 || book.forecast_bases.contains(&(cfg.main_stream.clone(), s.next_batch_id - 1)) {
+        return None;
+    }
+    DateTime::from_timestamp(s.last_t_end - 1, 0).map(|d| d.date_naive())
+}
+
+/// Whole m³/s (×1000): machines that differ in the last bits of a float reach the same bytes.
+fn round_milli(v: i64) -> i64 {
+    (v as f64 / 1000.0).round() as i64 * 1000
+}
+
+/// The flow forecast this node computed with the public model (`<node>/forecast/<day>.json`, written by
+/// `cota_ml.forecast --out`), as bodies based on the main stream's latest batch.
+pub fn forecast_bodies(cfg: &Config, book: &Book, node_dir: &Path) -> Result<Vec<Body>> {
+    let Some(day) = forecast_day(cfg, book) else { return Ok(Vec::new()) };
+    let path = node_dir.join("forecast").join(format!("{day}.json"));
+    let Ok(text) = std::fs::read_to_string(&path) else { return Ok(Vec::new()) };
+    let f: Value = serde_json::from_str(&text).with_context(|| format!("interpretando {}", path.display()))?;
+    let s = book.ledger.stream(&cfg.main_stream).expect("forecast_day checked it");
+    // The model read the same readings as the batch it is based on.
+    if f["based_on_root"].as_str() != Some(hex::encode(s.last_batch_root).as_str()) {
+        eprintln!("aviso: {} parte de outro lote; previsão não assinada", path.display());
+        return Ok(Vec::new());
+    }
+    let station = f["station_id"].as_str().context("station_id")?.to_string();
+    let model_sha256 = decode_hex(f["model_sha256"].as_str().context("model_sha256")?)?;
+    let features_root = decode_hex(f["features_root"].as_str().context("features_root")?)?;
+    let mut out = Vec::new();
+    for h in f["forecasts"].as_array().context("forecasts")? {
+        let q = |k: &str| h[k].as_i64().with_context(|| format!("{k} em {}", path.display()));
+        out.push(Body::Forecast(cota_ledger::Forecast {
+            stream: cfg.main_stream.clone(),
+            station_id: station.clone(),
+            based_on_batch_id: s.next_batch_id - 1,
+            based_on_root: s.last_batch_root,
+            target_ts: q("target_ts")?,
+            horizon_hours: q("horizon_hours")? as u16,
+            p10: round_milli(q("p10")?),
+            p50: round_milli(q("p50")?),
+            p90: round_milli(q("p90")?),
+            model_sha256,
+            features_root,
+        }));
+    }
+    Ok(out)
+}
+
 /// The official warnings this node saw that the ledger does not have yet.
 pub fn alert_bodies(book: &Book, node_dir: &Path) -> Vec<Body> {
     let mut seen = BTreeSet::new();
@@ -501,6 +559,7 @@ pub fn sign_round(key: &SigningKey, cfg: &Config, book: &Book, node_dir: &Path) 
     } else {
         bodies.extend(station_bodies(cfg, book)?);
         bodies.extend(day_bodies(cfg, book, node_dir)?);
+        bodies.extend(forecast_bodies(cfg, book, node_dir)?);
         bodies.extend(alert_bodies(book, node_dir));
     }
     bodies.retain(|b| !book.digests.contains(&<[u8; 32]>::from(Sha256::digest(b.signing_message()))));
@@ -528,6 +587,7 @@ impl Book {
             stations: self.stations.clone(),
             alert_versions: self.alert_versions.clone(),
             digests: self.digests.clone(),
+            forecast_bases: self.forecast_bases.clone(),
             v2_records: Vec::new(),
         }
     }

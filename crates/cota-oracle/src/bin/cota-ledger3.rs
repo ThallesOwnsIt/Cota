@@ -41,6 +41,11 @@ enum Cmd {
         nodes_dir: PathBuf,
     },
     Verify,
+    /// Prints the day whose flow forecast the nodes should make now (nothing if none).
+    ForecastDay {
+        #[arg(long, default_value = "config/ledger-v3.toml")]
+        config: PathBuf,
+    },
 }
 
 fn main() -> Result<()> {
@@ -78,6 +83,13 @@ fn main() -> Result<()> {
                 book.ledger.size(),
                 ledger3::iso(book.ledger.clock()),
             );
+        }
+        Cmd::ForecastDay { config } => {
+            let cfg = ledger3::load_config(&config)?;
+            let book = ledger3::Book::open(&args.ledger, &args.v2_ledger)?;
+            if let Some(day) = ledger3::forecast_day(&cfg, &book) {
+                println!("{day}");
+            }
         }
         Cmd::Verify => {
             let book = ledger3::Book::open(&args.ledger, &args.v2_ledger)?;

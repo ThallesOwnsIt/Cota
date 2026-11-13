@@ -179,7 +179,10 @@ message    = "COTA-CHECKPOINT-v3" ‖ borsh(Checkpoint)
 - **Rehearsal** (decided on 13/11/2026): with `COTA_V3_ENSAIO=1`, the round also writes `data/ledger-v3-ensaio`
   next to v2. Its Genesis cites the v2 records of the day the rehearsal starts (`config/ledger-v3.toml`). The real
   cutover happens on the new server; the rehearsal ledger is then discarded.
-- Not yet in the rehearsal: the flow forecast signed by the nodes (each node running the model), which comes next.
+- The flow forecast: each node runs the public model (`cota_ml.forecast --out <node>/forecast`) on the main
+  stream's latest batch, rounds the quantiles to whole m³/s and signs. The model reads that batch from the v2 ledger,
+  where it lands at the end of the round that anchors it, so the nodes forecast one round after the batch
+  (`cota-ledger3 forecast-day` says which day). After the cutover the model reads the v3 batches instead.
 
 ## 9. Storage
 
