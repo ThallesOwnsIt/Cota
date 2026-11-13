@@ -488,6 +488,17 @@
       "committed_at": 1794455964,
       "signers": 7,
       "problems": []
+    },
+    {
+      "batch_id": 44,
+      "record_index": 185,
+      "day": "2026-11-12",
+      "t_start": 1794441600,
+      "t_end": 1794528000,
+      "slot": 521653498,
+      "committed_at": 1794532079,
+      "signers": 7,
+      "problems": []
     }
   ],
   "forecasts": [
@@ -1983,10 +1994,10 @@
       "p10": 3966502,
       "p50": 4160610,
       "p90": 5423907,
-      "observation_slot": null,
-      "observed_milli": null,
-      "recorded_before_observation": null,
-      "inside_p10_p90": null,
+      "observation_slot": 521653498,
+      "observed_milli": 3410930,
+      "recorded_before_observation": true,
+      "inside_p10_p90": false,
       "alert": null,
       "problems": []
     },
@@ -1999,10 +2010,10 @@
       "p10": 3369882,
       "p50": 3410225,
       "p90": 3535343,
-      "observation_slot": null,
-      "observed_milli": null,
-      "recorded_before_observation": null,
-      "inside_p10_p90": null,
+      "observation_slot": 521653498,
+      "observed_milli": 3410930,
+      "recorded_before_observation": true,
+      "inside_p10_p90": true,
       "alert": null,
       "problems": []
     },
@@ -2240,6 +2251,15 @@
       "slot": 521335461,
       "next_batch_slot": 521653498,
       "problems": []
+    },
+    {
+      "day": "2026-11-12",
+      "record_index": 186,
+      "rain_mean_milli": 15005,
+      "triggered": false,
+      "slot": 521653515,
+      "next_batch_slot": null,
+      "problems": []
     }
   ],
   "vaults": [
@@ -2265,20 +2285,20 @@
   "summary": {
     "alerts": 31,
     "alerts_recorded_before_observation": 31,
-    "batches": 43,
+    "batches": 44,
     "batches_with_problems": 0,
     "early_warnings": 0,
     "forecasts": 86,
-    "forecasts_inside_p10_p90": 51,
-    "forecasts_observed": 80,
-    "forecasts_recorded_before_observation": 80,
+    "forecasts_inside_p10_p90": 52,
+    "forecasts_observed": 82,
+    "forecasts_recorded_before_observation": 82,
     "forecasts_with_problems": 0,
-    "outlooks": 7,
+    "outlooks": 8,
     "outlooks_with_problems": 0,
     "public_alerts": 19,
     "public_alerts_with_problems": 0,
     "records": 187,
-    "unmatched": 2,
+    "unmatched": 0,
     "vault_payouts": 3,
     "vaults": 2,
     "vaults_with_problems": 0
