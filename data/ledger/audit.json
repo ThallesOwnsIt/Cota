@@ -2,16 +2,16 @@
   "program": "FnjR7wG5zicqWJ6KQuWQ5UcqqhcSghrYozVgMmmDFNwR",
   "registry": "6CNtD18LQ4bBZTGK1C2Z6RuJrSwyxCD3ToRpiWE3y9bR",
   "accumulator": {
-    "records": 187,
-    "on_chain": 187,
+    "records": 188,
+    "on_chain": 188,
     "peaks_match": true,
-    "root": "0ab5fa5f0c9f8948c91b55ce847e62417c31b8dc7f1f272420e95e86a88d8086",
+    "root": "4b83e0d1a5a96f04df7f9c75c99ab17089a842563b7a45cf706c1ab7256c598f",
     "kinds": {
       "batch": 44,
       "degradation": 4,
       "forecast": 86,
       "outlook": 8,
-      "public_alert": 19,
+      "public_alert": 20,
       "station": 26
     }
   },
@@ -2092,6 +2092,14 @@
       "problems": []
     },
     {
+      "record_index": 187,
+      "alert_id": "urn:oid:2.49.0.0.76.0.2026.28697.1",
+      "slot": 521826064,
+      "committed_at": 1794573356,
+      "signers": 7,
+      "problems": []
+    },
+    {
       "record_index": 137,
       "alert_id": "urn:oid:2.49.0.0.76.0.2026.28641.1",
       "slot": 519384891,
@@ -2278,10 +2286,7 @@
       "problems": []
     }
   ],
-  "unmatched": [
-    "registro 185 (batch) sem arquivo no ledger",
-    "registro 186 (outlook) sem arquivo no ledger"
-  ],
+  "unmatched": [],
   "summary": {
     "alerts": 31,
     "alerts_recorded_before_observation": 31,
@@ -2295,9 +2300,9 @@
     "forecasts_with_problems": 0,
     "outlooks": 8,
     "outlooks_with_problems": 0,
-    "public_alerts": 19,
+    "public_alerts": 20,
     "public_alerts_with_problems": 0,
-    "records": 187,
+    "records": 188,
     "unmatched": 0,
     "vault_payouts": 3,
     "vaults": 2,
