@@ -20,9 +20,12 @@ RUN --mount=type=cache,target=/usr/local/cargo/registry \
  && find target/release -maxdepth 1 -type f -executable -name 'cota-*' -exec cp {} /out/ \;
 
 FROM node:22-bookworm-slim
+# libgomp1: OpenMP runtime that LightGBM (the flow model) loads; the slim image lacks it, and without it the model
+# fails on import (the VPS lost the forecast of 2026-11-12 this way).
 RUN apt-get update \
- && apt-get install -y --no-install-recommends git openssh-client curl ca-certificates \
- && rm -rf /var/lib/apt/lists/*
+ && apt-get install -y --no-install-recommends git openssh-client curl ca-certificates libgomp1 \
+ && rm -rf /var/lib/apt/lists/* \
+ && ldconfig -p | grep -q 'libgomp.so.1'
 COPY --from=ghcr.io/astral-sh/uv:0.13 /uv /uvx /usr/local/bin/
 # The forecast's Python (ml/.python-version), installed once in the image; it is also the python3 of the scripts.
 ENV UV_PYTHON_INSTALL_DIR=/opt/python UV_LINK_MODE=copy
