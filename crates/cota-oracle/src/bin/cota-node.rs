@@ -43,6 +43,10 @@ struct Args {
     out: PathBuf,
     #[arg(long, value_enum, default_value = "none")]
     fault: FaultArg,
+    /// Hours after the day closes during which the node waits (signs nothing, tries again next round) when a whole
+    /// source did not answer, instead of signing a day without it.
+    #[arg(long, default_value_t = node::COMPLETE_BY_HOURS)]
+    complete_by_hours: i64,
 }
 
 fn main() -> Result<()> {
@@ -74,6 +78,22 @@ fn main() -> Result<()> {
 
     match node::sign_day(&key, &stations, &args.cache, args.day, batch_id, prev_root, fault)? {
         Some(signed) => {
+            let now = chrono::Utc::now().timestamp();
+            if let Some(reason) = node::wait_reason(&signed.ingest, args.day, now, args.complete_by_hours) {
+                // Not a signature on a day a source missed: the day stays pending and the next round tries again.
+                let _ = std::fs::remove_file(&path);
+                let deadline = cota_ingest::end_of_day(args.day) + args.complete_by_hours * 3600;
+                eprintln!(
+                    "[{}] lote {batch_id} ({}): {reason}. Não assino ainda; tento de novo na próxima rodada (até {} UTC, depois assino o que houver)",
+                    &signed.node[..8],
+                    args.day,
+                    chrono::DateTime::from_timestamp(deadline, 0).map(|d| d.format("%d/%m %H:%M").to_string()).unwrap_or_default(),
+                );
+                return Ok(());
+            }
+            if !node::sources_down(&signed.ingest).is_empty() {
+                eprintln!("[{}] aviso: o prazo para as fontes responderem passou; assino {} sem elas", &signed.node[..8], args.day);
+            }
             std::fs::write(&path, serde_json::to_string_pretty(&signed)?)?;
             eprintln!(
                 "[{}] lote {batch_id} ({}) raiz {} com {} leituras{}",

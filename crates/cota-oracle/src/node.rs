@@ -70,6 +70,43 @@ pub fn sign_day(
     }))
 }
 
+/// Hours after a day closes during which a node waits for a source that is down instead of signing the day without
+/// it. Past that, it signs what it has (the missing stations stay on record), so the ledger never stalls.
+pub const COMPLETE_BY_HOURS: i64 = 4;
+
+fn source_label(s: cota_core::Source) -> &'static str {
+    match s {
+        cota_core::Source::Ana => "ANA",
+        cota_core::Source::Inmet => "INMET",
+        cota_core::Source::OpenMeteoGlofas => "GloFAS",
+        _ => "outra fonte",
+    }
+}
+
+/// Sources that are down, not just a gauge out: fewer than half of their stations returned any reading for the day.
+/// Each with how many stations answered and how many there are.
+pub fn sources_down(reports: &[StationReport]) -> Vec<(&'static str, usize, usize)> {
+    let mut by_source: std::collections::BTreeMap<&'static str, (usize, usize)> = std::collections::BTreeMap::new();
+    for r in reports.iter().filter(|r| r.expected > 0) {
+        let e = by_source.entry(source_label(r.source)).or_default();
+        e.1 += 1;
+        if r.readings > 0 {
+            e.0 += 1;
+        }
+    }
+    by_source.into_iter().filter(|(_, (with, total))| with * 2 < *total).map(|(s, (w, t))| (s, w, t)).collect()
+}
+
+/// Why the node should not sign `day` yet: a source is down and the day closed less than `complete_by_hours` ago.
+/// `None` means sign (everything answered, or the wait is over).
+pub fn wait_reason(reports: &[StationReport], day: NaiveDate, now: i64, complete_by_hours: i64) -> Option<String> {
+    let down = sources_down(reports);
+    if down.is_empty() || now >= end_of_day(day) + complete_by_hours * 3600 {
+        return None;
+    }
+    Some(down.iter().map(|(s, w, t)| format!("{s}: {w} de {t} estações responderam")).collect::<Vec<_>>().join("; "))
+}
+
 pub mod hex64 {
     use serde::{de::Error, Deserialize, Deserializer, Serializer};
 
@@ -82,5 +119,33 @@ pub mod hex64 {
         let mut out = [0u8; 64];
         hex::decode_to_slice(&text, &mut out).map_err(D::Error::custom)?;
         Ok(out)
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use cota_core::Source;
+
+    fn report(id: &str, source: Source, readings: usize) -> StationReport {
+        StationReport { station_id: id.into(), source, readings, missing: 24 - readings.min(24), expected: 24 }
+    }
+
+    #[test]
+    fn a_source_is_down_when_most_of_its_stations_are_silent() {
+        let day = NaiveDate::from_ymd_opt(2026, 11, 12).unwrap();
+        // 2026-11-12: the ANA login failed, its 14 gauges came back empty, only GloFAS answered.
+        let mut reports: Vec<StationReport> = (0..14).map(|i| report(&format!("ANA-{i}"), Source::Ana, 0)).collect();
+        reports.extend((0..6).map(|i| report(&format!("GLOFAS-{i}"), Source::OpenMeteoGlofas, 1)));
+        assert_eq!(sources_down(&reports), vec![("ANA", 0, 14)]);
+        let closed = end_of_day(day);
+        // Right after the day closed: wait and try again next round.
+        assert_eq!(wait_reason(&reports, day, closed + 3900, COMPLETE_BY_HOURS).as_deref(), Some("ANA: 0 de 14 estações responderam"));
+        // Past the deadline: sign what there is.
+        assert_eq!(wait_reason(&reports, day, closed + COMPLETE_BY_HOURS * 3600, COMPLETE_BY_HOURS), None);
+        // One gauge out (13 of 14) is not a source down.
+        reports.iter_mut().filter(|r| r.source == Source::Ana).skip(1).for_each(|r| r.readings = 20);
+        assert!(sources_down(&reports).is_empty());
+        assert_eq!(wait_reason(&reports, day, closed + 3900, COMPLETE_BY_HOURS), None);
     }
 }

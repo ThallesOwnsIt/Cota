@@ -61,9 +61,13 @@ jobs:
           day=$(scripts/live/round.sh plan)
           run=true
           # Backup mode (repository variable COTA_BACKUP_MODE = true): the server runs the rounds, and GitHub only
-          # steps in when a closed day is still not anchored at 03:00 UTC (the server does it soon after 01:00).
+          # steps in when a closed day is still not anchored at 03:00 UTC (the server does it soon after 01:00). With
+          # the v3 ledger, from 05:00: nodes wait for a source that is down until 04:00, and v3 has no chain to
+          # arbitrate two aggregators, so the backup must not overlap the server's retries.
           # A manual run (workflow_dispatch) always runs.
-          if [[ $BACKUP == true ]] && { [[ -z $day ]] || (( 10#$(date -u +%H) < 3 )); }; then
+          from=3
+          [[ $COTA_LEDGER == v3 ]] && from=5
+          if [[ $BACKUP == true ]] && { [[ -z $day ]] || (( 10#$(date -u +%H) < from )); }; then
             run=false
             echo "modo reserva: o servidor está em dia; nada a fazer"
           fi
