@@ -139,6 +139,24 @@ def main() -> None:
     if sent or upgraded:
         print(f"previsões de terceiros: {sent} carimbo(s) enviado(s), {upgraded} confirmado(s) no Bitcoin")
 
+    # 4. Checkpoints of the v3 ledger (docs/ledger-v3.md §7), including its rehearsal: each gets its own proof.
+    sent = upgraded = 0
+    for d in sorted(ROOT.glob("data/ledger-v3*/checkpoints")):
+        for f in sorted(d.glob("*.json")):
+            proof = f.with_name(f.name + ".ots")
+            if not proof.exists():
+                r = ots("stamp", str(f))
+                if r.returncode == 0:
+                    sent += 1
+                else:
+                    print(f"aviso: ots stamp de {f.relative_to(ROOT)} falhou: {r.stderr.strip()}")
+            elif status(proof)["bitcoin_block"] is None:
+                ots("upgrade", str(proof))
+                proof.with_name(proof.name + ".bak").unlink(missing_ok=True)
+                upgraded += status(proof)["bitcoin_block"] is not None
+    if sent or upgraded:
+        print(f"pontos de controle do livro v3: {sent} carimbo(s) enviado(s), {upgraded} confirmado(s) no Bitcoin")
+
 
 if __name__ == "__main__":
     main()

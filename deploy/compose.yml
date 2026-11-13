@@ -19,6 +19,7 @@ x-env: &env
   RPC: ${RPC:-https://api.devnet.solana.com}
   CLUSTER: ${CLUSTER:-devnet}
   SECRETS: /run/secrets
+  COTA_V3_ENSAIO: ${COTA_V3_ENSAIO:-0}
   UV_CACHE_DIR: /work/.cache/uv
   npm_config_cache: /work/.cache/npm
 

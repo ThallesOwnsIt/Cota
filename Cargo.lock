@@ -1191,11 +1191,13 @@ dependencies = [
  "anyhow",
  "base64 0.23.1",
  "bincode",
+ "borsh",
  "bs58",
  "chrono",
  "clap",
  "cota-core",
  "cota-ingest",
+ "cota-ledger",
  "cota-quality",
  "cota-v2",
  "ed25519-dalek 2.2.0",
@@ -1212,6 +1214,7 @@ dependencies = [
  "solana-sdk-ids",
  "solana-signer",
  "solana-transaction",
+ "toml 1.1.8+spec-1.1.0",
 ]
 
 [[package]]

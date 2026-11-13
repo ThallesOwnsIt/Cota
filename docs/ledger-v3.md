@@ -28,7 +28,7 @@ of the library.
 | Everyone sees the same ledger? | Checkpoints form a hash chain, are anchored publicly and are cosigned by the members' nodes, each holding a full copy |
 | Without trusting anyone? | The whole ledger, the library and the verifier are public; verification runs offline, in a terminal or a browser |
 
-What the Solana program did and the verifier now does: §9.
+What the Solana program did and the verifier now does: §10.
 
 ## 2. Continuity with v1 and v2
 
@@ -153,7 +153,11 @@ message    = "COTA-CHECKPOINT-v3" ‖ borsh(Checkpoint)
 ```
 
 - `root` is the accumulator's bagged root at `size` leaves (`cota_core::mmr::bag`). `prev` is the SHA-256 of the
-  previous checkpoint's message (zeros for the first).
+  previous checkpoint's message (zeros for the first). `signed_at` is the ledger clock at that size, so every member
+  signs the same bytes; real time comes from the anchors.
+- Each node signs the checkpoint of the ledger as it found it, after replaying and verifying it itself. The
+  aggregator publishes it in the next round, before appending that round's entries. So the checkpoint of a round's
+  entries appears one round (30 minutes) later.
 - A checkpoint is valid with a majority of signatures from the committee of `epoch`. It has no member limit,
   because a checkpoint is a file, not a transaction. Every member's node signs every checkpoint it can verify, so
   the extra signatures act as witnesses.
@@ -167,7 +171,17 @@ message    = "COTA-CHECKPOINT-v3" ‖ borsh(Checkpoint)
   3. **Any other public chain**: optional, for second-level time. One tiny transaction per day.
 - **Mirrors**: GitHub (this repository), Software Heritage, Arweave, and the nodes of the institutions.
 
-## 8. Storage
+## 8. Rehearsal and tools
+
+- `cota-ledger3` (in `cota-oracle`): `sign` (each node), `collect` (aggregator), `verify` (anyone). A node rewrites
+  `data/nodes/<node>/v3/` every round with exactly what it attests: the bodies it observed that the ledger does not
+  have yet, and the checkpoint of the state it verified.
+- **Rehearsal** (decided on 13/11/2026): with `COTA_V3_ENSAIO=1`, the round also writes `data/ledger-v3-ensaio`
+  next to v2. Its Genesis cites the v2 records of the day the rehearsal starts (`config/ledger-v3.toml`). The real
+  cutover happens on the new server; the rehearsal ledger is then discarded.
+- Not yet in the rehearsal: the flow forecast signed by the nodes (each node running the model), which comes next.
+
+## 9. Storage
 
 `data/ledger-v3/`:
 
@@ -178,7 +192,7 @@ message    = "COTA-CHECKPOINT-v3" ‖ borsh(Checkpoint)
 
 `data/ledger/` (v2) stays as it is, frozen at the cutover.
 
-## 9. What moved from the program to the verifier
+## 10. What moved from the program to the verifier
 
 | The Solana program… | Now |
 |---|---|
@@ -188,7 +202,7 @@ message    = "COTA-CHECKPOINT-v3" ‖ borsh(Checkpoint)
 | checked admin changes against the upgrade authority (multisig) | the current committee's majority, with a 7-day delay (§5) |
 | paid out vaults on an inclusion proof | frozen. A future contract on any chain would verify a signed checkpoint and an inclusion proof, the same logic |
 
-## 10. Verification
+## 11. Verification
 
 A full verifier, in a terminal or a browser through WebAssembly:
 
@@ -203,7 +217,7 @@ A full verifier, in a terminal or a browser through WebAssembly:
 
 A light check of one entry needs only an inclusion proof against one anchored, signed checkpoint.
 
-## 11. Cutover
+## 12. Cutover
 
 - **Day D−1**: last v2 batch. From then on nothing more is sent to the v2 program.
 - **Day D**: the committee signs Genesis at index N with the v2 summary and the initial committee (today's three
@@ -212,7 +226,7 @@ A light check of one entry needs only an inclusion proof against one anchored, s
 - **D 00:00 UTC**: the streams start. `guaiba` carries the 14 gauges; the other two start empty until Etapa 5.
 - The site reads v1, v2 and v3.
 
-## 12. Security considerations
+## 13. Security considerations
 
 - **A majority of the committee colludes.** It can sign false entries, as in any k-of-n system. Mitigations: the
   members are independent institutions (Etapa 7); every entry stays public and attributable; a committee change
@@ -226,7 +240,7 @@ A light check of one entry needs only an inclusion proof against one anchored, s
   leaked key's past signatures stay valid for the entries they signed; that is the point of an evidence ledger.
 - **Time manipulation.** Batch windows are checked against anchor times (§6).
 
-## 13. Decisions taken in review (13/11/2026)
+## 14. Decisions taken in review (13/11/2026)
 
 - A committee change takes effect 7 days after it is announced, and the current majority may withdraw it while it
   is pending (§5).

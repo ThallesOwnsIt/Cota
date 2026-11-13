@@ -1,0 +1,36 @@
+# Cota ledger v3 (docs/ledger-v3.md): what the committee signs to open the ledger.
+#
+# Every node builds the opening entries from this file and the files it points to, so they all sign the same
+# bytes. Changing it after the opening has no effect: streams, rules and sources never change, and the committee
+# changes only by a CommitteeChange entry.
+
+# The station catalog; its stations go to `main_stream` (Etapa 5 adds a stream per station).
+catalog = "config/stations-live.toml"
+streams = ["guaiba", "uruguai", "litoranea"]
+main_stream = "guaiba"
+
+[genesis]
+v2_program = "FnjR7wG5zicqWJ6KQuWQ5UcqqhcSghrYozVgMmmDFNwR"
+v2_registry = "6CNtD18LQ4bBZTGK1C2Z6RuJrSwyxCD3ToRpiWE3y9bR"
+# The frozen v1 archive; Genesis records the SHA-256 of its file listing (path and SHA-256 of each file).
+v1_archive = "data/ledger-v1"
+# The v2 committee, in the same order (positions 0, 1, 2).
+members = [
+  "GS3uQUPgfCDXqtbpD6vPyNpQgRcDUFj1fhF4wYGk9ist",
+  "B4FwxN42zWyiSKU7qwvbpchy7uDD8ugnzX43B9mPd38L",
+  "AFbz6rqf4u7pexBHadriqd9VNDh74KGqEeZG5eeQKTs3",
+]
+threshold = 2
+# 00:00 UTC of the first day the streams carry. For the rehearsal (data/ledger-v3-ensaio): its first day.
+cutover = "2026-11-14"
+
+[rules]
+# The flow alert rule (its `alert_rule` field) and the early-warning rules, as v2 uses them.
+flow_alert_manifest = "ml/models/manifest.json"
+outlook_main = "ml/models/outlook-rule.json"
+outlook_dir = "ml/models/outlook-rules"
+
+[[sources]]
+id = "glofas"
+stream = "guaiba"
+horizon_days = 30

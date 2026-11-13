@@ -30,6 +30,8 @@
 #                        health check's report as the message
 #   COMPOSE              all: run each step in its own container, e.g. "docker compose -f deploy/compose.yml"
 #   MAX_DAYS             all: closed days anchored in one round (default 7)
+#   COTA_V3_ENSAIO       1 = also run the rehearsal of the v3 ledger (docs/ledger-v3.md) next to v2, in V3_LEDGER
+#                        (default data/ledger-v3-ensaio); v2 is not touched. Default 0
 set -euo pipefail
 SELF="$(cd "$(dirname "$0")" && pwd)/$(basename "$0")"
 cd "$(dirname "$SELF")/../.."
@@ -38,6 +40,8 @@ export RPC=${RPC:-https://api.devnet.solana.com}
 export CLUSTER=${CLUSTER:-devnet}
 SECRETS=${SECRETS:-keys}
 BIN=${BIN:-target/release}
+V3_LEDGER=${V3_LEDGER:-data/ledger-v3-ensaio}
+ensaio() { [[ ${COTA_V3_ENSAIO:-0} == 1 ]]; }
 
 log() { printf '[%s] %s\n' "$(date -u +%H:%M:%S)" "$*" >&2; }
 warn() { log "aviso: $*"; }
@@ -81,6 +85,11 @@ node() {
   else
     log "nenhum dia fechado à espera de lote"
   fi
+  # v3 rehearsal: every round (checkpoints and warnings do not wait for a closed day), on top of what this node has
+  # just observed.
+  if ensaio; then
+    "$BIN/cota-ledger3" --ledger "$V3_LEDGER" sign --key "$key" --node-dir "$out" || warn "livro v3 (ensaio): o nó não assinou"
+  fi
   python3 -I scripts/node_index.py "$out"
   return $rc
 }
@@ -116,6 +125,10 @@ anchor() {
       rc=1
     fi
   fi
+  # v3 rehearsal: the checkpoint and the entries a majority of the nodes signed.
+  if ensaio; then
+    "$BIN/cota-ledger3" --ledger "$V3_LEDGER" collect --nodes-dir data/nodes || warn "livro v3 (ensaio): falhou"
+  fi
   # Parametric vaults: the program decides; the operator only pays the crank's fee.
   "$BIN/cota-vault" --rpc "$RPC" --cluster "$CLUSTER" --payer "$payer" crank || warn "cofres: falhou"
   return $rc
@@ -139,6 +152,7 @@ publish() {
   fi
   archive || warn "cópia no Arweave: falhou"
   git add data/ledger dashboard/data
+  if [[ -d $V3_LEDGER ]]; then git add "$V3_LEDGER"; fi
   if ! git diff --cached --quiet; then
     bot_git commit -q -m "ao vivo: $(date -u +%FT%H:%MZ)"
   fi
@@ -155,7 +169,7 @@ publish() {
     # has none). --autostash: a tracked file changed by a tool must not block the pull. -X theirs: where GitHub
     # wrote the same ledger file (a backup run copying the same records from the chain, a stamp of the same
     # root), the round's own version, made first and with the batch's data, wins; the round only commits
-    # data/ledger and dashboard/data, so code is never touched.
+    # data/ledger, dashboard/data and the v3 ledger, so code is never touched.
     if bot_git pull -q --rebase --autostash -X theirs && git push -q; then
       log "ledger enviado ($pending commit(s))"
       after_push
