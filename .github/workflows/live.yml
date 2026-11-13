@@ -13,6 +13,9 @@
 #          VERCEL_DEPLOY_HOOK (optional: rebuilds the site after each push).
 # Safety switch: only runs with the repository variable COTA_LIVE_ENABLED = true. With COTA_BACKUP_MODE = true the
 # server (docs/server.md) is the primary and this workflow only acts when the server falls behind.
+# After the cutover to the v3 ledger, the repository variable COTA_LEDGER = v3 switches every job to it: the plan
+# comes from the ledger, nodes also run the flow model and sign it, and the aggregator collects into data/ledger-v3
+# instead of writing to Solana (the operator key is then unused).
 name: Cota ao vivo
 
 on:
@@ -33,6 +36,7 @@ env:
   RPC: ${{ secrets.RPC_URL || 'https://api.devnet.solana.com' }}
   CLUSTER: devnet
   CARGO_TERM_COLOR: never
+  COTA_LEDGER: ${{ vars.COTA_LEDGER || 'v2' }}
 
 jobs:
   plan:
@@ -43,6 +47,13 @@ jobs:
       run: ${{ steps.next.outputs.run }}
     steps:
       - uses: actions/checkout@v4
+      # After the cutover the plan asks the v3 ledger (cota-ledger3 next-day).
+      - uses: Swatinem/rust-cache@v2
+        if: vars.COTA_LEDGER == 'v3'
+        with:
+          shared-key: cota
+      - if: vars.COTA_LEDGER == 'v3'
+        run: cargo build --release -p cota-oracle --bin cota-ledger3
       - id: next
         env:
           BACKUP: ${{ vars.COTA_BACKUP_MODE == 'true' && github.event_name == 'schedule' }}
@@ -72,7 +83,12 @@ jobs:
       - uses: Swatinem/rust-cache@v2
         with:
           shared-key: cota
-      - run: cargo build --release -p cota-oracle --bin cota-node --bin cota-alerts --bin cota-outlook --bin cota-extforecast
+      - run: cargo build --release -p cota-oracle --bin cota-node --bin cota-alerts --bin cota-outlook --bin cota-extforecast --bin cota-ledger3
+      # After the cutover each node runs the flow model itself (uv run --frozen in ml/).
+      - uses: astral-sh/setup-uv@v6
+        if: vars.COTA_LEDGER == 'v3'
+      - if: vars.COTA_LEDGER == 'v3'
+        run: uv sync --frozen --project ml
       - name: Chave do nó
         env:
           KEY: ${{ secrets[format('NODE_{0}_KEY', matrix.node)] }}
