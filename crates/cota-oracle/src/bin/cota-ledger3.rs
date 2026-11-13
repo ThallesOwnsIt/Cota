@@ -48,6 +48,15 @@ enum Cmd {
         #[arg(long)]
         rpc: Option<String>,
     },
+    /// Prints `DAY BATCH_ID PREV_ROOT` of the next closed day the ledger waits for (nothing if none): what the round
+    /// signs after the cutover, when v2 no longer says it.
+    NextDay {
+        #[arg(long, default_value = "config/ledger-v3.toml")]
+        config: PathBuf,
+        /// Minutes after 00:00 UTC before yesterday counts as closed.
+        #[arg(long, default_value_t = 60)]
+        settle_min: i64,
+    },
     /// Prints the day whose flow forecast the nodes should make now (nothing if none).
     ForecastDay {
         #[arg(long, default_value = "config/ledger-v3.toml")]
@@ -91,6 +100,13 @@ fn main() -> Result<()> {
                 book.ledger.size(),
                 ledger3::iso(book.ledger.clock()),
             );
+        }
+        Cmd::NextDay { config, settle_min } => {
+            let cfg = ledger3::load_config(&config)?;
+            let book = ledger3::Book::open(&args.ledger, &args.v2_ledger)?;
+            if let Some((day, id, prev)) = ledger3::next_day(&cfg, &book, chrono::Utc::now().timestamp(), settle_min * 60) {
+                println!("{day} {id} {}", hex::encode(prev));
+            }
         }
         Cmd::ForecastDay { config } => {
             let cfg = ledger3::load_config(&config)?;

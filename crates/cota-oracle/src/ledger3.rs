@@ -492,6 +492,15 @@ pub fn forecast_day(cfg: &Config, book: &Book) -> Option<NaiveDate> {
     DateTime::from_timestamp(s.last_t_end - 1, 0).map(|d| d.date_naive())
 }
 
+/// The next day the main stream waits for, once it has closed and `settle_secs` have passed (the sources publish a
+/// day's last hours late): the day, the batch number it will get and the root it chains to. `None` before Genesis or
+/// when that day is still open.
+pub fn next_day(cfg: &Config, book: &Book, now: i64, settle_secs: i64) -> Option<(NaiveDate, u64, Hash)> {
+    let s = book.ledger.stream(&cfg.main_stream)?;
+    let day = DateTime::from_timestamp(s.last_t_end, 0)?.date_naive();
+    (end_of_day(day) + settle_secs <= now).then_some((day, s.next_batch_id, s.last_batch_root))
+}
+
 /// Whole m³/s (×1000): machines that differ in the last bits of a float reach the same bytes.
 fn round_milli(v: i64) -> i64 {
     (v as f64 / 1000.0).round() as i64 * 1000

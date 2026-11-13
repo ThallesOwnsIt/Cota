@@ -3,9 +3,10 @@
 # container, see deploy/), in GitHub Actions (the backup, .github/workflows/live.yml), on an institution's node
 # (scripts/node_run.sh) and on a laptop for tests (scripts/live.sh).
 #
-#   round.sh plan        the UTC day the chain is waiting a batch for, if it has closed (else an empty line)
+#   round.sh plan        the UTC day the chain (v3: the ledger) is waiting a batch for, if it has closed (else empty)
 #   round.sh node [i]    one oracle node: signs INMET's warnings, the day's batch and the rain forecast
-#   round.sh anchor      takes to the chain whatever has quorum, forecasts discharge, cranks the vaults
+#   round.sh anchor      takes to the chain whatever has quorum, forecasts discharge, cranks the vaults (v3: collects
+#                        into the ledger what a majority of the nodes signed)
 #   round.sh publish     Bitcoin stamp, audit, dashboard data, Arweave copy, commit and push
 #   round.sh aggregate   anchor + publish, for one day (GitHub Actions)
 #   round.sh doctor      read-only health check (scripts/doctor.py)
@@ -32,6 +33,9 @@
 #   MAX_DAYS             all: closed days anchored in one round (default 7)
 #   COTA_V3_ENSAIO       1 = also run the rehearsal of the v3 ledger (docs/ledger-v3.md) next to v2, in V3_LEDGER
 #                        (default data/ledger-v3-ensaio); v2 is not touched. Default 0
+#   COTA_LEDGER          v2 (default) or v3. v3 = after the cutover: the round signs and collects only the v3 ledger
+#                        (V3_LEDGER, default data/ledger-v3), takes the day from it and writes nothing to Solana
+#   NODES_DIR            anchor: where the nodes' folders are (default data/nodes)
 set -euo pipefail
 SELF="$(cd "$(dirname "$0")" && pwd)/$(basename "$0")"
 cd "$(dirname "$SELF")/../.."
@@ -40,8 +44,10 @@ export RPC=${RPC:-https://api.devnet.solana.com}
 export CLUSTER=${CLUSTER:-devnet}
 SECRETS=${SECRETS:-keys}
 BIN=${BIN:-target/release}
-V3_LEDGER=${V3_LEDGER:-data/ledger-v3-ensaio}
-ensaio() { [[ ${COTA_V3_ENSAIO:-0} == 1 ]]; }
+v3only() { [[ ${COTA_LEDGER:-v2} == v3 ]]; }
+if v3only; then V3_LEDGER=${V3_LEDGER:-data/ledger-v3}; else V3_LEDGER=${V3_LEDGER:-data/ledger-v3-ensaio}; fi
+# The v3 steps run in the rehearsal and, after the cutover, alone.
+ensaio() { [[ ${COTA_V3_ENSAIO:-0} == 1 ]] || v3only; }
 
 log() { printf '[%s] %s\n' "$(date -u +%H:%M:%S)" "$*" >&2; }
 warn() { log "aviso: $*"; }
@@ -51,6 +57,11 @@ plan() {
   # DAY set (even empty) wins: in GitHub Actions the plan job decides once for every job of the run.
   if [[ -n ${DAY+x} ]]; then
     echo "$DAY"
+    return
+  fi
+  # After the cutover the v3 ledger says which day it waits for, with the same settling time.
+  if v3only; then
+    "$BIN/cota-ledger3" --ledger "$V3_LEDGER" next-day --settle-min "${SETTLE_MIN:-60}" | cut -d' ' -f1
     return
   fi
   local day now
@@ -76,7 +87,14 @@ node() {
   "$BIN/cota-alerts" observe --key "$key" --out "$out/alerts" || warn "avisos do INMET indisponíveis nesta rodada"
   day=$(plan) || { warn "não consegui consultar a cadeia"; return 1; }
   if [[ -n $day ]]; then
-    "$BIN/cota-node" --key "$key" --day "$day" --rpc "$RPC" --config config/stations-live.toml --out "$out" ||
+    # The node's batch file (its readings); its number and chain come from the ledger that waits for it.
+    local chain=(--rpc "$RPC") next _ bid broot
+    if v3only; then
+      next=$("$BIN/cota-ledger3" --ledger "$V3_LEDGER" next-day --settle-min 0)
+      read -r _ bid broot <<<"$next"
+      chain=(--batch-id "${bid:-0}" --prev-root "${broot:-$(printf '0%.0s' {1..64})}")
+    fi
+    "$BIN/cota-node" --key "$key" --day "$day" "${chain[@]}" --config config/stations-live.toml --out "$out" ||
       { warn "lote de $day: o nó não conseguiu assinar"; rc=1; }
     # Without the rain forecast, the node's batch still counts.
     "$BIN/cota-outlook" observe --key "$key" --day "$day" --out "$out/outlook" || warn "chuva prevista indisponível"
@@ -89,11 +107,12 @@ node() {
   # just observed.
   if ensaio; then
     # The flow forecast is the node's own run of the public model, on the latest batch (once per batch).
-    local fday fdir
+    local fday fdir l3
     fday=$("$BIN/cota-ledger3" --ledger "$V3_LEDGER" forecast-day) || fday=""
     fdir="$(cd "$out" && pwd)/forecast"
-    if [[ -n $fday && ! -f $fdir/$fday.json ]]; then
-      (cd ml && uv run --frozen python -m cota_ml.forecast --day "$fday" --ledger-v3 "$(cd .. && pwd)/$V3_LEDGER" --out "$fdir") ||
+    l3=$(cd "$V3_LEDGER" 2>/dev/null && pwd) || l3=""
+    if [[ -n $fday && -n $l3 && ! -f $fdir/$fday.json ]]; then
+      (cd ml && uv run --frozen python -m cota_ml.forecast --day "$fday" --ledger-v3 "$l3" --out "$fdir") ||
         warn "livro v3 (ensaio): o modelo de vazão falhou"
     fi
     "$BIN/cota-ledger3" --ledger "$V3_LEDGER" sign --key "$key" --node-dir "$out" --rpc "$RPC" || warn "livro v3 (ensaio): o nó não assinou"
@@ -104,6 +123,12 @@ node() {
 
 anchor() {
   local payer=${PAYER:-$SECRETS/operator.json} rc=0 day
+  # After the cutover: only the v3 ledger, nothing goes to Solana.
+  if v3only; then
+    python3 scripts/fetch_nodes.py || warn "nós externos indisponíveis"
+    "$BIN/cota-ledger3" --ledger "$V3_LEDGER" collect --nodes-dir "${NODES_DIR:-data/nodes}" || { warn "livro v3: falhou"; return 1; }
+    return 0
+  fi
   # Independent nodes run by other institutions publish their signatures elsewhere (config/nodes.toml); they
   # count only if their keys are committee members on-chain.
   python3 scripts/fetch_nodes.py || warn "nós externos indisponíveis"
@@ -135,7 +160,7 @@ anchor() {
   fi
   # v3 rehearsal: the checkpoint and the entries a majority of the nodes signed.
   if ensaio; then
-    "$BIN/cota-ledger3" --ledger "$V3_LEDGER" collect --nodes-dir data/nodes || warn "livro v3 (ensaio): falhou"
+    "$BIN/cota-ledger3" --ledger "$V3_LEDGER" collect --nodes-dir "${NODES_DIR:-data/nodes}" || warn "livro v3 (ensaio): falhou"
   fi
   # Parametric vaults: the program decides; the operator only pays the crank's fee.
   "$BIN/cota-vault" --rpc "$RPC" --cluster "$CLUSTER" --payer "$payer" crank || warn "cofres: falhou"
@@ -149,7 +174,11 @@ publish() {
   if [[ $push == 1 ]]; then
     python3 scripts/timestamp.py || warn "carimbo no Bitcoin: falhou"
   fi
-  if [[ -n $(git status --porcelain data/ledger) ]]; then
+  if v3only && [[ -n $(git status --porcelain "$V3_LEDGER") ]]; then
+    # The v3 ledger replayed in full (rules, signatures, checkpoints, readings, contents, the opening committee).
+    { "$BIN/cota-ledger3" --ledger "$V3_LEDGER" verify --rpc "$RPC" && python3 scripts/export_dashboard.py; } ||
+      { warn "conferência do livro v3 ou dados do painel: falhou"; rc=1; }
+  elif ! v3only && [[ -n $(git status --porcelain data/ledger) ]]; then
     { "$BIN/cota-audit" --rpc "$RPC" && python3 scripts/export_dashboard.py; } || { warn "auditoria ou dados do painel: falhou"; rc=1; }
   else
     log "nada novo no ledger"
