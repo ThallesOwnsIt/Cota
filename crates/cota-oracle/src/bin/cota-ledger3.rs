@@ -42,6 +42,11 @@ enum Cmd {
     Collect {
         #[arg(long, default_value = "data/nodes")]
         nodes_dir: PathBuf,
+        #[arg(long, default_value = "config/ledger-v3.toml")]
+        config: PathBuf,
+        /// The station quality check's limits (as v2's aggregator).
+        #[arg(long, default_value = "config/quality-limits.toml")]
+        limits: PathBuf,
     },
     Verify {
         /// RPC to compare Genesis with v2's committee on the chain.
@@ -76,9 +81,13 @@ fn main() -> Result<()> {
             let cp = book.next_checkpoint().map(|c| format!(", ponto de controle {}", c.size)).unwrap_or_default();
             eprintln!("[{}] livro v3: {n} entrada(s) assinada(s){cp}", &keys::pubkey_base58(&key)[..8]);
         }
-        Cmd::Collect { nodes_dir } => {
+        Cmd::Collect { nodes_dir, config, limits } => {
             let mut book = ledger3::Book::open(&args.ledger, &args.v2_ledger)?;
-            let report = ledger3::collect(&mut book, &nodes_dir, chrono::Utc::now().timestamp())?;
+            let quality = ledger3::load_config(&config).and_then(|cfg| ledger3::QualityInput::load(&cfg, &limits));
+            if let Err(e) = &quality {
+                eprintln!("aviso: sem a avaliação de qualidade das estações ({e:#})");
+            }
+            let report = ledger3::collect(&mut book, &nodes_dir, chrono::Utc::now().timestamp(), quality.as_ref().ok())?;
             if report.backfilled > 0 {
                 eprintln!("livro v3: {} conteúdo(s) que faltavam foram completados", report.backfilled);
             }

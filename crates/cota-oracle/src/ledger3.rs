@@ -716,7 +716,7 @@ fn order(body: &Body) -> (u8, String, u64) {
 
 /// The aggregator's round: publishes the checkpoint a majority signed for the current state, then appends every body
 /// a majority signed, in `order`, through the rules.
-pub fn collect(book: &mut Book, nodes_dir: &Path, now: i64) -> Result<Report> {
+pub fn collect(book: &mut Book, nodes_dir: &Path, now: i64, quality: Option<&QualityInput>) -> Result<Report> {
     let mut report = Report::default();
     let (bodies, checkpoints) = read_node_files(nodes_dir);
 
@@ -805,7 +805,7 @@ pub fn collect(book: &mut Book, nodes_dir: &Path, now: i64) -> Result<Report> {
         match book.ledger.apply(&entry) {
             Ok(applied) => {
                 if let Body::Batch(b) = &entry.body {
-                    write_batch_readings(book, nodes_dir, b)?;
+                    write_batch_readings(book, nodes_dir, b, quality)?;
                 }
                 write_content(book, nodes_dir, &entry, applied.index)?;
                 book.append(entry, &applied)?;
@@ -934,26 +934,64 @@ fn write_content(book: &Book, nodes_dir: &Path, entry: &Entry, index: u64) -> Re
     Ok(())
 }
 
-/// `batches/<stream>-<id>.json`: the readings of a batch, from a node whose v2 batch has the same Merkle root.
-fn write_batch_readings(book: &Book, nodes_dir: &Path, b: &cota_ledger::Batch) -> Result<()> {
-    let Ok(rd) = std::fs::read_dir(nodes_dir) else { return Ok(()) };
-    for node in rd.filter_map(|e| e.ok().map(|e| e.path())) {
-        if let Some(found) = node_batches(&node).into_values().find(|s| s.header.merkle_root == b.merkle_root) {
-            let dir = book.dir.join("batches");
-            std::fs::create_dir_all(&dir)?;
-            let file = serde_json::json!({
-                "stream": b.stream,
-                "batch_id": b.batch_id,
-                "day": found.day.to_string(),
-                "merkle_root": hex::encode(b.merkle_root),
-                "leaf_count": b.leaf_count,
-                "readings": found.readings,
-            });
-            std::fs::write(dir.join(format!("{}-{:05}.json", b.stream, b.batch_id)), serde_json::to_string_pretty(&file)? + "\n")?;
-            return Ok(());
-        }
+/// What the station quality check needs: its limits and the catalog (id, source).
+pub struct QualityInput {
+    pub limits: cota_quality::Limits,
+    pub catalog: Vec<(String, cota_core::Source)>,
+}
+
+impl QualityInput {
+    pub fn load(cfg: &Config, limits: &Path) -> Result<Self> {
+        Ok(Self {
+            limits: cota_quality::Limits::load(limits)?,
+            catalog: cota_ingest::config::load(&cfg.catalog)?.into_iter().map(|s| (s.id, s.source)).collect(),
+        })
     }
-    Ok(())
+}
+
+/// `batches/<stream>-<id>.json`: the readings of a batch, from a node whose batch has the same Merkle root, and the
+/// quality of each station (`cota-quality`, as v2's aggregator does): stuck or jumping readings, gaps, and the nodes
+/// that saw different readings. Quality is derived data, not signed; its state carries over in `quality-state.json`.
+fn write_batch_readings(book: &Book, nodes_dir: &Path, b: &cota_ledger::Batch, quality: Option<&QualityInput>) -> Result<()> {
+    let Ok(rd) = std::fs::read_dir(nodes_dir) else { return Ok(()) };
+    let mut nodes: Vec<PathBuf> = rd.filter_map(|e| e.ok().map(|e| e.path())).collect();
+    nodes.sort();
+    let day_batches: Vec<SignedBatch> = nodes.iter().filter_map(|n| node_batches(n).into_values().find(|s| s.header.t_start == b.t_start)).collect();
+    let Some(found) = day_batches.iter().find(|s| s.header.merkle_root == b.merkle_root) else { return Ok(()) };
+    let quality_json = match quality {
+        None => Value::Null,
+        Some(q) => {
+            let members: Vec<String> = book.ledger.committee().map(|c| c.members.iter().map(base58).collect()).unwrap_or_default();
+            let valid: Vec<&SignedBatch> = day_batches.iter().filter(|s| members.contains(&s.node)).collect();
+            let readings: Vec<&[cota_core::Reading]> = valid.iter().map(|s| s.readings.as_slice()).collect();
+            let agreement = cota_quality::node_agreement(&readings);
+            let state_path = book.dir.join("quality-state.json");
+            let mut state: cota_quality::State =
+                std::fs::read_to_string(&state_path).ok().and_then(|t| serde_json::from_str(&t).ok()).unwrap_or_default();
+            let stations = cota_quality::assess(&mut state, &q.limits, &q.catalog, b.t_start, b.t_end, &found.readings, &agreement);
+            std::fs::write(&state_path, serde_json::to_string_pretty(&state)? + "\n")?;
+            let dissents: Vec<Value> = agreement
+                .dissents
+                .iter()
+                .map(|d| {
+                    let mut v = serde_json::to_value(d).unwrap_or(Value::Null);
+                    v["member"] = Value::String(valid[d.node].node.clone());
+                    v
+                })
+                .collect();
+            serde_json::json!({ "stations": stations, "dissents": dissents })
+        }
+    };
+    let file = serde_json::json!({
+        "stream": b.stream,
+        "batch_id": b.batch_id,
+        "day": found.day.to_string(),
+        "merkle_root": hex::encode(b.merkle_root),
+        "leaf_count": b.leaf_count,
+        "readings": found.readings,
+        "quality": quality_json,
+    });
+    write_json(&book.dir.join("batches").join(format!("{}-{:05}.json", b.stream, b.batch_id)), &file)
 }
 
 /// Every batch's published readings (`batches/<stream>-<id>.json`) rebuild the Merkle root, count and station set the

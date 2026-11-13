@@ -5,7 +5,7 @@
 #
 #   round.sh plan        the UTC day the chain (v3: the ledger) is waiting a batch for, if it has closed (else empty)
 #   round.sh node [i]    one oracle node: signs INMET's warnings, the day's batch and the rain forecast
-#   round.sh anchor      takes to the chain whatever has quorum, forecasts discharge, cranks the vaults (v3: collects
+#   round.sh anchor      takes to the chain whatever has quorum and forecasts discharge (v3: collects
 #                        into the ledger what a majority of the nodes signed)
 #   round.sh publish     Bitcoin stamp, audit, dashboard data, Arweave copy, commit and push
 #   round.sh aggregate   anchor + publish, for one day (GitHub Actions)
@@ -162,8 +162,8 @@ anchor() {
   if ensaio; then
     "$BIN/cota-ledger3" --ledger "$V3_LEDGER" collect --nodes-dir "${NODES_DIR:-data/nodes}" || warn "livro v3 (ensaio): falhou"
   fi
-  # Parametric vaults: the program decides; the operator only pays the crank's fee.
-  "$BIN/cota-vault" --rpc "$RPC" --cluster "$CLUSTER" --payer "$payer" crank || warn "cofres: falhou"
+  # The parametric vaults were retired on 13/11/2026 (decision of the project owner): the round no longer cranks them.
+  # They stay on-chain, idle, until they expire on 05/11/2027, when cota-vault can close them.
   return $rc
 }
 
