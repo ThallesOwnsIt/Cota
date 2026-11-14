@@ -36,6 +36,13 @@ struct Args {
     prev_root: Option<String>,
     #[arg(long, default_value = "config/stations.toml")]
     config: PathBuf,
+    /// v3: the ledger's config; the stations are those of `--stream` in its catalogs (instead of `--config`), and the
+    /// batch file goes to that stream's folder.
+    #[arg(long, requires = "stream")]
+    ledger_config: Option<PathBuf>,
+    /// v3: the stream (region) whose batch this is.
+    #[arg(long, requires = "ledger_config")]
+    stream: Option<String>,
     #[arg(long, default_value = "data/raw")]
     cache: PathBuf,
     /// This node's directory; writes `{batch_id:05}.json`.
@@ -52,7 +59,13 @@ struct Args {
 fn main() -> Result<()> {
     let args = Args::parse();
     let key = keys::load_signing_key(&args.key)?;
-    let stations = cota_ingest::config::load(&args.config)?;
+    let (stations, out) = match (&args.ledger_config, &args.stream) {
+        (Some(path), Some(stream)) => {
+            let cfg = cota_oracle::ledger3::load_config(path)?;
+            (cfg.stream_stations(stream)?, cfg.stream_dir(&args.out, stream))
+        }
+        _ => (cota_ingest::config::load(&args.config)?, args.out.clone()),
+    };
 
     let (batch_id, prev_root) = match (&args.rpc, args.batch_id, &args.prev_root) {
         (Some(url), _, _) => {
@@ -73,8 +86,8 @@ fn main() -> Result<()> {
         FaultArg::Silent => node::Fault::Silent,
         FaultArg::Tamper => node::Fault::Tamper,
     };
-    std::fs::create_dir_all(&args.out)?;
-    let path = args.out.join(format!("{batch_id:05}.json"));
+    std::fs::create_dir_all(&out)?;
+    let path = out.join(format!("{batch_id:05}.json"));
 
     match node::sign_day(&key, &stations, &args.cache, args.day, batch_id, prev_root, fault)? {
         Some(signed) => {

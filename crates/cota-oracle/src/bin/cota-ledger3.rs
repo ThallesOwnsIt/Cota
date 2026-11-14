@@ -61,6 +61,9 @@ enum Cmd {
         /// Minutes after 00:00 UTC before yesterday counts as closed.
         #[arg(long, default_value_t = 60)]
         settle_min: i64,
+        /// The stream (region); default: the main one.
+        #[arg(long)]
+        stream: Option<String>,
     },
     /// Writes the ledger, every entry decoded, as JSON for the dashboard (scripts/export_dashboard.py).
     Export {
@@ -118,10 +121,11 @@ fn main() -> Result<()> {
                 ledger3::iso(book.ledger.clock()),
             );
         }
-        Cmd::NextDay { config, settle_min } => {
+        Cmd::NextDay { config, settle_min, stream } => {
             let cfg = ledger3::load_config(&config)?;
             let book = ledger3::Book::open(&args.ledger, &args.v2_ledger)?;
-            if let Some((day, id, prev)) = ledger3::next_day(&cfg, &book, chrono::Utc::now().timestamp(), settle_min * 60) {
+            let stream = stream.unwrap_or_else(|| cfg.main_stream.clone());
+            if let Some((day, id, prev)) = ledger3::next_day(&book, &stream, chrono::Utc::now().timestamp(), settle_min * 60) {
                 println!("{day} {id} {}", hex::encode(prev));
             }
         }

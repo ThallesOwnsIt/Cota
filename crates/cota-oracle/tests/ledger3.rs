@@ -67,3 +67,28 @@ fn every_catalog_station_is_accepted_by_the_ledger_and_the_opening_ones_do_not_c
         assert!(again.is_empty(), "estações da abertura assinadas de novo: {again:?}");
     }
 }
+
+/// Each stream's batch carries its own stations (every station in exactly one), and its files go to its own folder:
+/// the main stream's where v2 put them, the others in a subfolder.
+#[test]
+fn each_stream_has_its_stations_and_its_folder() {
+    let root = concat!(env!("CARGO_MANIFEST_DIR"), "/../..");
+    std::env::set_current_dir(root).unwrap();
+    let cfg = cota_oracle::ledger3::load_config(std::path::Path::new("config/ledger-v3.toml")).unwrap();
+    let all = cfg.stations().unwrap();
+    let mut total = 0;
+    for stream in &cfg.streams {
+        let st = cfg.stream_stations(stream).unwrap();
+        assert!(!st.is_empty(), "{stream}");
+        assert!(st.iter().all(|s| cfg.stream_of(s) == stream));
+        total += st.len();
+    }
+    assert_eq!(total, all.len());
+    let main = cfg.stream_stations(&cfg.main_stream).unwrap();
+    assert!(main.iter().any(|s| s.id == "ANA-87450004") && main.iter().any(|s| s.id == "GLOFAS-GUAIBA"));
+    assert!(cfg.stream_stations("uruguai").unwrap().iter().any(|s| s.id == "ANA-77150000"));
+    assert!(cfg.stream_stations("nada").is_err());
+    let node = std::path::Path::new("data/nodes/node-1");
+    assert_eq!(cfg.stream_dir(node, "guaiba"), node);
+    assert_eq!(cfg.stream_dir(node, "uruguai"), node.join("uruguai"));
+}

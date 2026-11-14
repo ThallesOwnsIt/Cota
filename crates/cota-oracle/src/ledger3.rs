@@ -89,6 +89,22 @@ impl Config {
     pub fn stream_of<'a>(&'a self, st: &'a cota_ingest::config::StationConfig) -> &'a str {
         st.stream.as_deref().unwrap_or(&self.main_stream)
     }
+
+    /// The stations whose readings go in `stream`'s batches.
+    pub fn stream_stations(&self, stream: &str) -> Result<Vec<cota_ingest::config::StationConfig>> {
+        ensure!(self.streams.iter().any(|s| s == stream), "região {stream} não existe no livro");
+        Ok(self.stations()?.into_iter().filter(|st| self.stream_of(st) == stream).collect())
+    }
+
+    /// Where a node keeps its batch files of `stream`: the main stream's in the node's folder (as in v2), the others in
+    /// a subfolder named after the stream.
+    pub fn stream_dir(&self, node_dir: &Path, stream: &str) -> PathBuf {
+        if stream == self.main_stream {
+            node_dir.to_path_buf()
+        } else {
+            node_dir.join(stream)
+        }
+    }
 }
 
 pub fn load_config(path: &Path) -> Result<Config> {
@@ -458,18 +474,22 @@ fn node_batches(node_dir: &Path) -> BTreeMap<NaiveDate, SignedBatch> {
     read_json_files::<SignedBatch>(node_dir).into_iter().map(|b| (b.day, b)).collect()
 }
 
-/// What this node observed for the main stream: the batch of the next day it has (gaps allowed), and the outlooks
-/// and third-party forecasts of that day and of the day the ledger last closed.
+/// What this node observed: for each stream, the batch of the next day it has (gaps allowed); and the outlooks and
+/// third-party forecasts of the main stream's new day and of the day it last closed.
 pub fn day_bodies(cfg: &Config, book: &Book, node_dir: &Path) -> Result<Vec<Body>> {
-    let Some(s) = book.ledger.stream(&cfg.main_stream) else { return Ok(Vec::new()) };
+    let Some(main) = book.ledger.stream(&cfg.main_stream) else { return Ok(Vec::new()) };
     let mut out = Vec::new();
     let mut days: Vec<i64> = vec![];
-    if s.next_batch_id > 1 {
-        days.push(s.last_t_end);
+    if main.next_batch_id > 1 {
+        days.push(main.last_t_end);
     }
-    if let Some((day, b)) = node_batches(node_dir).into_iter().find(|(d, _)| start_of_day(*d) >= s.last_t_end) {
+    for stream in &cfg.streams {
+        let Some(s) = book.ledger.stream(stream) else { continue };
+        let Some((day, b)) = node_batches(&cfg.stream_dir(node_dir, stream)).into_iter().find(|(d, _)| start_of_day(*d) >= s.last_t_end) else {
+            continue;
+        };
         out.push(Body::Batch(cota_ledger::Batch {
-            stream: cfg.main_stream.clone(),
+            stream: stream.clone(),
             batch_id: s.next_batch_id,
             t_start: b.header.t_start,
             t_end: b.header.t_end,
@@ -478,7 +498,9 @@ pub fn day_bodies(cfg: &Config, book: &Book, node_dir: &Path) -> Result<Vec<Body
             station_set_hash: b.header.station_set_hash,
             prev_batch_root: s.last_batch_root,
         }));
-        days.push(end_of_day(day));
+        if stream == &cfg.main_stream {
+            days.push(end_of_day(day));
+        }
     }
     // Outlooks issued at the end of those days (issued_at = 00:00 of the next day).
     for o in read_json_files::<SignedOutlook>(&node_dir.join("outlook")) {
@@ -523,11 +545,11 @@ pub fn forecast_day(cfg: &Config, book: &Book) -> Option<NaiveDate> {
     DateTime::from_timestamp(s.last_t_end - 1, 0).map(|d| d.date_naive())
 }
 
-/// The next day the main stream waits for, once it has closed and `settle_secs` have passed (the sources publish a
-/// day's last hours late): the day, the batch number it will get and the root it chains to. `None` before Genesis or
-/// when that day is still open.
-pub fn next_day(cfg: &Config, book: &Book, now: i64, settle_secs: i64) -> Option<(NaiveDate, u64, Hash)> {
-    let s = book.ledger.stream(&cfg.main_stream)?;
+/// The next day a stream waits for, once it has closed and `settle_secs` have passed (the sources publish a day's
+/// last hours late): the day, the batch number it will get and the root it chains to. `None` before Genesis, for a
+/// stream the ledger does not have, or when that day is still open.
+pub fn next_day(book: &Book, stream: &str, now: i64, settle_secs: i64) -> Option<(NaiveDate, u64, Hash)> {
+    let s = book.ledger.stream(stream)?;
     let day = DateTime::from_timestamp(s.last_t_end, 0)?.date_naive();
     (end_of_day(day) + settle_secs <= now).then_some((day, s.next_batch_id, s.last_batch_root))
 }

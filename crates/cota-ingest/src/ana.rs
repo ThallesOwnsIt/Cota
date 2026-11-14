@@ -112,14 +112,16 @@ pub fn login(http: &reqwest::blocking::Client, cred: &Credentials) -> Result<Str
     })
 }
 
-/// All rows for stations `codes` between local days `first` and `last` (inclusive).
+/// All rows for stations `codes` between local days `first` and `last` (inclusive), in blocks of `MAX_CODES`.
+/// A block that still fails after its retries leaves only its own stations without readings (missing hours, recorded
+/// by quality); the other blocks go on. With the whole state (~44 blocks), one bad answer must not empty the batch.
 pub fn fetch(http: &reqwest::blocking::Client, token: &str, codes: &[&str], first: NaiveDate, last: NaiveDate) -> Result<Vec<Row>> {
     // A daily batch covers 2 local days: DIAS_2 is enough. Larger windows (backfill) go 7 days at a
     // time.
     let range_days: u64 = if (last - first).num_days() < 2 { 2 } else { 7 };
-    let mut rows = Vec::new();
-    for chunk in codes.chunks(MAX_CODES) {
+    let (rows, _failed) = by_blocks(codes, |chunk| {
         let joined = chunk.join(",");
+        let mut rows = Vec::new();
         let mut end = last;
         loop {
             let url = format!(
@@ -142,8 +144,25 @@ pub fn fetch(http: &reqwest::blocking::Client, token: &str, codes: &[&str], firs
                 _ => break,
             }
         }
-    }
+        Ok(rows)
+    });
     Ok(rows)
+}
+
+/// Runs `fetch_block` on each block of up to `MAX_CODES` codes and keeps what answered; returns the rows and the codes
+/// of the blocks that failed.
+pub fn by_blocks(codes: &[&str], mut fetch_block: impl FnMut(&[&str]) -> Result<Vec<Row>>) -> (Vec<Row>, Vec<String>) {
+    let (mut rows, mut failed) = (Vec::new(), Vec::new());
+    for chunk in codes.chunks(MAX_CODES) {
+        match fetch_block(chunk) {
+            Ok(r) => rows.extend(r),
+            Err(e) => {
+                eprintln!("aviso: a ANA não respondeu para {chunk:?}; essas estações ficam sem leituras neste lote: {e:#}");
+                failed.extend(chunk.iter().map(|c| c.to_string()));
+            }
+        }
+    }
+    (rows, failed)
 }
 
 /// Canonical string whose SHA-256 becomes `raw_payload_sha256`: code, local instant and stage
@@ -227,6 +246,27 @@ pub fn local_days(from: i64, to: i64) -> Result<(NaiveDate, NaiveDate)> {
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    #[test]
+    fn a_failing_block_leaves_only_its_own_stations_without_readings() {
+        let codes: Vec<String> = (0..25).map(|i| format!("{:08}", 87000000 + i)).collect();
+        let refs: Vec<&str> = codes.iter().map(String::as_str).collect();
+        let mut calls = 0;
+        let (rows, failed) = by_blocks(&refs, |chunk| {
+            calls += 1;
+            assert!(chunk.len() <= MAX_CODES);
+            if calls == 2 {
+                anyhow::bail!("503");
+            }
+            Ok(chunk
+                .iter()
+                .map(|c| Row { codigoestacao: c.to_string(), data_hora: "2026-11-12 00:00:00.0".into(), cota: Some("100".into()) })
+                .collect())
+        });
+        assert_eq!(calls, 3);
+        assert_eq!(rows.len(), 15);
+        assert_eq!(failed, refs[10..20].iter().map(|c| c.to_string()).collect::<Vec<_>>());
+    }
 
     fn station(id: &str) -> StationConfig {
         StationConfig {
