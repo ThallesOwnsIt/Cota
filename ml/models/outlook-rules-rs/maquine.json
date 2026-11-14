@@ -1,0 +1,61 @@
+{
+  "rule_sha256": "7322baa316b09c464f1344f194fca8f4bfb0c30791e384566a3ea55a36a1fc71",
+  "spec": {
+    "region": "maquine",
+    "points": [
+      {
+        "id": "ana-87317021",
+        "lat": -29.581,
+        "lon": -50.278
+      },
+      {
+        "id": "ana-87317030",
+        "lat": -29.65,
+        "lon": -50.21
+      }
+    ],
+    "models": [
+      "ecmwf_ifs025",
+      "gfs_global",
+      "icon_global"
+    ],
+    "min_models": 2,
+    "run_hour_utc": 0,
+    "window_days": 5,
+    "aggregation": "por modelo: soma horária de D+1..D+5 (UTC) em cada ponto, arredondada a 0,1 mm por dia; média dos pontos; depois média dos modelos",
+    "threshold_mm": 100,
+    "target": {
+      "station_id": "GLOFAS-MAQUINE",
+      "threshold_m3s": 129.1,
+      "within_days": 7
+    },
+    "calibration": {
+      "years": [
+        2015,
+        2023
+      ],
+      "data": "chuva da reanálise ERA5 (Open-Meteo) + vazão GloFAS",
+      "threshold_mm": 100,
+      "csi": 0.433,
+      "hits": 65,
+      "false_alarms": 49,
+      "misses": 36,
+      "days": 3246,
+      "flood_days": 101
+    },
+    "backtest": {
+      "period": [
+        "2024-02-15",
+        "2026-11-12"
+      ],
+      "days": 989,
+      "hits": 9,
+      "false_alarms": 12,
+      "misses": 12,
+      "csi": 0.273,
+      "floods": 3,
+      "floods_warned": 3,
+      "false_alarm_runs": 7
+    }
+  }
+}

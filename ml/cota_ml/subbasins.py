@@ -84,7 +84,7 @@ def era5_daily(pid: str, lat: float, lon: float) -> dict[str, float]:
 
 def glofas_daily(tid: str, lat: float, lon: float, end: date) -> dict[str, float]:
     url = f"{FLOOD}?latitude={lat}&longitude={lon}&daily=river_discharge&start_date={CAL_START}&end_date={end}"
-    d = _get(url, CACHE / f"glofas_{tid}_{end}.json")["daily"]
+    d = _get(url, CACHE / f"glofas_{tid}_{lat}_{lon}_{end}.json")["daily"]  # the cell is part of the key
     return {t: v for t, v in zip(d["time"], d["river_discharge"]) if v is not None}
 
 
@@ -166,7 +166,7 @@ def backtest(pts, thr_mm: float, q: dict[str, float], thr_q: float, end: date) -
             "floods": floods, "false_alarm_runs": alert_runs([r for r in rows if r["alert"] and not r["flood_ahead"]])}
 
 
-def write_rule(sid: str, sb: dict, cal: dict, thr_q: float, bt: dict) -> None:
+def write_rule(sid: str, sb: dict, cal: dict, thr_q: float, bt: dict, out_dir: Path | None = None) -> None:
     """The rule file for the chain, in the format of cota_ml.outlook's (the hash covers the canonical spec)."""
     tid = sb["target"][0]
     spec = {
@@ -184,7 +184,7 @@ def write_rule(sid: str, sb: dict, cal: dict, thr_q: float, bt: dict) -> None:
                      "floods_warned": sum(1 for f in bt["floods"] if f["first_alert"]), "false_alarm_runs": len(bt["false_alarm_runs"])},
     }
     sha = hashlib.sha256(canonical(spec)).hexdigest()
-    out = ROOT / "ml" / "models" / "outlook-rules" / f"{sid}.json"
+    out = (out_dir or ROOT / "ml" / "models" / "outlook-rules") / f"{sid}.json"
     out.parent.mkdir(parents=True, exist_ok=True)
     out.write_text(json.dumps({"rule_sha256": sha, "spec": spec}, indent=2, ensure_ascii=False) + "\n")
     print(f"  regra {sid}: {spec['threshold_mm']} mm, rule_sha256 {sha[:16]}… → {out.relative_to(ROOT)}")

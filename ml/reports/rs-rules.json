@@ -1,0 +1,1265 @@
+{
+ "method": "The method of the Guaíba's sub-basins (cota_ml.subbasins), unchanged, one basin at a time:\n\n1. Flood of a basin: GloFAS discharge at its point above that point's own 99th percentile (2015–2023) within 7 days.\n2. Calibration (2015–2023): the rain over the next 5 days, averaged over the basin's points, that maximizes CSI, with\n   the ERA5 reanalysis (Open-Meteo archive).\n3. Out-of-sample test (Feb 2024 → `--end`): the same threshold on the rain the models actually forecast then.\n\nThe points are ANA gauges inside each basin (data/inventory/ana-rs.json: being on its rivers, they are inside it),\nspread out at least ~25 km apart (the reanalysis grid), plus towns of Santa Catarina and Misiones for the upper\nUruguay, which RS's inventory does not cover. Where a basin had too few gauges, a point in its headwaters completes it.\nThe GloFAS point of each basin is the river cell next to its main gauge (the largest mean discharge within 0.1°).",
+ "basins": {
+  "uruguai": {
+   "name": "Rio Uruguai (calha, em Uruguaiana)",
+   "region": "uruguai",
+   "gauge": "77150000 Uruguaiana",
+   "target": "GLOFAS-URUGUAIANA",
+   "target_cell": [
+    -29.775,
+    -57.175
+   ],
+   "flood_m3s_p99": 19236.1,
+   "points": [
+    "ana-75020200",
+    "ana-70120000",
+    "ana-75900000",
+    "ana-76220900",
+    "sc-joacaba",
+    "ar-obera",
+    "ana-76440010",
+    "sc-sao-miguel-do-oeste",
+    "ana-76700000",
+    "ana-73371000",
+    "ana-75650900",
+    "sc-chapeco",
+    "ana-70719700",
+    "ana-74505400"
+   ],
+   "calibration": {
+    "threshold_mm": 105,
+    "csi": 0.188,
+    "hits": 9,
+    "false_alarms": 13,
+    "misses": 26,
+    "days": 3246,
+    "flood_days": 35
+   },
+   "backtest": {
+    "period": [
+     "2024-02-15",
+     "2026-11-12"
+    ],
+    "contingency": {
+     "days": 989,
+     "hits": 2,
+     "false_alarms": 2,
+     "misses": 5,
+     "csi": 0.222
+    },
+    "floods": [
+     {
+      "first_day": "2024-05-06",
+      "last_day": "2024-05-11",
+      "peak_m3s": 31988,
+      "first_alert": "2024-04-29",
+      "lead_days": 7
+     }
+    ],
+    "false_alarm_runs": [
+     [
+      "2024-04-28",
+      "2024-04-28"
+     ],
+     [
+      "2026-10-07",
+      "2026-10-07"
+     ]
+    ]
+   }
+  },
+  "alto-uruguai": {
+   "name": "Alto Uruguai (até Iraí)",
+   "region": "uruguai",
+   "gauge": "74100000 Iraí",
+   "target": "GLOFAS-IRAI",
+   "target_cell": [
+    -27.125,
+    -53.325
+   ],
+   "flood_m3s_p99": 11297.0,
+   "points": [
+    "ana-72450500",
+    "ana-70120000",
+    "ana-74100000",
+    "sc-cacador",
+    "ana-70719700",
+    "ana-73390000",
+    "sc-lages",
+    "ana-73200500",
+    "sc-campos-novos",
+    "ana-70842000"
+   ],
+   "calibration": {
+    "threshold_mm": 95,
+    "csi": 0.479,
+    "hits": 45,
+    "false_alarms": 20,
+    "misses": 29,
+    "days": 3245,
+    "flood_days": 74
+   },
+   "backtest": {
+    "period": [
+     "2024-02-15",
+     "2026-11-12"
+    ],
+    "contingency": {
+     "days": 988,
+     "hits": 11,
+     "false_alarms": 2,
+     "misses": 24,
+     "csi": 0.297
+    },
+    "floods": [
+     {
+      "first_day": "2024-05-05",
+      "last_day": "2024-05-06",
+      "peak_m3s": 16105,
+      "first_alert": "2024-04-28",
+      "lead_days": 7
+     },
+     {
+      "first_day": "2024-12-10",
+      "last_day": "2024-12-10",
+      "peak_m3s": 11911,
+      "first_alert": "2024-12-05",
+      "lead_days": 5
+     },
+     {
+      "first_day": "2025-07-01",
+      "last_day": "2025-07-01",
+      "peak_m3s": 12105,
+      "first_alert": null,
+      "lead_days": null
+     },
+     {
+      "first_day": "2026-07-04",
+      "last_day": "2026-07-04",
+      "peak_m3s": 14354,
+      "first_alert": "2026-06-27",
+      "lead_days": 7
+     },
+     {
+      "first_day": "2026-09-02",
+      "last_day": "2026-09-03",
+      "peak_m3s": 15487,
+      "first_alert": "2026-08-27",
+      "lead_days": 6
+     }
+    ],
+    "false_alarm_runs": [
+     [
+      "2026-09-18",
+      "2026-09-18"
+     ],
+     [
+      "2026-10-07",
+      "2026-10-07"
+     ]
+    ]
+   }
+  },
+  "ijui": {
+   "name": "Ijuí",
+   "region": "uruguai",
+   "gauge": "75230000 Entre-Ijuís",
+   "target": "GLOFAS-IJUI",
+   "target_cell": [
+    -28.325,
+    -54.375
+   ],
+   "flood_m3s_p99": 828.0,
+   "points": [
+    "ana-75185200",
+    "ana-75060000",
+    "ana-75230000"
+   ],
+   "calibration": {
+    "threshold_mm": 90,
+    "csi": 0.362,
+    "hits": 55,
+    "false_alarms": 70,
+    "misses": 27,
+    "days": 3246,
+    "flood_days": 82
+   },
+   "backtest": {
+    "period": [
+     "2024-02-15",
+     "2026-11-12"
+    ],
+    "contingency": {
+     "days": 982,
+     "hits": 18,
+     "false_alarms": 15,
+     "misses": 22,
+     "csi": 0.327
+    },
+    "floods": [
+     {
+      "first_day": "2024-05-02",
+      "last_day": "2024-05-07",
+      "peak_m3s": 1745,
+      "first_alert": "2024-04-25",
+      "lead_days": 7
+     },
+     {
+      "first_day": "2024-05-13",
+      "last_day": "2024-05-14",
+      "peak_m3s": 1364,
+      "first_alert": "2024-05-09",
+      "lead_days": 4
+     },
+     {
+      "first_day": "2024-06-19",
+      "last_day": "2024-06-20",
+      "peak_m3s": 970,
+      "first_alert": "2024-06-14",
+      "lead_days": 5
+     },
+     {
+      "first_day": "2026-09-22",
+      "last_day": "2026-09-22",
+      "peak_m3s": 864,
+      "first_alert": null,
+      "lead_days": null
+     },
+     {
+      "first_day": "2026-10-10",
+      "last_day": "2026-10-10",
+      "peak_m3s": 952,
+      "first_alert": "2026-10-03",
+      "lead_days": 7
+     },
+     {
+      "first_day": "2026-11-05",
+      "last_day": "2026-11-06",
+      "peak_m3s": 992,
+      "first_alert": "2026-11-02",
+      "lead_days": 3
+     }
+    ],
+    "false_alarm_runs": [
+     [
+      "2024-03-15",
+      "2024-03-17"
+     ],
+     [
+      "2024-04-11",
+      "2024-04-11"
+     ],
+     [
+      "2024-12-05",
+      "2024-12-05"
+     ],
+     [
+      "2025-06-12",
+      "2025-06-17"
+     ],
+     [
+      "2025-12-19",
+      "2025-12-20"
+     ],
+     [
+      "2026-06-27",
+      "2026-06-27"
+     ],
+     [
+      "2026-07-17",
+      "2026-07-17"
+     ]
+    ]
+   }
+  },
+  "ibicui": {
+   "name": "Ibicuí (até Manoel Viana)",
+   "region": "uruguai",
+   "gauge": "76560000 Manoel Viana",
+   "target": "GLOFAS-MANOEL-VIANA",
+   "target_cell": [
+    -29.625,
+    -55.575
+   ],
+   "flood_m3s_p99": 2797.9,
+   "points": [
+    "ana-76118000",
+    "ana-76248000",
+    "ana-76560003",
+    "ana-76300000",
+    "ana-76069500",
+    "ana-76111010",
+    "ana-76220900",
+    "ana-76395010"
+   ],
+   "calibration": {
+    "threshold_mm": 90,
+    "csi": 0.26,
+    "hits": 27,
+    "false_alarms": 37,
+    "misses": 40,
+    "days": 3246,
+    "flood_days": 67
+   },
+   "backtest": {
+    "period": [
+     "2024-02-15",
+     "2026-11-12"
+    ],
+    "contingency": {
+     "days": 982,
+     "hits": 9,
+     "false_alarms": 16,
+     "misses": 12,
+     "csi": 0.243
+    },
+    "floods": [
+     {
+      "first_day": "2024-05-03",
+      "last_day": "2024-05-09",
+      "peak_m3s": 4187,
+      "first_alert": "2024-04-26",
+      "lead_days": 7
+     },
+     {
+      "first_day": "2025-06-20",
+      "last_day": "2025-06-23",
+      "peak_m3s": 3714,
+      "first_alert": "2025-06-13",
+      "lead_days": 7
+     },
+     {
+      "first_day": "2026-10-02",
+      "last_day": "2026-10-03",
+      "peak_m3s": 3395,
+      "first_alert": "2026-09-25",
+      "lead_days": 7
+     }
+    ],
+    "false_alarm_runs": [
+     [
+      "2024-03-14",
+      "2024-03-17"
+     ],
+     [
+      "2024-04-11",
+      "2024-04-12"
+     ],
+     [
+      "2024-05-20",
+      "2024-05-20"
+     ],
+     [
+      "2025-05-05",
+      "2025-05-07"
+     ],
+     [
+      "2025-12-20",
+      "2025-12-21"
+     ],
+     [
+      "2026-07-15",
+      "2026-07-17"
+     ],
+     [
+      "2026-09-24",
+      "2026-09-24"
+     ]
+    ]
+   }
+  },
+  "santa-maria": {
+   "name": "Santa Maria (até Rosário do Sul)",
+   "region": "uruguai",
+   "gauge": "76310000 Rosário do Sul",
+   "target": "GLOFAS-ROSARIO-DO-SUL",
+   "target_cell": [
+    -30.125,
+    -54.975
+   ],
+   "flood_m3s_p99": 1348.4,
+   "points": [
+    "ana-76251000",
+    "ana-76310000",
+    "ana-76220900",
+    "ana-76290000"
+   ],
+   "calibration": {
+    "threshold_mm": 80,
+    "csi": 0.211,
+    "hits": 34,
+    "false_alarms": 109,
+    "misses": 18,
+    "days": 3246,
+    "flood_days": 52
+   },
+   "backtest": {
+    "period": [
+     "2024-02-15",
+     "2026-11-12"
+    ],
+    "contingency": {
+     "days": 988,
+     "hits": 5,
+     "false_alarms": 29,
+     "misses": 16,
+     "csi": 0.1
+    },
+    "floods": [
+     {
+      "first_day": "2024-05-04",
+      "last_day": "2024-05-04",
+      "peak_m3s": 1373,
+      "first_alert": "2024-04-27",
+      "lead_days": 7
+     },
+     {
+      "first_day": "2024-09-27",
+      "last_day": "2024-09-29",
+      "peak_m3s": 1527,
+      "first_alert": "2024-09-23",
+      "lead_days": 4
+     },
+     {
+      "first_day": "2025-06-20",
+      "last_day": "2025-06-22",
+      "peak_m3s": 1454,
+      "first_alert": "2025-06-16",
+      "lead_days": 4
+     }
+    ],
+    "false_alarm_runs": [
+     [
+      "2024-03-12",
+      "2024-03-17"
+     ],
+     [
+      "2024-04-11",
+      "2024-04-12"
+     ],
+     [
+      "2024-04-25",
+      "2024-04-26"
+     ],
+     [
+      "2024-05-21",
+      "2024-05-21"
+     ],
+     [
+      "2024-08-04",
+      "2024-08-04"
+     ],
+     [
+      "2024-08-17",
+      "2024-08-17"
+     ],
+     [
+      "2025-05-04",
+      "2025-05-08"
+     ],
+     [
+      "2025-08-17",
+      "2025-08-18"
+     ],
+     [
+      "2025-12-20",
+      "2025-12-20"
+     ],
+     [
+      "2026-07-15",
+      "2026-07-17"
+     ],
+     [
+      "2026-07-27",
+      "2026-07-27"
+     ],
+     [
+      "2026-09-24",
+      "2026-09-27"
+     ]
+    ]
+   }
+  },
+  "ibirapuita": {
+   "name": "Ibirapuitã (até Alegrete)",
+   "region": "uruguai",
+   "gauge": "76750000 Alegrete",
+   "target": "GLOFAS-ALEGRETE",
+   "target_cell": [
+    -29.675,
+    -55.875
+   ],
+   "flood_m3s_p99": 725.6,
+   "points": [
+    "ana-76700000",
+    "ibirapuita-nascentes",
+    "ana-76750000"
+   ],
+   "calibration": {
+    "threshold_mm": 90,
+    "csi": 0.242,
+    "hits": 37,
+    "false_alarms": 79,
+    "misses": 37,
+    "days": 3246,
+    "flood_days": 74
+   },
+   "backtest": {
+    "period": [
+     "2024-02-15",
+     "2026-11-12"
+    ],
+    "contingency": {
+     "days": 977,
+     "hits": 6,
+     "false_alarms": 16,
+     "misses": 46,
+     "csi": 0.088
+    },
+    "floods": [
+     {
+      "first_day": "2024-05-01",
+      "last_day": "2024-05-04",
+      "peak_m3s": 928,
+      "first_alert": "2024-04-26",
+      "lead_days": 5
+     },
+     {
+      "first_day": "2024-05-24",
+      "last_day": "2024-05-24",
+      "peak_m3s": 1073,
+      "first_alert": null,
+      "lead_days": null
+     },
+     {
+      "first_day": "2024-09-27",
+      "last_day": "2024-09-27",
+      "peak_m3s": 766,
+      "first_alert": null,
+      "lead_days": null
+     },
+     {
+      "first_day": "2025-05-27",
+      "last_day": "2025-05-28",
+      "peak_m3s": 972,
+      "first_alert": "2025-05-23",
+      "lead_days": 4
+     },
+     {
+      "first_day": "2025-05-30",
+      "last_day": "2025-05-31",
+      "peak_m3s": 872,
+      "first_alert": "2025-05-23",
+      "lead_days": 7
+     },
+     {
+      "first_day": "2025-06-20",
+      "last_day": "2025-06-24",
+      "peak_m3s": 1044,
+      "first_alert": "2025-06-16",
+      "lead_days": 4
+     },
+     {
+      "first_day": "2025-09-10",
+      "last_day": "2025-09-10",
+      "peak_m3s": 752,
+      "first_alert": null,
+      "lead_days": null
+     },
+     {
+      "first_day": "2026-09-29",
+      "last_day": "2026-09-29",
+      "peak_m3s": 888,
+      "first_alert": null,
+      "lead_days": null
+     },
+     {
+      "first_day": "2026-10-02",
+      "last_day": "2026-10-02",
+      "peak_m3s": 812,
+      "first_alert": null,
+      "lead_days": null
+     }
+    ],
+    "false_alarm_runs": [
+     [
+      "2024-03-14",
+      "2024-03-16"
+     ],
+     [
+      "2024-03-18",
+      "2024-03-18"
+     ],
+     [
+      "2024-04-12",
+      "2024-04-12"
+     ],
+     [
+      "2024-08-04",
+      "2024-08-04"
+     ],
+     [
+      "2025-05-04",
+      "2025-05-08"
+     ],
+     [
+      "2025-12-20",
+      "2025-12-20"
+     ],
+     [
+      "2026-07-15",
+      "2026-07-17"
+     ],
+     [
+      "2026-07-27",
+      "2026-07-27"
+     ]
+    ]
+   }
+  },
+  "quarai": {
+   "name": "Quaraí",
+   "region": "uruguai",
+   "gauge": "77500000 Quaraí",
+   "target": "GLOFAS-QUARAI",
+   "target_cell": [
+    -30.325,
+    -56.575
+   ],
+   "flood_m3s_p99": 791.8,
+   "points": [
+    "ana-77499010",
+    "quarai-alto"
+   ],
+   "calibration": {
+    "threshold_mm": 85,
+    "csi": 0.316,
+    "hits": 67,
+    "false_alarms": 88,
+    "misses": 57,
+    "days": 3246,
+    "flood_days": 124
+   },
+   "backtest": {
+    "period": [
+     "2024-02-15",
+     "2026-11-12"
+    ],
+    "contingency": {
+     "days": 982,
+     "hits": 12,
+     "false_alarms": 14,
+     "misses": 44,
+     "csi": 0.171
+    },
+    "floods": [
+     {
+      "first_day": "2024-04-17",
+      "last_day": "2024-04-17",
+      "peak_m3s": 793,
+      "first_alert": "2024-04-11",
+      "lead_days": 6
+     },
+     {
+      "first_day": "2024-05-01",
+      "last_day": "2024-05-02",
+      "peak_m3s": 1049,
+      "first_alert": "2024-04-26",
+      "lead_days": 5
+     },
+     {
+      "first_day": "2024-09-25",
+      "last_day": "2024-09-27",
+      "peak_m3s": 1441,
+      "first_alert": "2024-09-23",
+      "lead_days": 2
+     },
+     {
+      "first_day": "2025-05-28",
+      "last_day": "2025-05-29",
+      "peak_m3s": 990,
+      "first_alert": "2025-05-23",
+      "lead_days": 5
+     },
+     {
+      "first_day": "2025-07-29",
+      "last_day": "2025-07-29",
+      "peak_m3s": 880,
+      "first_alert": null,
+      "lead_days": null
+     },
+     {
+      "first_day": "2025-09-05",
+      "last_day": "2025-09-05",
+      "peak_m3s": 812,
+      "first_alert": null,
+      "lead_days": null
+     },
+     {
+      "first_day": "2026-07-20",
+      "last_day": "2026-07-21",
+      "peak_m3s": 1395,
+      "first_alert": "2026-07-15",
+      "lead_days": 5
+     },
+     {
+      "first_day": "2026-09-29",
+      "last_day": "2026-09-29",
+      "peak_m3s": 970,
+      "first_alert": "2026-09-24",
+      "lead_days": 5
+     }
+    ],
+    "false_alarm_runs": [
+     [
+      "2024-03-12",
+      "2024-03-16"
+     ],
+     [
+      "2024-08-17",
+      "2024-08-17"
+     ],
+     [
+      "2024-11-24",
+      "2024-11-24"
+     ],
+     [
+      "2025-05-04",
+      "2025-05-07"
+     ],
+     [
+      "2025-08-18",
+      "2025-08-18"
+     ],
+     [
+      "2025-12-20",
+      "2025-12-20"
+     ],
+     [
+      "2026-08-15",
+      "2026-08-15"
+     ]
+    ]
+   }
+  },
+  "camaqua": {
+   "name": "Camaquã",
+   "region": "litoranea",
+   "gauge": "87905000 Cristal",
+   "target": "GLOFAS-CAMAQUA",
+   "target_cell": [
+    -31.075,
+    -51.925
+   ],
+   "flood_m3s_p99": 1963.6,
+   "points": [
+    "ana-87795000",
+    "ana-87580001",
+    "ana-87905000",
+    "ana-87660010",
+    "ana-87864950"
+   ],
+   "calibration": {
+    "threshold_mm": 85,
+    "csi": 0.311,
+    "hits": 37,
+    "false_alarms": 57,
+    "misses": 25,
+    "days": 3246,
+    "flood_days": 62
+   },
+   "backtest": {
+    "period": [
+     "2024-02-15",
+     "2026-11-12"
+    ],
+    "contingency": {
+     "days": 993,
+     "hits": 3,
+     "false_alarms": 21,
+     "misses": 11,
+     "csi": 0.086
+    },
+    "floods": [
+     {
+      "first_day": "2024-05-26",
+      "last_day": "2024-05-26",
+      "peak_m3s": 2003,
+      "first_alert": "2024-05-21",
+      "lead_days": 5
+     },
+     {
+      "first_day": "2024-09-27",
+      "last_day": "2024-09-27",
+      "peak_m3s": 2122,
+      "first_alert": "2024-09-23",
+      "lead_days": 4
+     }
+    ],
+    "false_alarm_runs": [
+     [
+      "2024-04-25",
+      "2024-04-26"
+     ],
+     [
+      "2024-04-28",
+      "2024-04-30"
+     ],
+     [
+      "2024-08-02",
+      "2024-08-04"
+     ],
+     [
+      "2025-05-05",
+      "2025-05-08"
+     ],
+     [
+      "2025-06-16",
+      "2025-06-17"
+     ],
+     [
+      "2026-07-15",
+      "2026-07-18"
+     ],
+     [
+      "2026-07-27",
+      "2026-07-27"
+     ],
+     [
+      "2026-09-25",
+      "2026-09-26"
+     ]
+    ]
+   }
+  },
+  "piratini": {
+   "name": "Piratini",
+   "region": "litoranea",
+   "gauge": "88640951 Pedro Osório",
+   "target": "GLOFAS-PIRATINI",
+   "target_cell": [
+    -31.925,
+    -52.725
+   ],
+   "flood_m3s_p99": 611.5,
+   "points": [
+    "ana-88579700",
+    "piratini-alto",
+    "ana-88640950"
+   ],
+   "calibration": {
+    "threshold_mm": 100,
+    "csi": 0.253,
+    "hits": 23,
+    "false_alarms": 22,
+    "misses": 46,
+    "days": 3246,
+    "flood_days": 69
+   },
+   "backtest": {
+    "period": [
+     "2024-02-15",
+     "2026-11-12"
+    ],
+    "contingency": {
+     "days": 982,
+     "hits": 3,
+     "false_alarms": 5,
+     "misses": 30,
+     "csi": 0.079
+    },
+    "floods": [
+     {
+      "first_day": "2024-05-02",
+      "last_day": "2024-05-02",
+      "peak_m3s": 688,
+      "first_alert": null,
+      "lead_days": null
+     },
+     {
+      "first_day": "2024-05-08",
+      "last_day": "2024-05-09",
+      "peak_m3s": 1018,
+      "first_alert": null,
+      "lead_days": null
+     },
+     {
+      "first_day": "2024-05-24",
+      "last_day": "2024-05-26",
+      "peak_m3s": 773,
+      "first_alert": null,
+      "lead_days": null
+     },
+     {
+      "first_day": "2024-08-24",
+      "last_day": "2024-08-24",
+      "peak_m3s": 747,
+      "first_alert": null,
+      "lead_days": null
+     },
+     {
+      "first_day": "2024-09-26",
+      "last_day": "2024-10-01",
+      "peak_m3s": 1261,
+      "first_alert": "2024-09-22",
+      "lead_days": 4
+     }
+    ],
+    "false_alarm_runs": [
+     [
+      "2025-05-05",
+      "2025-05-06"
+     ],
+     [
+      "2026-07-15",
+      "2026-07-17"
+     ]
+    ]
+   }
+  },
+  "jaguarao": {
+   "name": "Jaguarão",
+   "region": "litoranea",
+   "gauge": "88300040 Jaguarão",
+   "target": "GLOFAS-JAGUARAO",
+   "target_cell": [
+    -32.625,
+    -53.275
+   ],
+   "flood_m3s_p99": 673.5,
+   "points": [
+    "ana-88260000",
+    "jaguarao-alto"
+   ],
+   "calibration": {
+    "threshold_mm": 70,
+    "csi": 0.229,
+    "hits": 32,
+    "false_alarms": 74,
+    "misses": 34,
+    "days": 3245,
+    "flood_days": 66
+   },
+   "backtest": {
+    "period": [
+     "2024-02-15",
+     "2026-11-12"
+    ],
+    "contingency": {
+     "days": 971,
+     "hits": 19,
+     "false_alarms": 22,
+     "misses": 20,
+     "csi": 0.311
+    },
+    "floods": [
+     {
+      "first_day": "2024-04-30",
+      "last_day": "2024-04-30",
+      "peak_m3s": 677,
+      "first_alert": "2024-04-24",
+      "lead_days": 6
+     },
+     {
+      "first_day": "2024-05-02",
+      "last_day": "2024-05-03",
+      "peak_m3s": 952,
+      "first_alert": "2024-04-25",
+      "lead_days": 7
+     },
+     {
+      "first_day": "2024-05-05",
+      "last_day": "2024-05-05",
+      "peak_m3s": 688,
+      "first_alert": "2024-05-01",
+      "lead_days": 4
+     },
+     {
+      "first_day": "2024-05-08",
+      "last_day": "2024-05-14",
+      "peak_m3s": 1428,
+      "first_alert": "2024-05-01",
+      "lead_days": 7
+     },
+     {
+      "first_day": "2024-05-24",
+      "last_day": "2024-05-26",
+      "peak_m3s": 838,
+      "first_alert": "2024-05-19",
+      "lead_days": 5
+     },
+     {
+      "first_day": "2024-08-24",
+      "last_day": "2024-08-25",
+      "peak_m3s": 860,
+      "first_alert": "2024-08-17",
+      "lead_days": 7
+     },
+     {
+      "first_day": "2024-09-26",
+      "last_day": "2024-10-01",
+      "peak_m3s": 1255,
+      "first_alert": "2024-09-20",
+      "lead_days": 6
+     },
+     {
+      "first_day": "2026-08-19",
+      "last_day": "2026-08-20",
+      "peak_m3s": 819,
+      "first_alert": "2026-08-13",
+      "lead_days": 6
+     }
+    ],
+    "false_alarm_runs": [
+     [
+      "2024-02-23",
+      "2024-02-23"
+     ],
+     [
+      "2024-03-13",
+      "2024-03-13"
+     ],
+     [
+      "2024-03-15",
+      "2024-03-15"
+     ],
+     [
+      "2024-03-18",
+      "2024-03-18"
+     ],
+     [
+      "2024-04-11",
+      "2024-04-12"
+     ],
+     [
+      "2024-08-16",
+      "2024-08-16"
+     ],
+     [
+      "2024-11-26",
+      "2024-11-26"
+     ],
+     [
+      "2025-03-30",
+      "2025-03-30"
+     ],
+     [
+      "2025-05-05",
+      "2025-05-07"
+     ],
+     [
+      "2025-08-18",
+      "2025-08-20"
+     ],
+     [
+      "2025-12-07",
+      "2025-12-08"
+     ],
+     [
+      "2026-07-14",
+      "2026-07-17"
+     ],
+     [
+      "2026-07-27",
+      "2026-07-27"
+     ]
+    ]
+   }
+  },
+  "mampituba": {
+   "name": "Mampituba",
+   "region": "litoranea",
+   "gauge": "84991510 Torres",
+   "target": "GLOFAS-MAMPITUBA",
+   "target_cell": [
+    -29.325,
+    -49.775
+   ],
+   "flood_m3s_p99": 349.9,
+   "points": [
+    "ana-84991100",
+    "ana-84991510"
+   ],
+   "calibration": {
+    "threshold_mm": 90,
+    "csi": 0.382,
+    "hits": 58,
+    "false_alarms": 54,
+    "misses": 40,
+    "days": 3246,
+    "flood_days": 98
+   },
+   "backtest": {
+    "period": [
+     "2024-02-15",
+     "2026-11-12"
+    ],
+    "contingency": {
+     "days": 988,
+     "hits": 9,
+     "false_alarms": 13,
+     "misses": 26,
+     "csi": 0.188
+    },
+    "floods": [
+     {
+      "first_day": "2024-05-04",
+      "last_day": "2024-05-04",
+      "peak_m3s": 365,
+      "first_alert": "2024-04-29",
+      "lead_days": 5
+     },
+     {
+      "first_day": "2024-05-13",
+      "last_day": "2024-05-14",
+      "peak_m3s": 607,
+      "first_alert": "2024-05-08",
+      "lead_days": 5
+     },
+     {
+      "first_day": "2025-07-01",
+      "last_day": "2025-07-01",
+      "peak_m3s": 362,
+      "first_alert": "2025-06-26",
+      "lead_days": 5
+     },
+     {
+      "first_day": "2026-09-01",
+      "last_day": "2026-09-02",
+      "peak_m3s": 408,
+      "first_alert": "2026-08-26",
+      "lead_days": 6
+     },
+     {
+      "first_day": "2026-10-01",
+      "last_day": "2026-10-01",
+      "peak_m3s": 394,
+      "first_alert": "2026-09-27",
+      "lead_days": 4
+     }
+    ],
+    "false_alarm_runs": [
+     [
+      "2024-04-09",
+      "2024-04-11"
+     ],
+     [
+      "2024-06-15",
+      "2024-06-15"
+     ],
+     [
+      "2024-07-04",
+      "2024-07-04"
+     ],
+     [
+      "2024-11-16",
+      "2024-11-18"
+     ],
+     [
+      "2025-11-03",
+      "2025-11-05"
+     ],
+     [
+      "2026-08-12",
+      "2026-08-12"
+     ],
+     [
+      "2026-10-11",
+      "2026-10-11"
+     ]
+    ]
+   }
+  },
+  "maquine": {
+   "name": "Maquiné (litoral norte)",
+   "region": "litoranea",
+   "gauge": "87317030 Maquiné",
+   "target": "GLOFAS-MAQUINE",
+   "target_cell": [
+    -29.675,
+    -50.225
+   ],
+   "flood_m3s_p99": 129.1,
+   "points": [
+    "ana-87317021",
+    "ana-87317030"
+   ],
+   "calibration": {
+    "threshold_mm": 100,
+    "csi": 0.433,
+    "hits": 65,
+    "false_alarms": 49,
+    "misses": 36,
+    "days": 3246,
+    "flood_days": 101
+   },
+   "backtest": {
+    "period": [
+     "2024-02-15",
+     "2026-11-12"
+    ],
+    "contingency": {
+     "days": 989,
+     "hits": 9,
+     "false_alarms": 12,
+     "misses": 12,
+     "csi": 0.273
+    },
+    "floods": [
+     {
+      "first_day": "2024-05-04",
+      "last_day": "2024-05-05",
+      "peak_m3s": 190,
+      "first_alert": "2024-04-27",
+      "lead_days": 7
+     },
+     {
+      "first_day": "2024-05-13",
+      "last_day": "2024-05-15",
+      "peak_m3s": 168,
+      "first_alert": "2024-05-08",
+      "lead_days": 5
+     },
+     {
+      "first_day": "2025-06-30",
+      "last_day": "2025-06-30",
+      "peak_m3s": 130,
+      "first_alert": "2025-06-27",
+      "lead_days": 3
+     }
+    ],
+    "false_alarm_runs": [
+     [
+      "2024-04-09",
+      "2024-04-09"
+     ],
+     [
+      "2024-04-26",
+      "2024-04-26"
+     ],
+     [
+      "2024-06-14",
+      "2024-06-15"
+     ],
+     [
+      "2024-11-17",
+      "2024-11-18"
+     ],
+     [
+      "2025-11-03",
+      "2025-11-04"
+     ],
+     [
+      "2026-08-25",
+      "2026-08-27"
+     ],
+     [
+      "2026-09-27",
+      "2026-09-27"
+     ]
+    ]
+   }
+  }
+ }
+}

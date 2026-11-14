@@ -274,6 +274,29 @@ mod tests {
         assert_eq!(file_name("cai", NaiveDate::from_ymd_opt(2026, 11, 12).unwrap()), "cai-2026-11-12.json");
     }
 
+    /// The rules for the rest of RS (Etapa 5.3) wait in their own folder, which the round does not read, until 5.4:
+    /// they must already load, with their hash, and not repeat a region of the rules in use.
+    #[test]
+    fn rules_for_the_rest_of_rs_load_and_do_not_clash() {
+        let root = Path::new(env!("CARGO_MANIFEST_DIR")).join("../..");
+        let live = load_rules(&root.join("ml/models/outlook-rule.json"), &root.join("ml/models/outlook-rules")).unwrap();
+        let dir = root.join("ml/models/outlook-rules-rs");
+        let mut regions: Vec<String> = live.iter().map(|r| r.spec.region.clone()).collect();
+        let mut count = 0;
+        for f in std::fs::read_dir(&dir).unwrap() {
+            let r = load_rule(&f.unwrap().path()).unwrap();
+            assert!(!r.spec.region.is_empty() && r.spec.region.len() <= 16, "{}", r.spec.region);
+            assert!(r.spec.points.len() >= 2 && r.threshold_milli() > 0);
+            regions.push(r.spec.region.clone());
+            count += 1;
+        }
+        assert!(count >= 1);
+        let n = regions.len();
+        regions.sort();
+        regions.dedup();
+        assert_eq!(regions.len(), n, "regiões repetidas");
+    }
+
     fn rule() -> Rule {
         let root = Path::new(env!("CARGO_MANIFEST_DIR")).join("../../ml/models/outlook-rule.json");
         load_rule(&root).unwrap()

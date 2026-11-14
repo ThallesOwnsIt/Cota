@@ -49,7 +49,8 @@ def test_features_do_not_look_ahead():
 def test_tampered_model_is_rejected(tmp_path):
     src = ROOT / "ml/models"
     for f in src.iterdir():
-        (tmp_path / f.name).write_bytes(f.read_bytes())
+        if f.is_file():  # the model's files; the rule folders are not part of it
+            (tmp_path / f.name).write_bytes(f.read_bytes())
     models, widen, manifest = model.load(tmp_path)
     assert set(widen) == {1, 2}
     target = tmp_path / manifest["files"][0]["file"]
