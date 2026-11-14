@@ -4,8 +4,10 @@
 # bytes. Changing it after the opening has no effect: streams, rules and sources never change, and the committee
 # changes only by a CommitteeChange entry.
 
-# The station catalog; its stations go to `main_stream` (Etapa 5 adds a stream per station).
+# The station catalog; its stations go to `main_stream`. The regional catalogs (Etapa 5: the rest of RS) name each
+# station's stream; their stations are signed as Station entries in the rounds after the opening.
 catalog = "config/stations-live.toml"
+regional_catalogs = ["config/stations-rs.toml"]
 streams = ["guaiba", "uruguai", "litoranea"]
 main_stream = "guaiba"
 

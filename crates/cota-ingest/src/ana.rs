@@ -237,6 +237,8 @@ mod tests {
             lat: -30.0211,
             lon: -51.2211,
             datum_id: Some("ANA-87450004-regua".into()),
+            stream: None,
+            kind: None,
         }
     }
 

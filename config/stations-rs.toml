@@ -1,0 +1,5087 @@
+# Stations of the rest of Rio Grande do Sul (Etapa 5): written by scripts/build_catalog_rs.py, do not edit by hand.
+# Source: ANA inventory checked until 2026-11-12 (data/inventory/ana-rs.json), the gauges that were
+# transmitting and are not in stations-live.toml; and the GloFAS points of the rain rules in ml/models/outlook-rules-rs.
+# `stream`: the region whose daily batch carries the station. `kind`: rio, jusante (below a dam) or reservatorio
+# (the dam's lake, which follows the plant's operation, not floods).
+
+[[station]]
+id = "GLOFAS-MANOEL-VIANA"
+name = "Ibicuí em Manoel Viana (GloFAS)"
+source = "open_meteo_glofas"
+variable = "river_discharge"
+lat = -29.625
+lon = -55.575
+stream = "uruguai"
+
+[[station]]
+id = "GLOFAS-MAQUINE"
+name = "Maquiné (GloFAS)"
+source = "open_meteo_glofas"
+variable = "river_discharge"
+lat = -29.675
+lon = -50.225
+stream = "litoranea"
+
+[[station]]
+id = "ANA-85029000"
+name = "Jacuí acima da PCH Ernestina (ANA)"
+source = "ana"
+variable = "river_stage"
+lat = -28.4056
+lon = -52.4408
+datum_id = "ANA-85029000-regua"
+stream = "guaiba"
+kind = "rio"
+ana_name = "PCH ERNESTINA MONTANTE"
+
+[[station]]
+id = "ANA-85040000"
+name = "Arroio Três Passos em Nicolau Vergueiro (ANA)"
+source = "ana"
+variable = "river_stage"
+lat = -28.4733
+lon = -52.4047
+datum_id = "ANA-85040000-regua"
+stream = "guaiba"
+kind = "rio"
+ana_name = "PCH ERNESTINA ARROIO TRÊS PASSOS"
+
+[[station]]
+id = "ANA-85050001"
+name = "Jacuí: reservatório da PCH Ernestina (ANA)"
+source = "ana"
+variable = "river_stage"
+lat = -28.5556
+lon = -52.545
+datum_id = "ANA-85050001-regua"
+stream = "guaiba"
+kind = "reservatorio"
+ana_name = "PCH ERNESTINA BARRAMENTO"
+
+[[station]]
+id = "ANA-85050100"
+name = "Jacuí abaixo da PCH Ernestina (ANA)"
+source = "ana"
+variable = "river_stage"
+lat = -28.5628
+lon = -52.5536
+datum_id = "ANA-85050100-regua"
+stream = "guaiba"
+kind = "jusante"
+ana_name = "PCH ERNESTINA JUSANTE 2"
+
+[[station]]
+id = "ANA-85050200"
+name = "Jacuí: reservatório da PCH Tio Hugo (ANA)"
+source = "ana"
+variable = "river_stage"
+lat = -28.5903
+lon = -52.5822
+datum_id = "ANA-85050200-regua"
+stream = "guaiba"
+kind = "reservatorio"
+ana_name = "PCH TIO HUGO BARRAMENTO"
+
+[[station]]
+id = "ANA-85050300"
+name = "Jacuí abaixo da PCH Tio Hugo (ANA)"
+source = "ana"
+variable = "river_stage"
+lat = -28.5992
+lon = -52.5975
+datum_id = "ANA-85050300-regua"
+stream = "guaiba"
+kind = "jusante"
+ana_name = "PCH TIO HUGO JUSANTE"
+
+[[station]]
+id = "ANA-85050350"
+name = "Jacuí acima da PCH Santo Antônio do Jacuí (ANA)"
+source = "ana"
+variable = "river_stage"
+lat = -28.6303
+lon = -52.6831
+datum_id = "ANA-85050350-regua"
+stream = "guaiba"
+kind = "rio"
+ana_name = "PCH SANTO ANTÔNIO DO JACUÍ MONTANTE"
+
+[[station]]
+id = "ANA-85051000"
+name = "Jacuí: reservatório da PCH Santo Antonio do Jacuí (ANA)"
+source = "ana"
+variable = "river_stage"
+lat = -28.6567
+lon = -52.7044
+datum_id = "ANA-85051000-regua"
+stream = "guaiba"
+kind = "reservatorio"
+ana_name = "PCH SANTO ANTONIO DO JACUÍ BARRAMENTO"
+
+[[station]]
+id = "ANA-85074000"
+name = "Jacuí: reservatório da PCH Cotovelo do Jacuí (ANA)"
+source = "ana"
+variable = "river_stage"
+lat = -28.6717
+lon = -52.7267
+datum_id = "ANA-85074000-regua"
+stream = "guaiba"
+kind = "reservatorio"
+ana_name = "PCH COTOVELO DO JACUÍ BARRAMENTO"
+
+[[station]]
+id = "ANA-85076000"
+name = "Jacuí abaixo da PCH Cotovelo do Jacuí (ANA)"
+source = "ana"
+variable = "river_stage"
+lat = -28.6728
+lon = -52.7311
+datum_id = "ANA-85076000-regua"
+stream = "guaiba"
+kind = "jusante"
+ana_name = "PCH COTOVELO DO JACUÍ JUSANTE"
+
+[[station]]
+id = "ANA-85080001"
+name = "Jacuí acima da UHE Passo Real (ANA)"
+source = "ana"
+variable = "river_stage"
+lat = -28.7197
+lon = -52.8492
+datum_id = "ANA-85080001-regua"
+stream = "guaiba"
+kind = "rio"
+ana_name = "UHE PASSO REAL MONTANTE 2"
+
+[[station]]
+id = "ANA-85110000"
+name = "Colorado abaixo da CGH Colorado (ANA)"
+source = "ana"
+variable = "river_stage"
+lat = -28.6428
+lon = -52.9269
+datum_id = "ANA-85110000-regua"
+stream = "guaiba"
+kind = "jusante"
+ana_name = "CGH COLORADO JUSANTE"
+
+[[station]]
+id = "ANA-85130000"
+name = "Arroio Butiá: reservatório da CGH Rp 1 (ANA)"
+source = "ana"
+variable = "river_stage"
+lat = -28.84
+lon = -52.7019
+datum_id = "ANA-85130000-regua"
+stream = "guaiba"
+kind = "reservatorio"
+ana_name = "CGH RP 1 BARRAMENTO"
+
+[[station]]
+id = "ANA-85130400"
+name = "Arroio Butiá abaixo da CGH Rp 1 (ANA)"
+source = "ana"
+variable = "river_stage"
+lat = -28.8406
+lon = -52.7067
+datum_id = "ANA-85130400-regua"
+stream = "guaiba"
+kind = "jusante"
+ana_name = "CGH RP 1 JUSANTE"
+
+[[station]]
+id = "ANA-85140000"
+name = "Jacuí acima da UHE Passo Real (ANA)"
+source = "ana"
+variable = "river_stage"
+lat = -28.7492
+lon = -52.9794
+datum_id = "ANA-85140000-regua"
+stream = "guaiba"
+kind = "rio"
+ana_name = "UHE PASSO REAL MONTANTE 1"
+
+[[station]]
+id = "ANA-85159900"
+name = "Arroio Pulador em Ibirubá (ANA)"
+source = "ana"
+variable = "river_stage"
+lat = -28.6208
+lon = -53.0894
+datum_id = "ANA-85159900-regua"
+stream = "guaiba"
+kind = "rio"
+ana_name = "IBIRUBÁ"
+
+[[station]]
+id = "ANA-85170100"
+name = "Jacuí-mirim: reservatório da CGH Mirim (ANA)"
+source = "ana"
+variable = "river_stage"
+lat = -28.2622
+lon = -53.1217
+datum_id = "ANA-85170100-regua"
+stream = "guaiba"
+kind = "reservatorio"
+ana_name = "CGH MIRIM BARRAMENTO"
+
+[[station]]
+id = "ANA-85170150"
+name = "Jacuí-mirim abaixo da CGH Mirim (ANA)"
+source = "ana"
+variable = "river_stage"
+lat = -28.2633
+lon = -53.1208
+datum_id = "ANA-85170150-regua"
+stream = "guaiba"
+kind = "jusante"
+ana_name = "CGH MIRIM JUSANTE"
+
+[[station]]
+id = "ANA-85180000"
+name = "Jacuí-mirim em Ibirubá (ANA)"
+source = "ana"
+variable = "river_stage"
+lat = -28.5461
+lon = -53.165
+datum_id = "ANA-85180000-regua"
+stream = "guaiba"
+kind = "rio"
+ana_name = "UHE PASSO REAL RIO JACUÍ-MIRIM 2"
+
+[[station]]
+id = "ANA-85240000"
+name = "Ingaí em Boa Vista do Incra (ANA)"
+source = "ana"
+variable = "river_stage"
+lat = -28.8361
+lon = -53.3006
+datum_id = "ANA-85240000-regua"
+stream = "guaiba"
+kind = "rio"
+ana_name = "UHE PASSO REAL RIO INGAÍ 2"
+
+[[station]]
+id = "ANA-85260001"
+name = "Jacuí: reservatório da UHE Passo Real (ANA)"
+source = "ana"
+variable = "river_stage"
+lat = -29.0164
+lon = -53.1886
+datum_id = "ANA-85260001-regua"
+stream = "guaiba"
+kind = "reservatorio"
+ana_name = "UHE PASSO REAL BARRAMENTO"
+
+[[station]]
+id = "ANA-85290000"
+name = "Arroio Lajeado Pelado em Salto do Jacuí (ANA)"
+source = "ana"
+variable = "river_stage"
+lat = -29.0508
+lon = -53.2653
+datum_id = "ANA-85290000-regua"
+stream = "guaiba"
+kind = "rio"
+ana_name = "UHE JACUÍ ARROIO LAJEADO PELADO"
+
+[[station]]
+id = "ANA-85300000"
+name = "Jacuí: reservatório da UHE Jacuí (ANA)"
+source = "ana"
+variable = "river_stage"
+lat = -29.0733
+lon = -53.21
+datum_id = "ANA-85300000-regua"
+stream = "guaiba"
+kind = "reservatorio"
+ana_name = "UHE JACUÍ BARRAMENTO"
+
+[[station]]
+id = "ANA-85306000"
+name = "Ivaí em Tupanciretã (ANA)"
+source = "ana"
+variable = "river_stage"
+lat = -28.935
+lon = -53.6433
+datum_id = "ANA-85306000-regua"
+stream = "guaiba"
+kind = "rio"
+ana_name = "PCH ERNESTO JORGE DREHER PONTE BR158"
+
+[[station]]
+id = "ANA-85309000"
+name = "Ivaí em Júlio de Castilhos (ANA)"
+source = "ana"
+variable = "river_stage"
+lat = -29.0333
+lon = -53.5094
+datum_id = "ANA-85309000-regua"
+stream = "guaiba"
+kind = "rio"
+ana_name = "PCH ERNESTO JORGE DREHER PONTE RINCÃO DO IVAI"
+
+[[station]]
+id = "ANA-85310000"
+name = "Ivaí acima da PCH Ernesto Jorge Dreher (ANA)"
+source = "ana"
+variable = "river_stage"
+lat = -29.1194
+lon = -53.4058
+datum_id = "ANA-85310000-regua"
+stream = "guaiba"
+kind = "rio"
+ana_name = "PCH ERNESTO JORGE DREHER MONTANTE 1"
+
+[[station]]
+id = "ANA-85311000"
+name = "Ivaí: reservatório da PCH Ernesto Jorge Dreher (ANA)"
+source = "ana"
+variable = "river_stage"
+lat = -29.1203
+lon = -53.3661
+datum_id = "ANA-85311000-regua"
+stream = "guaiba"
+kind = "reservatorio"
+ana_name = "PCH ERNESTO JORGE DREHER  BARRAMENTO"
+
+[[station]]
+id = "ANA-85349000"
+name = "Ivaí: reservatório da PCH Engenheiro Henrique Kotzian (ANA)"
+source = "ana"
+variable = "river_stage"
+lat = -29.1294
+lon = -53.3194
+datum_id = "ANA-85349000-regua"
+stream = "guaiba"
+kind = "reservatorio"
+ana_name = "PCH ENGENHEIRO HENRIQUE KOTZIAN BARRAMENTO"
+
+[[station]]
+id = "ANA-85350000"
+name = "Ivaí abaixo da PCH Engenheiro Henrique Kotzian (ANA)"
+source = "ana"
+variable = "river_stage"
+lat = -29.1289
+lon = -53.3178
+datum_id = "ANA-85350000-regua"
+stream = "guaiba"
+kind = "jusante"
+ana_name = "PCH ENGENHEIRO HENRIQUE KOTZIAN JUSANTE"
+
+[[station]]
+id = "ANA-85365000"
+name = "Jacuí: reservatório da UHE Itaúba (ANA)"
+source = "ana"
+variable = "river_stage"
+lat = -29.2597
+lon = -53.2353
+datum_id = "ANA-85365000-regua"
+stream = "guaiba"
+kind = "reservatorio"
+ana_name = "UHE ITAÚBA BARRAMENTO"
+
+[[station]]
+id = "ANA-85365500"
+name = "Arroio Povinho em Nicolau Vergueiro (ANA)"
+source = "ana"
+variable = "river_stage"
+lat = -28.555
+lon = -52.4936
+datum_id = "ANA-85365500-regua"
+stream = "guaiba"
+kind = "rio"
+ana_name = "UHE ITAÚBA ARROIO POVINHO"
+
+[[station]]
+id = "ANA-85380500"
+name = "Jacuizinho em Arroio do Tigre (ANA)"
+source = "ana"
+variable = "river_stage"
+lat = -29.2311
+lon = -53.1175
+datum_id = "ANA-85380500-regua"
+stream = "guaiba"
+kind = "rio"
+ana_name = "UHE DONA FRANCISCA RIO JACUIZINHO"
+
+[[station]]
+id = "ANA-85382000"
+name = "Arroio Carijinho em Sobradinho (ANA)"
+source = "ana"
+variable = "river_stage"
+lat = -29.3853
+lon = -53.0483
+datum_id = "ANA-85382000-regua"
+stream = "guaiba"
+kind = "rio"
+ana_name = "UHE DONA FRANCISCA ARROIO CARIJINHO"
+
+[[station]]
+id = "ANA-85395100"
+name = "Jacuí: reservatório da UHE Dona Francisca (ANA)"
+source = "ana"
+variable = "river_stage"
+lat = -29.4475
+lon = -53.2844
+datum_id = "ANA-85395100-regua"
+stream = "guaiba"
+kind = "reservatorio"
+ana_name = "UHE DONA FRANCISCA BARRAMENTO"
+
+[[station]]
+id = "ANA-85395300"
+name = "Jacuí abaixo da UHE Dona Francisca (ANA)"
+source = "ana"
+variable = "river_stage"
+lat = -29.4719
+lon = -53.2814
+datum_id = "ANA-85395300-regua"
+stream = "guaiba"
+kind = "jusante"
+ana_name = "UHE DONA FRANCISCA JUSANTE"
+
+[[station]]
+id = "ANA-85400000"
+name = "Jacuí em Dona Francisca (ANA)"
+source = "ana"
+variable = "river_stage"
+lat = -29.6269
+lon = -53.3528
+datum_id = "ANA-85400000-regua"
+stream = "guaiba"
+kind = "rio"
+ana_name = "DONA FRANCISCA"
+
+[[station]]
+id = "ANA-85400020"
+name = "Jacuí em Dona Francisca (ANA)"
+source = "ana"
+variable = "river_stage"
+lat = -29.6311
+lon = -53.3586
+datum_id = "ANA-85400020-regua"
+stream = "guaiba"
+kind = "rio"
+ana_name = "DONA FRANCISCA"
+
+[[station]]
+id = "ANA-85418000"
+name = "Soturno em Nova Palma (ANA)"
+source = "ana"
+variable = "river_stage"
+lat = -29.4761
+lon = -53.4794
+datum_id = "ANA-85418000-regua"
+stream = "guaiba"
+kind = "rio"
+ana_name = "NOVA PALMA"
+
+[[station]]
+id = "ANA-85436000"
+name = "Arroio Cadena em Santa Maria (ANA)"
+source = "ana"
+variable = "river_stage"
+lat = -29.7
+lon = -53.8356
+datum_id = "ANA-85436000-regua"
+stream = "guaiba"
+kind = "rio"
+ana_name = "SANTA MARIA - ARROIO CADENA"
+
+[[station]]
+id = "ANA-85438001"
+name = "Vacacaí-mirim em Restinga Seca (ANA)"
+source = "ana"
+variable = "river_stage"
+lat = -29.8011
+lon = -53.3689
+datum_id = "ANA-85438001-regua"
+stream = "guaiba"
+kind = "rio"
+ana_name = "RESTINGA SECA"
+
+[[station]]
+id = "ANA-85470200"
+name = "Vacacaí em São Gabriel (ANA)"
+source = "ana"
+variable = "river_stage"
+lat = -30.3414
+lon = -54.3058
+datum_id = "ANA-85470200-regua"
+stream = "guaiba"
+kind = "rio"
+ana_name = "SÃO GABRIEL"
+
+[[station]]
+id = "ANA-85500010"
+name = "Arroio Bonito em Lagoa dos Três Cantos (ANA)"
+source = "ana"
+variable = "river_stage"
+lat = -28.5272
+lon = -52.8878
+datum_id = "ANA-85500010-regua"
+stream = "guaiba"
+kind = "rio"
+ana_name = "CGH COLORADO ARROIO BONITO"
+
+[[station]]
+id = "ANA-85500100"
+name = "Colorado acima da CGH Colorado (ANA)"
+source = "ana"
+variable = "river_stage"
+lat = -28.5794
+lon = -52.92
+datum_id = "ANA-85500100-regua"
+stream = "guaiba"
+kind = "rio"
+ana_name = "CGH COLORADO MONTANTE"
+
+[[station]]
+id = "ANA-85500990"
+name = "Colorado: reservatório da CGH Colorado (ANA)"
+source = "ana"
+variable = "river_stage"
+lat = -28.6294
+lon = -52.9356
+datum_id = "ANA-85500990-regua"
+stream = "guaiba"
+kind = "reservatorio"
+ana_name = "CGH COLORADO BARRAMENTO"
+
+[[station]]
+id = "ANA-85600003"
+name = "Vacacaí em Formigueiro (ANA)"
+source = "ana"
+variable = "river_stage"
+lat = -29.9258
+lon = -53.4164
+datum_id = "ANA-85600003-regua"
+stream = "guaiba"
+kind = "rio"
+ana_name = "FORMIGUEIRO/RESTINGA SECA"
+
+[[station]]
+id = "ANA-85643990"
+name = "Jacuí em Cachoeira do Sul (ANA)"
+source = "ana"
+variable = "river_stage"
+lat = -30.0636
+lon = -52.8983
+datum_id = "ANA-85643990-regua"
+stream = "guaiba"
+kind = "rio"
+ana_name = "CACHOEIRA DO SUL"
+
+[[station]]
+id = "ANA-85653000"
+name = "Botucaraí em Candelária (ANA)"
+source = "ana"
+variable = "river_stage"
+lat = -29.6694
+lon = -52.9317
+datum_id = "ANA-85653000-regua"
+stream = "guaiba"
+kind = "rio"
+ana_name = "CERRO BRANCO/CANDELÁRIA"
+
+[[station]]
+id = "ANA-85659960"
+name = "Arroio Canhão em Encruzilhada do Sul (ANA)"
+source = "ana"
+variable = "river_stage"
+lat = -30.49
+lon = -52.5881
+datum_id = "ANA-85659960-regua"
+stream = "guaiba"
+kind = "rio"
+ana_name = "ENCRUZINHADA DO SUL"
+
+[[station]]
+id = "ANA-85729000"
+name = "Pardo em Gramado Xavier (ANA)"
+source = "ana"
+variable = "river_stage"
+lat = -29.265
+lon = -52.685
+datum_id = "ANA-85729000-regua"
+stream = "guaiba"
+kind = "rio"
+ana_name = "LAGOÃO"
+
+[[station]]
+id = "ANA-85739807"
+name = "Pardo em Candelária (ANA)"
+source = "ana"
+variable = "river_stage"
+lat = -29.6736
+lon = -52.7703
+datum_id = "ANA-85739807-regua"
+stream = "guaiba"
+kind = "rio"
+ana_name = "CANDELÁRIA"
+
+[[station]]
+id = "ANA-85810000"
+name = "Pardinho em Sinimbú (ANA)"
+source = "ana"
+variable = "river_stage"
+lat = -29.5336
+lon = -52.5197
+datum_id = "ANA-85810000-regua"
+stream = "guaiba"
+kind = "rio"
+ana_name = "SINIMBU"
+
+[[station]]
+id = "ANA-85820000"
+name = "Pardinho em Santa Cruz do Sul (ANA)"
+source = "ana"
+variable = "river_stage"
+lat = -29.6461
+lon = -52.4628
+datum_id = "ANA-85820000-regua"
+stream = "guaiba"
+kind = "rio"
+ana_name = "SANTA CRUZ DO SUL"
+
+[[station]]
+id = "ANA-85889010"
+name = "Pardo em Rio Pardo (ANA)"
+source = "ana"
+variable = "river_stage"
+lat = -29.9761
+lon = -52.3808
+datum_id = "ANA-85889010-regua"
+stream = "guaiba"
+kind = "rio"
+ana_name = "RIO PARDO"
+
+[[station]]
+id = "ANA-85899800"
+name = "Jacuí em Rio Pardo (ANA)"
+source = "ana"
+variable = "river_stage"
+lat = -29.9933
+lon = -52.3814
+datum_id = "ANA-85899800-regua"
+stream = "guaiba"
+kind = "rio"
+ana_name = "RIO PARDO - RIO JACUÍ"
+
+[[station]]
+id = "ANA-85900000"
+name = "Jacuí em Rio Pardo (ANA)"
+source = "ana"
+variable = "river_stage"
+lat = -29.995
+lon = -52.3756
+datum_id = "ANA-85900000-regua"
+stream = "guaiba"
+kind = "rio"
+ana_name = "RIO PARDO"
+
+[[station]]
+id = "ANA-86060010"
+name = "Arroio Arcada: reservatório da CGH Cambará (ANA)"
+source = "ana"
+variable = "river_stage"
+lat = -28.9489
+lon = -50.0556
+datum_id = "ANA-86060010-regua"
+stream = "guaiba"
+kind = "reservatorio"
+ana_name = "CGH CAMBARÁ BARRAMENTO"
+
+[[station]]
+id = "ANA-86095100"
+name = "Rio das Antas em Jaquirana (ANA)"
+source = "ana"
+variable = "river_stage"
+lat = -28.7986
+lon = -50.4297
+datum_id = "ANA-86095100-regua"
+stream = "guaiba"
+kind = "rio"
+ana_name = "BOM JESUS/JAQUIRANA"
+
+[[station]]
+id = "ANA-86099000"
+name = "Rio das Antas acima da PCH Pezzi (ANA)"
+source = "ana"
+variable = "river_stage"
+lat = -28.8047
+lon = -50.4936
+datum_id = "ANA-86099000-regua"
+stream = "guaiba"
+kind = "rio"
+ana_name = "PCH PEZZI MONTANTE"
+
+[[station]]
+id = "ANA-86100600"
+name = "Arroio Pinheiro Alto em Bom Jesus (ANA)"
+source = "ana"
+variable = "river_stage"
+lat = -28.7575
+lon = -50.5211
+datum_id = "ANA-86100600-regua"
+stream = "guaiba"
+kind = "rio"
+ana_name = "PCH PEZZI ARROIO PINHEIRO ALTO"
+
+[[station]]
+id = "ANA-86100800"
+name = "Rio das Antas: reservatório da PCH Pezzi (ANA)"
+source = "ana"
+variable = "river_stage"
+lat = -28.7922
+lon = -50.5647
+datum_id = "ANA-86100800-regua"
+stream = "guaiba"
+kind = "reservatorio"
+ana_name = "PCH PEZZI BARRAMENTO"
+
+[[station]]
+id = "ANA-86101000"
+name = "Rio das Antas acima da PCH Passo do Meio (ANA)"
+source = "ana"
+variable = "river_stage"
+lat = -28.7883
+lon = -50.5611
+datum_id = "ANA-86101000-regua"
+stream = "guaiba"
+kind = "rio"
+ana_name = "PCH PASSO DO MEIO MONTANTE"
+
+[[station]]
+id = "ANA-86102000"
+name = "Tainhas acima da PCH Passo do Meio (ANA)"
+source = "ana"
+variable = "river_stage"
+lat = -28.8644
+lon = -50.5622
+datum_id = "ANA-86102000-regua"
+stream = "guaiba"
+kind = "rio"
+ana_name = "PCH PASSO DO MEIO MONTANTE TAINHAS"
+
+[[station]]
+id = "ANA-86109000"
+name = "Rio das Antas: reservatório da PCH Passo do Meio (ANA)"
+source = "ana"
+variable = "river_stage"
+lat = -28.8067
+lon = -50.6128
+datum_id = "ANA-86109000-regua"
+stream = "guaiba"
+kind = "reservatorio"
+ana_name = "PCH PASSO DO MEIO BARRAMENTO"
+
+[[station]]
+id = "ANA-86110000"
+name = "Rio das Antas abaixo da PCH Passo do Meio (ANA)"
+source = "ana"
+variable = "river_stage"
+lat = -28.8161
+lon = -50.6214
+datum_id = "ANA-86110000-regua"
+stream = "guaiba"
+kind = "jusante"
+ana_name = "PCH PASSO DO MEIO JUSANTE"
+
+[[station]]
+id = "ANA-86117000"
+name = "Arroio do Governador em Vila Maria (ANA)"
+source = "ana"
+variable = "river_stage"
+lat = -28.79
+lon = -50.6789
+datum_id = "ANA-86117000-regua"
+stream = "guaiba"
+kind = "rio"
+ana_name = "PCH SERRA DOS CAVALINHOS I ARROIO DO GOVERNADOR"
+
+[[station]]
+id = "ANA-86118000"
+name = "Rio das Antas: reservatório da PCH Serra dos Cavalinhos I (ANA)"
+source = "ana"
+variable = "river_stage"
+lat = -28.7964
+lon = -50.7294
+datum_id = "ANA-86118000-regua"
+stream = "guaiba"
+kind = "reservatorio"
+ana_name = "PCH SERRA DOS CAVALINHOS I BARRAMENTO"
+
+[[station]]
+id = "ANA-86120050"
+name = "Tainhas em Cambará do Sul (ANA)"
+source = "ana"
+variable = "river_stage"
+lat = -29.2647
+lon = -50.3147
+datum_id = "ANA-86120050-regua"
+stream = "guaiba"
+kind = "rio"
+ana_name = "SÃO FRANCISCO DE PAULA-CAMBARÁ DO SUL"
+
+[[station]]
+id = "ANA-86125000"
+name = "Arroio Trabuco abaixo da CGH Trabuco (ANA)"
+source = "ana"
+variable = "river_stage"
+lat = -28.6022
+lon = -51.2344
+datum_id = "ANA-86125000-regua"
+stream = "guaiba"
+kind = "jusante"
+ana_name = "CGH TRABUCO JUSANTE"
+
+[[station]]
+id = "ANA-86125050"
+name = "Ituim acima da PCH Morro Grande (ANA)"
+source = "ana"
+variable = "river_stage"
+lat = -28.5486
+lon = -51.3017
+datum_id = "ANA-86125050-regua"
+stream = "guaiba"
+kind = "rio"
+ana_name = "PCH MORRO GRANDE MONTANTE"
+
+[[station]]
+id = "ANA-86125100"
+name = "Ituim: reservatório da PCH Morro Grande (ANA)"
+source = "ana"
+variable = "river_stage"
+lat = -28.5589
+lon = -51.3111
+datum_id = "ANA-86125100-regua"
+stream = "guaiba"
+kind = "reservatorio"
+ana_name = "PCH MORRO GRANDE BARRAMENTO"
+
+[[station]]
+id = "ANA-86125120"
+name = "Ituim abaixo da PCH Morro Grande (ANA)"
+source = "ana"
+variable = "river_stage"
+lat = -28.5719
+lon = -51.3111
+datum_id = "ANA-86125120-regua"
+stream = "guaiba"
+kind = "jusante"
+ana_name = "PCH MORRO GRANDE JUSANTE 1"
+
+[[station]]
+id = "ANA-86125130"
+name = "Ituim abaixo da PCH Morro Grande (ANA)"
+source = "ana"
+variable = "river_stage"
+lat = -28.5919
+lon = -51.3247
+datum_id = "ANA-86125130-regua"
+stream = "guaiba"
+kind = "jusante"
+ana_name = "PCH MORRO GRANDE JUSANTE 2"
+
+[[station]]
+id = "ANA-86125160"
+name = "Ituim: reservatório da PCH Saltinho (ANA)"
+source = "ana"
+variable = "river_stage"
+lat = -28.6114
+lon = -51.3422
+datum_id = "ANA-86125160-regua"
+stream = "guaiba"
+kind = "reservatorio"
+ana_name = "PCH SALTINHO BARRAMENTO"
+
+[[station]]
+id = "ANA-86125165"
+name = "Ituim em Muitos Capões (ANA)"
+source = "ana"
+variable = "river_stage"
+lat = -28.6111
+lon = -51.3486
+datum_id = "ANA-86125165-regua"
+stream = "guaiba"
+kind = "rio"
+ana_name = "PCH SALTINHO ALÇA"
+
+[[station]]
+id = "ANA-86125200"
+name = "Ituim abaixo da PCH Saltinho (ANA)"
+source = "ana"
+variable = "river_stage"
+lat = -28.6364
+lon = -51.3806
+datum_id = "ANA-86125200-regua"
+stream = "guaiba"
+kind = "jusante"
+ana_name = "PCH SALTINHO JUSANTE"
+
+[[station]]
+id = "ANA-86125500"
+name = "Prata: reservatório da PCH Jararaca (ANA)"
+source = "ana"
+variable = "river_stage"
+lat = -28.9381
+lon = -51.4656
+datum_id = "ANA-86125500-regua"
+stream = "guaiba"
+kind = "reservatorio"
+ana_name = "PCH JARARACA BARRAMENTO"
+
+[[station]]
+id = "ANA-86160000"
+name = "Tainhas em Jaquirana (ANA)"
+source = "ana"
+variable = "river_stage"
+lat = -28.8681
+lon = -50.4561
+datum_id = "ANA-86160000-regua"
+stream = "guaiba"
+kind = "rio"
+ana_name = "PASSO TAINHAS"
+
+[[station]]
+id = "ANA-86162000"
+name = "Rio das Antas: reservatório da PCH Serra dos Cavalinho… (ANA)"
+source = "ana"
+variable = "river_stage"
+lat = -28.7914
+lon = -50.7458
+datum_id = "ANA-86162000-regua"
+stream = "guaiba"
+kind = "reservatorio"
+ana_name = "PCH SERRA DOS CAVALINHOS II BARRAMENTO"
+
+[[station]]
+id = "ANA-86163000"
+name = "Rio das Antas abaixo da PCH Serra dos Cavalinhos Ii (ANA)"
+source = "ana"
+variable = "river_stage"
+lat = -28.7869
+lon = -50.7447
+datum_id = "ANA-86163000-regua"
+stream = "guaiba"
+kind = "jusante"
+ana_name = "PCH SERRA DOS CAVALINHOS II JUSANTE"
+
+[[station]]
+id = "ANA-86194900"
+name = "Lajeado Grande acima da PCH Cazuza Ferreira (ANA)"
+source = "ana"
+variable = "river_stage"
+lat = -29.0231
+lon = -50.7156
+datum_id = "ANA-86194900-regua"
+stream = "guaiba"
+kind = "rio"
+ana_name = "PCH CAZUZA FERREIRA MONTANTE"
+
+[[station]]
+id = "ANA-86195000"
+name = "Lajeado Grande: reservatório da PCH Cazuza Ferreira (ANA)"
+source = "ana"
+variable = "river_stage"
+lat = -29.0206
+lon = -50.7314
+datum_id = "ANA-86195000-regua"
+stream = "guaiba"
+kind = "reservatorio"
+ana_name = "PCH CAZUZA FERREIRA BARRAMENTO"
+
+[[station]]
+id = "ANA-86195100"
+name = "Lajeado Grande em São Francisco de Paula (ANA)"
+source = "ana"
+variable = "river_stage"
+lat = -29.0197
+lon = -50.7339
+datum_id = "ANA-86195100-regua"
+stream = "guaiba"
+kind = "rio"
+ana_name = "PCH CAZUZA FERREIRA ALÇA"
+
+[[station]]
+id = "ANA-86200500"
+name = "Lajeado Grande abaixo da PCH Cazuza Ferreira (ANA)"
+source = "ana"
+variable = "river_stage"
+lat = -29.0206
+lon = -50.7342
+datum_id = "ANA-86200500-regua"
+stream = "guaiba"
+kind = "jusante"
+ana_name = "PCH CAZUZA FERREIRA JUSANTE"
+
+[[station]]
+id = "ANA-86200900"
+name = "Lajeado Grande: reservatório da PCH Criúva (ANA)"
+source = "ana"
+variable = "river_stage"
+lat = -28.9653
+lon = -50.7989
+datum_id = "ANA-86200900-regua"
+stream = "guaiba"
+kind = "reservatorio"
+ana_name = "PCH CRIÚVA BARRAMENTO"
+
+[[station]]
+id = "ANA-86210900"
+name = "Lajeado Grande: reservatório da PCH Palanquinho (ANA)"
+source = "ana"
+variable = "river_stage"
+lat = -28.8964
+lon = -50.8108
+datum_id = "ANA-86210900-regua"
+stream = "guaiba"
+kind = "reservatorio"
+ana_name = "PCH PALANQUINHO BARRAMENTO"
+
+[[station]]
+id = "ANA-86220600"
+name = "Rio das Antas abaixo da PCH Palanquinho (ANA)"
+source = "ana"
+variable = "river_stage"
+lat = -28.8294
+lon = -51.0092
+datum_id = "ANA-86220600-regua"
+stream = "guaiba"
+kind = "jusante"
+ana_name = "PCH PALANQUINHO JUSANTE"
+
+[[station]]
+id = "ANA-86280500"
+name = "Arroio São Marcos: reservatório da PCH Rio São Marcos (ANA)"
+source = "ana"
+variable = "river_stage"
+lat = -29.0367
+lon = -51.0956
+datum_id = "ANA-86280500-regua"
+stream = "guaiba"
+kind = "reservatorio"
+ana_name = "PCH RIO SÃO MARCOS BARRAMENTO"
+
+[[station]]
+id = "ANA-86297965"
+name = "Arroio São Marcos abaixo da PCH Rio São Marcos (ANA)"
+source = "ana"
+variable = "river_stage"
+lat = -28.9442
+lon = -51.1758
+datum_id = "ANA-86297965-regua"
+stream = "guaiba"
+kind = "jusante"
+ana_name = "PCH RIO SÃO MARCOS JUSANTE"
+
+[[station]]
+id = "ANA-86297995"
+name = "Rio das Antas em Flores da Cunha (ANA)"
+source = "ana"
+variable = "river_stage"
+lat = -28.9422
+lon = -51.1897
+datum_id = "ANA-86297995-regua"
+stream = "guaiba"
+kind = "rio"
+ana_name = "FLORES DA CUNHA-ANTÔNIO PRADO"
+
+[[station]]
+id = "ANA-86298000"
+name = "Rio das Antas em Antônio Prado (ANA)"
+source = "ana"
+variable = "river_stage"
+lat = -28.9414
+lon = -51.1892
+datum_id = "ANA-86298000-regua"
+stream = "guaiba"
+kind = "rio"
+ana_name = "UHE CASTRO ALVES RS-122"
+
+[[station]]
+id = "ANA-86305000"
+name = "Rio das Antas: reservatório da UHE Castro Alves (ANA)"
+source = "ana"
+variable = "river_stage"
+lat = -29.0058
+lon = -51.3853
+datum_id = "ANA-86305000-regua"
+stream = "guaiba"
+kind = "reservatorio"
+ana_name = "UHE CASTRO ALVES BARRAMENTO"
+
+[[station]]
+id = "ANA-86306000"
+name = "Rio das Antas em Nova Roma do Sul (ANA)"
+source = "ana"
+variable = "river_stage"
+lat = -29.0133
+lon = -51.3675
+datum_id = "ANA-86306000-regua"
+stream = "guaiba"
+kind = "rio"
+ana_name = "UHE CASTRO ALVES ALÇA"
+
+[[station]]
+id = "ANA-86321000"
+name = "Tegas em Nova Pádua (ANA)"
+source = "ana"
+variable = "river_stage"
+lat = -29.0633
+lon = -51.3236
+datum_id = "ANA-86321000-regua"
+stream = "guaiba"
+kind = "rio"
+ana_name = "UHE CASTRO ALVES TEGA"
+
+[[station]]
+id = "ANA-86329001"
+name = "Rio das Antas em Nova Roma do Sul (ANA)"
+source = "ana"
+variable = "river_stage"
+lat = -29.0575
+lon = -51.3961
+datum_id = "ANA-86329001-regua"
+stream = "guaiba"
+kind = "rio"
+ana_name = "NOVA ROMA/FARROUPILHA"
+
+[[station]]
+id = "ANA-86342000"
+name = "Santa Rita em Muitos Capões (ANA)"
+source = "ana"
+variable = "river_stage"
+lat = -28.3233
+lon = -51.3367
+datum_id = "ANA-86342000-regua"
+stream = "guaiba"
+kind = "rio"
+ana_name = "MUITOS CAPÕES/LAGOA VERMELHA"
+
+[[station]]
+id = "ANA-86350000"
+name = "Santa Rita em Muitos Capões (ANA)"
+source = "ana"
+variable = "river_stage"
+lat = -28.4725
+lon = -51.36
+datum_id = "ANA-86350000-regua"
+stream = "guaiba"
+kind = "rio"
+ana_name = "PCH CHIMARRÃO RIO SANTA RITA"
+
+[[station]]
+id = "ANA-86390900"
+name = "Turvo acima da PCH Jardim (ANA)"
+source = "ana"
+variable = "river_stage"
+lat = -28.5328
+lon = -51.4094
+datum_id = "ANA-86390900-regua"
+stream = "guaiba"
+kind = "rio"
+ana_name = "PCH JARDIM MONTANTE"
+
+[[station]]
+id = "ANA-86402000"
+name = "Turvo: reservatório da PCH Jardim (ANA)"
+source = "ana"
+variable = "river_stage"
+lat = -28.56
+lon = -51.4081
+datum_id = "ANA-86402000-regua"
+stream = "guaiba"
+kind = "reservatorio"
+ana_name = "PCH JARDIM BARRAMENTO"
+
+[[station]]
+id = "ANA-86403000"
+name = "Turvo abaixo da PCH Jardim (ANA)"
+source = "ana"
+variable = "river_stage"
+lat = -28.5692
+lon = -51.4064
+datum_id = "ANA-86403000-regua"
+stream = "guaiba"
+kind = "jusante"
+ana_name = "PCH JARDIM JUSANTE"
+
+[[station]]
+id = "ANA-86404100"
+name = "Turvo abaixo da PCH Chimarrão (ANA)"
+source = "ana"
+variable = "river_stage"
+lat = -28.6017
+lon = -51.6686
+datum_id = "ANA-86404100-regua"
+stream = "guaiba"
+kind = "jusante"
+ana_name = "PCH CHIMARRÃO JUSANTE"
+
+[[station]]
+id = "ANA-86404200"
+name = "Turvo: reservatório da PCH Chimarrão (ANA)"
+source = "ana"
+variable = "river_stage"
+lat = -28.5981
+lon = -51.3992
+datum_id = "ANA-86404200-regua"
+stream = "guaiba"
+kind = "reservatorio"
+ana_name = "PCH CHIMARRÃO BARRAMENTO"
+
+[[station]]
+id = "ANA-86405000"
+name = "Turvo: reservatório da PCH Santa Carolina (ANA)"
+source = "ana"
+variable = "river_stage"
+lat = -28.6153
+lon = -51.4033
+datum_id = "ANA-86405000-regua"
+stream = "guaiba"
+kind = "reservatorio"
+ana_name = "PCH SANTA CAROLINA BARRAMENTO"
+
+[[station]]
+id = "ANA-86406000"
+name = "Turvo abaixo da PCH Santa Carolina (ANA)"
+source = "ana"
+variable = "river_stage"
+lat = -28.6189
+lon = -51.4011
+datum_id = "ANA-86406000-regua"
+stream = "guaiba"
+kind = "jusante"
+ana_name = "PCH SANTA CAROLINA JUSANTE"
+
+[[station]]
+id = "ANA-86410001"
+name = "Turvo em Protásio Alves (ANA)"
+source = "ana"
+variable = "river_stage"
+lat = -28.7383
+lon = -51.4258
+datum_id = "ANA-86410001-regua"
+stream = "guaiba"
+kind = "rio"
+ana_name = "PROTÁSIO ALVES/IPÊ"
+
+[[station]]
+id = "ANA-86410050"
+name = "Turvo em Antônio Prado (ANA)"
+source = "ana"
+variable = "river_stage"
+lat = -28.8086
+lon = -51.4467
+datum_id = "ANA-86410050-regua"
+stream = "guaiba"
+kind = "rio"
+ana_name = "PCH DA ILHA BALSA DO TURVO"
+
+[[station]]
+id = "ANA-86410800"
+name = "Arroio Primavera em Protásio Alves (ANA)"
+source = "ana"
+variable = "river_stage"
+lat = -28.7983
+lon = -51.4744
+datum_id = "ANA-86410800-regua"
+stream = "guaiba"
+kind = "rio"
+ana_name = "PCH DA ILHA AFLUENTE"
+
+[[station]]
+id = "ANA-86430500"
+name = "Prata em Protásio Alves (ANA)"
+source = "ana"
+variable = "river_stage"
+lat = -28.8225
+lon = -51.4939
+datum_id = "ANA-86430500-regua"
+stream = "guaiba"
+kind = "rio"
+ana_name = "PCH JARARACA PRATINHA"
+
+[[station]]
+id = "ANA-86430900"
+name = "Prata: reservatório da PCH Da Ilha (ANA)"
+source = "ana"
+variable = "river_stage"
+lat = -28.8925
+lon = -51.455
+datum_id = "ANA-86430900-regua"
+stream = "guaiba"
+kind = "reservatorio"
+ana_name = "PCH DA ILHA BARRAMENTO"
+
+[[station]]
+id = "ANA-86447000"
+name = "Prata em Nova Roma do Sul (ANA)"
+source = "ana"
+variable = "river_stage"
+lat = -28.9714
+lon = -51.4611
+datum_id = "ANA-86447000-regua"
+stream = "guaiba"
+kind = "rio"
+ana_name = "UHE MONTE CLARO BALSA DO PRATA"
+
+[[station]]
+id = "ANA-86448000"
+name = "Rio das Antas: reservatório da UHE Monte Claro (ANA)"
+source = "ana"
+variable = "river_stage"
+lat = -29.0292
+lon = -51.5219
+datum_id = "ANA-86448000-regua"
+stream = "guaiba"
+kind = "reservatorio"
+ana_name = "UHE MONTE CLARO BARRAMENTO"
+
+[[station]]
+id = "ANA-86450000"
+name = "Rio das Antas abaixo da UHE Monte Claro (ANA)"
+source = "ana"
+variable = "river_stage"
+lat = -29.075
+lon = -51.5239
+datum_id = "ANA-86450000-regua"
+stream = "guaiba"
+kind = "jusante"
+ana_name = "UHE MONTE CLARO JUSANTE 1 (ALÇA)"
+
+[[station]]
+id = "ANA-86450500"
+name = "Rio das Antas abaixo da UHE Monte Claro (ANA)"
+source = "ana"
+variable = "river_stage"
+lat = -29.0211
+lon = -51.5333
+datum_id = "ANA-86450500-regua"
+stream = "guaiba"
+kind = "jusante"
+ana_name = "UHE MONTE CLARO JUSANTE 2"
+
+[[station]]
+id = "ANA-86451000"
+name = "Rio das Antas acima da UHE 14 de Julho (ANA)"
+source = "ana"
+variable = "river_stage"
+lat = -29.0156
+lon = -51.5428
+datum_id = "ANA-86451000-regua"
+stream = "guaiba"
+kind = "rio"
+ana_name = "UHE 14 DE JULHO MONTANTE"
+
+[[station]]
+id = "ANA-86470800"
+name = "Rio das Antas: reservatório da UHE 14 de Julho (ANA)"
+source = "ana"
+variable = "river_stage"
+lat = -29.0658
+lon = -51.6744
+datum_id = "ANA-86470800-regua"
+stream = "guaiba"
+kind = "reservatorio"
+ana_name = "UHE 14 DE JULHO BARRAMENTO"
+
+[[station]]
+id = "ANA-86470900"
+name = "Rio das Antas em Cotiporã (ANA)"
+source = "ana"
+variable = "river_stage"
+lat = -29.07
+lon = -51.6342
+datum_id = "ANA-86470900-regua"
+stream = "guaiba"
+kind = "rio"
+ana_name = "UHE 14 DE JULHO ALÇA"
+
+[[station]]
+id = "ANA-86471000"
+name = "Rio das Antas abaixo da UHE 14 de Julho (ANA)"
+source = "ana"
+variable = "river_stage"
+lat = -29.0797
+lon = -51.6814
+datum_id = "ANA-86471000-regua"
+stream = "guaiba"
+kind = "jusante"
+ana_name = "UHE 14 DE JULHO JUSANTE"
+
+[[station]]
+id = "ANA-86472000"
+name = "Rio das Antas em Santa Tereza (ANA)"
+source = "ana"
+variable = "river_stage"
+lat = -29.0978
+lon = -51.6997
+datum_id = "ANA-86472000-regua"
+stream = "guaiba"
+kind = "rio"
+ana_name = "LINHA JOSÉ JÚLIO"
+
+[[station]]
+id = "ANA-86472600"
+name = "Taquari em Santa Tereza (ANA)"
+source = "ana"
+variable = "river_stage"
+lat = -29.1781
+lon = -51.7322
+datum_id = "ANA-86472600-regua"
+stream = "guaiba"
+kind = "rio"
+ana_name = "SANTA TEREZA"
+
+[[station]]
+id = "ANA-86479000"
+name = "São Domingos em São Domingos do Sul (ANA)"
+source = "ana"
+variable = "river_stage"
+lat = -28.5792
+lon = -51.8686
+datum_id = "ANA-86479000-regua"
+stream = "guaiba"
+kind = "rio"
+ana_name = "PCH CAÇADOR PONTE SÃO DOMINGOS"
+
+[[station]]
+id = "ANA-86488000"
+name = "Carreiro acima da PCH Caçador (ANA)"
+source = "ana"
+variable = "river_stage"
+lat = -28.6847
+lon = -51.8506
+datum_id = "ANA-86488000-regua"
+stream = "guaiba"
+kind = "rio"
+ana_name = "PCH CAÇADOR MONTANTE"
+
+[[station]]
+id = "ANA-86489000"
+name = "Carreiro: reservatório da PCH Caçador (ANA)"
+source = "ana"
+variable = "river_stage"
+lat = -28.7075
+lon = -51.8503
+datum_id = "ANA-86489000-regua"
+stream = "guaiba"
+kind = "reservatorio"
+ana_name = "PCH CAÇADOR BARRAMENTO"
+
+[[station]]
+id = "ANA-86493000"
+name = "Carreiro: reservatório da PCH Boa Fé (ANA)"
+source = "ana"
+variable = "river_stage"
+lat = -28.7464
+lon = -51.8536
+datum_id = "ANA-86493000-regua"
+stream = "guaiba"
+kind = "reservatorio"
+ana_name = "PCH BOA FÉ BARRAMENTO"
+
+[[station]]
+id = "ANA-86495500"
+name = "Carreiro: reservatório da PCH São Paulo (ANA)"
+source = "ana"
+variable = "river_stage"
+lat = -28.775
+lon = -51.8447
+datum_id = "ANA-86495500-regua"
+stream = "guaiba"
+kind = "reservatorio"
+ana_name = "PCH SÃO PAULO BARRAMENTO"
+
+[[station]]
+id = "ANA-86497400"
+name = "Carreiro: reservatório da PCH Autódromo (ANA)"
+source = "ana"
+variable = "river_stage"
+lat = -28.8289
+lon = -51.8419
+datum_id = "ANA-86497400-regua"
+stream = "guaiba"
+kind = "reservatorio"
+ana_name = "PCH AUTÓDROMO BARRAMENTO"
+
+[[station]]
+id = "ANA-86500000"
+name = "Carreiro em Guaporé (ANA)"
+source = "ana"
+variable = "river_stage"
+lat = -28.8489
+lon = -51.8325
+datum_id = "ANA-86500000-regua"
+stream = "guaiba"
+kind = "rio"
+ana_name = "PASSO CARREIRO"
+
+[[station]]
+id = "ANA-86504400"
+name = "Arroio Não Sabia: reservatório da CGH São Domingos d… (ANA)"
+source = "ana"
+variable = "river_stage"
+lat = -28.8092
+lon = -51.7364
+datum_id = "ANA-86504400-regua"
+stream = "guaiba"
+kind = "reservatorio"
+ana_name = "CGH SÃO DOMINGOS DO PRATA BARRAMENTO"
+
+[[station]]
+id = "ANA-86504500"
+name = "Arroio Não Sabia abaixo da CGH São Domingos do Prata (ANA)"
+source = "ana"
+variable = "river_stage"
+lat = -28.8139
+lon = -51.7381
+datum_id = "ANA-86504500-regua"
+stream = "guaiba"
+kind = "jusante"
+ana_name = "CGH SÃO DOMINGOS DO PRATA JUSANTE"
+
+[[station]]
+id = "ANA-86504900"
+name = "Carreiro abaixo da PCH Autódromo (ANA)"
+source = "ana"
+variable = "river_stage"
+lat = -28.8817
+lon = -51.7897
+datum_id = "ANA-86504900-regua"
+stream = "guaiba"
+kind = "jusante"
+ana_name = "PCH AUTÓDROMO JUSANTE"
+
+[[station]]
+id = "ANA-86505400"
+name = "Carreiro: reservatório da PCH Linha Emilia (ANA)"
+source = "ana"
+variable = "river_stage"
+lat = -28.9411
+lon = -51.7739
+datum_id = "ANA-86505400-regua"
+stream = "guaiba"
+kind = "reservatorio"
+ana_name = "PCH LINHA EMILIA BARRAMENTO"
+
+[[station]]
+id = "ANA-86505500"
+name = "Carreiro abaixo da PCH Linha Emilia (ANA)"
+source = "ana"
+variable = "river_stage"
+lat = -28.9414
+lon = -51.7694
+datum_id = "ANA-86505500-regua"
+stream = "guaiba"
+kind = "jusante"
+ana_name = "PCH LINHA EMILIA JUSANTE"
+
+[[station]]
+id = "ANA-86506000"
+name = "Carreiro: reservatório da PCH Cotiporã (ANA)"
+source = "ana"
+variable = "river_stage"
+lat = -28.9639
+lon = -51.7583
+datum_id = "ANA-86506000-regua"
+stream = "guaiba"
+kind = "reservatorio"
+ana_name = "PCH COTIPORÃ BARRAMENTO"
+
+[[station]]
+id = "ANA-86507000"
+name = "Carreiro abaixo da PCH Cotiporã (ANA)"
+source = "ana"
+variable = "river_stage"
+lat = -28.9722
+lon = -51.7558
+datum_id = "ANA-86507000-regua"
+stream = "guaiba"
+kind = "jusante"
+ana_name = "PCH COTIPORÃ JUSANTE"
+
+[[station]]
+id = "ANA-86507220"
+name = "Carreiro em Cotiporã (ANA)"
+source = "ana"
+variable = "river_stage"
+lat = -28.9956
+lon = -51.7544
+datum_id = "ANA-86507220-regua"
+stream = "guaiba"
+kind = "rio"
+ana_name = "COTIPORÃO/DOIS LAJEADOS"
+
+[[station]]
+id = "ANA-86520000"
+name = "Capigui: reservatório da PCH Capigui (ANA)"
+source = "ana"
+variable = "river_stage"
+lat = -28.3511
+lon = -52.2147
+datum_id = "ANA-86520000-regua"
+stream = "guaiba"
+kind = "reservatorio"
+ana_name = "PCH CAPIGUI BARRAMENTO DE REGULARIZAÇÃO"
+
+[[station]]
+id = "ANA-86520100"
+name = "Capigui abaixo da PCH Capigui (ANA)"
+source = "ana"
+variable = "river_stage"
+lat = -28.3825
+lon = -52.2586
+datum_id = "ANA-86520100-regua"
+stream = "guaiba"
+kind = "jusante"
+ana_name = "PCH CAPIGUI JUSANTE"
+
+[[station]]
+id = "ANA-86529500"
+name = "Arroio Marau em Marau (ANA)"
+source = "ana"
+variable = "river_stage"
+lat = -28.4569
+lon = -52.1892
+datum_id = "ANA-86529500-regua"
+stream = "guaiba"
+kind = "rio"
+ana_name = "MARAU"
+
+[[station]]
+id = "ANA-86542000"
+name = "Guaporé em União da Serra (ANA)"
+source = "ana"
+variable = "river_stage"
+lat = -28.7194
+lon = -52.0831
+datum_id = "ANA-86542000-regua"
+stream = "guaiba"
+kind = "rio"
+ana_name = "UNIÃO DA SERRA"
+
+[[station]]
+id = "ANA-86560000"
+name = "Guaporé em Guaporé (ANA)"
+source = "ana"
+variable = "river_stage"
+lat = -28.9122
+lon = -51.9531
+datum_id = "ANA-86560000-regua"
+stream = "guaiba"
+kind = "rio"
+ana_name = "LINHA COLOMBO"
+
+[[station]]
+id = "ANA-86560020"
+name = "Guaporé em Anta Gorda (ANA)"
+source = "ana"
+variable = "river_stage"
+lat = -28.9108
+lon = -51.9522
+datum_id = "ANA-86560020-regua"
+stream = "guaiba"
+kind = "rio"
+ana_name = "GUAPORÉ - ANTA GORDA"
+
+[[station]]
+id = "ANA-86581000"
+name = "Guaporé em Muçum (ANA)"
+source = "ana"
+variable = "river_stage"
+lat = -29.1683
+lon = -51.8875
+datum_id = "ANA-86581000-regua"
+stream = "guaiba"
+kind = "rio"
+ana_name = "MUÇUM/ENCANTADO"
+
+[[station]]
+id = "ANA-86640900"
+name = "Arroio Putinga em Putinga (ANA)"
+source = "ana"
+variable = "river_stage"
+lat = -28.7383
+lon = -51.4258
+datum_id = "ANA-86640900-regua"
+stream = "guaiba"
+kind = "rio"
+ana_name = "PUTINGA"
+
+[[station]]
+id = "ANA-86700005"
+name = "Arroio Jacaré em Encantado (ANA)"
+source = "ana"
+variable = "river_stage"
+lat = -29.1883
+lon = -51.9208
+datum_id = "ANA-86700005-regua"
+stream = "guaiba"
+kind = "rio"
+ana_name = "ENCANTADO"
+
+[[station]]
+id = "ANA-86733330"
+name = "Taquari em Encantado (ANA)"
+source = "ana"
+variable = "river_stage"
+lat = -29.2819
+lon = -51.8808
+datum_id = "ANA-86733330-regua"
+stream = "guaiba"
+kind = "rio"
+ana_name = "ENCANTADO/ROCA SALES"
+
+[[station]]
+id = "ANA-86739850"
+name = "Arroio da Seca em Imigrante (ANA)"
+source = "ana"
+variable = "river_stage"
+lat = -29.3494
+lon = -51.7708
+datum_id = "ANA-86739850-regua"
+stream = "guaiba"
+kind = "rio"
+ana_name = "IMIGRANTE"
+
+[[station]]
+id = "ANA-86743700"
+name = "Forqueta acima da PCH Rastro de Auto (ANA)"
+source = "ana"
+variable = "river_stage"
+lat = -29.0419
+lon = -52.2222
+datum_id = "ANA-86743700-regua"
+stream = "guaiba"
+kind = "rio"
+ana_name = "PCH RASTRO DE AUTO MONTANTE"
+
+[[station]]
+id = "ANA-86743800"
+name = "Forqueta: reservatório da PCH Rastro de Auto (ANA)"
+source = "ana"
+variable = "river_stage"
+lat = -29.0533
+lon = -52.2194
+datum_id = "ANA-86743800-regua"
+stream = "guaiba"
+kind = "reservatorio"
+ana_name = "PCH RASTRO DE AUTO BARRAMENTO"
+
+[[station]]
+id = "ANA-86743900"
+name = "Forqueta: reservatório da PCH Salto Forqueta (ANA)"
+source = "ana"
+variable = "river_stage"
+lat = -29.0814
+lon = -52.2083
+datum_id = "ANA-86743900-regua"
+stream = "guaiba"
+kind = "reservatorio"
+ana_name = "PCH SALTO FORQUETA BARRAMENTO"
+
+[[station]]
+id = "ANA-86743950"
+name = "Forqueta em Putinga (ANA)"
+source = "ana"
+variable = "river_stage"
+lat = -29.0833
+lon = -52.2106
+datum_id = "ANA-86743950-regua"
+stream = "guaiba"
+kind = "rio"
+ana_name = "PCH SALTO FORQUETA ALÇA"
+
+[[station]]
+id = "ANA-86744110"
+name = "Forqueta abaixo da PCH Salto Forqueta (ANA)"
+source = "ana"
+variable = "river_stage"
+lat = -29.0947
+lon = -52.2122
+datum_id = "ANA-86744110-regua"
+stream = "guaiba"
+kind = "jusante"
+ana_name = "PCH SALTO FORQUETA JUSANTE"
+
+[[station]]
+id = "ANA-86744650"
+name = "Forqueta abaixo da PCH Vale do Leite (ANA)"
+source = "ana"
+variable = "river_stage"
+lat = -29.1867
+lon = -52.1756
+datum_id = "ANA-86744650-regua"
+stream = "guaiba"
+kind = "jusante"
+ana_name = "PCH VALE DO LEITE JUSANTE"
+
+[[station]]
+id = "ANA-86744900"
+name = "Forqueta em Travesseiro (ANA)"
+source = "ana"
+variable = "river_stage"
+lat = -29.2144
+lon = -52.1594
+datum_id = "ANA-86744900-regua"
+stream = "guaiba"
+kind = "rio"
+ana_name = "TRAVESSEIRO/POUSO NOVO"
+
+[[station]]
+id = "ANA-86746680"
+name = "Arroio Forquetinha em Canudos do Vale (ANA)"
+source = "ana"
+variable = "river_stage"
+lat = -29.3225
+lon = -52.2353
+datum_id = "ANA-86746680-regua"
+stream = "guaiba"
+kind = "rio"
+ana_name = "CANUDOS DO VALE"
+
+[[station]]
+id = "ANA-86780000"
+name = "Forqueta em Travesseiro (ANA)"
+source = "ana"
+variable = "river_stage"
+lat = -29.2239
+lon = -52.1622
+datum_id = "ANA-86780000-regua"
+stream = "guaiba"
+kind = "rio"
+ana_name = "BARRA DO FÃO"
+
+[[station]]
+id = "ANA-86855000"
+name = "Arroio Boa Vista em Teutônia (ANA)"
+source = "ana"
+variable = "river_stage"
+lat = -29.4603
+lon = -51.7683
+datum_id = "ANA-86855000-regua"
+stream = "guaiba"
+kind = "rio"
+ana_name = "TEUTÔNIA"
+
+[[station]]
+id = "ANA-86878700"
+name = "Forqueta em Arroio do Meio (ANA)"
+source = "ana"
+variable = "river_stage"
+lat = -29.4214
+lon = -51.9661
+datum_id = "ANA-86878700-regua"
+stream = "guaiba"
+kind = "rio"
+ana_name = "ARROIO DO MEIO/LAJEADO"
+
+[[station]]
+id = "ANA-86888400"
+name = "Arroio Castelhano em Venâncio Aires (ANA)"
+source = "ana"
+variable = "river_stage"
+lat = -29.5656
+lon = -52.3247
+datum_id = "ANA-86888400-regua"
+stream = "guaiba"
+kind = "rio"
+ana_name = "SANTA CRUZ DO SUL-VENÂNCIO AIRES"
+
+[[station]]
+id = "ANA-86895000"
+name = "Taquari em Venâncio Aires (ANA)"
+source = "ana"
+variable = "river_stage"
+lat = -29.6922
+lon = -51.97
+datum_id = "ANA-86895000-regua"
+stream = "guaiba"
+kind = "rio"
+ana_name = "PORTO MARIANTE"
+
+[[station]]
+id = "ANA-87010000"
+name = "Jacuí em Triunfo (ANA)"
+source = "ana"
+variable = "river_stage"
+lat = -29.9419
+lon = -51.6942
+datum_id = "ANA-87010000-regua"
+stream = "guaiba"
+kind = "rio"
+ana_name = "TRIUNFO"
+
+[[station]]
+id = "ANA-87036800"
+name = "Jacuí em Charqueadas (ANA)"
+source = "ana"
+variable = "river_stage"
+lat = -29.9478
+lon = -51.6172
+datum_id = "ANA-87036800-regua"
+stream = "guaiba"
+kind = "rio"
+ana_name = "CHARQUEADAS"
+
+[[station]]
+id = "ANA-87068000"
+name = "Arroio do Junco acima da UHE Bugres Divisa (ANA)"
+source = "ana"
+variable = "river_stage"
+lat = -29.3
+lon = -50.5211
+datum_id = "ANA-87068000-regua"
+stream = "guaiba"
+kind = "rio"
+ana_name = "UHE BUGRES DIVISA MONTANTE 2"
+
+[[station]]
+id = "ANA-87070000"
+name = "Arroio da Divisa: reservatório da UHE Bugres (ANA)"
+source = "ana"
+variable = "river_stage"
+lat = -29.2994
+lon = -50.5697
+datum_id = "ANA-87070000-regua"
+stream = "guaiba"
+kind = "reservatorio"
+ana_name = "UHE BUGRES BARRAMENTO DIVISA"
+
+[[station]]
+id = "ANA-87072000"
+name = "Santa Cruz acima da UHE Bugres Blang (ANA)"
+source = "ana"
+variable = "river_stage"
+lat = -29.3603
+lon = -50.5258
+datum_id = "ANA-87072000-regua"
+stream = "guaiba"
+kind = "rio"
+ana_name = "UHE BUGRES BLANG MONTANTE 1"
+
+[[station]]
+id = "ANA-87075000"
+name = "Caí: reservatório da UHE Bugres (ANA)"
+source = "ana"
+variable = "river_stage"
+lat = -29.3267
+lon = -50.6178
+datum_id = "ANA-87075000-regua"
+stream = "guaiba"
+kind = "reservatorio"
+ana_name = "UHE BUGRES BARRAMENTO BLANG"
+
+[[station]]
+id = "ANA-87100000"
+name = "Caí: reservatório da UHE Bugres (ANA)"
+source = "ana"
+variable = "river_stage"
+lat = -29.3153
+lon = -50.6806
+datum_id = "ANA-87100000-regua"
+stream = "guaiba"
+kind = "reservatorio"
+ana_name = "UHE BUGRES BARRAMENTO SALTO"
+
+[[station]]
+id = "ANA-87107000"
+name = "Santa Cruz acima da CGH Toca (ANA)"
+source = "ana"
+variable = "river_stage"
+lat = -29.3044
+lon = -50.7264
+datum_id = "ANA-87107000-regua"
+stream = "guaiba"
+kind = "rio"
+ana_name = "CGH TOCA MONTANTE"
+
+[[station]]
+id = "ANA-87110000"
+name = "Santa Cruz: reservatório da CGH Toca (ANA)"
+source = "ana"
+variable = "river_stage"
+lat = -29.2892
+lon = -50.7408
+datum_id = "ANA-87110000-regua"
+stream = "guaiba"
+kind = "reservatorio"
+ana_name = "CGH TOCA BARRAMENTO"
+
+[[station]]
+id = "ANA-87120000"
+name = "Caí: reservatório da PCH Passo do Inferno (ANA)"
+source = "ana"
+variable = "river_stage"
+lat = -29.2683
+lon = -50.7467
+datum_id = "ANA-87120000-regua"
+stream = "guaiba"
+kind = "reservatorio"
+ana_name = "PCH PASSO DO INFERNO BARRAMENTO"
+
+[[station]]
+id = "ANA-87150000"
+name = "Caí em Caxias do Sul (ANA)"
+source = "ana"
+variable = "river_stage"
+lat = -29.3075
+lon = -50.9958
+datum_id = "ANA-87150000-regua"
+stream = "guaiba"
+kind = "rio"
+ana_name = "LINHA GONZAGA"
+
+[[station]]
+id = "ANA-87153000"
+name = "Arroio Piai abaixo da CGH Santo Anjo (ANA)"
+source = "ana"
+variable = "river_stage"
+lat = -29.205
+lon = -51.09
+datum_id = "ANA-87153000-regua"
+stream = "guaiba"
+kind = "jusante"
+ana_name = "CGH SANTO ANJO JUSANTE"
+
+[[station]]
+id = "ANA-87159600"
+name = "Caí em Caxias do Sul (ANA)"
+source = "ana"
+variable = "river_stage"
+lat = -29.3314
+lon = -51.1636
+datum_id = "ANA-87159600-regua"
+stream = "guaiba"
+kind = "rio"
+ana_name = "NOVA PETRÓPOLIS-CAXIAS DO SUL"
+
+[[station]]
+id = "ANA-87160000"
+name = "Caí em Caxias do Sul (ANA)"
+source = "ana"
+variable = "river_stage"
+lat = -29.3356
+lon = -51.1889
+datum_id = "ANA-87160000-regua"
+stream = "guaiba"
+kind = "rio"
+ana_name = "NOVA PALMIRA"
+
+[[station]]
+id = "ANA-87163000"
+name = "Caí em Vale Real (ANA)"
+source = "ana"
+variable = "river_stage"
+lat = -29.3997
+lon = -51.2536
+datum_id = "ANA-87163000-regua"
+stream = "guaiba"
+kind = "rio"
+ana_name = "VALE REAL"
+
+[[station]]
+id = "ANA-87165001"
+name = "Caí em Feliz (ANA)"
+source = "ana"
+variable = "river_stage"
+lat = -29.455
+lon = -51.3061
+datum_id = "ANA-87165001-regua"
+stream = "guaiba"
+kind = "rio"
+ana_name = "FELIZ"
+
+[[station]]
+id = "ANA-87168000"
+name = "Arroio Forromeco em São Vendelino (ANA)"
+source = "ana"
+variable = "river_stage"
+lat = -29.3828
+lon = -51.3689
+datum_id = "ANA-87168000-regua"
+stream = "guaiba"
+kind = "rio"
+ana_name = "SÃO VENDELINO"
+
+[[station]]
+id = "ANA-87168510"
+name = "Arroio Forromeco em Bom Princípio (ANA)"
+source = "ana"
+variable = "river_stage"
+lat = -29.4875
+lon = -51.3489
+datum_id = "ANA-87168510-regua"
+stream = "guaiba"
+kind = "rio"
+ana_name = "BOM PRINCÍPIO"
+
+[[station]]
+id = "ANA-87168590"
+name = "Caí em Bom Princípio (ANA)"
+source = "ana"
+variable = "river_stage"
+lat = -29.5072
+lon = -51.3556
+datum_id = "ANA-87168590-regua"
+stream = "guaiba"
+kind = "rio"
+ana_name = "BOM PRINCÍPIO"
+
+[[station]]
+id = "ANA-87189000"
+name = "Cadeia em Picada Café (ANA)"
+source = "ana"
+variable = "river_stage"
+lat = -29.4614
+lon = -51.14
+datum_id = "ANA-87189000-regua"
+stream = "guaiba"
+kind = "rio"
+ana_name = "PICADA CAFÉ"
+
+[[station]]
+id = "ANA-87200000"
+name = "Cadeia: reservatório da PCH Herval (ANA)"
+source = "ana"
+variable = "river_stage"
+lat = -29.5011
+lon = -51.0022
+datum_id = "ANA-87200000-regua"
+stream = "guaiba"
+kind = "reservatorio"
+ana_name = "PCH HERVAL BARRAMENTO"
+
+[[station]]
+id = "ANA-87202000"
+name = "Cadeia em Picada Café (ANA)"
+source = "ana"
+variable = "river_stage"
+lat = -29.4619
+lon = -51.1403
+datum_id = "ANA-87202000-regua"
+stream = "guaiba"
+kind = "rio"
+ana_name = "PICADA CAFÉ"
+
+[[station]]
+id = "ANA-87219850"
+name = "Arroio Feitoria em Dois Irmãos (ANA)"
+source = "ana"
+variable = "river_stage"
+lat = -29.5969
+lon = -51.0894
+datum_id = "ANA-87219850-regua"
+stream = "guaiba"
+kind = "rio"
+ana_name = "DOIS IRMÃOS"
+
+[[station]]
+id = "ANA-87219950"
+name = "Arroio Feitoria abaixo da CGH Picada 48 (ANA)"
+source = "ana"
+variable = "river_stage"
+lat = -29.5839
+lon = -51.1253
+datum_id = "ANA-87219950-regua"
+stream = "guaiba"
+kind = "jusante"
+ana_name = "CGH PICADA 48 JUSANTE"
+
+[[station]]
+id = "ANA-87230000"
+name = "Cadeia em São Sebastião do Caí (ANA)"
+source = "ana"
+variable = "river_stage"
+lat = -29.5906
+lon = -51.3136
+datum_id = "ANA-87230000-regua"
+stream = "guaiba"
+kind = "rio"
+ana_name = "COSTA DO RIO CADEIA - MONTANTE"
+
+[[station]]
+id = "ANA-87242000"
+name = "Lago Guaíba em Guaíba (ANA)"
+source = "ana"
+variable = "river_stage"
+lat = -30.1075
+lon = -51.3111
+datum_id = "ANA-87242000-regua"
+stream = "guaiba"
+kind = "rio"
+ana_name = "TERMINAL CATSUL GUAÍBA"
+
+[[station]]
+id = "ANA-87242025"
+name = "Guaíba em Viamão (ANA)"
+source = "ana"
+variable = "river_stage"
+lat = -30.3589
+lon = -51.0464
+datum_id = "ANA-87242025-regua"
+stream = "guaiba"
+kind = "rio"
+ana_name = "VIAMÃO - RESERVA ESTADUAL"
+
+[[station]]
+id = "ANA-87271100"
+name = "Caí em Montenegro (ANA)"
+source = "ana"
+variable = "river_stage"
+lat = -29.6969
+lon = -51.46
+datum_id = "ANA-87271100-regua"
+stream = "guaiba"
+kind = "rio"
+ana_name = "MONTENEGRO"
+
+[[station]]
+id = "ANA-87290010"
+name = "Caí em Montenegro (ANA)"
+source = "ana"
+variable = "river_stage"
+lat = -29.8772
+lon = -51.2431
+datum_id = "ANA-87290010-regua"
+stream = "guaiba"
+kind = "rio"
+ana_name = "MONTENEGRO/NOVA SANTA RITA"
+
+[[station]]
+id = "ANA-87300000"
+name = "Caí em Triunfo (ANA)"
+source = "ana"
+variable = "river_stage"
+lat = -29.8642
+lon = -51.3639
+datum_id = "ANA-87300000-regua"
+stream = "guaiba"
+kind = "rio"
+ana_name = "PASSO DO CAÍ"
+
+[[station]]
+id = "ANA-87318000"
+name = "Arroio Caraá em Caraá (ANA)"
+source = "ana"
+variable = "river_stage"
+lat = -29.7908
+lon = -50.4217
+datum_id = "ANA-87318000-regua"
+stream = "guaiba"
+kind = "rio"
+ana_name = "ARROIO CARAÁ"
+
+[[station]]
+id = "ANA-87318700"
+name = "Rio dos Sinos em Caraá (ANA)"
+source = "ana"
+variable = "river_stage"
+lat = -29.7692
+lon = -50.3572
+datum_id = "ANA-87318700-regua"
+stream = "guaiba"
+kind = "rio"
+ana_name = "CARAÁ"
+
+[[station]]
+id = "ANA-87337010"
+name = "Rolante em Rolante (ANA)"
+source = "ana"
+variable = "river_stage"
+lat = -29.5825
+lon = -50.4697
+datum_id = "ANA-87337010-regua"
+stream = "guaiba"
+kind = "rio"
+ana_name = "ROLANTE - RIO MASCARADA"
+
+[[station]]
+id = "ANA-87350000"
+name = "Rolante em Rolante (ANA)"
+source = "ana"
+variable = "river_stage"
+lat = -29.645
+lon = -50.5106
+datum_id = "ANA-87350000-regua"
+stream = "guaiba"
+kind = "rio"
+ana_name = "ALTO ROLANTE"
+
+[[station]]
+id = "ANA-87351000"
+name = "Rolante em Rolante (ANA)"
+source = "ana"
+variable = "river_stage"
+lat = -29.6653
+lon = -50.5819
+datum_id = "ANA-87351000-regua"
+stream = "guaiba"
+kind = "rio"
+ana_name = "ROLANTE - CENTRO"
+
+[[station]]
+id = "ANA-87361000"
+name = "Paranhana: reservatório da UHE Canastra (ANA)"
+source = "ana"
+variable = "river_stage"
+lat = -29.3472
+lon = -50.7014
+datum_id = "ANA-87361000-regua"
+stream = "guaiba"
+kind = "reservatorio"
+ana_name = "UHE CANASTRA BARRAMENTO"
+
+[[station]]
+id = "ANA-87361100"
+name = "Paranhana abaixo da UHE Canastra (ANA)"
+source = "ana"
+variable = "river_stage"
+lat = -29.3936
+lon = -50.7475
+datum_id = "ANA-87361100-regua"
+stream = "guaiba"
+kind = "jusante"
+ana_name = "UHE CANASTRA JUSANTE 2"
+
+[[station]]
+id = "ANA-87366500"
+name = "Paranhana em Três Coroas (ANA)"
+source = "ana"
+variable = "river_stage"
+lat = -29.47
+lon = -50.7594
+datum_id = "ANA-87366500-regua"
+stream = "guaiba"
+kind = "rio"
+ana_name = "TRÊS COROAS"
+
+[[station]]
+id = "ANA-87375500"
+name = "Paranhana em Igrejinha (ANA)"
+source = "ana"
+variable = "river_stage"
+lat = -29.5736
+lon = -50.7964
+datum_id = "ANA-87375500-regua"
+stream = "guaiba"
+kind = "rio"
+ana_name = "IGREJINHA"
+
+[[station]]
+id = "ANA-87376000"
+name = "Rio dos Sinos em Taquara (ANA)"
+source = "ana"
+variable = "river_stage"
+lat = -29.6858
+lon = -50.8122
+datum_id = "ANA-87376000-regua"
+stream = "guaiba"
+kind = "rio"
+ana_name = "FOZ DO PARANHANA"
+
+[[station]]
+id = "ANA-87377400"
+name = "Arroio Grande em Nova Hartz (ANA)"
+source = "ana"
+variable = "river_stage"
+lat = -29.5933
+lon = -50.9028
+datum_id = "ANA-87377400-regua"
+stream = "guaiba"
+kind = "rio"
+ana_name = "NOVA HARTZ"
+
+[[station]]
+id = "ANA-87377500"
+name = "Rio dos Sinos em Araricá (ANA)"
+source = "ana"
+variable = "river_stage"
+lat = -29.6908
+lon = -50.9417
+datum_id = "ANA-87377500-regua"
+stream = "guaiba"
+kind = "rio"
+ana_name = "ARARICÁ/SAPIRANGA/TAQUARA"
+
+[[station]]
+id = "ANA-87382009"
+name = "Rio dos Sinos em São Leopoldo (ANA)"
+source = "ana"
+variable = "river_stage"
+lat = -29.7592
+lon = -51.1492
+datum_id = "ANA-87382009-regua"
+stream = "guaiba"
+kind = "rio"
+ana_name = "SÃO LEOPOLDO"
+
+[[station]]
+id = "ANA-87385010"
+name = "Rio dos Sinos em Esteio (ANA)"
+source = "ana"
+variable = "river_stage"
+lat = -29.8328
+lon = -51.1811
+datum_id = "ANA-87385010-regua"
+stream = "guaiba"
+kind = "rio"
+ana_name = "ESTEIO"
+
+[[station]]
+id = "ANA-87385041"
+name = "Rio dos Sinos em Canoas (ANA)"
+source = "ana"
+variable = "river_stage"
+lat = -29.8764
+lon = -51.2431
+datum_id = "ANA-87385041-regua"
+stream = "guaiba"
+kind = "rio"
+ana_name = "NOVA SANTA RITA/CANOAS"
+
+[[station]]
+id = "ANA-87398750"
+name = "Gravataí em Glorinha (ANA)"
+source = "ana"
+variable = "river_stage"
+lat = -29.9803
+lon = -50.7439
+datum_id = "ANA-87398750-regua"
+stream = "guaiba"
+kind = "rio"
+ana_name = "4 IRMÃOS CANAL GRAVATAÍ"
+
+[[station]]
+id = "ANA-87398885"
+name = "Gravataí em Gravataí (ANA)"
+source = "ana"
+variable = "river_stage"
+lat = -29.975
+lon = -50.9406
+datum_id = "ANA-87398885-regua"
+stream = "guaiba"
+kind = "rio"
+ana_name = "CORSAN GRAVATAÍ"
+
+[[station]]
+id = "ANA-87399050"
+name = "Gravataí em Gravataí (ANA)"
+source = "ana"
+variable = "river_stage"
+lat = -29.9639
+lon = -50.9806
+datum_id = "ANA-87399050-regua"
+stream = "guaiba"
+kind = "rio"
+ana_name = "GRAVATAÍ"
+
+[[station]]
+id = "ANA-87401750"
+name = "Gravataí em Alvorada (ANA)"
+source = "ana"
+variable = "river_stage"
+lat = -29.9683
+lon = -51.0367
+datum_id = "ANA-87401750-regua"
+stream = "guaiba"
+kind = "rio"
+ana_name = "CORSAN ALVORADA"
+
+[[station]]
+id = "ANA-87406000"
+name = "Gravataí em Canoas (ANA)"
+source = "ana"
+variable = "river_stage"
+lat = -29.9658
+lon = -51.1656
+datum_id = "ANA-87406000-regua"
+stream = "guaiba"
+kind = "rio"
+ana_name = "ALBATROZ"
+
+[[station]]
+id = "ANA-87450030"
+name = "Guaíba em Eldorado do Sul (ANA)"
+source = "ana"
+variable = "river_stage"
+lat = -30.0097
+lon = -51.3033
+datum_id = "ANA-87450030-regua"
+stream = "guaiba"
+kind = "rio"
+ana_name = "ELDORADO DO SUL"
+
+[[station]]
+id = "ANA-87451000"
+name = "Guaíba em Porto Alegre (ANA)"
+source = "ana"
+variable = "river_stage"
+lat = -30.0775
+lon = -51.2456
+datum_id = "ANA-87451000-regua"
+stream = "guaiba"
+kind = "rio"
+ana_name = "PORTO ALEGRE - CRISTAL"
+
+[[station]]
+id = "ANA-87460125"
+name = "Guaíba em Porto Alegre (ANA)"
+source = "ana"
+variable = "river_stage"
+lat = -30.1419
+lon = -51.2272
+datum_id = "ANA-87460125-regua"
+stream = "guaiba"
+kind = "rio"
+ana_name = "PORTO ALEGRE - IPANEMA"
+
+[[station]]
+id = "ANA-87479500"
+name = "Arroio do Ribeiro em Sertão Santana (ANA)"
+source = "ana"
+variable = "river_stage"
+lat = -30.4736
+lon = -51.6086
+datum_id = "ANA-87479500-regua"
+stream = "guaiba"
+kind = "rio"
+ana_name = "SERTÃO SANTANA"
+
+[[station]]
+id = "ANA-87480000"
+name = "Guaíba em Barra do Ribeiro (ANA)"
+source = "ana"
+variable = "river_stage"
+lat = -30.2944
+lon = -51.2986
+datum_id = "ANA-87480000-regua"
+stream = "guaiba"
+kind = "rio"
+ana_name = "BARRA DO RIBEIRO - LAGO GUAÍBA"
+
+[[station]]
+id = "ANA-87500060"
+name = "Guaíba em Viamão (ANA)"
+source = "ana"
+variable = "river_stage"
+lat = -30.2825
+lon = -51.0214
+datum_id = "ANA-87500060-regua"
+stream = "guaiba"
+kind = "rio"
+ana_name = "VIAMÃO - ITAPUÃ"
+
+[[station]]
+id = "ANA-87510047"
+name = "Arroio dos Cachorros: reservatório da CGH Morrinhos (ANA)"
+source = "ana"
+variable = "river_stage"
+lat = -30.3175
+lon = -51.8678
+datum_id = "ANA-87510047-regua"
+stream = "guaiba"
+kind = "reservatorio"
+ana_name = "CGH MORRINHOS BARRAMENTO"
+
+[[station]]
+id = "ANA-87510049"
+name = "Arroio dos Cachorros abaixo da CGH Morrinhos (ANA)"
+source = "ana"
+variable = "river_stage"
+lat = -30.3106
+lon = -51.8475
+datum_id = "ANA-87510049-regua"
+stream = "guaiba"
+kind = "jusante"
+ana_name = "CGH MORRINHOS JUSANTE"
+
+[[station]]
+id = "ANA-70120000"
+name = "Pelotas em São José dos Ausentes (ANA)"
+source = "ana"
+variable = "river_stage"
+lat = -28.4456
+lon = -49.8975
+datum_id = "ANA-70120000-regua"
+stream = "uruguai"
+kind = "rio"
+ana_name = "UHE BARRA GRANDE FAXINAL PRETO"
+
+[[station]]
+id = "ANA-70150000"
+name = "Pelotas em Bom Jesus (ANA)"
+source = "ana"
+variable = "river_stage"
+lat = -28.3944
+lon = -50.5756
+datum_id = "ANA-70150000-regua"
+stream = "uruguai"
+kind = "rio"
+ana_name = "UHE BARRA GRANDE PASSO DO HONORATO"
+
+[[station]]
+id = "ANA-70710000"
+name = "Santana em Vacaria (ANA)"
+source = "ana"
+variable = "river_stage"
+lat = -28.2628
+lon = -50.7608
+datum_id = "ANA-70710000-regua"
+stream = "uruguai"
+kind = "rio"
+ana_name = "UHE BARRA GRANDE SANTANA"
+
+[[station]]
+id = "ANA-70719700"
+name = "Socorro: reservatório da CGH Despraiado (ANA)"
+source = "ana"
+variable = "river_stage"
+lat = -28.3208
+lon = -50.8653
+datum_id = "ANA-70719700-regua"
+stream = "uruguai"
+kind = "reservatorio"
+ana_name = "CGH DESPRAIADO BARRAMENTO"
+
+[[station]]
+id = "ANA-70719750"
+name = "Socorro abaixo da CGH Despraiado (ANA)"
+source = "ana"
+variable = "river_stage"
+lat = -28.31
+lon = -50.8592
+datum_id = "ANA-70719750-regua"
+stream = "uruguai"
+kind = "jusante"
+ana_name = "CGH DESPRAIADO JUSANTE"
+
+[[station]]
+id = "ANA-70719760"
+name = "Socorro: reservatório da CGH Três Marias (ANA)"
+source = "ana"
+variable = "river_stage"
+lat = -28.2994
+lon = -50.8553
+datum_id = "ANA-70719760-regua"
+stream = "uruguai"
+kind = "reservatorio"
+ana_name = "CGH TRÊS MARIAS BARRAMENTO"
+
+[[station]]
+id = "ANA-70719860"
+name = "Socorro abaixo da CGH Três Marias (ANA)"
+source = "ana"
+variable = "river_stage"
+lat = -28.2919
+lon = -50.8481
+datum_id = "ANA-70719860-regua"
+stream = "uruguai"
+kind = "jusante"
+ana_name = "CGH TRÊS MARIAS JUSANTE"
+
+[[station]]
+id = "ANA-70719960"
+name = "Socorro: reservatório da CGH Passo do Buraco (ANA)"
+source = "ana"
+variable = "river_stage"
+lat = -28.2858
+lon = -50.84
+datum_id = "ANA-70719960-regua"
+stream = "uruguai"
+kind = "reservatorio"
+ana_name = "CGH PASSO DO BURACO BARRAMENTO"
+
+[[station]]
+id = "ANA-70719990"
+name = "Socorro abaixo da CGH Passo do Buraco (ANA)"
+source = "ana"
+variable = "river_stage"
+lat = -28.2872
+lon = -50.8336
+datum_id = "ANA-70719990-regua"
+stream = "uruguai"
+kind = "jusante"
+ana_name = "CGH PASSO DO BURACO JUSANTE"
+
+[[station]]
+id = "ANA-70720000"
+name = "Socorro em Vacaria (ANA)"
+source = "ana"
+variable = "river_stage"
+lat = -28.2869
+lon = -50.8333
+datum_id = "ANA-70720000-regua"
+stream = "uruguai"
+kind = "rio"
+ana_name = "UHE BARRA GRANDE SOCORRO"
+
+[[station]]
+id = "ANA-70740000"
+name = "Rio do Frade abaixo da CGH Bruna (ANA)"
+source = "ana"
+variable = "river_stage"
+lat = -28.02
+lon = -51.0203
+datum_id = "ANA-70740000-regua"
+stream = "uruguai"
+kind = "jusante"
+ana_name = "CGH BRUNA JUSANTE"
+
+[[station]]
+id = "ANA-70840080"
+name = "Pelotas: reservatório da UHE Barra Grande (ANA)"
+source = "ana"
+variable = "river_stage"
+lat = -27.78
+lon = -51.1917
+datum_id = "ANA-70840080-regua"
+stream = "uruguai"
+kind = "reservatorio"
+ana_name = "UHE BARRA GRANDE BARRAMENTO"
+
+[[station]]
+id = "ANA-70841500"
+name = "Bernardo José acima da PCH Moinho (ANA)"
+source = "ana"
+variable = "river_stage"
+lat = -28.0819
+lon = -51.2583
+datum_id = "ANA-70841500-regua"
+stream = "uruguai"
+kind = "rio"
+ana_name = "PCH MOINHO MONTANTE"
+
+[[station]]
+id = "ANA-70842000"
+name = "Bernardo José acima da PCH Esmeralda (ANA)"
+source = "ana"
+variable = "river_stage"
+lat = -27.9631
+lon = -51.3375
+datum_id = "ANA-70842000-regua"
+stream = "uruguai"
+kind = "rio"
+ana_name = "PCH ESMERALDA MONTANTE 2"
+
+[[station]]
+id = "ANA-70843000"
+name = "Bernardo José acima da PCH São Bernardo (ANA)"
+source = "ana"
+variable = "river_stage"
+lat = -27.8569
+lon = -51.3611
+datum_id = "ANA-70843000-regua"
+stream = "uruguai"
+kind = "rio"
+ana_name = "PCH SÃO BERNARDO MONTANTE"
+
+[[station]]
+id = "ANA-70843500"
+name = "Arroio São Joaquim em Lagoa Vermelha (ANA)"
+source = "ana"
+variable = "river_stage"
+lat = -27.8572
+lon = -51.3814
+datum_id = "ANA-70843500-regua"
+stream = "uruguai"
+kind = "rio"
+ana_name = "PCH ESMERALDA ARROIO SÃO JOAQUIM"
+
+[[station]]
+id = "ANA-70844200"
+name = "Bernardo José acima da PCH Esmeralda (ANA)"
+source = "ana"
+variable = "river_stage"
+lat = -27.8197
+lon = -51.3753
+datum_id = "ANA-70844200-regua"
+stream = "uruguai"
+kind = "rio"
+ana_name = "PCH ESMERALDA MONTANTE 1"
+
+[[station]]
+id = "ANA-70844300"
+name = "Bernardo José: reservatório da PCH Esmeralda (ANA)"
+source = "ana"
+variable = "river_stage"
+lat = -27.7886
+lon = -51.3469
+datum_id = "ANA-70844300-regua"
+stream = "uruguai"
+kind = "reservatorio"
+ana_name = "PCH ESMERALDA BARRAMENTO"
+
+[[station]]
+id = "ANA-70844500"
+name = "Bernardo José: reservatório da PCH Moinho (ANA)"
+source = "ana"
+variable = "river_stage"
+lat = -27.7722
+lon = -51.3333
+datum_id = "ANA-70844500-regua"
+stream = "uruguai"
+kind = "reservatorio"
+ana_name = "PCH MOINHO BARRAMENTO"
+
+[[station]]
+id = "ANA-70845000"
+name = "Bernardo José: reservatório da PCH São Bernardo (ANA)"
+source = "ana"
+variable = "river_stage"
+lat = -27.7381
+lon = -51.3133
+datum_id = "ANA-70845000-regua"
+stream = "uruguai"
+kind = "reservatorio"
+ana_name = "PCH SÃO BERNARDO BARRAMENTO"
+
+[[station]]
+id = "ANA-72080000"
+name = "Marmeleiro acima da PCH Ouro (ANA)"
+source = "ana"
+variable = "river_stage"
+lat = -27.6433
+lon = -51.4889
+datum_id = "ANA-72080000-regua"
+stream = "uruguai"
+kind = "rio"
+ana_name = "PCH OURO MONTANTE"
+
+[[station]]
+id = "ANA-72090000"
+name = "Marmeleiro: reservatório da PCH Ouro (ANA)"
+source = "ana"
+variable = "river_stage"
+lat = -27.6367
+lon = -51.4897
+datum_id = "ANA-72090000-regua"
+stream = "uruguai"
+kind = "reservatorio"
+ana_name = "PCH OURO BARRAMENTO"
+
+[[station]]
+id = "ANA-72428000"
+name = "Forquilha ou Inhanduva em Sananduva (ANA)"
+source = "ana"
+variable = "river_stage"
+lat = -27.8786
+lon = -51.7542
+datum_id = "ANA-72428000-regua"
+stream = "uruguai"
+kind = "rio"
+ana_name = "UHE MACHADINHO RIO FORQUILHA"
+
+[[station]]
+id = "ANA-72451000"
+name = "Forquilha ou Inhanduva: reservatório da PCH Forquilha Iv (ANA)"
+source = "ana"
+variable = "river_stage"
+lat = -27.6147
+lon = -51.7508
+datum_id = "ANA-72451000-regua"
+stream = "uruguai"
+kind = "reservatorio"
+ana_name = "PCH FORQUILHA IV BARRAMENTO"
+
+[[station]]
+id = "ANA-72460000"
+name = "Carazinho em Cacique Doble (ANA)"
+source = "ana"
+variable = "river_stage"
+lat = -27.7664
+lon = -51.6667
+datum_id = "ANA-72460000-regua"
+stream = "uruguai"
+kind = "rio"
+ana_name = "CACIQUE DOBLE"
+
+[[station]]
+id = "ANA-72480001"
+name = "Forquilha ou Inhanduva: reservatório da PCH Forquilha (ANA)"
+source = "ana"
+variable = "river_stage"
+lat = -27.6589
+lon = -51.7483
+datum_id = "ANA-72480001-regua"
+stream = "uruguai"
+kind = "reservatorio"
+ana_name = "PCH FORQUILHA BARRAMENTO"
+
+[[station]]
+id = "ANA-72480100"
+name = "Forquilha ou Inhanduva abaixo da PCH Forquilha (ANA)"
+source = "ana"
+variable = "river_stage"
+lat = -27.6375
+lon = -51.7486
+datum_id = "ANA-72480100-regua"
+stream = "uruguai"
+kind = "jusante"
+ana_name = "PCH FORQUILHA JUSANTE"
+
+[[station]]
+id = "ANA-72519000"
+name = "Apue ou Ligeiro: reservatório da CGH Ligeiro (ANA)"
+source = "ana"
+variable = "river_stage"
+lat = -28.1828
+lon = -51.8403
+datum_id = "ANA-72519000-regua"
+stream = "uruguai"
+kind = "reservatorio"
+ana_name = "CGH LIGEIRO BARRAMENTO"
+
+[[station]]
+id = "ANA-72519100"
+name = "Apue ou Ligeiro abaixo da CGH Ligeiro (ANA)"
+source = "ana"
+variable = "river_stage"
+lat = -28.1739
+lon = -51.8444
+datum_id = "ANA-72519100-regua"
+stream = "uruguai"
+kind = "jusante"
+ana_name = "CGH LIGEIRO JUSANTE"
+
+[[station]]
+id = "ANA-72580500"
+name = "Abaunã em Getúlio Vargas (ANA)"
+source = "ana"
+variable = "river_stage"
+lat = -27.8803
+lon = -52.2322
+datum_id = "ANA-72580500-regua"
+stream = "uruguai"
+kind = "rio"
+ana_name = "GETÚLIO VARGAS"
+
+[[station]]
+id = "ANA-72870900"
+name = "Apuaê-mirim em Marcelino Ramos (ANA)"
+source = "ana"
+variable = "river_stage"
+lat = -27.5619
+lon = -51.8578
+datum_id = "ANA-72870900-regua"
+stream = "uruguai"
+kind = "rio"
+ana_name = "UHE ITÁ RIO APUAÊ"
+
+[[station]]
+id = "ANA-73200500"
+name = "Palomas em Barra do Rio Azul (ANA)"
+source = "ana"
+variable = "river_stage"
+lat = -27.3139
+lon = -52.3964
+datum_id = "ANA-73200500-regua"
+stream = "uruguai"
+kind = "rio"
+ana_name = "UHE FOZ DO CHAPECÓ RIO PALOMA"
+
+[[station]]
+id = "ANA-73205750"
+name = "Palomas em Barra do Rio Azul (ANA)"
+source = "ana"
+variable = "river_stage"
+lat = -27.4094
+lon = -52.4144
+datum_id = "ANA-73205750-regua"
+stream = "uruguai"
+kind = "rio"
+ana_name = "BARRA DO RIO AZUL-RIO PALOMA"
+
+[[station]]
+id = "ANA-73205800"
+name = "Azul em Barra do Rio Azul (ANA)"
+source = "ana"
+variable = "river_stage"
+lat = -27.4106
+lon = -52.4122
+datum_id = "ANA-73205800-regua"
+stream = "uruguai"
+kind = "rio"
+ana_name = "BARRA DO RIO AZUL - RIO AZUL"
+
+[[station]]
+id = "ANA-73220000"
+name = "Douradinho em Itatiba do Sul (ANA)"
+source = "ana"
+variable = "river_stage"
+lat = -27.3
+lon = -52.5303
+datum_id = "ANA-73220000-regua"
+stream = "uruguai"
+kind = "rio"
+ana_name = "UHE FOZ DO CHAPECÓ RIO DOURADINHO"
+
+[[station]]
+id = "ANA-73371000"
+name = "Passo Fundo em Passo Fundo (ANA)"
+source = "ana"
+variable = "river_stage"
+lat = -28.2481
+lon = -52.3711
+datum_id = "ANA-73371000-regua"
+stream = "uruguai"
+kind = "rio"
+ana_name = "PASSO FUNDO"
+
+[[station]]
+id = "ANA-73389000"
+name = "Inhupaca em Sertão (ANA)"
+source = "ana"
+variable = "river_stage"
+lat = -27.9547
+lon = -52.5383
+datum_id = "ANA-73389000-regua"
+stream = "uruguai"
+kind = "rio"
+ana_name = "UHE PASSO FUNDO RIO INHUPAÇÁ"
+
+[[station]]
+id = "ANA-73420080"
+name = "Passo Fundo: reservatório da UHE Passo Fundo (ANA)"
+source = "ana"
+variable = "river_stage"
+lat = -27.5539
+lon = -52.7425
+datum_id = "ANA-73420080-regua"
+stream = "uruguai"
+kind = "reservatorio"
+ana_name = "UHE PASSO FUNDO BARRAMENTO"
+
+[[station]]
+id = "ANA-73436000"
+name = "Lajeado do Lobo: reservatório da PCH Albano Machado (ANA)"
+source = "ana"
+variable = "river_stage"
+lat = -27.5022
+lon = -52.8106
+datum_id = "ANA-73436000-regua"
+stream = "uruguai"
+kind = "reservatorio"
+ana_name = "PCH ALBANO MACHADO BARRAMENTO"
+
+[[station]]
+id = "ANA-73437000"
+name = "Lajeado do Lobo abaixo da PCH Albano Machado (ANA)"
+source = "ana"
+variable = "river_stage"
+lat = -27.4964
+lon = -52.8031
+datum_id = "ANA-73437000-regua"
+stream = "uruguai"
+kind = "jusante"
+ana_name = "PCH ALBANO MACHADO JUSANTE"
+
+[[station]]
+id = "ANA-73440000"
+name = "Passo Fundo em Nonoai (ANA)"
+source = "ana"
+variable = "river_stage"
+lat = -27.4822
+lon = -52.7797
+datum_id = "ANA-73440000-regua"
+stream = "uruguai"
+kind = "rio"
+ana_name = "UHE MONJOLINHO NONOAI"
+
+[[station]]
+id = "ANA-73444700"
+name = "Lajeado Grande em Barão de Cotegipe (ANA)"
+source = "ana"
+variable = "river_stage"
+lat = -27.6242
+lon = -52.3839
+datum_id = "ANA-73444700-regua"
+stream = "uruguai"
+kind = "rio"
+ana_name = "BARÃO DE COTEGIPE"
+
+[[station]]
+id = "ANA-73444750"
+name = "Cravo em Paulo Bento (ANA)"
+source = "ana"
+variable = "river_stage"
+lat = -27.6986
+lon = -52.4181
+datum_id = "ANA-73444750-regua"
+stream = "uruguai"
+kind = "rio"
+ana_name = "PAULO BENTO"
+
+[[station]]
+id = "ANA-73445000"
+name = "Erechim em Cruzaltense (ANA)"
+source = "ana"
+variable = "river_stage"
+lat = -27.6694
+lon = -52.5842
+datum_id = "ANA-73445000-regua"
+stream = "uruguai"
+kind = "rio"
+ana_name = "UHE MONJOLINHO CRUZALTENSE"
+
+[[station]]
+id = "ANA-73448000"
+name = "Erechim em São Valentim (ANA)"
+source = "ana"
+variable = "river_stage"
+lat = -27.5703
+lon = -52.6781
+datum_id = "ANA-73448000-regua"
+stream = "uruguai"
+kind = "rio"
+ana_name = "UHE MONJOLINHO RIO ERECHIM"
+
+[[station]]
+id = "ANA-73490000"
+name = "Passo Fundo: reservatório da UHE Monjolinho (ANA)"
+source = "ana"
+variable = "river_stage"
+lat = -27.3456
+lon = -52.7336
+datum_id = "ANA-73490000-regua"
+stream = "uruguai"
+kind = "reservatorio"
+ana_name = "UHE MONJOLINHO BARRAMENTO"
+
+[[station]]
+id = "ANA-73520000"
+name = "Rio dos Índios: reservatório da PCH Rio dos Índios (ANA)"
+source = "ana"
+variable = "river_stage"
+lat = -27.2814
+lon = -52.7953
+datum_id = "ANA-73520000-regua"
+stream = "uruguai"
+kind = "reservatorio"
+ana_name = "PCH RIO DOS ÍNDIOS BARRAMENTO"
+
+[[station]]
+id = "ANA-73528000"
+name = "Rio dos Índios abaixo da PCH Rio dos Índios (ANA)"
+source = "ana"
+variable = "river_stage"
+lat = -27.2456
+lon = -52.7944
+datum_id = "ANA-73528000-regua"
+stream = "uruguai"
+kind = "jusante"
+ana_name = "PCH RIO DOS ÍNDIOS JUSANTE"
+
+[[station]]
+id = "ANA-74040080"
+name = "Uruguai: reservatório da UHE Foz do Chapecó (ANA)"
+source = "ana"
+variable = "river_stage"
+lat = -27.14
+lon = -53.0433
+datum_id = "ANA-74040080-regua"
+stream = "uruguai"
+kind = "reservatorio"
+ana_name = "UHE FOZ DO CHAPECÓ BARRAMENTO"
+
+[[station]]
+id = "ANA-74087500"
+name = "Uruguai em Iraí (ANA)"
+source = "ana"
+variable = "river_stage"
+lat = -27.1953
+lon = -53.1953
+datum_id = "ANA-74087500-regua"
+stream = "uruguai"
+kind = "rio"
+ana_name = "IRAÍ - RIO URUGUAI"
+
+[[station]]
+id = "ANA-74100000"
+name = "Uruguai em Iraí (ANA)"
+source = "ana"
+variable = "river_stage"
+lat = -27.1756
+lon = -53.2297
+datum_id = "ANA-74100000-regua"
+stream = "uruguai"
+kind = "rio"
+ana_name = "IRAÍ"
+
+[[station]]
+id = "ANA-74100300"
+name = "Rio do Mel em Iraí (ANA)"
+source = "ana"
+variable = "river_stage"
+lat = -27.1989
+lon = -53.2494
+datum_id = "ANA-74100300-regua"
+stream = "uruguai"
+kind = "rio"
+ana_name = "IRAÍ - RIO DO MEL"
+
+[[station]]
+id = "ANA-74120700"
+name = "Rio da Várzea acima da CGH Mata Cobra (ANA)"
+source = "ana"
+variable = "river_stage"
+lat = -28.2472
+lon = -52.8011
+datum_id = "ANA-74120700-regua"
+stream = "uruguai"
+kind = "rio"
+ana_name = "CGH MATA COBRA MONTANTE 2"
+
+[[station]]
+id = "ANA-74120750"
+name = "Rio da Várzea acima da CGH Mata Cobra (ANA)"
+source = "ana"
+variable = "river_stage"
+lat = -28.2653
+lon = -52.8969
+datum_id = "ANA-74120750-regua"
+stream = "uruguai"
+kind = "rio"
+ana_name = "CGH MATA COBRA MONTANTE 1"
+
+[[station]]
+id = "ANA-74120900"
+name = "Rio da Várzea: reservatório da CGH Mata Cobra (ANA)"
+source = "ana"
+variable = "river_stage"
+lat = -28.1031
+lon = -53.0147
+datum_id = "ANA-74120900-regua"
+stream = "uruguai"
+kind = "reservatorio"
+ana_name = "CGH MATA COBRA BARRAMENTO"
+
+[[station]]
+id = "ANA-74130000"
+name = "Rio da Várzea abaixo da CGH Mata Cobra (ANA)"
+source = "ana"
+variable = "river_stage"
+lat = -28.0986
+lon = -53.0156
+datum_id = "ANA-74130000-regua"
+stream = "uruguai"
+kind = "jusante"
+ana_name = "CGH MATA COBRA JUSANTE"
+
+[[station]]
+id = "ANA-74186000"
+name = "Rio da Várzea em Barra Funda (ANA)"
+source = "ana"
+variable = "river_stage"
+lat = -27.9228
+lon = -53.0472
+datum_id = "ANA-74186000-regua"
+stream = "uruguai"
+kind = "rio"
+ana_name = "BARRA FUNDA/NOVO BARREIRO"
+
+[[station]]
+id = "ANA-74189000"
+name = "Arroio Caturete em Sarandi (ANA)"
+source = "ana"
+variable = "river_stage"
+lat = -27.9372
+lon = -52.9194
+datum_id = "ANA-74189000-regua"
+stream = "uruguai"
+kind = "rio"
+ana_name = "SARANDI"
+
+[[station]]
+id = "ANA-74240000"
+name = "Rio da Várzea em Rodeio Bonito (ANA)"
+source = "ana"
+variable = "river_stage"
+lat = -27.4989
+lon = -53.1603
+datum_id = "ANA-74240000-regua"
+stream = "uruguai"
+kind = "rio"
+ana_name = "RODEIO BONITO"
+
+[[station]]
+id = "ANA-74339000"
+name = "Guarita acima da PCH Guarita João Amado (ANA)"
+source = "ana"
+variable = "river_stage"
+lat = -27.8344
+lon = -53.5144
+datum_id = "ANA-74339000-regua"
+stream = "uruguai"
+kind = "rio"
+ana_name = "PCH GUARITA JOÃO AMADO MONTANTE"
+
+[[station]]
+id = "ANA-74340000"
+name = "Guarita: reservatório da PCH Guarita (ANA)"
+source = "ana"
+variable = "river_stage"
+lat = -27.7653
+lon = -53.5575
+datum_id = "ANA-74340000-regua"
+stream = "uruguai"
+kind = "reservatorio"
+ana_name = "PCH GUARITA BARRAMENTO JOÃO AMADO"
+
+[[station]]
+id = "ANA-74350000"
+name = "Guarita: reservatório da PCH Guarita (ANA)"
+source = "ana"
+variable = "river_stage"
+lat = -27.6139
+lon = -53.5714
+datum_id = "ANA-74350000-regua"
+stream = "uruguai"
+kind = "reservatorio"
+ana_name = "PCH GUARITA BARRAMENTO"
+
+[[station]]
+id = "ANA-74350100"
+name = "Guarita abaixo da PCH Guarita (ANA)"
+source = "ana"
+variable = "river_stage"
+lat = -27.6067
+lon = -53.5742
+datum_id = "ANA-74350100-regua"
+stream = "uruguai"
+kind = "jusante"
+ana_name = "PCH GUARITA JUSANTE"
+
+[[station]]
+id = "ANA-74351000"
+name = "Guarita abaixo da PCH Ferradura (ANA)"
+source = "ana"
+variable = "river_stage"
+lat = -27.5589
+lon = -53.5764
+datum_id = "ANA-74351000-regua"
+stream = "uruguai"
+kind = "jusante"
+ana_name = "PCH FERRADURA JUSANTE"
+
+[[station]]
+id = "ANA-74352000"
+name = "Guarita: reservatório da CGH Das Cabras (ANA)"
+source = "ana"
+variable = "river_stage"
+lat = -27.5367
+lon = -53.5697
+datum_id = "ANA-74352000-regua"
+stream = "uruguai"
+kind = "reservatorio"
+ana_name = "CGH DAS CABRAS BARRAMENTO"
+
+[[station]]
+id = "ANA-74352200"
+name = "Guarita abaixo da CGH Das Cabras (ANA)"
+source = "ana"
+variable = "river_stage"
+lat = -27.5344
+lon = -53.565
+datum_id = "ANA-74352200-regua"
+stream = "uruguai"
+kind = "jusante"
+ana_name = "CGH DAS CABRAS JUSANTE"
+
+[[station]]
+id = "ANA-74355000"
+name = "Guarita: reservatório da PCH Tambaú (ANA)"
+source = "ana"
+variable = "river_stage"
+lat = -27.44
+lon = -53.5614
+datum_id = "ANA-74355000-regua"
+stream = "uruguai"
+kind = "reservatorio"
+ana_name = "PCH TAMBAÚ BARRAMENTO"
+
+[[station]]
+id = "ANA-74356000"
+name = "Guarita abaixo da PCH Tambaú (ANA)"
+source = "ana"
+variable = "river_stage"
+lat = -27.4303
+lon = -53.5611
+datum_id = "ANA-74356000-regua"
+stream = "uruguai"
+kind = "jusante"
+ana_name = "PCH TAMBAÚ JUSANTE"
+
+[[station]]
+id = "ANA-74359000"
+name = "Arroio Fortaleza: reservatório da CGH Carlos Bevilácqua (ANA)"
+source = "ana"
+variable = "river_stage"
+lat = -27.6028
+lon = -53.3917
+datum_id = "ANA-74359000-regua"
+stream = "uruguai"
+kind = "reservatorio"
+ana_name = "CGH CARLOS BEVILÁCQUA BARRAMENTO"
+
+[[station]]
+id = "ANA-74359600"
+name = "Arroio Fortaleza abaixo da CGH Frederico João Cerutti (ANA)"
+source = "ana"
+variable = "river_stage"
+lat = -27.5086
+lon = -53.4314
+datum_id = "ANA-74359600-regua"
+stream = "uruguai"
+kind = "jusante"
+ana_name = "CGH FREDERICO JOÃO CERUTTI JUSANTE"
+
+[[station]]
+id = "ANA-74462000"
+name = "Turvo em Santo Augusto (ANA)"
+source = "ana"
+variable = "river_stage"
+lat = -27.8203
+lon = -53.7328
+datum_id = "ANA-74462000-regua"
+stream = "uruguai"
+kind = "rio"
+ana_name = "PCH CARLOS GONZATTO PONTE TURVO"
+
+[[station]]
+id = "ANA-74462500"
+name = "Lajeado Paiol em Coronel Bicaco (ANA)"
+source = "ana"
+variable = "river_stage"
+lat = -27.7169
+lon = -53.7136
+datum_id = "ANA-74462500-regua"
+stream = "uruguai"
+kind = "rio"
+ana_name = "CORONEL BICACO"
+
+[[station]]
+id = "ANA-74463000"
+name = "Turvo em Campo Novo (ANA)"
+source = "ana"
+variable = "river_stage"
+lat = -27.7089
+lon = -53.775
+datum_id = "ANA-74463000-regua"
+stream = "uruguai"
+kind = "rio"
+ana_name = "PCH CARLOS GONZATTO VILA TURVO"
+
+[[station]]
+id = "ANA-74464500"
+name = "Turvo: reservatório da PCH Carlos Gonzatto (ANA)"
+source = "ana"
+variable = "river_stage"
+lat = -27.6247
+lon = -53.8028
+datum_id = "ANA-74464500-regua"
+stream = "uruguai"
+kind = "reservatorio"
+ana_name = "PCH CARLOS GONZATTO BARRAMENTO"
+
+[[station]]
+id = "ANA-74465000"
+name = "Turvo abaixo da PCH Carlos Gonzatto (ANA)"
+source = "ana"
+variable = "river_stage"
+lat = -27.6231
+lon = -53.8008
+datum_id = "ANA-74465000-regua"
+stream = "uruguai"
+kind = "jusante"
+ana_name = "PCH CARLOS GONZATTO JUSANTE"
+
+[[station]]
+id = "ANA-74466000"
+name = "Turvo: reservatório da PCH Marco Baldo (ANA)"
+source = "ana"
+variable = "river_stage"
+lat = -27.575
+lon = -53.7897
+datum_id = "ANA-74466000-regua"
+stream = "uruguai"
+kind = "reservatorio"
+ana_name = "PCH MARCO BALDO BARRAMENTO"
+
+[[station]]
+id = "ANA-74467000"
+name = "Turvo abaixo da PCH Marco Baldo (ANA)"
+source = "ana"
+variable = "river_stage"
+lat = -27.5647
+lon = -53.7869
+datum_id = "ANA-74467000-regua"
+stream = "uruguai"
+kind = "jusante"
+ana_name = "PCH MARCO BALDO JUSANTE"
+
+[[station]]
+id = "ANA-74468000"
+name = "Turvo: reservatório da PCH Toca do Tigre (ANA)"
+source = "ana"
+variable = "river_stage"
+lat = -27.5453
+lon = -53.8069
+datum_id = "ANA-74468000-regua"
+stream = "uruguai"
+kind = "reservatorio"
+ana_name = "PCH TOCA DO TIGRE BARRAMENTO"
+
+[[station]]
+id = "ANA-74468500"
+name = "Turvo abaixo da PCH Toca do Tigre (ANA)"
+source = "ana"
+variable = "river_stage"
+lat = -27.5353
+lon = -53.815
+datum_id = "ANA-74468500-regua"
+stream = "uruguai"
+kind = "jusante"
+ana_name = "PCH TOCA DO TIGRE JUSANTE"
+
+[[station]]
+id = "ANA-74500000"
+name = "Uruguai em Tiradentes do Sul (ANA)"
+source = "ana"
+variable = "river_stage"
+lat = -27.3019
+lon = -54.1397
+datum_id = "ANA-74500000-regua"
+stream = "uruguai"
+kind = "rio"
+ana_name = "ALTO URUGUAI"
+
+[[station]]
+id = "ANA-74505400"
+name = "Lajeado Grande abaixo da CGH Crissiumal (ANA)"
+source = "ana"
+variable = "river_stage"
+lat = -27.405
+lon = -54.1681
+datum_id = "ANA-74505400-regua"
+stream = "uruguai"
+kind = "jusante"
+ana_name = "CGH CRISSIUMAL JUSANTE"
+
+[[station]]
+id = "ANA-74549990"
+name = "Buricá: reservatório da CGH Buricá (ANA)"
+source = "ana"
+variable = "river_stage"
+lat = -27.8969
+lon = -54.1072
+datum_id = "ANA-74549990-regua"
+stream = "uruguai"
+kind = "reservatorio"
+ana_name = "CGH BURICÁ BARRAMENTO"
+
+[[station]]
+id = "ANA-74550000"
+name = "Buricá abaixo da CGH Buricá (ANA)"
+source = "ana"
+variable = "river_stage"
+lat = -27.8914
+lon = -54.1028
+datum_id = "ANA-74550000-regua"
+stream = "uruguai"
+kind = "jusante"
+ana_name = "CGH BURICÁ JUSANTE"
+
+[[station]]
+id = "ANA-74620500"
+name = "Lajeado dos Pratos em Horizontina (ANA)"
+source = "ana"
+variable = "river_stage"
+lat = -27.6064
+lon = -54.3914
+datum_id = "ANA-74620500-regua"
+stream = "uruguai"
+kind = "rio"
+ana_name = "TUCUNDUVA/HORIZONTINA"
+
+[[station]]
+id = "ANA-74670000"
+name = "Santa Rosa: reservatório da CGH Bela União (ANA)"
+source = "ana"
+variable = "river_stage"
+lat = -27.7811
+lon = -54.3736
+datum_id = "ANA-74670000-regua"
+stream = "uruguai"
+kind = "reservatorio"
+ana_name = "CGH BELA UNIÃO BARRAMENTO"
+
+[[station]]
+id = "ANA-74675000"
+name = "Santa Rosa abaixo da CGH Bela União (ANA)"
+source = "ana"
+variable = "river_stage"
+lat = -27.78
+lon = -54.3736
+datum_id = "ANA-74675000-regua"
+stream = "uruguai"
+kind = "jusante"
+ana_name = "CGH BELA UNIÃO JUSANTE"
+
+[[station]]
+id = "ANA-74690001"
+name = "Santa Rosa: reservatório da CGH Santa Rosa (ANA)"
+source = "ana"
+variable = "river_stage"
+lat = -27.7714
+lon = -54.3889
+datum_id = "ANA-74690001-regua"
+stream = "uruguai"
+kind = "reservatorio"
+ana_name = "CGH SANTA ROSA BARRAMENTO"
+
+[[station]]
+id = "ANA-74690100"
+name = "Santa Rosa abaixo da CGH Santa Rosa (ANA)"
+source = "ana"
+variable = "river_stage"
+lat = -27.7703
+lon = -54.3897
+datum_id = "ANA-74690100-regua"
+stream = "uruguai"
+kind = "jusante"
+ana_name = "CGH SANTA ROSA JUSANTE 3"
+
+[[station]]
+id = "ANA-74694000"
+name = "Santa Rosa: reservatório da CGH Santo Antônio (ANA)"
+source = "ana"
+variable = "river_stage"
+lat = -27.7303
+lon = -54.4083
+datum_id = "ANA-74694000-regua"
+stream = "uruguai"
+kind = "reservatorio"
+ana_name = "CGH SANTO ANTÔNIO BARRAMENTO"
+
+[[station]]
+id = "ANA-74695000"
+name = "Santa Rosa abaixo da CGH Santo Antônio (ANA)"
+source = "ana"
+variable = "river_stage"
+lat = -27.7294
+lon = -54.4094
+datum_id = "ANA-74695000-regua"
+stream = "uruguai"
+kind = "jusante"
+ana_name = "CGH SANTO ANTÔNIO JUSANTE"
+
+[[station]]
+id = "ANA-74699002"
+name = "Santa Rosa em Tuparendi (ANA)"
+source = "ana"
+variable = "river_stage"
+lat = -27.6769
+lon = -54.4656
+datum_id = "ANA-74699002-regua"
+stream = "uruguai"
+kind = "rio"
+ana_name = "TUPARENDI/TUCUNDUVA"
+
+[[station]]
+id = "ANA-74720000"
+name = "Uruguai em Porto Mauá (ANA)"
+source = "ana"
+variable = "river_stage"
+lat = -27.5781
+lon = -54.6831
+datum_id = "ANA-74720000-regua"
+stream = "uruguai"
+kind = "rio"
+ana_name = "PORTO MAUÁ"
+
+[[station]]
+id = "ANA-74746000"
+name = "Lajeado Pessegueirinho em Santa Rosa (ANA)"
+source = "ana"
+variable = "river_stage"
+lat = -27.8639
+lon = -54.4869
+datum_id = "ANA-74746000-regua"
+stream = "uruguai"
+kind = "rio"
+ana_name = "SANTA ROSA - PESSEGUEIRINHO"
+
+[[station]]
+id = "ANA-74746700"
+name = "Lajeado Pessegueiro em Santa Rosa (ANA)"
+source = "ana"
+variable = "river_stage"
+lat = -27.8783
+lon = -54.4914
+datum_id = "ANA-74746700-regua"
+stream = "uruguai"
+kind = "rio"
+ana_name = "SANTA ROSA - PESSEGUEIRO"
+
+[[station]]
+id = "ANA-74800000"
+name = "Uruguai em Porto Lucena (ANA)"
+source = "ana"
+variable = "river_stage"
+lat = -27.8525
+lon = -55.0256
+datum_id = "ANA-74800000-regua"
+stream = "uruguai"
+kind = "rio"
+ana_name = "PORTO LUCENA"
+
+[[station]]
+id = "ANA-74860003"
+name = "Comandaí em Guarani das Missões (ANA)"
+source = "ana"
+variable = "river_stage"
+lat = -28.1397
+lon = -54.5603
+datum_id = "ANA-74860003-regua"
+stream = "uruguai"
+kind = "rio"
+ana_name = "GUARANI DAS MISSÕES"
+
+[[station]]
+id = "ANA-74899050"
+name = "Arroio Pessegueiro em Campina das Missões (ANA)"
+source = "ana"
+variable = "river_stage"
+lat = -27.9839
+lon = -54.8256
+datum_id = "ANA-74899050-regua"
+stream = "uruguai"
+kind = "rio"
+ana_name = "CAMPINA DAS MISSÕES"
+
+[[station]]
+id = "ANA-74910010"
+name = "Comandaí em Porto Xavier (ANA)"
+source = "ana"
+variable = "river_stage"
+lat = -27.8797
+lon = -55.0519
+datum_id = "ANA-74910010-regua"
+stream = "uruguai"
+kind = "rio"
+ana_name = "PORTO LUCENA/PORTO XAVIER"
+
+[[station]]
+id = "ANA-75020200"
+name = "Fiuzá em Panambi (ANA)"
+source = "ana"
+variable = "river_stage"
+lat = -28.3011
+lon = -53.5033
+datum_id = "ANA-75020200-regua"
+stream = "uruguai"
+kind = "rio"
+ana_name = "PANAMBI"
+
+[[station]]
+id = "ANA-75050000"
+name = "Ijuí acima da PCH José Barasuol (ANA)"
+source = "ana"
+variable = "river_stage"
+lat = -28.2739
+lon = -53.6486
+datum_id = "ANA-75050000-regua"
+stream = "uruguai"
+kind = "rio"
+ana_name = "PCH JOSÉ BARASUOL MONTANTE"
+
+[[station]]
+id = "ANA-75060000"
+name = "Caxambu: reservatório da CGH Caxambú (ANA)"
+source = "ana"
+variable = "river_stage"
+lat = -28.3969
+lon = -53.4583
+datum_id = "ANA-75060000-regua"
+stream = "uruguai"
+kind = "reservatorio"
+ana_name = "CGH CAXAMBÚ BARRAMENTO"
+
+[[station]]
+id = "ANA-75120000"
+name = "Ijuí: reservatório da PCH Passo de Ajuricaba (ANA)"
+source = "ana"
+variable = "river_stage"
+lat = -28.2825
+lon = -53.8103
+datum_id = "ANA-75120000-regua"
+stream = "uruguai"
+kind = "reservatorio"
+ana_name = "PCH PASSO DE AJURICABA BARRAMENTO"
+
+[[station]]
+id = "ANA-75155010"
+name = "Ijuí acima da PCH Passo do Ajuricaba (ANA)"
+source = "ana"
+variable = "river_stage"
+lat = -28.2869
+lon = -53.7803
+datum_id = "ANA-75155010-regua"
+stream = "uruguai"
+kind = "rio"
+ana_name = "PCH PASSO DO AJURICABA MONTANTE"
+
+[[station]]
+id = "ANA-75178000"
+name = "Ijuí: reservatório da PCH José Barasuol (ANA)"
+source = "ana"
+variable = "river_stage"
+lat = -28.2925
+lon = -53.8778
+datum_id = "ANA-75178000-regua"
+stream = "uruguai"
+kind = "reservatorio"
+ana_name = "PCH JOSÉ BARASUOL BARRAMENTO"
+
+[[station]]
+id = "ANA-75180000"
+name = "Ijuí: reservatório da PCH Rs-155 (ANA)"
+source = "ana"
+variable = "river_stage"
+lat = -28.3128
+lon = -53.8964
+datum_id = "ANA-75180000-regua"
+stream = "uruguai"
+kind = "reservatorio"
+ana_name = "PCH RS-155 BARRAMENTO"
+
+[[station]]
+id = "ANA-75181000"
+name = "Ijuí abaixo da PCH Rs-155 (ANA)"
+source = "ana"
+variable = "river_stage"
+lat = -28.3128
+lon = -53.9131
+datum_id = "ANA-75181000-regua"
+stream = "uruguai"
+kind = "jusante"
+ana_name = "PCH RS-155 JUSANTE"
+
+[[station]]
+id = "ANA-75185200"
+name = "Potiribu: reservatório da PCH Sede Ii (ANA)"
+source = "ana"
+variable = "river_stage"
+lat = -28.3711
+lon = -53.8792
+datum_id = "ANA-75185200-regua"
+stream = "uruguai"
+kind = "reservatorio"
+ana_name = "PCH SEDE II BARRAMENTO"
+
+[[station]]
+id = "ANA-75186660"
+name = "Ijuí: reservatório da PCH Linha Onze Oeste (ANA)"
+source = "ana"
+variable = "river_stage"
+lat = -28.3511
+lon = -54.0047
+datum_id = "ANA-75186660-regua"
+stream = "uruguai"
+kind = "reservatorio"
+ana_name = "PCH LINHA ONZE OESTE BARRAMENTO"
+
+[[station]]
+id = "ANA-75186900"
+name = "Ijuí abaixo da PCH Linha Onze Oeste (ANA)"
+source = "ana"
+variable = "river_stage"
+lat = -28.3558
+lon = -54.0464
+datum_id = "ANA-75186900-regua"
+stream = "uruguai"
+kind = "jusante"
+ana_name = "PCH LINHA ONZE OESTE JUSANTE"
+
+[[station]]
+id = "ANA-75186960"
+name = "Ijuí abaixo da CGH Esquina Gaúcha (ANA)"
+source = "ana"
+variable = "river_stage"
+lat = -28.3397
+lon = -54.1994
+datum_id = "ANA-75186960-regua"
+stream = "uruguai"
+kind = "jusante"
+ana_name = "CGH ESQUINA GAÚCHA JUSANTE"
+
+[[station]]
+id = "ANA-75187000"
+name = "Potiribu em Ijuí (ANA)"
+source = "ana"
+variable = "river_stage"
+lat = -28.3603
+lon = -53.9008
+datum_id = "ANA-75187000-regua"
+stream = "uruguai"
+kind = "rio"
+ana_name = "PCH JOSÉ BARASUOL RIO POTIRIBU"
+
+[[station]]
+id = "ANA-75199000"
+name = "Conceição: reservatório da CGH Augusto Pestana (ANA)"
+source = "ana"
+variable = "river_stage"
+lat = -28.4864
+lon = -53.9503
+datum_id = "ANA-75199000-regua"
+stream = "uruguai"
+kind = "reservatorio"
+ana_name = "CGH AUGUSTO PESTANA BARRAMENTO"
+
+[[station]]
+id = "ANA-75199050"
+name = "Conceição abaixo da CGH Augusto Pestana (ANA)"
+source = "ana"
+variable = "river_stage"
+lat = -28.4864
+lon = -53.9514
+datum_id = "ANA-75199050-regua"
+stream = "uruguai"
+kind = "jusante"
+ana_name = "CGH AUGUSTO PESTANA JUSANTE"
+
+[[station]]
+id = "ANA-75230000"
+name = "Ijuí em Entre-ijuis (ANA)"
+source = "ana"
+variable = "river_stage"
+lat = -28.3553
+lon = -54.2675
+datum_id = "ANA-75230000-regua"
+stream = "uruguai"
+kind = "rio"
+ana_name = "SANTO ANGELO"
+
+[[station]]
+id = "ANA-75269900"
+name = "Ijuizinho: reservatório da CGH Igrejinha (ANA)"
+source = "ana"
+variable = "river_stage"
+lat = -28.7953
+lon = -53.9714
+datum_id = "ANA-75269900-regua"
+stream = "uruguai"
+kind = "reservatorio"
+ana_name = "CGH IGREJINHA BARRAMENTO"
+
+[[station]]
+id = "ANA-75270000"
+name = "Ijuizinho em Jóia (ANA)"
+source = "ana"
+variable = "river_stage"
+lat = -28.7778
+lon = -53.9817
+datum_id = "ANA-75270000-regua"
+stream = "uruguai"
+kind = "rio"
+ana_name = "PCH IJUIZINHO PONTE QUEIMADA"
+
+[[station]]
+id = "ANA-75280100"
+name = "Ijuizinho abaixo da CGH Igrejinha (ANA)"
+source = "ana"
+variable = "river_stage"
+lat = -28.7797
+lon = -53.9628
+datum_id = "ANA-75280100-regua"
+stream = "uruguai"
+kind = "jusante"
+ana_name = "CGH IGREJINHA JUSANTE"
+
+[[station]]
+id = "ANA-75287000"
+name = "Ijuizinho acima da PCH Ijuizinho (ANA)"
+source = "ana"
+variable = "river_stage"
+lat = -28.5433
+lon = -54.1553
+datum_id = "ANA-75287000-regua"
+stream = "uruguai"
+kind = "rio"
+ana_name = "PCH IJUIZINHO MONTANTE"
+
+[[station]]
+id = "ANA-75288000"
+name = "Ijuizinho: reservatório da PCH Ijuizinho (ANA)"
+source = "ana"
+variable = "river_stage"
+lat = -28.4417
+lon = -54.2886
+datum_id = "ANA-75288000-regua"
+stream = "uruguai"
+kind = "reservatorio"
+ana_name = "PCH IJUIZINHO BARRAMENTO"
+
+[[station]]
+id = "ANA-75290000"
+name = "Ijuizinho acima da PCH Ijuizinho Cermissões (ANA)"
+source = "ana"
+variable = "river_stage"
+lat = -28.4122
+lon = -54.3025
+datum_id = "ANA-75290000-regua"
+stream = "uruguai"
+kind = "rio"
+ana_name = "PCH IJUIZINHO CERMISSÕES MONTANTE"
+
+[[station]]
+id = "ANA-75291000"
+name = "Ijuizinho: reservatório da PCH Ijuizinho Cermissões (ANA)"
+source = "ana"
+variable = "river_stage"
+lat = -28.4006
+lon = -54.3125
+datum_id = "ANA-75291000-regua"
+stream = "uruguai"
+kind = "reservatorio"
+ana_name = "PCH IJUIZINHO CERMISSÕES BARRAMENTO"
+
+[[station]]
+id = "ANA-75305000"
+name = "Ijuí acima da UHE São José (ANA)"
+source = "ana"
+variable = "river_stage"
+lat = -28.1997
+lon = -54.6431
+datum_id = "ANA-75305000-regua"
+stream = "uruguai"
+kind = "rio"
+ana_name = "UHE SÃO JOSÉ MONTANTE"
+
+[[station]]
+id = "ANA-75307000"
+name = "Arroio Uruqua em Caibaté (ANA)"
+source = "ana"
+variable = "river_stage"
+lat = -28.2925
+lon = -54.6967
+datum_id = "ANA-75307000-regua"
+stream = "uruguai"
+kind = "rio"
+ana_name = "UHE SÃO JOSÉ ARROIO URUQUA"
+
+[[station]]
+id = "ANA-75318000"
+name = "Riacho Fundo em Rolador (ANA)"
+source = "ana"
+variable = "river_stage"
+lat = -28.2275
+lon = -54.7547
+datum_id = "ANA-75318000-regua"
+stream = "uruguai"
+kind = "rio"
+ana_name = "UHE SÃO JOSÉ RIACHO FUNDO"
+
+[[station]]
+id = "ANA-75325000"
+name = "Ijuí: reservatório da UHE São José (ANA)"
+source = "ana"
+variable = "river_stage"
+lat = -28.1778
+lon = -54.8144
+datum_id = "ANA-75325000-regua"
+stream = "uruguai"
+kind = "reservatorio"
+ana_name = "UHE SÃO JOSÉ BARRAMENTO"
+
+[[station]]
+id = "ANA-75326000"
+name = "Ijuí abaixo da UHE São José (ANA)"
+source = "ana"
+variable = "river_stage"
+lat = -28.1744
+lon = -54.8192
+datum_id = "ANA-75326000-regua"
+stream = "uruguai"
+kind = "jusante"
+ana_name = "UHE SÃO JOSÉ JUSANTE"
+
+[[station]]
+id = "ANA-75331000"
+name = "Arroio Rolador em Rolador (ANA)"
+source = "ana"
+variable = "river_stage"
+lat = -28.2069
+lon = -54.8697
+datum_id = "ANA-75331000-regua"
+stream = "uruguai"
+kind = "rio"
+ana_name = "UHE PASSO SÃO JOÃO JAMES"
+
+[[station]]
+id = "ANA-75342000"
+name = "Ijuí: reservatório da UHE Passo São João (ANA)"
+source = "ana"
+variable = "river_stage"
+lat = -28.1325
+lon = -55.0517
+datum_id = "ANA-75342000-regua"
+stream = "uruguai"
+kind = "reservatorio"
+ana_name = "UHE PASSO SÃO JOÃO BARRAMENTO"
+
+[[station]]
+id = "ANA-75343000"
+name = "Lajeado das Pedras em Quinze de Novembro (ANA)"
+source = "ana"
+variable = "river_stage"
+lat = -28.1589
+lon = -55.0625
+datum_id = "ANA-75343000-regua"
+stream = "uruguai"
+kind = "rio"
+ana_name = "UHE PASSO SÃO JOÃO SÍTIO VALDIR COIMBRA"
+
+[[station]]
+id = "ANA-75344000"
+name = "Ijuí abaixo da UHE Passo São João (ANA)"
+source = "ana"
+variable = "river_stage"
+lat = -28.1239
+lon = -55.0533
+datum_id = "ANA-75344000-regua"
+stream = "uruguai"
+kind = "jusante"
+ana_name = "UHE PASSO SÃO JOÃO JUSANTE"
+
+[[station]]
+id = "ANA-75450200"
+name = "Piratini em Bossoroca (ANA)"
+source = "ana"
+variable = "river_stage"
+lat = -28.53
+lon = -54.9631
+datum_id = "ANA-75450200-regua"
+stream = "uruguai"
+kind = "rio"
+ana_name = "BOSSOROCA"
+
+[[station]]
+id = "ANA-75550000"
+name = "Uruguai em Garruchos (ANA)"
+source = "ana"
+variable = "river_stage"
+lat = -28.1822
+lon = -55.6433
+datum_id = "ANA-75550000-regua"
+stream = "uruguai"
+kind = "rio"
+ana_name = "GARRUCHOS"
+
+[[station]]
+id = "ANA-75650010"
+name = "Icamaquã em Itacurubi (ANA)"
+source = "ana"
+variable = "river_stage"
+lat = -28.7425
+lon = -55.1625
+datum_id = "ANA-75650010-regua"
+stream = "uruguai"
+kind = "rio"
+ana_name = "PROP. RURAL ITACURUBI (CPRM)"
+
+[[station]]
+id = "ANA-75706000"
+name = "Icamaquã em Santo Antônio das Missões (ANA)"
+source = "ana"
+variable = "river_stage"
+lat = -28.6178
+lon = -55.7381
+datum_id = "ANA-75706000-regua"
+stream = "uruguai"
+kind = "rio"
+ana_name = "SANTO ANTÔNIO DAS MISSÕES/SÃO BORJA"
+
+[[station]]
+id = "ANA-75779900"
+name = "Uruguai em São Borja (ANA)"
+source = "ana"
+variable = "river_stage"
+lat = -28.6231
+lon = -56.0297
+datum_id = "ANA-75779900-regua"
+stream = "uruguai"
+kind = "rio"
+ana_name = "SÃO BORJA"
+
+[[station]]
+id = "ANA-75780000"
+name = "Uruguai em São Borja (ANA)"
+source = "ana"
+variable = "river_stage"
+lat = -28.6244
+lon = -56.0369
+datum_id = "ANA-75780000-regua"
+stream = "uruguai"
+kind = "rio"
+ana_name = "PASSO SÃO BORJA"
+
+[[station]]
+id = "ANA-75881800"
+name = "Ijuizinho: reservatório da PCH Rincão (ANA)"
+source = "ana"
+variable = "river_stage"
+lat = -28.4208
+lon = -54.2978
+datum_id = "ANA-75881800-regua"
+stream = "uruguai"
+kind = "reservatorio"
+ana_name = "PCH RINCÃO BARRAMENTO"
+
+[[station]]
+id = "ANA-75881900"
+name = "Ijuizinho abaixo da PCH Rincão (ANA)"
+source = "ana"
+variable = "river_stage"
+lat = -28.4228
+lon = -54.3006
+datum_id = "ANA-75881900-regua"
+stream = "uruguai"
+kind = "jusante"
+ana_name = "PCH RINCÃO JUSANTE"
+
+[[station]]
+id = "ANA-75900000"
+name = "Uruguai em Itaqui (ANA)"
+source = "ana"
+variable = "river_stage"
+lat = -29.1175
+lon = -56.5544
+datum_id = "ANA-75900000-regua"
+stream = "uruguai"
+kind = "rio"
+ana_name = "ITAQUI"
+
+[[station]]
+id = "ANA-76069500"
+name = "Toropi acima da PCH Quebra Dentes (ANA)"
+source = "ana"
+variable = "river_stage"
+lat = -29.2661
+lon = -53.9483
+datum_id = "ANA-76069500-regua"
+stream = "uruguai"
+kind = "rio"
+ana_name = "PCH QUEBRA DENTES MONTANTE 1"
+
+[[station]]
+id = "ANA-76070500"
+name = "Toropi abaixo da PCH Quebra Dentes (ANA)"
+source = "ana"
+variable = "river_stage"
+lat = -29.3897
+lon = -54.0189
+datum_id = "ANA-76070500-regua"
+stream = "uruguai"
+kind = "jusante"
+ana_name = "PCH QUEBRA DENTES JUSANTE"
+
+[[station]]
+id = "ANA-76084000"
+name = "Toropi: reservatório da PCH Cachoeira Cinco Veados (ANA)"
+source = "ana"
+variable = "river_stage"
+lat = -29.4192
+lon = -54.05
+datum_id = "ANA-76084000-regua"
+stream = "uruguai"
+kind = "reservatorio"
+ana_name = "PCH CACHOEIRA CINCO VEADOS BARRAMENTO"
+
+[[station]]
+id = "ANA-76084040"
+name = "Toropi abaixo da PCH Cachoeira Cinco Veados (ANA)"
+source = "ana"
+variable = "river_stage"
+lat = -29.4208
+lon = -54.0528
+datum_id = "ANA-76084040-regua"
+stream = "uruguai"
+kind = "jusante"
+ana_name = "PCH CACHOEIRA CINCO VEADOS JUSANTE"
+
+[[station]]
+id = "ANA-76086500"
+name = "Toropi abaixo da PCH Rincão São Miguel (ANA)"
+source = "ana"
+variable = "river_stage"
+lat = -29.4558
+lon = -54.0933
+datum_id = "ANA-76086500-regua"
+stream = "uruguai"
+kind = "jusante"
+ana_name = "PCH RINCÃO SÃO MIGUEL JUSANTE"
+
+[[station]]
+id = "ANA-76090000"
+name = "Toropi em Toropi (ANA)"
+source = "ana"
+variable = "river_stage"
+lat = -29.4914
+lon = -54.2258
+datum_id = "ANA-76090000-regua"
+stream = "uruguai"
+kind = "rio"
+ana_name = "TOROPI/SÃO PEDRO DO SUL"
+
+[[station]]
+id = "ANA-76112000"
+name = "Arroio Socavão em Quevedos (ANA)"
+source = "ana"
+variable = "river_stage"
+lat = -29.4578
+lon = -54.1278
+datum_id = "ANA-76112000-regua"
+stream = "uruguai"
+kind = "rio"
+ana_name = "PCH SALTO DO GUASSUPI ARROIO SOCAVÃO"
+
+[[station]]
+id = "ANA-76115400"
+name = "Arroio Guassupi acima da PCH Salto do Guassupi (ANA)"
+source = "ana"
+variable = "river_stage"
+lat = -29.4017
+lon = -53.9408
+datum_id = "ANA-76115400-regua"
+stream = "uruguai"
+kind = "rio"
+ana_name = "PCH SALTO DO GUASSUPI MONTANTE"
+
+[[station]]
+id = "ANA-76115800"
+name = "Toropi-mirim em Quevedos (ANA)"
+source = "ana"
+variable = "river_stage"
+lat = -29.4611
+lon = -54.1942
+datum_id = "ANA-76115800-regua"
+stream = "uruguai"
+kind = "rio"
+ana_name = "PCH SALTO DO GUASSUPI RIO TOROPI MIRIM"
+
+[[station]]
+id = "ANA-76118000"
+name = "Arroio Sertão da Mata em Mata (ANA)"
+source = "ana"
+variable = "river_stage"
+lat = -29.5642
+lon = -54.4525
+datum_id = "ANA-76118000-regua"
+stream = "uruguai"
+kind = "rio"
+ana_name = "MATA"
+
+[[station]]
+id = "ANA-76250501"
+name = "Santa Maria em Dom Pedrito (ANA)"
+source = "ana"
+variable = "river_stage"
+lat = -30.9747
+lon = -54.6886
+datum_id = "ANA-76250501-regua"
+stream = "uruguai"
+kind = "rio"
+ana_name = "DOM PEDRITO"
+
+[[station]]
+id = "ANA-76251000"
+name = "Santa Maria em Dom Pedrito (ANA)"
+source = "ana"
+variable = "river_stage"
+lat = -30.9703
+lon = -54.6933
+datum_id = "ANA-76251000-regua"
+stream = "uruguai"
+kind = "rio"
+ana_name = "DOM PEDRITO"
+
+[[station]]
+id = "ANA-76290000"
+name = "Ibicuí da Armada em Rosário do Sul (ANA)"
+source = "ana"
+variable = "river_stage"
+lat = -30.5183
+lon = -55.0431
+datum_id = "ANA-76290000-regua"
+stream = "uruguai"
+kind = "rio"
+ana_name = "PASSO DOS FARRAPOS"
+
+[[station]]
+id = "ANA-76300000"
+name = "Ibicuí da Armada em Rosário do Sul (ANA)"
+source = "ana"
+variable = "river_stage"
+lat = -30.2808
+lon = -54.9031
+datum_id = "ANA-76300000-regua"
+stream = "uruguai"
+kind = "rio"
+ana_name = "PONTE IBICUI DA ARMADA"
+
+[[station]]
+id = "ANA-76310000"
+name = "Santa Maria em Rosário do Sul (ANA)"
+source = "ana"
+variable = "river_stage"
+lat = -30.2428
+lon = -54.9169
+datum_id = "ANA-76310000-regua"
+stream = "uruguai"
+kind = "rio"
+ana_name = "ROSÁRIO DO SUL"
+
+[[station]]
+id = "ANA-76395010"
+name = "Ibicuí-mirim em Santa Maria (ANA)"
+source = "ana"
+variable = "river_stage"
+lat = -29.665
+lon = -54.1064
+datum_id = "ANA-76395010-regua"
+stream = "uruguai"
+kind = "rio"
+ana_name = "SÃO PEDRO DO SUL/SANTA MARIA"
+
+[[station]]
+id = "ANA-76430900"
+name = "Jaguari: reservatório da PCH Furnas do Segredo (ANA)"
+source = "ana"
+variable = "river_stage"
+lat = -29.3656
+lon = -54.5044
+datum_id = "ANA-76430900-regua"
+stream = "uruguai"
+kind = "reservatorio"
+ana_name = "PCH FURNAS DO SEGREDO BARRAMENTO"
+
+[[station]]
+id = "ANA-76431000"
+name = "Jaguari abaixo da PCH Furnas do Segredo (ANA)"
+source = "ana"
+variable = "river_stage"
+lat = -29.3803
+lon = -54.5103
+datum_id = "ANA-76431000-regua"
+stream = "uruguai"
+kind = "jusante"
+ana_name = "PCH FURNAS DO SEGREDO JUSANTE"
+
+[[station]]
+id = "ANA-76440010"
+name = "Jaguari em Jaguari (ANA)"
+source = "ana"
+variable = "river_stage"
+lat = -29.4992
+lon = -54.6886
+datum_id = "ANA-76440010-regua"
+stream = "uruguai"
+kind = "rio"
+ana_name = "JAGUARI"
+
+[[station]]
+id = "ANA-76519000"
+name = "Arroio Inhancunda em São Francisco de Assis (ANA)"
+source = "ana"
+variable = "river_stage"
+lat = -29.5472
+lon = -55.1364
+datum_id = "ANA-76519000-regua"
+stream = "uruguai"
+kind = "rio"
+ana_name = "SÃO FRANCISCO DE ASSIS"
+
+[[station]]
+id = "ANA-76560000"
+name = "Ibicuí em Manoel Viana (ANA)"
+source = "ana"
+variable = "river_stage"
+lat = -29.5958
+lon = -55.4814
+datum_id = "ANA-76560000-regua"
+stream = "uruguai"
+kind = "rio"
+ana_name = "MANOEL VIANA"
+
+[[station]]
+id = "ANA-76560003"
+name = "Ibicuí em Manoel Viana (ANA)"
+source = "ana"
+variable = "river_stage"
+lat = -29.5961
+lon = -55.4817
+datum_id = "ANA-76560003-regua"
+stream = "uruguai"
+kind = "rio"
+ana_name = "MANOEL VIANA"
+
+[[station]]
+id = "ANA-76700000"
+name = "Ibirapuitã em Alegrete (ANA)"
+source = "ana"
+variable = "river_stage"
+lat = -29.9731
+lon = -55.7478
+datum_id = "ANA-76700000-regua"
+stream = "uruguai"
+kind = "rio"
+ana_name = "PASSO DOS BRITOS"
+
+[[station]]
+id = "ANA-76742000"
+name = "Arroio Caverá em Alegrete (ANA)"
+source = "ana"
+variable = "river_stage"
+lat = -29.9511
+lon = -55.6003
+datum_id = "ANA-76742000-regua"
+stream = "uruguai"
+kind = "rio"
+ana_name = "PASSO DO OSÓRIO"
+
+[[station]]
+id = "ANA-76748978"
+name = "Ibirapuitã em Alegrete (ANA)"
+source = "ana"
+variable = "river_stage"
+lat = -29.8053
+lon = -55.7831
+datum_id = "ANA-76748978-regua"
+stream = "uruguai"
+kind = "rio"
+ana_name = "ALEGRETE"
+
+[[station]]
+id = "ANA-76750000"
+name = "Ibirapuitã em Alegrete (ANA)"
+source = "ana"
+variable = "river_stage"
+lat = -29.7683
+lon = -55.7875
+datum_id = "ANA-76750000-regua"
+stream = "uruguai"
+kind = "rio"
+ana_name = "ALEGRETE"
+
+[[station]]
+id = "ANA-76800000"
+name = "Ibicuí em Itaqui (ANA)"
+source = "ana"
+variable = "river_stage"
+lat = -29.3092
+lon = -56.0553
+datum_id = "ANA-76800000-regua"
+stream = "uruguai"
+kind = "rio"
+ana_name = "PASSO MARIANO PINTO"
+
+[[station]]
+id = "ANA-77150000"
+name = "Uruguai em Uruguaiana (ANA)"
+source = "ana"
+variable = "river_stage"
+lat = -29.7486
+lon = -57.0886
+datum_id = "ANA-77150000-regua"
+stream = "uruguai"
+kind = "rio"
+ana_name = "URUGUAIANA"
+
+[[station]]
+id = "ANA-77499010"
+name = "Quaraí em Quaraí (ANA)"
+source = "ana"
+variable = "river_stage"
+lat = -30.3925
+lon = -56.4558
+datum_id = "ANA-77499010-regua"
+stream = "uruguai"
+kind = "rio"
+ana_name = "QUARAÍ"
+
+[[station]]
+id = "ANA-77500000"
+name = "Quaraí em Quaraí (ANA)"
+source = "ana"
+variable = "river_stage"
+lat = -30.3844
+lon = -56.4656
+datum_id = "ANA-77500000-regua"
+stream = "uruguai"
+kind = "rio"
+ana_name = "QUARAÍ"
+
+[[station]]
+id = "ANA-79099870"
+name = "Arroio Bagé em Bagé (ANA)"
+source = "ana"
+variable = "river_stage"
+lat = -31.3294
+lon = -54.0939
+datum_id = "ANA-79099870-regua"
+stream = "uruguai"
+kind = "rio"
+ana_name = "BAGÉ"
+
+[[station]]
+id = "ANA-79400000"
+name = "Negro em Bagé (ANA)"
+source = "ana"
+variable = "river_stage"
+lat = -31.5339
+lon = -54.2944
+datum_id = "ANA-79400000-regua"
+stream = "uruguai"
+kind = "rio"
+ana_name = "ESTÂNCIA DO ESPANTOSO"
+
+[[station]]
+id = "ANA-84991100"
+name = "Rio dos Negros em Morrinhos do Sul (ANA)"
+source = "ana"
+variable = "river_stage"
+lat = -29.3667
+lon = -49.9375
+datum_id = "ANA-84991100-regua"
+stream = "litoranea"
+kind = "rio"
+ana_name = "MORRINHOS DO SUL"
+
+[[station]]
+id = "ANA-84991510"
+name = "Mampituba em Torres (ANA)"
+source = "ana"
+variable = "river_stage"
+lat = -29.2992
+lon = -49.7531
+datum_id = "ANA-84991510-regua"
+stream = "litoranea"
+kind = "rio"
+ana_name = "TORRES"
+
+[[station]]
+id = "ANA-87308300"
+name = "Pedras Brancas em Três Forquilhas (ANA)"
+source = "ana"
+variable = "river_stage"
+lat = -29.4317
+lon = -50.1117
+datum_id = "ANA-87308300-regua"
+stream = "litoranea"
+kind = "rio"
+ana_name = "TRÊS FORQUILHAS-RIO PEDRAS BRANCAS"
+
+[[station]]
+id = "ANA-87309020"
+name = "Três Forquilhas em Três Forquilhas (ANA)"
+source = "ana"
+variable = "river_stage"
+lat = -29.51
+lon = -50.0911
+datum_id = "ANA-87309020-regua"
+stream = "litoranea"
+kind = "rio"
+ana_name = "TRÊS FORQUILHAS - RIO TRÊS FORQUILHAS"
+
+[[station]]
+id = "ANA-87317021"
+name = "Maquiné em Maquiné (ANA)"
+source = "ana"
+variable = "river_stage"
+lat = -29.5806
+lon = -50.2783
+datum_id = "ANA-87317021-regua"
+stream = "litoranea"
+kind = "rio"
+ana_name = "MAQUINÉ - RIO MAQUINÉ"
+
+[[station]]
+id = "ANA-87317030"
+name = "Maquiné em Maquiné (ANA)"
+source = "ana"
+variable = "river_stage"
+lat = -29.6519
+lon = -50.2092
+datum_id = "ANA-87317030-regua"
+stream = "litoranea"
+kind = "rio"
+ana_name = "MAQUINÉ"
+
+[[station]]
+id = "ANA-87317036"
+name = "Arroio Água Parada em Maquiné (ANA)"
+source = "ana"
+variable = "river_stage"
+lat = -29.675
+lon = -50.1992
+datum_id = "ANA-87317036-regua"
+stream = "litoranea"
+kind = "rio"
+ana_name = "MAQUINÉ - RIO ÁGUA PARADA"
+
+[[station]]
+id = "ANA-87333000"
+name = "Lagoa dos Barros em Santo Antônio da Patrulha (ANA)"
+source = "ana"
+variable = "river_stage"
+lat = -29.9094
+lon = -50.4253
+datum_id = "ANA-87333000-regua"
+stream = "litoranea"
+kind = "rio"
+ana_name = "STIL LAGOA DOS BARROS"
+
+[[station]]
+id = "ANA-87420600"
+name = "Lagoa dos Patos em Mostardas (ANA)"
+source = "ana"
+variable = "river_stage"
+lat = -31.0206
+lon = -50.9672
+datum_id = "ANA-87420600-regua"
+stream = "litoranea"
+kind = "rio"
+ana_name = "MOSTARDAS"
+
+[[station]]
+id = "ANA-87510018"
+name = "Palmares em Palmares do Sul (ANA)"
+source = "ana"
+variable = "river_stage"
+lat = -30.2569
+lon = -50.48
+datum_id = "ANA-87510018-regua"
+stream = "litoranea"
+kind = "rio"
+ana_name = "PALMARES DO SUL"
+
+[[station]]
+id = "ANA-87525000"
+name = "Arroio Velhaço em Cerro Grande do Sul (ANA)"
+source = "ana"
+variable = "river_stage"
+lat = -30.5908
+lon = -51.7483
+datum_id = "ANA-87525000-regua"
+stream = "litoranea"
+kind = "rio"
+ana_name = "CERRO GRANDE DO SUL"
+
+[[station]]
+id = "ANA-87539990"
+name = "Lagoa dos Patos em Arambaré (ANA)"
+source = "ana"
+variable = "river_stage"
+lat = -30.9064
+lon = -51.4925
+datum_id = "ANA-87539990-regua"
+stream = "litoranea"
+kind = "rio"
+ana_name = "ARAMBARÉ"
+
+[[station]]
+id = "ANA-87580001"
+name = "Arroio das Lavras em Lavras do Sul (ANA)"
+source = "ana"
+variable = "river_stage"
+lat = -30.8156
+lon = -53.8997
+datum_id = "ANA-87580001-regua"
+stream = "litoranea"
+kind = "rio"
+ana_name = "LAVRAS DO SUL"
+
+[[station]]
+id = "ANA-87660010"
+name = "Camaquã em Santana da Boa Vista (ANA)"
+source = "ana"
+variable = "river_stage"
+lat = -30.9736
+lon = -53.0464
+datum_id = "ANA-87660010-regua"
+stream = "litoranea"
+kind = "rio"
+ana_name = "SANTANA DA BOA VISTA"
+
+[[station]]
+id = "ANA-87785000"
+name = "Arroio Abranjo acima da CGH Abranjo I (ANA)"
+source = "ana"
+variable = "river_stage"
+lat = -30.7492
+lon = -52.6464
+datum_id = "ANA-87785000-regua"
+stream = "litoranea"
+kind = "rio"
+ana_name = "CGH ABRANJO I MONTANTE"
+
+[[station]]
+id = "ANA-87790000"
+name = "Arroio Abranjo: reservatório da CGH Abranjo I (ANA)"
+source = "ana"
+variable = "river_stage"
+lat = -30.7883
+lon = -52.6297
+datum_id = "ANA-87790000-regua"
+stream = "litoranea"
+kind = "reservatorio"
+ana_name = "CGH ABRANJO I BARRAMENTO"
+
+[[station]]
+id = "ANA-87795000"
+name = "Arroio Abranjo abaixo da CGH Abranjo I (ANA)"
+source = "ana"
+variable = "river_stage"
+lat = -30.7956
+lon = -52.6242
+datum_id = "ANA-87795000-regua"
+stream = "litoranea"
+kind = "jusante"
+ana_name = "CGH ABRANJO I JUSANTE"
+
+[[station]]
+id = "ANA-87849000"
+name = "Arroio dos Ladrões em Amaral Ferrador (ANA)"
+source = "ana"
+variable = "river_stage"
+lat = -30.8667
+lon = -52.2419
+datum_id = "ANA-87849000-regua"
+stream = "litoranea"
+kind = "rio"
+ana_name = "AMARAL FERRADOR"
+
+[[station]]
+id = "ANA-87864950"
+name = "Arroio Sutil em Dom Feliciano (ANA)"
+source = "ana"
+variable = "river_stage"
+lat = -30.6961
+lon = -52.0603
+datum_id = "ANA-87864950-regua"
+stream = "litoranea"
+kind = "rio"
+ana_name = "DOM FELICIANO"
+
+[[station]]
+id = "ANA-87905000"
+name = "Camaquã em Cristal (ANA)"
+source = "ana"
+variable = "river_stage"
+lat = -31.0119
+lon = -52.0525
+datum_id = "ANA-87905000-regua"
+stream = "litoranea"
+kind = "rio"
+ana_name = "PASSO DO MENDONÇA"
+
+[[station]]
+id = "ANA-87905010"
+name = "Camaquã em Cristal (ANA)"
+source = "ana"
+variable = "river_stage"
+lat = -31.0122
+lon = -52.0525
+datum_id = "ANA-87905010-regua"
+stream = "litoranea"
+kind = "rio"
+ana_name = "CRISTAL"
+
+[[station]]
+id = "ANA-87920500"
+name = "Arroio São Lourenço em São Lourenço do Sul (ANA)"
+source = "ana"
+variable = "river_stage"
+lat = -31.29
+lon = -52.1175
+datum_id = "ANA-87920500-regua"
+stream = "litoranea"
+kind = "rio"
+ana_name = "PASSO DO CANDOMBE"
+
+[[station]]
+id = "ANA-87920600"
+name = "Arroio São Lourenço em São Lourenço do Sul (ANA)"
+source = "ana"
+variable = "river_stage"
+lat = -31.3044
+lon = -52.0939
+datum_id = "ANA-87920600-regua"
+stream = "litoranea"
+kind = "rio"
+ana_name = "SÃO LOURENÇO DO SUL - ARROIO SÃO LOURENÇO"
+
+[[station]]
+id = "ANA-87920990"
+name = "Lagoa dos Patos em São Lourenço do Sul (ANA)"
+source = "ana"
+variable = "river_stage"
+lat = -31.3775
+lon = -51.96
+datum_id = "ANA-87920990-regua"
+stream = "litoranea"
+kind = "rio"
+ana_name = "SÃO LOURENÇO DO SUL - LAGOA DOS PATOS"
+
+[[station]]
+id = "ANA-87929995"
+name = "Arroio Grande - Ex.turucu em São Lourenço do Sul (ANA)"
+source = "ana"
+variable = "river_stage"
+lat = -31.4111
+lon = -52.1681
+datum_id = "ANA-87929995-regua"
+stream = "litoranea"
+kind = "rio"
+ana_name = "TURUÇU"
+
+[[station]]
+id = "ANA-87953000"
+name = "Lagoa dos Patos em Pelotas (ANA)"
+source = "ana"
+variable = "river_stage"
+lat = -31.7022
+lon = -52.1567
+datum_id = "ANA-87953000-regua"
+stream = "litoranea"
+kind = "rio"
+ana_name = "PELOTAS - COLÔNIA Z3"
+
+[[station]]
+id = "ANA-87979800"
+name = "Lagoa dos Patos em Rio Grande (ANA)"
+source = "ana"
+variable = "river_stage"
+lat = -32.0272
+lon = -52.1025
+datum_id = "ANA-87979800-regua"
+stream = "litoranea"
+kind = "rio"
+ana_name = "RIO GRANDE"
+
+[[station]]
+id = "ANA-88045010"
+name = "Lagoa Mirim em Santa Vitória do Palmar (ANA)"
+source = "ana"
+variable = "river_stage"
+lat = -33.4978
+lon = -53.4358
+datum_id = "ANA-88045010-regua"
+stream = "litoranea"
+kind = "rio"
+ana_name = "SANTA VITÓRIA DO PALMAR - LAGOA MIRIM"
+
+[[station]]
+id = "ANA-88260000"
+name = "Jaguarão em Jaguarão (ANA)"
+source = "ana"
+variable = "river_stage"
+lat = -32.5194
+lon = -53.4558
+datum_id = "ANA-88260000-regua"
+stream = "litoranea"
+kind = "rio"
+ana_name = "PASSO DAS PEDRAS"
+
+[[station]]
+id = "ANA-88300040"
+name = "Jaguarão em Jaguarão (ANA)"
+source = "ana"
+variable = "river_stage"
+lat = -32.5694
+lon = -53.3761
+datum_id = "ANA-88300040-regua"
+stream = "litoranea"
+kind = "rio"
+ana_name = "JAGUARÃO"
+
+[[station]]
+id = "ANA-88370010"
+name = "Arroio Grande em Arroio Grande (ANA)"
+source = "ana"
+variable = "river_stage"
+lat = -32.2386
+lon = -53.0892
+datum_id = "ANA-88370010-regua"
+stream = "litoranea"
+kind = "rio"
+ana_name = "ARROIO GRANDE"
+
+[[station]]
+id = "ANA-88406000"
+name = "Canal de São Gonçalo em Arroio Grande (ANA)"
+source = "ana"
+variable = "river_stage"
+lat = -32.12
+lon = -52.6
+datum_id = "ANA-88406000-regua"
+stream = "litoranea"
+kind = "rio"
+ana_name = "ARROIO GRANDE-SANTA ISABEL DO SUL"
+
+[[station]]
+id = "ANA-88549001"
+name = "Piratini em Cerrito (ANA)"
+source = "ana"
+variable = "river_stage"
+lat = -31.8606
+lon = -52.8169
+datum_id = "ANA-88549001-regua"
+stream = "litoranea"
+kind = "rio"
+ana_name = "PIRATINI/CERRITO"
+
+[[station]]
+id = "ANA-88579700"
+name = "Arroio Basílio em Piratini (ANA)"
+source = "ana"
+variable = "river_stage"
+lat = -31.8753
+lon = -53.0275
+datum_id = "ANA-88579700-regua"
+stream = "litoranea"
+kind = "rio"
+ana_name = "PIRATINI-HERVAL"
+
+[[station]]
+id = "ANA-88640950"
+name = "Piratini em Cerrito (ANA)"
+source = "ana"
+variable = "river_stage"
+lat = -31.8603
+lon = -52.8167
+datum_id = "ANA-88640950-regua"
+stream = "litoranea"
+kind = "rio"
+ana_name = "PONTE RIO PIRATINI"
+
+[[station]]
+id = "ANA-88640951"
+name = "Piratini em Cerrito (ANA)"
+source = "ana"
+variable = "river_stage"
+lat = -31.8603
+lon = -52.8167
+datum_id = "ANA-88640951-regua"
+stream = "litoranea"
+kind = "rio"
+ana_name = "CERRITO/PEDRO OSÓRIO"

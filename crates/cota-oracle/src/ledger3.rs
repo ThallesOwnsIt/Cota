@@ -33,6 +33,9 @@ use crate::{attest::SignedAlert, extforecast::SignedForecast, node::SignedBatch,
 #[derive(Debug, Clone, Deserialize)]
 pub struct Config {
     pub catalog: PathBuf,
+    /// More catalogs whose stations name their stream (Etapa 5: the rest of RS).
+    #[serde(default)]
+    pub regional_catalogs: Vec<PathBuf>,
     pub streams: Vec<String>,
     pub main_stream: String,
     pub genesis: GenesisConfig,
@@ -63,6 +66,29 @@ pub struct SourceConfig {
     pub id: String,
     pub stream: String,
     pub horizon_days: u16,
+}
+
+impl Config {
+    /// Every station of every catalog; an id in two catalogs is an error.
+    pub fn stations(&self) -> Result<Vec<cota_ingest::config::StationConfig>> {
+        let mut all = cota_ingest::config::load(&self.catalog)?;
+        for c in &self.regional_catalogs {
+            all.extend(cota_ingest::config::load(c)?);
+        }
+        let mut seen = BTreeSet::new();
+        for s in &all {
+            ensure!(seen.insert(s.id.as_str()), "estação {} em mais de um catálogo", s.id);
+            if let Some(stream) = &s.stream {
+                ensure!(self.streams.contains(stream), "estação {}: região {stream} não existe no livro", s.id);
+            }
+        }
+        Ok(all)
+    }
+
+    /// The stream that carries a station.
+    pub fn stream_of<'a>(&'a self, st: &'a cota_ingest::config::StationConfig) -> &'a str {
+        st.stream.as_deref().unwrap_or(&self.main_stream)
+    }
 }
 
 pub fn load_config(path: &Path) -> Result<Config> {
@@ -397,11 +423,12 @@ pub fn opening_bodies(cfg: &Config, book: &Book) -> Result<Vec<Body>> {
     Ok(bodies)
 }
 
-/// The catalog's stations that the ledger does not have yet, or has with other data.
-pub fn station_bodies(cfg: &Config, book: &Book) -> Result<Vec<Body>> {
-    let mut out = Vec::new();
-    for st in cota_ingest::config::load(&cfg.catalog)? {
-        let s = cota_ledger::Station {
+/// Every catalog station as the ledger registers it.
+pub fn catalog_stations(cfg: &Config) -> Result<Vec<cota_ledger::Station>> {
+    Ok(cfg
+        .stations()?
+        .iter()
+        .map(|st| cota_ledger::Station {
             station_id: st.id.clone(),
             name: st.name.clone(),
             source: st.source as u8,
@@ -409,13 +436,14 @@ pub fn station_bodies(cfg: &Config, book: &Book) -> Result<Vec<Body>> {
             lat_e6: (st.lat * 1e6).round() as i32,
             lon_e6: (st.lon * 1e6).round() as i32,
             datum_id: st.datum_id.clone(),
-            stream: cfg.main_stream.clone(),
-        };
-        if book.stations.get(&st.id) != Some(&s) {
-            out.push(Body::Station(s));
-        }
-    }
-    Ok(out)
+            stream: cfg.stream_of(st).to_string(),
+        })
+        .collect())
+}
+
+/// The catalog's stations that the ledger does not have yet, or has with other data.
+pub fn station_bodies(cfg: &Config, book: &Book) -> Result<Vec<Body>> {
+    Ok(catalog_stations(cfg)?.into_iter().filter(|s| book.stations.get(&s.station_id) != Some(s)).map(Body::Station).collect())
 }
 
 fn read_json_files<T: serde::de::DeserializeOwned>(dir: &Path) -> Vec<T> {
@@ -944,7 +972,7 @@ impl QualityInput {
     pub fn load(cfg: &Config, limits: &Path) -> Result<Self> {
         Ok(Self {
             limits: cota_quality::Limits::load(limits)?,
-            catalog: cota_ingest::config::load(&cfg.catalog)?.into_iter().map(|s| (s.id, s.source)).collect(),
+            catalog: cfg.stations()?.into_iter().map(|s| (s.id, s.source)).collect(),
         })
     }
 }
