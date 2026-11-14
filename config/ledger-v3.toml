@@ -31,6 +31,8 @@ cutover = "2026-11-14"
 flow_alert_manifest = "ml/models/manifest.json"
 outlook_main = "ml/models/outlook-rule.json"
 outlook_dir = "ml/models/outlook-rules"
+# Early-warning rules of the rest of RS (Etapa 5.3), signed after the opening on the stream of their GloFAS target.
+regional_outlook_dirs = ["ml/models/outlook-rules-rs"]
 
 [[sources]]
 id = "glofas"

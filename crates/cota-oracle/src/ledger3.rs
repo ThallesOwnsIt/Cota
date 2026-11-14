@@ -59,6 +59,10 @@ pub struct RulesConfig {
     pub flow_alert_manifest: PathBuf,
     pub outlook_main: PathBuf,
     pub outlook_dir: PathBuf,
+    /// Early-warning rules of other regions (Etapa 5), signed after the opening; each one's stream is that of its
+    /// GloFAS target station in the catalogs.
+    #[serde(default)]
+    pub regional_outlook_dirs: Vec<PathBuf>,
 }
 
 #[derive(Debug, Clone, Deserialize)]
@@ -88,6 +92,36 @@ impl Config {
     /// The stream that carries a station.
     pub fn stream_of<'a>(&'a self, st: &'a cota_ingest::config::StationConfig) -> &'a str {
         st.stream.as_deref().unwrap_or(&self.main_stream)
+    }
+
+    /// The regional early-warning rules, each with the stream of its target station.
+    pub fn regional_outlook_rules(&self) -> Result<Vec<(outlook::Rule, String)>> {
+        let stations = self.stations()?;
+        let mut out = Vec::new();
+        for dir in &self.rules.regional_outlook_dirs {
+            for r in outlook::load_dir(dir)? {
+                let target = r.spec.target.as_ref().with_context(|| format!("regra {}: sem estação alvo", r.spec.region))?;
+                let st = stations
+                    .iter()
+                    .find(|s| s.id == target.station_id)
+                    .with_context(|| format!("regra {}: a estação alvo {} não está nos catálogos", r.spec.region, target.station_id))?;
+                let stream = self.stream_of(st).to_string();
+                out.push((r, stream));
+            }
+        }
+        Ok(out)
+    }
+
+    /// The stream of every early-warning region: the opening's rules on the main stream, the regional ones on theirs.
+    pub fn outlook_streams(&self) -> Result<BTreeMap<String, String>> {
+        let mut map: BTreeMap<String, String> = outlook::load_rules(&self.rules.outlook_main, &self.rules.outlook_dir)?
+            .into_iter()
+            .map(|r| (r.spec.region, self.main_stream.clone()))
+            .collect();
+        for (r, stream) in self.regional_outlook_rules()? {
+            map.insert(r.spec.region, stream);
+        }
+        Ok(map)
     }
 
     /// The stations whose readings go in `stream`'s batches.
@@ -439,6 +473,25 @@ pub fn opening_bodies(cfg: &Config, book: &Book) -> Result<Vec<Body>> {
     Ok(bodies)
 }
 
+/// The regional early-warning rules (Etapa 5), as RuleSet entries on their streams. Those the ledger already has are
+/// dropped by `sign_round` (same signing message); a changed rule for an existing region is refused by the ledger.
+pub fn rule_bodies(cfg: &Config) -> Result<Vec<Body>> {
+    Ok(cfg
+        .regional_outlook_rules()?
+        .into_iter()
+        .map(|(r, stream)| {
+            Body::RuleSet(RuleSet::Outlook {
+                region: r.spec.region.clone(),
+                stream,
+                threshold_milli: r.threshold_milli(),
+                window_secs: r.window_secs(),
+                min_models: r.spec.min_models,
+                spec_sha256: r.sha256,
+            })
+        })
+        .collect())
+}
+
 /// Every catalog station as the ledger registers it.
 pub fn catalog_stations(cfg: &Config) -> Result<Vec<cota_ledger::Station>> {
     Ok(cfg
@@ -477,14 +530,19 @@ fn node_batches(node_dir: &Path) -> BTreeMap<NaiveDate, SignedBatch> {
 /// What this node observed: for each stream, the batch of the next day it has (gaps allowed); and the outlooks and
 /// third-party forecasts of the main stream's new day and of the day it last closed.
 pub fn day_bodies(cfg: &Config, book: &Book, node_dir: &Path) -> Result<Vec<Body>> {
-    let Some(main) = book.ledger.stream(&cfg.main_stream) else { return Ok(Vec::new()) };
-    let mut out = Vec::new();
-    let mut days: Vec<i64> = vec![];
-    if main.next_batch_id > 1 {
-        days.push(main.last_t_end);
+    if book.ledger.stream(&cfg.main_stream).is_none() {
+        return Ok(Vec::new());
     }
+    let mut out = Vec::new();
+    // Per stream, the instants an outlook or third-party forecast may be issued at: the end of the day it last closed
+    // and of the day whose batch this node brings now (the ledger checks it against the rule's or source's stream).
+    let mut days: BTreeMap<String, Vec<i64>> = BTreeMap::new();
     for stream in &cfg.streams {
         let Some(s) = book.ledger.stream(stream) else { continue };
+        let d = days.entry(stream.clone()).or_default();
+        if s.next_batch_id > 1 {
+            d.push(s.last_t_end);
+        }
         let Some((day, b)) = node_batches(&cfg.stream_dir(node_dir, stream)).into_iter().find(|(d, _)| start_of_day(*d) >= s.last_t_end) else {
             continue;
         };
@@ -498,13 +556,14 @@ pub fn day_bodies(cfg: &Config, book: &Book, node_dir: &Path) -> Result<Vec<Body
             station_set_hash: b.header.station_set_hash,
             prev_batch_root: s.last_batch_root,
         }));
-        if stream == &cfg.main_stream {
-            days.push(end_of_day(day));
-        }
+        d.push(end_of_day(day));
     }
-    // Outlooks issued at the end of those days (issued_at = 00:00 of the next day).
+    let in_days = |stream: &str, at: i64| days.get(stream).is_some_and(|d| d.contains(&at));
+    // Outlooks issued at the end of those days (issued_at = 00:00 of the next day), on their rule's stream.
+    let streams = cfg.outlook_streams()?;
     for o in read_json_files::<SignedOutlook>(&node_dir.join("outlook")) {
-        if days.contains(&o.header.issued_at) {
+        let Some(stream) = streams.get(&o.header.region) else { continue };
+        if in_days(stream, o.header.issued_at) {
             let h = o.header;
             out.push(Body::Outlook(cota_ledger::Outlook {
                 region: h.region,
@@ -521,7 +580,7 @@ pub fn day_bodies(cfg: &Config, book: &Book, node_dir: &Path) -> Result<Vec<Body
     for f in read_json_files::<SignedForecast>(&node_dir.join("extforecast")) {
         let issued_at = end_of_day(f.header.day);
         let Some(src) = cfg.sources.iter().find(|s| s.id == f.header.source) else { continue };
-        if days.contains(&issued_at) {
+        if in_days(&src.stream, issued_at) {
             out.push(Body::ExternalForecast(cota_ledger::ExternalForecast {
                 source: src.id.clone(),
                 stream: src.stream.clone(),
@@ -651,6 +710,7 @@ pub fn sign_round(key: &SigningKey, cfg: &Config, book: &Book, node_dir: &Path) 
         bodies.extend(station_bodies(cfg, &empty)?);
     } else {
         bodies.extend(station_bodies(cfg, book)?);
+        bodies.extend(rule_bodies(cfg)?);
         bodies.extend(day_bodies(cfg, book, node_dir)?);
         bodies.extend(forecast_bodies(cfg, book, node_dir)?);
         bodies.extend(alert_bodies(book, node_dir));

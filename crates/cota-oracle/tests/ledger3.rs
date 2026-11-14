@@ -92,3 +92,20 @@ fn each_stream_has_its_stations_and_its_folder() {
     assert_eq!(cfg.stream_dir(node, "guaiba"), node);
     assert_eq!(cfg.stream_dir(node, "uruguai"), node.join("uruguai"));
 }
+
+/// The rest of RS's early-warning rules go on the stream of their GloFAS target (Ibicuí on the Uruguai's, Maquiné on
+/// the Litoral's); the opening's stay on the main stream; no region appears twice.
+#[test]
+fn regional_rules_go_on_the_stream_of_their_target() {
+    let root = concat!(env!("CARGO_MANIFEST_DIR"), "/../..");
+    std::env::set_current_dir(root).unwrap();
+    let cfg = cota_oracle::ledger3::load_config(std::path::Path::new("config/ledger-v3.toml")).unwrap();
+    let streams = cfg.outlook_streams().unwrap();
+    assert_eq!(streams["guaiba"], "guaiba");
+    assert_eq!(streams["taquari"], "guaiba");
+    assert_eq!(streams["ibicui"], "uruguai");
+    assert_eq!(streams["maquine"], "litoranea");
+    let bodies = cota_oracle::ledger3::rule_bodies(&cfg).unwrap();
+    assert_eq!(bodies.len(), cfg.regional_outlook_rules().unwrap().len());
+    assert!(bodies.iter().all(|b| matches!(b, cota_ledger::Body::RuleSet(cota_ledger::RuleSet::Outlook { stream, .. }) if stream != &cfg.main_stream)));
+}

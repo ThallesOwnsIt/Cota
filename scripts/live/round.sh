@@ -105,8 +105,10 @@ node() {
       "$BIN/cota-node" --key "$key" --day "$day" --rpc "$RPC" --config config/stations-live.toml --out "$out" ||
         { warn "lote de $day: o nó não conseguiu assinar"; rc=1; }
     fi
-    # Without the rain forecast, the node's batch still counts.
-    "$BIN/cota-outlook" observe --key "$key" --day "$day" --out "$out/outlook" || warn "chuva prevista indisponível"
+    # Without the rain forecast, the node's batch still counts. The v3 ledger also has the rest of RS's rules.
+    local more=()
+    if v3only; then more=(--more-rules ml/models/outlook-rules-rs); fi
+    "$BIN/cota-outlook" observe --key "$key" --day "$day" "${more[@]}" --out "$out/outlook" || warn "chuva prevista indisponível"
     # Third-party forecast (GloFAS discharge, 30 days), signed for the ledger until program v3 records it.
     "$BIN/cota-extforecast" observe --key "$key" --day "$day" --out "$out/extforecast" || warn "previsão GloFAS indisponível"
   else

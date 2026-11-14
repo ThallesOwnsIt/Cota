@@ -30,8 +30,17 @@ pub struct Point {
     pub lon: f64,
 }
 
+/// The GloFAS point whose flood the rule warns of (the sub-basin and regional rules name it).
+#[derive(Debug, Clone, Deserialize)]
+pub struct Target {
+    pub station_id: String,
+}
+
 #[derive(Debug, Clone, Deserialize)]
 pub struct Spec {
+    /// Present in the sub-basin and regional rules; the hash covers the file's JSON, not this struct.
+    #[serde(default)]
+    pub target: Option<Target>,
     pub region: String,
     pub points: Vec<Point>,
     pub models: Vec<String>,
@@ -82,6 +91,13 @@ pub fn file_name(region: &str, day: NaiveDate) -> String {
 /// The basin-wide rule plus every sub-basin rule in `dir` (sorted by file name), each checked by `load_rule`.
 pub fn load_rules(main: &Path, dir: &Path) -> Result<Vec<Rule>> {
     let mut rules = vec![load_rule(main)?];
+    rules.extend(load_dir(dir)?);
+    Ok(rules)
+}
+
+/// The rules in a folder (`*.json`), in file-name order; none if the folder does not exist.
+pub fn load_dir(dir: &Path) -> Result<Vec<Rule>> {
+    let mut rules = Vec::new();
     if dir.is_dir() {
         let mut files: Vec<_> = std::fs::read_dir(dir)?.map(|e| e.map(|e| e.path())).collect::<std::io::Result<_>>()?;
         files.retain(|f| f.extension().is_some_and(|e| e == "json"));
