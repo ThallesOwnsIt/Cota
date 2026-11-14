@@ -828,8 +828,10 @@ def export_v3(out: Path, ledger3: Path) -> None:
     alerts.sort(key=lambda a: a["index"], reverse=True)
 
     batch_id_ending = {e["body"]["t_end"]: e["body"]["batch_id"] for e in batches}
+    # The page shows the Guaíba's rules (basin and sub-basins); the rest of RS's (Etapa 5) wait for its region pages.
+    guaiba_regions = {e["body"]["region"] for e in entries if e["kind"] == "rule_set" and e["body"].get("rule") == "outlook" and e["body"]["stream"] == "guaiba"}
     outlooks = []
-    for e in (x for x in entries if x["kind"] == "outlook"):
+    for e in (x for x in entries if x["kind"] == "outlook" and x["body"]["region"] in guaiba_regions):
         o = e["body"]
         day = day_of(o["issued_at"] - 1)
         c = json.loads((ledger3 / "outlooks" / f"{o['region']}-{day}.json").read_text())
