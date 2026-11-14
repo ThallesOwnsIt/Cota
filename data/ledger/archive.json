@@ -3,9 +3,9 @@
  "note": "path -> Arweave id of its latest gzipped copy; records.jsonl in chunks",
  "files": {
   "data/ledger/audit.json": {
-   "sha256": "36b4c8027ef0f99f4bbf78b6b131607d9572b2a044ee640c2c7bff0d124e7ad4",
-   "id": "3hZrPw1iC6k3Wh3VxfM-8by2NZrHrh3hN6cnu8MR9I4",
-   "bytes": 6157
+   "sha256": "fb6a4e14d0b92295bcfa38247e20dd0b16c614a2f243faf5b07449545b036e93",
+   "id": "JdQhOKenntndnlUnY-wb_5imDGzoidLNQmM_P_VYAqE",
+   "bytes": 6297
   },
   "data/ledger/batches/00001.json": {
    "sha256": "c764b273b95f359854739c3ec9a3a5f202234c144ab3eb7dbfdf32efb8b6941e",
@@ -1501,6 +1501,31 @@
    "sha256": "2711f8c64cc9b45a65d28c90be1f5459da306fddb8fb0b1d14780d39ce7f6ee5",
    "id": "llH1unHv4UnpZ10f4W2oesGHiC8sQExB9-jTPQv-mZ8",
    "bytes": 614
+  },
+  "data/ledger/batches/00045.json": {
+   "sha256": "ee1e97f56643234166e3825498931e218f5635db625bf219677ceb0cf31477e2",
+   "id": "tSn56k-Nvnpb-83W90P8xA2tg5eTjQgwI0MVoHHvDQM",
+   "bytes": 16953
+  },
+  "data/ledger/external_forecasts/glofas/2026-11-13.json": {
+   "sha256": "e042dd9e4926dfa4396b36bfeaefa1ce726286b292c5a53f85b2251a2a08e77d",
+   "id": "NHax1PY_kUs2PUo1Tlln5pmZFvIZlYM2HDbCK-R3d_A",
+   "bytes": 4763
+  },
+  "data/ledger/external_forecasts/glofas/2026-11-13.json.ots": {
+   "sha256": "1bfe36b54dfec857d101e20d2c29f4d395f67bc1b510bba93009e505ad6fbfd2",
+   "id": "48_ENtn0W64lLdBoimng3x-id0fR33KrIVT-vbasayg",
+   "bytes": 708
+  },
+  "data/ledger/forecasts/2026-11-13.json": {
+   "sha256": "ff8aa9d486368c8f887040253c28ae62fd6ecb0aa46f6e5d43a2724550590a68",
+   "id": "MCDHjVeVfO-ZOOLEQGGfVMmtkYfCDq7Onz9AiKov1Zk",
+   "bytes": 902
+  },
+  "data/ledger/outlooks/2026-11-13.json": {
+   "sha256": "3deffedd8cafcb1bff4e281e98d16bf848ed8d3f068bf208b8a154a40b714b30",
+   "id": "TyY_XAedfr2zdjJ7osLKH_uclFkWG_hlT6T-oza7JN4",
+   "bytes": 1003
   }
  },
  "records": [
@@ -1601,8 +1626,15 @@
    "sha256": "6d535667ccdf2dcca869f3064ef0b603043e149267808afd35fef3fdb2fb9d5e",
    "id": "kE28CQ60K01-Mt_h9cziaQVv5q3K3fSCPOXQaipbahw",
    "bytes": 328
+  },
+  {
+   "from": 189,
+   "to": 192,
+   "sha256": "b9c0d87a2e99f1a81bc36cb08352443fbdeb70bc4081b0f12bc3db2a5d84f5d2",
+   "id": "xucz_NUNdbZ5K5wwyzLikBYcalp9hzir5kQjMy-5Y-U",
+   "bytes": 983
   }
  ],
- "bytes": 2154883,
+ "bytes": 2186492,
  "signer": "7kw7om2uMrnSaJBZXriH6TAVpQrsN7Eoq7dtsqgb6Lww"
 }
