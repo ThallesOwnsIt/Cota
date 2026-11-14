@@ -86,16 +86,25 @@ node() {
   # Official warnings are independent of the batch: a failure here does not stop the rest.
   "$BIN/cota-alerts" observe --key "$key" --out "$out/alerts" || warn "avisos do INMET indisponíveis nesta rodada"
   day=$(plan) || { warn "não consegui consultar a cadeia"; return 1; }
+  if v3only; then
+    # One batch per stream (region), each on the next day its own sequence waits for once closed and settled (a
+    # region whose source was down may lag the others); number and chain come from the ledger.
+    local stream next sday bid broot
+    for stream in $("$BIN/cota-ledger3" --ledger "$V3_LEDGER" streams); do
+      next=$("$BIN/cota-ledger3" --ledger "$V3_LEDGER" next-day --stream "$stream" --settle-min "${SETTLE_MIN:-60}") || next=""
+      [[ -n $next ]] || continue
+      read -r sday bid broot <<<"$next"
+      "$BIN/cota-node" --key "$key" --day "$sday" --batch-id "$bid" --prev-root "$broot" \
+        --ledger-config config/ledger-v3.toml --stream "$stream" --out "$out" ||
+        { warn "lote de $sday ($stream): o nó não conseguiu assinar"; rc=1; }
+    done
+  fi
   if [[ -n $day ]]; then
-    # The node's batch file (its readings); its number and chain come from the ledger that waits for it.
-    local chain=(--rpc "$RPC") next _ bid broot
-    if v3only; then
-      next=$("$BIN/cota-ledger3" --ledger "$V3_LEDGER" next-day --settle-min 0)
-      read -r _ bid broot <<<"$next"
-      chain=(--batch-id "${bid:-0}" --prev-root "${broot:-$(printf '0%.0s' {1..64})}")
+    # v2: the node's batch file (its readings); its number and chain come from the chain.
+    if ! v3only; then
+      "$BIN/cota-node" --key "$key" --day "$day" --rpc "$RPC" --config config/stations-live.toml --out "$out" ||
+        { warn "lote de $day: o nó não conseguiu assinar"; rc=1; }
     fi
-    "$BIN/cota-node" --key "$key" --day "$day" "${chain[@]}" --config config/stations-live.toml --out "$out" ||
-      { warn "lote de $day: o nó não conseguiu assinar"; rc=1; }
     # Without the rain forecast, the node's batch still counts.
     "$BIN/cota-outlook" observe --key "$key" --day "$day" --out "$out/outlook" || warn "chuva prevista indisponível"
     # Third-party forecast (GloFAS discharge, 30 days), signed for the ledger until program v3 records it.

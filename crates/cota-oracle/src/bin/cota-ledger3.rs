@@ -75,6 +75,11 @@ enum Cmd {
         #[arg(long, default_value = "config/ledger-v3.toml")]
         config: PathBuf,
     },
+    /// The streams (regions) of the config, one per line, the main one first.
+    Streams {
+        #[arg(long, default_value = "config/ledger-v3.toml")]
+        config: PathBuf,
+    },
 }
 
 fn main() -> Result<()> {
@@ -91,11 +96,12 @@ fn main() -> Result<()> {
         }
         Cmd::Collect { nodes_dir, config, limits } => {
             let mut book = ledger3::Book::open(&args.ledger, &args.v2_ledger)?;
-            let quality = ledger3::load_config(&config).and_then(|cfg| ledger3::QualityInput::load(&cfg, &limits));
+            let cfg = ledger3::load_config(&config)?;
+            let quality = ledger3::QualityInput::load(&cfg, &limits);
             if let Err(e) = &quality {
                 eprintln!("aviso: sem a avaliação de qualidade das estações ({e:#})");
             }
-            let report = ledger3::collect(&mut book, &nodes_dir, chrono::Utc::now().timestamp(), quality.as_ref().ok())?;
+            let report = ledger3::collect(&mut book, &cfg, &nodes_dir, chrono::Utc::now().timestamp(), quality.as_ref().ok())?;
             if report.backfilled > 0 {
                 eprintln!("livro v3: {} conteúdo(s) que faltavam foram completados", report.backfilled);
             }
@@ -137,6 +143,13 @@ fn main() -> Result<()> {
             }
             std::fs::write(&out, serde_json::to_string(&v)?)?;
             eprintln!("livro v3: {} entrada(s) exportada(s) → {}", book.entries.len(), out.display());
+        }
+        Cmd::Streams { config } => {
+            let cfg = ledger3::load_config(&config)?;
+            println!("{}", cfg.main_stream);
+            for s in cfg.streams.iter().filter(|s| **s != cfg.main_stream) {
+                println!("{s}");
+            }
         }
         Cmd::ForecastDay { config } => {
             let cfg = ledger3::load_config(&config)?;

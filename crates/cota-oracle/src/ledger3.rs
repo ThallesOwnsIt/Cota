@@ -368,7 +368,7 @@ pub fn check_trust(cfg: &Config, book: &Book, rpc_url: Option<&str>) -> Result<(
     let (trusted, source) = match rpc_url.and_then(chain_members) {
         Some(m) => (m, "o comitê da v2 na cadeia"),
         None => {
-            eprintln!("aviso: não consegui ler o comitê da v2 na cadeia; confiro com config/ledger-v3.toml");
+            eprintln!("aviso: não consegui ler o comitê da v2 na cadeia; confiro com o arquivo de configuração do livro");
             (configured, "config/ledger-v3.toml")
         }
     };
@@ -766,7 +766,7 @@ fn order(body: &Body) -> (u8, String, u64) {
 
 /// The aggregator's round: publishes the checkpoint a majority signed for the current state, then appends every body
 /// a majority signed, in `order`, through the rules.
-pub fn collect(book: &mut Book, nodes_dir: &Path, now: i64, quality: Option<&QualityInput>) -> Result<Report> {
+pub fn collect(book: &mut Book, cfg: &Config, nodes_dir: &Path, now: i64, quality: Option<&QualityInput>) -> Result<Report> {
     let mut report = Report::default();
     let (bodies, checkpoints) = read_node_files(nodes_dir);
 
@@ -855,7 +855,7 @@ pub fn collect(book: &mut Book, nodes_dir: &Path, now: i64, quality: Option<&Qua
         match book.ledger.apply(&entry) {
             Ok(applied) => {
                 if let Body::Batch(b) = &entry.body {
-                    write_batch_readings(book, nodes_dir, b, quality)?;
+                    write_batch_readings(book, cfg, nodes_dir, b, quality)?;
                 }
                 write_content(book, nodes_dir, &entry, applied.index)?;
                 book.append(entry, &applied)?;
@@ -987,26 +987,32 @@ fn write_content(book: &Book, nodes_dir: &Path, entry: &Entry, index: u64) -> Re
 /// What the station quality check needs: its limits and the catalog (id, source).
 pub struct QualityInput {
     pub limits: cota_quality::Limits,
-    pub catalog: Vec<(String, cota_core::Source)>,
+    /// Each stream's stations: a batch is assessed only against its own (another region's stations are not missing
+    /// from it).
+    pub catalog: BTreeMap<String, Vec<(String, cota_core::Source)>>,
 }
 
 impl QualityInput {
     pub fn load(cfg: &Config, limits: &Path) -> Result<Self> {
-        Ok(Self {
-            limits: cota_quality::Limits::load(limits)?,
-            catalog: cfg.stations()?.into_iter().map(|s| (s.id, s.source)).collect(),
-        })
+        let mut catalog: BTreeMap<String, Vec<(String, cota_core::Source)>> = BTreeMap::new();
+        for s in cfg.stations()? {
+            catalog.entry(cfg.stream_of(&s).to_string()).or_default().push((s.id, s.source));
+        }
+        Ok(Self { limits: cota_quality::Limits::load(limits)?, catalog })
     }
 }
 
 /// `batches/<stream>-<id>.json`: the readings of a batch, from a node whose batch has the same Merkle root, and the
 /// quality of each station (`cota-quality`, as v2's aggregator does): stuck or jumping readings, gaps, and the nodes
 /// that saw different readings. Quality is derived data, not signed; its state carries over in `quality-state.json`.
-fn write_batch_readings(book: &Book, nodes_dir: &Path, b: &cota_ledger::Batch, quality: Option<&QualityInput>) -> Result<()> {
+fn write_batch_readings(book: &Book, cfg: &Config, nodes_dir: &Path, b: &cota_ledger::Batch, quality: Option<&QualityInput>) -> Result<()> {
     let Ok(rd) = std::fs::read_dir(nodes_dir) else { return Ok(()) };
-    let mut nodes: Vec<PathBuf> = rd.filter_map(|e| e.ok().map(|e| e.path())).collect();
+    let mut nodes: Vec<PathBuf> = rd.filter_map(|e| e.ok().map(|e| e.path())).filter(|p| p.is_dir()).collect();
     nodes.sort();
-    let day_batches: Vec<SignedBatch> = nodes.iter().filter_map(|n| node_batches(n).into_values().find(|s| s.header.t_start == b.t_start)).collect();
+    // Each node's batch of this stream and day (the stream's own folder: another stream's batch of the same day must
+    // not count in the agreement between nodes).
+    let day_batches: Vec<SignedBatch> =
+        nodes.iter().filter_map(|n| node_batches(&cfg.stream_dir(n, &b.stream)).into_values().find(|s| s.header.t_start == b.t_start)).collect();
     let Some(found) = day_batches.iter().find(|s| s.header.merkle_root == b.merkle_root) else { return Ok(()) };
     let quality_json = match quality {
         None => Value::Null,
@@ -1018,7 +1024,8 @@ fn write_batch_readings(book: &Book, nodes_dir: &Path, b: &cota_ledger::Batch, q
             let state_path = book.dir.join("quality-state.json");
             let mut state: cota_quality::State =
                 std::fs::read_to_string(&state_path).ok().and_then(|t| serde_json::from_str(&t).ok()).unwrap_or_default();
-            let stations = cota_quality::assess(&mut state, &q.limits, &q.catalog, b.t_start, b.t_end, &found.readings, &agreement);
+            let catalog = q.catalog.get(&b.stream).map(Vec::as_slice).unwrap_or_default();
+            let stations = cota_quality::assess(&mut state, &q.limits, catalog, b.t_start, b.t_end, &found.readings, &agreement);
             std::fs::write(&state_path, serde_json::to_string_pretty(&state)? + "\n")?;
             let dissents: Vec<Value> = agreement
                 .dissents

@@ -205,16 +205,26 @@ def check_v3_ledger(path: Path, url: str, warn_only: bool = False) -> tuple[str,
 
 
 def check_v3_batch(path: Path, late_hours: float) -> tuple[str, str]:
-    r = ledger3("--ledger", str(path), "next-day", "--settle-min", "0")
+    """Every stream (region) has its own sequence of batches: the worst one decides."""
+    r = ledger3("--ledger", str(path), "streams")
     if r.returncode != 0:
         return FAIL, "não consegui consultar o livro: " + " ".join(r.stderr.split())[-200:]
-    if not r.stdout.strip():
-        return OK, "em dia: nenhum dia fechado à espera de lote"
-    day = datetime.fromisoformat(r.stdout.split()[0]).replace(tzinfo=timezone.utc).date()
-    closed = datetime(day.year, day.month, day.day, tzinfo=timezone.utc) + timedelta(days=1)
-    late = (datetime.now(timezone.utc) - closed).total_seconds()
-    msg = f"{day} fechou há {ago(late)} e ainda não tem lote"
-    return (FAIL, msg) if late > late_hours * 3600 else (OK, msg + "; dentro da janela")
+    status, notes = OK, []
+    for stream in r.stdout.split():
+        r = ledger3("--ledger", str(path), "next-day", "--stream", stream, "--settle-min", "0")
+        if r.returncode != 0:
+            return FAIL, f"não consegui consultar o livro ({stream}): " + " ".join(r.stderr.split())[-200:]
+        if not r.stdout.strip():
+            continue
+        day = datetime.fromisoformat(r.stdout.split()[0]).replace(tzinfo=timezone.utc).date()
+        closed = datetime(day.year, day.month, day.day, tzinfo=timezone.utc) + timedelta(days=1)
+        late = (datetime.now(timezone.utc) - closed).total_seconds()
+        if late > late_hours * 3600:
+            status = FAIL
+            notes.append(f"{stream}: {day} fechou há {ago(late)} e ainda não tem lote")
+        else:
+            notes.append(f"{stream}: {day} fechou há {ago(late)}, dentro da janela")
+    return status, "; ".join(notes) or "em dia: nenhum dia fechado à espera de lote, em nenhuma região"
 
 
 def check_v3_checkpoint(path: Path) -> tuple[str, str]:
