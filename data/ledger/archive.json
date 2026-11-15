@@ -1558,9 +1558,9 @@
    "bytes": 4802
   },
   "data/ledger/external_forecasts/glofas/2026-11-14.json.ots": {
-   "sha256": "6926934895abf6b5c5196ae433da9db9b18d3f4017e5de1e71a828e1445ba12f",
-   "id": "XLlokbe4G0N6vnvurqCm9QiAqmZWPx8_nYVrKtcVDok",
-   "bytes": 628
+   "sha256": "53dfa3b16dce10afdc1f98a79e53ad7c7d2b32941377a61957636598183c95b1",
+   "id": "6vhlTfoMSt3M3_cLaje_T6Z5uaV7h6lcCh6MNRBd0aI",
+   "bytes": 2554
   },
   "data/ledger/forecasts/2026-11-14.json": {
    "sha256": "372f8af87b57cf44c4d69623affde2d502a99cbee3aa22ec1e1e1d931c145f42",
@@ -1694,6 +1694,6 @@
    "bytes": 992
   }
  ],
- "bytes": 2278080,
+ "bytes": 2280634,
  "signer": "7kw7om2uMrnSaJBZXriH6TAVpQrsN7Eoq7dtsqgb6Lww"
 }
