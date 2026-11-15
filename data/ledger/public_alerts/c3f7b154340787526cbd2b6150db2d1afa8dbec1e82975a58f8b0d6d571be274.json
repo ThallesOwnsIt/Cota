@@ -1,0 +1,35 @@
+{
+  "cluster": "devnet",
+  "committed_at": 1794749771,
+  "content": "{\"alterado\":false,\"aviso_cor\":\"#FFFE00\",\"codigo\":\"urn:oid:2.49.0.0.76.0.2026.28710.1\",\"created_at\":\"2026-11-15T00:00:00.000Z\",\"data_fim\":\"2026-11-17T00:00:00.000Z\",\"data_inicio\":\"2026-11-16T00:00:00.000Z\",\"descricao\":\"Ventos Costeiros\",\"encerrado\":false,\"estados\":\"Santa Catarina,Rio Grande do Sul\",\"fim\":\"2026-11-17 23:59\",\"geocodes\":\"4201406,4301057,4201950,4202073,4301636,4220000,4304630,4304671,4305439,4305454,4306551,4207007,4310330,4208807,4311775,4312500,4313508,4313656,4212254,4315602,4215653,4317301,4216404,4318507,4217709,4321352,4321436,4321501,4321600,4321667,4323002,4323804\",\"hora_fim\":\"23:59\",\"hora_inicio\":\"09:00\",\"id_aviso\":28710,\"id_condicao_severa\":37,\"id_icone\":97,\"id_sequencia\":1,\"id_severidade\":6,\"id_usuario\":19,\"inicio\":\"2026-11-16 09:00\",\"instrucoes\":[\"Contate a Defesa Civil (telefone: 199).\"],\"issuer\":\"inmet\",\"mesorregioes\":\"Sul Catarinense,Metropolitana de Porto Alegre,Sudeste Rio-grandense\",\"microrregioes\":\"Araranguá,Osório,Criciúma,Litoral Lagunar,Tubarão,Porto Alegre\",\"municipios\":\"Araranguá - SC (4201406),Arroio do Sal - RS (4301057),Balneário Arroio do Silva - SC (4201950),Balneário Gaivota - SC (4202073),Balneário Pinhal - RS (4301636),Balneário Rincão - SC (4220000),Capão da Canoa - RS (4304630),Capivari do Sul - RS (4304671),Chuí - RS (4305439),Cidreira - RS (4305454),Dom Pedro de Alcântara - RS (4306551),Içara - SC (4207007),Imbé - RS (4310330),Jaguaruna - SC (4208807),Maquiné - RS (4311775),Mostardas - RS (4312500),Osório - RS (4313508),Palmares do Sul - RS (4313656),Passo de Torres - SC (4212254),Rio Grande - RS (4315602),Santa Rosa do Sul - SC (4215653),Santa Vitória do Palmar - RS (4317301),São João do Sul - SC (4216404),São José do Norte - RS (4318507),Sombrio - SC (4217709),Tavares - RS (4321352),Terra de Areia - RS (4321436),Torres - RS (4321501),Tramandaí - RS (4321600),Três Cachoeiras - RS (4321667),Viamão - RS (4323002),Xangri-lá - RS (4323804)\",\"poligono\":\"{\\\"type\\\":\\\"Polygon\\\",\\\"coordinates\\\":[[[-49.364319,-28.962492],[-48.955078,-28.666491],[-49.073181,-28.700225],[-49.257202,-28.806174],[-49.770813,-29.24327],[-50.317383,-30.031055],[-50.800781,-30.334954],[-51.196289,-31.015279],[-51.481934,-31.428663],[-51.855469,-31.746854],[-52.492676,-32.23139],[-52.602539,-32.62087],[-53.041992,-33.192731],[-53.525391,-33.651208],[-53.349609,-33.779147],[-52.624512,-33.211116],[-52.250977,-32.361403],[-51.723633,-31.914868],[-51.328125,-31.728167],[-50.800781,-31.184609],[-50.29541,-30.505484],[-49.87793,-29.592565],[-49.364319,-28.962492]]]}\",\"referencia\":null,\"regioes\":\"Sul\",\"riscos\":[\"Intensificação dos ventos nas regiões litorâneas, movimentando dunas de areia sobre construções na orla.\"],\"severidade\":\"Perigo Potencial\",\"updated_at\":\"2026-11-15T00:00:00.000Z\"}",
+  "description": "Ventos Costeiros",
+  "explorer": "https://explorer.solana.com/tx/28sEySFvDrdybB2pKZy4PFHXtoPz1ucyuKXzCuWA6H1oeCTwbrWy7tNdEskZAnBCyESRuNi7cxdu1pPuH37RhcKE?cluster=devnet",
+  "header": {
+    "alert_id": "urn:oid:2.49.0.0.76.0.2026.28710.1",
+    "content_sha256": "c3f7b154340787526cbd2b6150db2d1afa8dbec1e82975a58f8b0d6d571be274",
+    "expires": 1794970740,
+    "issuer": "inmet",
+    "onset": 1794830400,
+    "severity": 1
+  },
+  "observations": [
+    {
+      "member": "GS3uQUPgfCDXqtbpD6vPyNpQgRcDUFj1fhF4wYGk9ist",
+      "seen_at": 1794749763
+    },
+    {
+      "member": "AFbz6rqf4u7pexBHadriqd9VNDh74KGqEeZG5eeQKTs3",
+      "seen_at": 1794749763
+    },
+    {
+      "member": "B4FwxN42zWyiSKU7qwvbpchy7uDD8ugnzX43B9mPd38L",
+      "seen_at": 1794749763
+    }
+  ],
+  "record_index": 200,
+  "severity_label": "Perigo Potencial",
+  "signers": 7,
+  "slot": 522563338,
+  "states": "Santa Catarina,Rio Grande do Sul",
+  "tx_signature": "28sEySFvDrdybB2pKZy4PFHXtoPz1ucyuKXzCuWA6H1oeCTwbrWy7tNdEskZAnBCyESRuNi7cxdu1pPuH37RhcKE"
+}
