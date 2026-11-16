@@ -3,9 +3,9 @@
  "note": "path -> Arweave id of its latest gzipped copy; records.jsonl in chunks",
  "files": {
   "data/ledger/audit.json": {
-   "sha256": "318fe9067d3d27395bd00e673b2019ef68a840ba7156cb1d66b1f093793ea181",
-   "id": "H5HPnGLHRz1DAnhH8Qycb1ns7MaswSxQw7hoySoQQO4",
-   "bytes": 6681
+   "sha256": "7779ccf7d5e8a48dab2b3bfb6f01da3c9ccdcd6d1c29538d947758d18f571ac0",
+   "id": "V_dhrpxK-PuS8TyE1HOIckcSRJQQAU9fok2syhwCIDY",
+   "bytes": 6704
   },
   "data/ledger/batches/00001.json": {
    "sha256": "c764b273b95f359854739c3ec9a3a5f202234c144ab3eb7dbfdf32efb8b6941e",
@@ -1631,6 +1631,16 @@
    "sha256": "9cfa43dcfc2396655baa60cbcad2f3c4ecd7c94d206df8e299a7c5a54c088a76",
    "id": "DeKS9FB3VrNsAW4uv4OpH3l3NETn8SsVLdhefza8icc",
    "bytes": 5843
+  },
+  "data/ledger/public_alerts/c5f0dc25c92b2f27dc3f6d329a15cb0003936f79b8d7c392dabb1d01507b1390.json": {
+   "sha256": "cc19e309c52825a1d095babe0ddfe21602c69c9a8c830cbfe55a289616fd348a",
+   "id": "s2tA-BdvDO-DEMmkRErinZUqkH0GFV6oRBoBoxgZdtY",
+   "bytes": 36729
+  },
+  "data/ledger/public_alerts/e8207414ebae0aa9d2e78885cb4debe5606f3bc8922b135fe999cc7b20df2f32.json": {
+   "sha256": "9b2fbb0d647b7f91368770bb52370407764ceed32f273d5cabe2d99208eee954",
+   "id": "_lAbkYYQ7iWjhsKbaZ4wkY6OLidzRRrTLEARbEg66vg",
+   "bytes": 11082
   }
  },
  "records": [
@@ -1773,8 +1783,15 @@
    "sha256": "34f550858b7bfbca16620fb85ec07bafd54af5d8ff0e401f0bf85f870c1a14a8",
    "id": "szLs0yKutNiH2ef78CepzgVVa4_IF906aNQLDqYMp5o",
    "bytes": 691
+  },
+  {
+   "from": 208,
+   "to": 209,
+   "sha256": "73f7c058744b6f150d7410bdc08069a3f1c8459a60adf5464ce7e76524173745",
+   "id": "cyVYdTOzbYZVTrpLD93aM2Pk_owr0XkpjycJM5SLRz4",
+   "bytes": 510
   }
  ],
- "bytes": 2383572,
+ "bytes": 2438597,
  "signer": "7kw7om2uMrnSaJBZXriH6TAVpQrsN7Eoq7dtsqgb6Lww"
 }
