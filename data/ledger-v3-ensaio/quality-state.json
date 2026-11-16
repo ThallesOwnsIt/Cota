@@ -1,123 +1,123 @@
 {
   "stations": {
     "ANA-85642000": {
-      "score": 0.9999999999999999,
-      "last_ts": 1794697200,
-      "last_value": 2450,
+      "score": 1.0,
+      "last_ts": 1794783600,
+      "last_value": 1830,
       "run": 1
     },
     "ANA-85930001": {
-      "score": 0.9999999999999999,
-      "last_ts": 1794697200,
-      "last_value": 900,
-      "run": 2
+      "score": 1.0,
+      "last_ts": 1794783600,
+      "last_value": 960,
+      "run": 1
     },
     "ANA-86510000": {
-      "score": 0.9999999999999999,
-      "last_ts": 1794697200,
-      "last_value": 1640,
+      "score": 1.0,
+      "last_ts": 1794783600,
+      "last_value": 1520,
       "run": 1
     },
     "ANA-86720000": {
-      "score": 0.9999999999999999,
-      "last_ts": 1794697200,
-      "last_value": 1040,
+      "score": 1.0,
+      "last_ts": 1794783600,
+      "last_value": 1000,
       "run": 1
     },
     "ANA-86879300": {
-      "score": 0.9999999999999999,
-      "last_ts": 1794697200,
-      "last_value": 13000,
-      "run": 2
+      "score": 1.0,
+      "last_ts": 1794783600,
+      "last_value": 12720,
+      "run": 1
     },
     "ANA-86881000": {
-      "score": 0.9999999999999999,
-      "last_ts": 1794697200,
-      "last_value": 3377,
+      "score": 1.0,
+      "last_ts": 1794783600,
+      "last_value": 3761,
       "run": 1
     },
     "ANA-86950000": {
-      "score": 0.9999999999999999,
-      "last_ts": 1794697200,
-      "last_value": 2800,
-      "run": 2
+      "score": 1.0,
+      "last_ts": 1794783600,
+      "last_value": 3000,
+      "run": 1
     },
     "ANA-87170000": {
-      "score": 0.9708333333333332,
-      "last_ts": 1794697200,
-      "last_value": 2450,
-      "run": 2
+      "score": 0.9854166666666666,
+      "last_ts": 1794783600,
+      "last_value": 2400,
+      "run": 5
     },
     "ANA-87270000": {
-      "score": 0.9708333333333332,
-      "last_ts": 1794697200,
-      "last_value": 1100,
+      "score": 0.9854166666666666,
+      "last_ts": 1794783600,
+      "last_value": 1300,
       "run": 1
     },
     "ANA-87380000": {
-      "score": 0.9999999999999999,
-      "last_ts": 1794697200,
-      "last_value": 2420,
+      "score": 1.0,
+      "last_ts": 1794783600,
+      "last_value": 2270,
       "run": 1
     },
     "ANA-87382000": {
-      "score": 0.9999999999999999,
-      "last_ts": 1794697200,
-      "last_value": 1550,
+      "score": 1.0,
+      "last_ts": 1794783600,
+      "last_value": 1590,
       "run": 1
     },
     "ANA-87399000": {
-      "score": 0.9999999999999999,
-      "last_ts": 1794697200,
-      "last_value": 2010,
-      "run": 1
+      "score": 1.0,
+      "last_ts": 1794783600,
+      "last_value": 1970,
+      "run": 4
     },
     "ANA-87450004": {
-      "score": 0.9999999999999999,
-      "last_ts": 1794697200,
-      "last_value": 890,
-      "run": 2
+      "score": 1.0,
+      "last_ts": 1794783600,
+      "last_value": 1030,
+      "run": 1
     },
     "ANA-87450020": {
-      "score": 0.9999999999999999,
-      "last_ts": 1794697200,
-      "last_value": 490,
-      "run": 2
+      "score": 1.0,
+      "last_ts": 1794783600,
+      "last_value": 620,
+      "run": 1
     },
     "GLOFAS-CAI": {
-      "score": 0.9999999999999999,
-      "last_ts": 1794614400,
-      "last_value": 132970,
+      "score": 1.0,
+      "last_ts": 1794700800,
+      "last_value": 113290,
       "run": 1
     },
     "GLOFAS-GRAVATAI": {
-      "score": 0.9999999999999999,
-      "last_ts": 1794614400,
-      "last_value": 15070,
+      "score": 1.0,
+      "last_ts": 1794700800,
+      "last_value": 12650,
       "run": 1
     },
     "GLOFAS-GUAIBA": {
-      "score": 0.9999999999999999,
-      "last_ts": 1794614400,
-      "last_value": 2392320,
+      "score": 1.0,
+      "last_ts": 1794700800,
+      "last_value": 2083490,
       "run": 1
     },
     "GLOFAS-JACUI": {
-      "score": 0.9999999999999999,
-      "last_ts": 1794614400,
-      "last_value": 1989670,
+      "score": 1.0,
+      "last_ts": 1794700800,
+      "last_value": 1756920,
       "run": 1
     },
     "GLOFAS-SINOS": {
-      "score": 0.9999999999999999,
-      "last_ts": 1794614400,
-      "last_value": 76620,
+      "score": 1.0,
+      "last_ts": 1794700800,
+      "last_value": 65530,
       "run": 1
     },
     "GLOFAS-TAQUARI": {
-      "score": 0.9999999999999999,
-      "last_ts": 1794614400,
-      "last_value": 764600,
+      "score": 1.0,
+      "last_ts": 1794700800,
+      "last_value": 627060,
       "run": 1
     }
   }
