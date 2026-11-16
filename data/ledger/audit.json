@@ -2,16 +2,16 @@
   "program": "FnjR7wG5zicqWJ6KQuWQ5UcqqhcSghrYozVgMmmDFNwR",
   "registry": "6CNtD18LQ4bBZTGK1C2Z6RuJrSwyxCD3ToRpiWE3y9bR",
   "accumulator": {
-    "records": 205,
-    "on_chain": 205,
+    "records": 208,
+    "on_chain": 208,
     "peaks_match": true,
-    "root": "5e26bd87c275a1fc6b07080d3667fbb6c92db8f6606cc0556dcebd5f1817c84c",
+    "root": "a044d10fed55db6abd769b1d6d7ffdd71bf25e865184e79cc7ae326bf509cbd1",
     "kinds": {
       "batch": 47,
       "degradation": 4,
       "forecast": 92,
       "outlook": 11,
-      "public_alert": 25,
+      "public_alert": 28,
       "station": 26
     }
   },
@@ -2173,6 +2173,14 @@
       "problems": []
     },
     {
+      "record_index": 206,
+      "alert_id": "urn:oid:2.49.0.0.76.0.2026.28714.1",
+      "slot": 522909638,
+      "committed_at": 1794832582,
+      "signers": 7,
+      "problems": []
+    },
+    {
       "record_index": 141,
       "alert_id": "urn:oid:2.49.0.0.76.0.2026.28645.1",
       "slot": 519384919,
@@ -2201,6 +2209,14 @@
       "alert_id": "urn:oid:2.49.0.0.76.0.2026.28684.1",
       "slot": 521166578,
       "committed_at": 1794415477,
+      "signers": 7,
+      "problems": []
+    },
+    {
+      "record_index": 205,
+      "alert_id": "urn:oid:2.49.0.0.76.0.2026.28713.1",
+      "slot": 522909626,
+      "committed_at": 1794832579,
       "signers": 7,
       "problems": []
     },
@@ -2345,6 +2361,14 @@
       "alert_id": "urn:oid:2.49.0.0.76.0.2026.28652.1",
       "slot": 519711095,
       "committed_at": 1794066740,
+      "signers": 7,
+      "problems": []
+    },
+    {
+      "record_index": 207,
+      "alert_id": "urn:oid:2.49.0.0.76.0.2026.28715.1",
+      "slot": 522909649,
+      "committed_at": 1794832584,
       "signers": 7,
       "problems": []
     },
@@ -2496,9 +2520,9 @@
     "forecasts_with_problems": 0,
     "outlooks": 11,
     "outlooks_with_problems": 0,
-    "public_alerts": 25,
+    "public_alerts": 28,
     "public_alerts_with_problems": 0,
-    "records": 205,
+    "records": 208,
     "unmatched": 0,
     "vault_payouts": 3,
     "vaults": 2,
