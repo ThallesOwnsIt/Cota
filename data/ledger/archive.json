@@ -413,9 +413,9 @@
    "bytes": 1536
   },
   "data/ledger/timestamps/index.json": {
-   "sha256": "ed5b8054f3af63892e3dbac78cee9f15a5f536deb0b636c999f844308005d928",
-   "id": "ZeMydp9bMqRALY0ztpclIgAgIaRzaN0BLW9EIyfeW44",
-   "bytes": 833
+   "sha256": "8d15991353cac677b6e519bf68ead570479f0ccb7910ba712c7cd151cac2326b",
+   "id": "-dPbtERp33GwnOUgA9tEMEQ0_17bKfZ-Ax4h55urjJ0",
+   "bytes": 829
   },
   "data/ledger/vaults/ao-vivo.json": {
    "sha256": "a4dfa4a9757bce2133115d431d1df7f2ea466c6004176e1869365b4eaf116c62",
@@ -1648,9 +1648,9 @@
    "bytes": 234
   },
   "data/ledger/timestamps/000210.txt.ots": {
-   "sha256": "053c4a5a32263845befe454358bbfca2c25400e1da134d9a6d9be040aed66df9",
-   "id": "jpR0x3TNac4roKVvFjTaSK_GzcQKE0BzZa3rQcVUI5M",
-   "bytes": 927
+   "sha256": "8d5d93e5c402328ea19869a366a0dfc638abc1472bde33e12124a581ece70946",
+   "id": "-RykqscTwJGvl2L5cLMQf-hu2PRxKy7WStY6XtTzz2M",
+   "bytes": 1806
   },
   "data/ledger/batches/00048.json": {
    "sha256": "e10ee280ef12f586a2d243d10d3ca14fa6902e106f3dd2e5ad64d48b54f963d0",
@@ -1834,6 +1834,6 @@
    "bytes": 993
   }
  ],
- "bytes": 2472835,
+ "bytes": 2475470,
  "signer": "7kw7om2uMrnSaJBZXriH6TAVpQrsN7Eoq7dtsqgb6Lww"
 }
