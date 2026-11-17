@@ -1,0 +1,7 @@
+{
+  "content": "{\"issued_at\":1794873600,\"models\":{\"ecmwf_ifs025\":{\"caraa\":[42,64,32,211,2],\"gramado\":[35,89,35,272,13],\"novo-hamburgo\":[60,68,19,226,23],\"rolante\":[42,64,32,211,2],\"taquara\":[55,63,41,166,2]},\"gfs_global\":{\"caraa\":[384,20,73,517,0],\"gramado\":[55,24,83,289,0],\"novo-hamburgo\":[246,23,85,224,0],\"rolante\":[123,12,88,392,0],\"taquara\":[106,18,96,312,0]},\"icon_global\":{\"caraa\":[6,96,140,203,2],\"gramado\":[1,79,69,182,1],\"novo-hamburgo\":[2,138,45,211,1],\"rolante\":[1,130,215,174,1],\"taquara\":[1,152,109,161,1]}},\"region\":\"sinos\",\"rule_sha256\":\"3d5dda09a1896ad7f8c56c80519018604d3ac07084f0cabe99271cad445db690\",\"run\":\"2026-11-16T00:00Z\",\"unit\":\"0.1 mm/dia\",\"window\":[\"2026-11-17\",\"2026-11-21\"]}",
+  "content_sha256": "288e35707c83386ff78605f032c017a19f8faa823d9e94002940bfcbd49dadbd",
+  "index": 257,
+  "issued_at": 1794873600,
+  "region": "sinos"
+}
