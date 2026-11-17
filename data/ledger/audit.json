@@ -2,16 +2,16 @@
   "program": "FnjR7wG5zicqWJ6KQuWQ5UcqqhcSghrYozVgMmmDFNwR",
   "registry": "6CNtD18LQ4bBZTGK1C2Z6RuJrSwyxCD3ToRpiWE3y9bR",
   "accumulator": {
-    "records": 215,
-    "on_chain": 215,
+    "records": 217,
+    "on_chain": 217,
     "peaks_match": true,
-    "root": "b5bf34ea77aa7236fd18c6a77364e1ee5a81ca58afda781708b657eddc0d561f",
+    "root": "2e8825ba75821f50fc610034d0be13622758bcd88e9cd77dac33fef2b4e5eb1f",
     "kinds": {
       "batch": 48,
       "degradation": 4,
       "forecast": 94,
       "outlook": 12,
-      "public_alert": 31,
+      "public_alert": 33,
       "station": 26
     }
   },
@@ -2232,6 +2232,14 @@
       "problems": []
     },
     {
+      "record_index": 216,
+      "alert_id": "urn:oid:2.49.0.0.76.0.2026.28722.1",
+      "slot": 523270780,
+      "committed_at": 1794918971,
+      "signers": 7,
+      "problems": []
+    },
+    {
       "record_index": 142,
       "alert_id": "urn:oid:2.49.0.0.76.0.2026.28647.1",
       "slot": 519384950,
@@ -2448,6 +2456,14 @@
       "problems": []
     },
     {
+      "record_index": 215,
+      "alert_id": "urn:oid:2.49.0.0.76.0.2026.28721.1",
+      "slot": 523270768,
+      "committed_at": 1794918969,
+      "signers": 7,
+      "problems": []
+    },
+    {
       "record_index": 139,
       "alert_id": "urn:oid:2.49.0.0.76.0.2026.28643.1",
       "slot": 519384905,
@@ -2596,9 +2612,9 @@
     "forecasts_with_problems": 0,
     "outlooks": 12,
     "outlooks_with_problems": 0,
-    "public_alerts": 31,
+    "public_alerts": 33,
     "public_alerts_with_problems": 0,
-    "records": 215,
+    "records": 217,
     "unmatched": 0,
     "vault_payouts": 3,
     "vaults": 2,
