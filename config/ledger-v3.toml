@@ -21,8 +21,9 @@ members = [
   "AFbz6rqf4u7pexBHadriqd9VNDh74KGqEeZG5eeQKTs3",
 ]
 threshold = 2
-# 00:00 UTC of the first day the streams carry. For the rehearsal (data/ledger-v3-ensaio): its first day.
-cutover = "2026-11-14"
+# 00:00 UTC of the first day the streams carry: 18/11/2026, the last day of v2 (the rehearsal, data/ledger-v3-ensaio,
+# opened on 14/11 and is not affected: changing this after an opening has no effect on it).
+cutover = "2026-11-18"
 
 [rules]
 # The flow alert rule (its `alert_rule` field) and the early-warning rules, as v2 uses them.
