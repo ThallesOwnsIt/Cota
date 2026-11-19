@@ -3,9 +3,9 @@
  "note": "path -> Arweave id of its latest gzipped copy; records.jsonl in chunks",
  "files": {
   "data/ledger/audit.json": {
-   "sha256": "bd29fc18ffb3829fc6351754d9fbd0b5269bb9366075b55e9a20560ab27814bd",
-   "id": "lu5i2rT0UN7SLY0YBZSRyX0KAfVO6AWWbn9LcH0WWUQ",
-   "bytes": 7206
+   "sha256": "32c15afa91be03ab2e04e31b53074d28101c9cbafa483661eb56f7579d38df80",
+   "id": "Czr1s_9sI01xNRx9yr9GHs2N4fqNhxKtoLSe6dsnK4c",
+   "bytes": 7248
   },
   "data/ledger/batches/00001.json": {
    "sha256": "c764b273b95f359854739c3ec9a3a5f202234c144ab3eb7dbfdf32efb8b6941e",
@@ -1781,6 +1781,21 @@
    "sha256": "a64c62ecf3c397641e0816c5cdbd120b881785611f1c798fd36a1e3587181922",
    "id": "D5WcFtxlHdIdDCVZlSlBQCqtB47iLJ5FHG7HBYXw-Kk",
    "bytes": 1003
+  },
+  "data/ledger/public_alerts/260377ebede61b0ef7a4a8b128e9ec8759ae9eb5a4d8503d168abc0f691dfcf8.json": {
+   "sha256": "a5913c339e12639fb268eaa984a04dacf1ff64572296e2d52736355a45c63434",
+   "id": "PDQAZ29hj9ywsLsZIBTduWINXX0xP24B5V8ygirobqA",
+   "bytes": 53034
+  },
+  "data/ledger/public_alerts/df1f2f887df944867545777c52e76422ff416f351435946617bf20be336a1d92.json": {
+   "sha256": "1993f53561db0268d1d82e7c32cb21beab928e21ab5472001e2fb7a63525536a",
+   "id": "ocoVOpjlu8NhaBSJfc4L6Pu1_ZjTNLGreigx1m751x8",
+   "bytes": 10235
+  },
+  "data/ledger/public_alerts/e181a2e5fbd83a8b5526eea3ae8af45b0083ee172fb430efd281661f500d5cc1.json": {
+   "sha256": "fd1715b3f381487a3fdfd2302ec6bf76070b49041ceefa0dbf25351c168a6925",
+   "id": "xKlWX51iLCieVWZs2-KjuKg_djBv1VPpMRzPCQVavvg",
+   "bytes": 52230
   }
  },
  "records": [
@@ -1986,8 +2001,15 @@
    "sha256": "a192ba585b7c4224c3dc42196e2a50861d7706ef45107a7e3ddba83a17ed3489",
    "id": "Dr76FAgKax7hIzE20M3SULGdi4Bet2L-XI8KSyI599w",
    "bytes": 992
+  },
+  {
+   "from": 229,
+   "to": 231,
+   "sha256": "b12664bb873513b70d5f6c2edbd4d71a6fb185453fcdb0fd31c6f3282d7bd1d9",
+   "id": "v10sXGbLvX5JJYAmiMQS09kLi4BPyJT5HE0uyXi3sMU",
+   "bytes": 702
   }
  ],
- "bytes": 2907736,
+ "bytes": 3031185,
  "signer": "7kw7om2uMrnSaJBZXriH6TAVpQrsN7Eoq7dtsqgb6Lww"
 }
