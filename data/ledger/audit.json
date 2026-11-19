@@ -2,16 +2,16 @@
   "program": "FnjR7wG5zicqWJ6KQuWQ5UcqqhcSghrYozVgMmmDFNwR",
   "registry": "6CNtD18LQ4bBZTGK1C2Z6RuJrSwyxCD3ToRpiWE3y9bR",
   "accumulator": {
-    "records": 232,
-    "on_chain": 232,
+    "records": 235,
+    "on_chain": 235,
     "peaks_match": true,
-    "root": "9c946b3b20202e1bdb148295b3a251838520c087f93e758ed24627cd69e98d95",
+    "root": "fdd2062dda42b46b4356f644b262d364c8ad1a1c696a213a59fc9b5e48f91d70",
     "kinds": {
       "batch": 50,
       "degradation": 4,
       "forecast": 98,
       "outlook": 14,
-      "public_alert": 40,
+      "public_alert": 43,
       "station": 26
     }
   },
@@ -2310,6 +2310,14 @@
       "problems": []
     },
     {
+      "record_index": 233,
+      "alert_id": "urn:oid:2.49.0.0.76.0.2026.28734.1",
+      "slot": 523993148,
+      "committed_at": 1795091775,
+      "signers": 7,
+      "problems": []
+    },
+    {
       "record_index": 141,
       "alert_id": "urn:oid:2.49.0.0.76.0.2026.28645.1",
       "slot": 519384919,
@@ -2382,6 +2390,14 @@
       "problems": []
     },
     {
+      "record_index": 232,
+      "alert_id": "urn:oid:2.49.0.0.76.0.2026.28733.1",
+      "slot": 523993138,
+      "committed_at": 1795091772,
+      "signers": 7,
+      "problems": []
+    },
+    {
       "record_index": 223,
       "alert_id": "urn:oid:2.49.0.0.76.0.2026.28725.1",
       "slot": 523631956,
@@ -2402,6 +2418,14 @@
       "alert_id": "urn:oid:2.49.0.0.76.0.2026.28720.1",
       "slot": 523263268,
       "committed_at": 1794917170,
+      "signers": 7,
+      "problems": []
+    },
+    {
+      "record_index": 234,
+      "alert_id": "urn:oid:2.49.0.0.76.0.2026.28735.1",
+      "slot": 523993159,
+      "committed_at": 1795091778,
       "signers": 7,
       "problems": []
     },
@@ -2772,9 +2796,9 @@
     "forecasts_with_problems": 0,
     "outlooks": 14,
     "outlooks_with_problems": 0,
-    "public_alerts": 40,
+    "public_alerts": 43,
     "public_alerts_with_problems": 0,
-    "records": 232,
+    "records": 235,
     "unmatched": 0,
     "vault_payouts": 3,
     "vaults": 2,
