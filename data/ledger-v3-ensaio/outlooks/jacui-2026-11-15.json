@@ -1,7 +1,0 @@
-{
-  "content": "{\"issued_at\":1794787200,\"models\":{\"ecmwf_ifs025\":{\"cachoeira-do-sul\":[3,66,39,15,511],\"espumoso\":[0,38,94,45,199],\"julio-de-castilhos\":[0,55,90,46,416],\"rio-pardo\":[3,60,67,38,517],\"santa-cruz-do-sul\":[4,48,102,27,471],\"santa-maria\":[0,51,36,22,534],\"sobradinho\":[3,53,61,22,396]},\"gfs_global\":{\"cachoeira-do-sul\":[1,86,38,2,58],\"espumoso\":[0,148,2,11,104],\"julio-de-castilhos\":[0,42,30,4,35],\"rio-pardo\":[0,288,13,1,43],\"santa-cruz-do-sul\":[0,93,36,6,25],\"santa-maria\":[0,93,41,0,32],\"sobradinho\":[0,63,79,6,60]},\"icon_global\":{\"cachoeira-do-sul\":[0,109,37,222,245],\"espumoso\":[0,103,14,161,464],\"julio-de-castilhos\":[0,83,6,418,141],\"rio-pardo\":[0,135,83,140,186],\"santa-cruz-do-sul\":[0,154,79,161,159],\"santa-maria\":[0,63,0,269,53],\"sobradinho\":[0,176,14,217,176]}},\"region\":\"jacui\",\"rule_sha256\":\"f012ea9fef7dbc39989d1df555b4ea65e9f82554dc3c743b823d441591143949\",\"run\":\"2026-11-15T00:00Z\",\"unit\":\"0.1 mm/dia\",\"window\":[\"2026-11-16\",\"2026-11-20\"]}",
-  "content_sha256": "e5a93a131649a4be70356967e565b067c9d9c3007d228d1900b0180889fd3afc",
-  "index": 241,
-  "issued_at": 1794787200,
-  "region": "jacui"
-}

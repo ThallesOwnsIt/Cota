@@ -1,7 +1,0 @@
-{
-  "content": "{\"issued_at\":1794960000,\"models\":{\"ecmwf_ifs025\":{\"bento-goncalves\":[60,30,185,16,183],\"bom-jesus\":[107,46,182,30,201],\"encantado\":[132,36,152,28,81],\"lajeado\":[78,33,97,26,42],\"nova-prata\":[77,102,255,16,199],\"soledade\":[82,43,169,2,168],\"vacaria\":[94,112,228,31,166]},\"gfs_global\":{\"bento-goncalves\":[34,8,16,0,8],\"bom-jesus\":[37,26,139,14,47],\"encantado\":[20,3,12,0,16],\"lajeado\":[60,29,5,0,10],\"nova-prata\":[42,4,80,11,55],\"soledade\":[4,4,42,1,56],\"vacaria\":[97,23,154,8,75]},\"icon_global\":{\"bento-goncalves\":[180,139,146,0,41],\"bom-jesus\":[64,63,324,2,99],\"encantado\":[111,38,99,0,50],\"lajeado\":[121,141,86,0,78],\"nova-prata\":[87,23,215,1,12],\"soledade\":[47,64,177,1,26],\"vacaria\":[73,14,292,1,87]}},\"region\":\"taquari\",\"rule_sha256\":\"d4d5c16154e687cbaff5bbbdea70f7f2961335d54f99f6786986dd8c12083494\",\"run\":\"2026-11-17T00:00Z\",\"unit\":\"0.1 mm/dia\",\"window\":[\"2026-11-18\",\"2026-11-22\"]}",
-  "content_sha256": "98941b7e99fc37ae2ea1db37ce6e4ef15e2c34cee20555e89db046fa201021c0",
-  "index": 273,
-  "issued_at": 1794960000,
-  "region": "taquari"
-}

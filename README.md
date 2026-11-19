@@ -29,13 +29,13 @@ May 2024 flood, when the Guaíba reached 5.37 m and it was hard to piece togethe
 Cota does not replace civil defense, and it doesn't prove a sensor measured correctly. It proves nobody changed the data, and
 when the data existed.
 
-### Status: moving from Solana to Cota's own ledger
+### Status: Cota's own ledger since 18 November 2026
 
-Until November 2026 the records went to a program on Solana's test network (devnet). Solana limited the committee to 7 members
-(a transaction holds only a few signatures) and its devnet is not an archive, so Cota is moving to a ledger of its own with the
-same records, signatures and rules. **Until the cutover (planned for around 18 November 2026) the live records still go to
-Solana (program v2), and the new ledger runs as a rehearsal next to it** (`data/ledger-v3-ensaio`). After the cutover, v2 is
-frozen as an archive and the site reads the new ledger.
+Until 18 November 2026 the records went to a program on Solana's test network (devnet). Solana limited the committee to 7
+members (a transaction holds only a few signatures) and its devnet is not an archive, so Cota moved to a ledger of its own
+with the same records, signatures and rules (`data/ledger-v3`). Its opening comes right after program v2's last record and
+pins its root; v2 is frozen as an archive, on a separate page of the site. Before the switch the new ledger ran for five
+days as a rehearsal next to v2, without a fault.
 
 ---
 
@@ -82,7 +82,7 @@ and compares the opening committee with v2's committee on-chain (the trust ancho
 | `ml/` | Training, evaluation and forecasting (Python/uv); the rain rules and their backtests |
 | `verifier/` | `ledger.mjs` and `cota_verify.wasm` (the v3 check), `verify.js` (the v2 check), `check.mjs` (both, with no site) |
 | `config/` | Gauges (`stations-live.toml`), places and official levels (`locations.toml`), the ledger's opening (`ledger-v3.toml`) |
-| `data/` | `ledger-v3*` (the v3 ledger and its rehearsal), `ledger` (v2), `ledger-v1` (v1) |
+| `data/` | `ledger-v3` (the ledger), `ledger` (v2, frozen), `ledger-v1` (v1) |
 | `dashboard/data/` | Data for the site, written by the live rounds (the site's code is in a private repository) |
 | `scripts/` | `live/round.sh` (one live round, the same everywhere), `export_dashboard.py`, `timestamp.py` (OpenTimestamps), `doctor.py` (health check) |
 
@@ -100,8 +100,8 @@ bash verifier/build-wasm.sh --check        # the browser verifier rebuilds to th
 
 A server runs `scripts/live/round.sh` every 30 minutes in Docker containers, each node's container with only its own key;
 GitHub Actions (`.github/workflows/live.yml`) is the backup. A node waits for a source that is down (fewer than half of its
-stations answering) until 04:00 UTC before signing a day without it. After the cutover, `COTA_LEDGER=v3` makes the round take
-the day from the ledger and write nothing to Solana.
+stations answering) until 04:00 UTC before signing a day without it. `COTA_LEDGER=v3` (on since 18/11/2026) makes the round
+take the day from the ledger and write nothing to Solana.
 
 ## Copies outside GitHub
 
@@ -118,7 +118,7 @@ the checkpoints against Bitcoin.
   `data/ledger/records.jsonl` and are checked against the on-chain peaks by `verifier/check.mjs`.
 - Program v1 (`4FChu6PkKzsFQRAtQt2oiGt7TuC4uZhBNSSHqDoVNFsa`, one account per record): `data/ledger-v1`.
 - The parametric vaults were retired on 13 November 2026. They stay on-chain, idle, until they expire on 5 November 2027.
-- After the cutover the site keeps this history on a separate archive page.
+- The site keeps this history on a separate archive page.
 
 ## What is open
 

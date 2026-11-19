@@ -1,7 +1,0 @@
-{
-  "content": "{\"issued_at\":1794787200,\"models\":{\"ecmwf_ifs025\":{\"cachoeirinha\":[3,36,45,27,216],\"glorinha\":[3,52,41,21,198],\"gravatai\":[3,36,45,27,216],\"santo-antonio-da-patrulha\":[0,88,71,57,336]},\"gfs_global\":{\"cachoeirinha\":[0,29,19,8,35],\"glorinha\":[0,89,53,4,67],\"gravatai\":[0,44,36,7,42],\"santo-antonio-da-patrulha\":[0,92,55,10,63]},\"icon_global\":{\"cachoeirinha\":[0,69,98,85,233],\"glorinha\":[0,17,108,64,87],\"gravatai\":[0,26,99,42,111],\"santo-antonio-da-patrulha\":[0,4,76,68,135]}},\"region\":\"gravatai\",\"rule_sha256\":\"715013b7e52d54b3dd74e44d49794039c7381042c4291a52be0fd4883d553276\",\"run\":\"2026-11-15T00:00Z\",\"unit\":\"0.1 mm/dia\",\"window\":[\"2026-11-16\",\"2026-11-20\"]}",
-  "content_sha256": "536b80965124958e522f5ee21c80c61e3db6330c2b3a30276be8cf9b207fa826",
-  "index": 245,
-  "issued_at": 1794787200,
-  "region": "gravatai"
-}
