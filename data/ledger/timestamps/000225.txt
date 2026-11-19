@@ -1,0 +1,6 @@
+Cota v2 accumulator root
+program  FnjR7wG5zicqWJ6KQuWQ5UcqqhcSghrYozVgMmmDFNwR
+registry 6CNtD18LQ4bBZTGK1C2Z6RuJrSwyxCD3ToRpiWE3y9bR
+records  225
+root     f4cc3218f054f74b26aef836bf945e9f859b920a3fe0f15732d246aa5d973df7
+stamped  2026-11-19T00:06:07+00:00

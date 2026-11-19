@@ -68,5 +68,40 @@
   "root": "0f999fe40cd77b0188e8a61ed76ef64be23774696f9f9314ff325701263f62ae",
   "stamped": "2026-11-14T00:06:09+00:00",
   "bitcoin_block": 975729
+ },
+ {
+  "file": "000195.txt",
+  "records": 195,
+  "root": "195e75d1c8d2c5e759eed558d19ffebc58d52735bbc26fe631867839c3995c9e",
+  "stamped": "2026-11-15T00:05:25+00:00",
+  "bitcoin_block": 975864
+ },
+ {
+  "file": "000201.txt",
+  "records": 201,
+  "root": "ef7ead5303209eca2d5a39ce1a2cd32b5bc758560495c579335916e8817f9ad7",
+  "stamped": "2026-11-16T00:06:07+00:00",
+  "bitcoin_block": 976035
+ },
+ {
+  "file": "000210.txt",
+  "records": 210,
+  "root": "6b002c81285d9b60948d6abcb1acbbea426405b2d444ec5dd9a3308da66bc385",
+  "stamped": "2026-11-17T00:05:45+00:00",
+  "bitcoin_block": 976199
+ },
+ {
+  "file": "000218.txt",
+  "records": 218,
+  "root": "0e59a44d6ea0d8fe8fa25494a7d8acba07142781f1fb348ff84845df907bbb9a",
+  "stamped": "2026-11-18T00:05:35+00:00",
+  "bitcoin_block": 976350
+ },
+ {
+  "file": "000225.txt",
+  "records": 225,
+  "root": "f4cc3218f054f74b26aef836bf945e9f859b920a3fe0f15732d246aa5d973df7",
+  "stamped": "2026-11-19T00:06:07+00:00",
+  "bitcoin_block": 976507
  }
 ]

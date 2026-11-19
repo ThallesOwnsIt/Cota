@@ -2,16 +2,16 @@
   "program": "FnjR7wG5zicqWJ6KQuWQ5UcqqhcSghrYozVgMmmDFNwR",
   "registry": "6CNtD18LQ4bBZTGK1C2Z6RuJrSwyxCD3ToRpiWE3y9bR",
   "accumulator": {
-    "records": 193,
-    "on_chain": 193,
+    "records": 235,
+    "on_chain": 235,
     "peaks_match": true,
-    "root": "3e1429c3e35acf91f0d99b0c289f73690933d96dac27187101d97ebc739533e4",
+    "root": "fdd2062dda42b46b4356f644b262d364c8ad1a1c696a213a59fc9b5e48f91d70",
     "kinds": {
-      "batch": 45,
+      "batch": 50,
       "degradation": 4,
-      "forecast": 88,
-      "outlook": 9,
-      "public_alert": 21,
+      "forecast": 98,
+      "outlook": 14,
+      "public_alert": 43,
       "station": 26
     }
   },
@@ -508,6 +508,61 @@
       "t_end": 1794614400,
       "slot": 522014300,
       "committed_at": 1794618377,
+      "signers": 7,
+      "problems": []
+    },
+    {
+      "batch_id": 46,
+      "record_index": 195,
+      "day": "2026-11-14",
+      "t_start": 1794614400,
+      "t_end": 1794700800,
+      "slot": 522375052,
+      "committed_at": 1794704749,
+      "signers": 7,
+      "problems": []
+    },
+    {
+      "batch_id": 47,
+      "record_index": 201,
+      "day": "2026-11-15",
+      "t_start": 1794700800,
+      "t_end": 1794787200,
+      "slot": 522736558,
+      "committed_at": 1794791184,
+      "signers": 7,
+      "problems": []
+    },
+    {
+      "batch_id": 48,
+      "record_index": 210,
+      "day": "2026-11-16",
+      "t_start": 1794787200,
+      "t_end": 1794873600,
+      "slot": 523098308,
+      "committed_at": 1794877698,
+      "signers": 7,
+      "problems": []
+    },
+    {
+      "batch_id": 49,
+      "record_index": 218,
+      "day": "2026-11-17",
+      "t_start": 1794873600,
+      "t_end": 1794960000,
+      "slot": 523458832,
+      "committed_at": 1794963948,
+      "signers": 7,
+      "problems": []
+    },
+    {
+      "batch_id": 50,
+      "record_index": 225,
+      "day": "2026-11-18",
+      "t_start": 1794960000,
+      "t_end": 1795046400,
+      "slot": 523820396,
+      "committed_at": 1795050454,
       "signers": 7,
       "problems": []
     }
@@ -2053,10 +2108,10 @@
       "p10": 2324111,
       "p50": 2359660,
       "p90": 2402237,
-      "observation_slot": null,
-      "observed_milli": null,
-      "recorded_before_observation": null,
-      "inside_p10_p90": null,
+      "observation_slot": 522375052,
+      "observed_milli": 2392320,
+      "recorded_before_observation": true,
+      "inside_p10_p90": true,
       "alert": null,
       "problems": []
     },
@@ -2069,6 +2124,166 @@
       "p10": 1913995,
       "p50": 2009694,
       "p90": 2226912,
+      "observation_slot": 522736558,
+      "observed_milli": 2083490,
+      "recorded_before_observation": true,
+      "inside_p10_p90": true,
+      "alert": null,
+      "problems": []
+    },
+    {
+      "issue_day": "2026-11-14",
+      "horizon_hours": 24,
+      "target_ts": 1794700800,
+      "record_index": 197,
+      "slot": 522375098,
+      "p10": 2041876,
+      "p50": 2125444,
+      "p90": 2179810,
+      "observation_slot": 522736558,
+      "observed_milli": 2083490,
+      "recorded_before_observation": true,
+      "inside_p10_p90": true,
+      "alert": null,
+      "problems": []
+    },
+    {
+      "issue_day": "2026-11-14",
+      "horizon_hours": 48,
+      "target_ts": 1794787200,
+      "record_index": 198,
+      "slot": 522375109,
+      "p10": 1737378,
+      "p50": 1941085,
+      "p90": 2181815,
+      "observation_slot": 523098308,
+      "observed_milli": 1818700,
+      "recorded_before_observation": true,
+      "inside_p10_p90": true,
+      "alert": null,
+      "problems": []
+    },
+    {
+      "issue_day": "2026-11-15",
+      "horizon_hours": 24,
+      "target_ts": 1794787200,
+      "record_index": 203,
+      "slot": 522736596,
+      "p10": 1790975,
+      "p50": 1825298,
+      "p90": 1857946,
+      "observation_slot": 523098308,
+      "observed_milli": 1818700,
+      "recorded_before_observation": true,
+      "inside_p10_p90": true,
+      "alert": null,
+      "problems": []
+    },
+    {
+      "issue_day": "2026-11-15",
+      "horizon_hours": 48,
+      "target_ts": 1794873600,
+      "record_index": 204,
+      "slot": 522736608,
+      "p10": 1514646,
+      "p50": 1601870,
+      "p90": 1846105,
+      "observation_slot": 523458832,
+      "observed_milli": 1558550,
+      "recorded_before_observation": true,
+      "inside_p10_p90": true,
+      "alert": null,
+      "problems": []
+    },
+    {
+      "issue_day": "2026-11-16",
+      "horizon_hours": 24,
+      "target_ts": 1794873600,
+      "record_index": 212,
+      "slot": 523098348,
+      "p10": 1564043,
+      "p50": 1619076,
+      "p90": 1689686,
+      "observation_slot": 523458832,
+      "observed_milli": 1558550,
+      "recorded_before_observation": true,
+      "inside_p10_p90": false,
+      "alert": null,
+      "problems": []
+    },
+    {
+      "issue_day": "2026-11-16",
+      "horizon_hours": 48,
+      "target_ts": 1794960000,
+      "record_index": 213,
+      "slot": 523098359,
+      "p10": 1344890,
+      "p50": 1588841,
+      "p90": 1903871,
+      "observation_slot": 523820396,
+      "observed_milli": 1335600,
+      "recorded_before_observation": true,
+      "inside_p10_p90": false,
+      "alert": null,
+      "problems": []
+    },
+    {
+      "issue_day": "2026-11-17",
+      "horizon_hours": 24,
+      "target_ts": 1794960000,
+      "record_index": 220,
+      "slot": 523458872,
+      "p10": 1359109,
+      "p50": 1394740,
+      "p90": 1483793,
+      "observation_slot": 523820396,
+      "observed_milli": 1335600,
+      "recorded_before_observation": true,
+      "inside_p10_p90": false,
+      "alert": null,
+      "problems": []
+    },
+    {
+      "issue_day": "2026-11-17",
+      "horizon_hours": 48,
+      "target_ts": 1795046400,
+      "record_index": 221,
+      "slot": 523458883,
+      "p10": 1194346,
+      "p50": 1405771,
+      "p90": 1684622,
+      "observation_slot": null,
+      "observed_milli": null,
+      "recorded_before_observation": null,
+      "inside_p10_p90": null,
+      "alert": null,
+      "problems": []
+    },
+    {
+      "issue_day": "2026-11-18",
+      "horizon_hours": 24,
+      "target_ts": 1795046400,
+      "record_index": 227,
+      "slot": 523820435,
+      "p10": 1154936,
+      "p50": 1193437,
+      "p90": 1258417,
+      "observation_slot": null,
+      "observed_milli": null,
+      "recorded_before_observation": null,
+      "inside_p10_p90": null,
+      "alert": null,
+      "problems": []
+    },
+    {
+      "issue_day": "2026-11-18",
+      "horizon_hours": 48,
+      "target_ts": 1795132800,
+      "record_index": 228,
+      "slot": 523820446,
+      "p10": 1031772,
+      "p50": 1203691,
+      "p90": 1505833,
       "observation_slot": null,
       "observed_milli": null,
       "recorded_before_observation": null,
@@ -2087,10 +2302,34 @@
       "problems": []
     },
     {
+      "record_index": 206,
+      "alert_id": "urn:oid:2.49.0.0.76.0.2026.28714.1",
+      "slot": 522909638,
+      "committed_at": 1794832582,
+      "signers": 7,
+      "problems": []
+    },
+    {
+      "record_index": 233,
+      "alert_id": "urn:oid:2.49.0.0.76.0.2026.28734.1",
+      "slot": 523993148,
+      "committed_at": 1795091775,
+      "signers": 7,
+      "problems": []
+    },
+    {
       "record_index": 141,
       "alert_id": "urn:oid:2.49.0.0.76.0.2026.28645.1",
       "slot": 519384919,
       "committed_at": 1793988677,
+      "signers": 7,
+      "problems": []
+    },
+    {
+      "record_index": 216,
+      "alert_id": "urn:oid:2.49.0.0.76.0.2026.28722.1",
+      "slot": 523270780,
+      "committed_at": 1794918971,
       "signers": 7,
       "problems": []
     },
@@ -2119,6 +2358,22 @@
       "problems": []
     },
     {
+      "record_index": 205,
+      "alert_id": "urn:oid:2.49.0.0.76.0.2026.28713.1",
+      "slot": 522909626,
+      "committed_at": 1794832579,
+      "signers": 7,
+      "problems": []
+    },
+    {
+      "record_index": 231,
+      "alert_id": "urn:oid:2.49.0.0.76.0.2026.28731.1",
+      "slot": 523985623,
+      "committed_at": 1795089973,
+      "signers": 7,
+      "problems": []
+    },
+    {
       "record_index": 149,
       "alert_id": "urn:oid:2.49.0.0.76.0.2026.28651.1",
       "slot": 519711088,
@@ -2135,6 +2390,22 @@
       "problems": []
     },
     {
+      "record_index": 232,
+      "alert_id": "urn:oid:2.49.0.0.76.0.2026.28733.1",
+      "slot": 523993138,
+      "committed_at": 1795091772,
+      "signers": 7,
+      "problems": []
+    },
+    {
+      "record_index": 223,
+      "alert_id": "urn:oid:2.49.0.0.76.0.2026.28725.1",
+      "slot": 523631956,
+      "committed_at": 1795005371,
+      "signers": 7,
+      "problems": []
+    },
+    {
       "record_index": 187,
       "alert_id": "urn:oid:2.49.0.0.76.0.2026.28697.1",
       "slot": 521826064,
@@ -2143,10 +2414,34 @@
       "problems": []
     },
     {
+      "record_index": 214,
+      "alert_id": "urn:oid:2.49.0.0.76.0.2026.28720.1",
+      "slot": 523263268,
+      "committed_at": 1794917170,
+      "signers": 7,
+      "problems": []
+    },
+    {
+      "record_index": 234,
+      "alert_id": "urn:oid:2.49.0.0.76.0.2026.28735.1",
+      "slot": 523993159,
+      "committed_at": 1795091778,
+      "signers": 7,
+      "problems": []
+    },
+    {
       "record_index": 137,
       "alert_id": "urn:oid:2.49.0.0.76.0.2026.28641.1",
       "slot": 519384891,
       "committed_at": 1793988670,
+      "signers": 7,
+      "problems": []
+    },
+    {
+      "record_index": 199,
+      "alert_id": "urn:oid:2.49.0.0.76.0.2026.28709.1",
+      "slot": 522563326,
+      "committed_at": 1794749768,
       "signers": 7,
       "problems": []
     },
@@ -2183,10 +2478,42 @@
       "problems": []
     },
     {
+      "record_index": 224,
+      "alert_id": "urn:oid:2.49.0.0.76.0.2026.28726.1",
+      "slot": 523631966,
+      "committed_at": 1795005374,
+      "signers": 7,
+      "problems": []
+    },
+    {
       "record_index": 131,
       "alert_id": "urn:oid:2.49.0.0.76.0.2026.28623.1",
       "slot": 519096958,
       "committed_at": 1793919722,
+      "signers": 7,
+      "problems": []
+    },
+    {
+      "record_index": 217,
+      "alert_id": "urn:oid:2.49.0.0.76.0.2026.28723.1",
+      "slot": 523368436,
+      "committed_at": 1794942322,
+      "signers": 7,
+      "problems": []
+    },
+    {
+      "record_index": 193,
+      "alert_id": "urn:oid:2.49.0.0.76.0.2026.28700.1",
+      "slot": 522179536,
+      "committed_at": 1794657937,
+      "signers": 7,
+      "problems": []
+    },
+    {
+      "record_index": 194,
+      "alert_id": "urn:oid:2.49.0.0.76.0.2026.28702.1",
+      "slot": 522179547,
+      "committed_at": 1794657940,
       "signers": 7,
       "problems": []
     },
@@ -2199,10 +2526,34 @@
       "problems": []
     },
     {
+      "record_index": 222,
+      "alert_id": "urn:oid:2.49.0.0.76.0.2026.28724.1",
+      "slot": 523624436,
+      "committed_at": 1795003571,
+      "signers": 7,
+      "problems": []
+    },
+    {
       "record_index": 165,
       "alert_id": "urn:oid:2.49.0.0.76.0.2026.28677.1",
       "slot": 520794411,
       "committed_at": 1794326091,
+      "signers": 7,
+      "problems": []
+    },
+    {
+      "record_index": 200,
+      "alert_id": "urn:oid:2.49.0.0.76.0.2026.28710.1",
+      "slot": 522563338,
+      "committed_at": 1794749771,
+      "signers": 7,
+      "problems": []
+    },
+    {
+      "record_index": 208,
+      "alert_id": "urn:oid:2.49.0.0.76.0.2026.28717.1",
+      "slot": 522917106,
+      "committed_at": 1794834369,
       "signers": 7,
       "problems": []
     },
@@ -2231,10 +2582,50 @@
       "problems": []
     },
     {
+      "record_index": 230,
+      "alert_id": "urn:oid:2.49.0.0.76.0.2026.28730.1",
+      "slot": 523985612,
+      "committed_at": 1795089970,
+      "signers": 7,
+      "problems": []
+    },
+    {
+      "record_index": 229,
+      "alert_id": "urn:oid:2.49.0.0.76.0.2026.28728.1",
+      "slot": 523985600,
+      "committed_at": 1795089967,
+      "signers": 7,
+      "problems": []
+    },
+    {
+      "record_index": 207,
+      "alert_id": "urn:oid:2.49.0.0.76.0.2026.28715.1",
+      "slot": 522909649,
+      "committed_at": 1794832584,
+      "signers": 7,
+      "problems": []
+    },
+    {
+      "record_index": 209,
+      "alert_id": "urn:oid:2.49.0.0.76.0.2026.28719.1",
+      "slot": 522917118,
+      "committed_at": 1794834372,
+      "signers": 7,
+      "problems": []
+    },
+    {
       "record_index": 166,
       "alert_id": "urn:oid:2.49.0.0.76.0.2026.28680.1",
       "slot": 520794418,
       "committed_at": 1794326093,
+      "signers": 7,
+      "problems": []
+    },
+    {
+      "record_index": 215,
+      "alert_id": "urn:oid:2.49.0.0.76.0.2026.28721.1",
+      "slot": 523270768,
+      "committed_at": 1794918969,
       "signers": 7,
       "problems": []
     },
@@ -2326,6 +2717,51 @@
       "rain_mean_milli": 28688,
       "triggered": false,
       "slot": 522014317,
+      "next_batch_slot": 522375052,
+      "problems": []
+    },
+    {
+      "day": "2026-11-14",
+      "record_index": 196,
+      "rain_mean_milli": 22244,
+      "triggered": false,
+      "slot": 522375070,
+      "next_batch_slot": 522736558,
+      "problems": []
+    },
+    {
+      "day": "2026-11-15",
+      "record_index": 202,
+      "rain_mean_milli": 45094,
+      "triggered": false,
+      "slot": 522736574,
+      "next_batch_slot": 523098308,
+      "problems": []
+    },
+    {
+      "day": "2026-11-16",
+      "record_index": 211,
+      "rain_mean_milli": 57810,
+      "triggered": false,
+      "slot": 523098325,
+      "next_batch_slot": 523458832,
+      "problems": []
+    },
+    {
+      "day": "2026-11-17",
+      "record_index": 219,
+      "rain_mean_milli": 33466,
+      "triggered": false,
+      "slot": 523458849,
+      "next_batch_slot": 523820396,
+      "problems": []
+    },
+    {
+      "day": "2026-11-18",
+      "record_index": 226,
+      "rain_mean_milli": 46511,
+      "triggered": false,
+      "slot": 523820413,
       "next_batch_slot": null,
       "problems": []
     }
@@ -2350,19 +2786,19 @@
   "summary": {
     "alerts": 31,
     "alerts_recorded_before_observation": 31,
-    "batches": 45,
+    "batches": 50,
     "batches_with_problems": 0,
     "early_warnings": 0,
-    "forecasts": 88,
-    "forecasts_inside_p10_p90": 53,
-    "forecasts_observed": 83,
-    "forecasts_recorded_before_observation": 83,
+    "forecasts": 98,
+    "forecasts_inside_p10_p90": 59,
+    "forecasts_observed": 92,
+    "forecasts_recorded_before_observation": 92,
     "forecasts_with_problems": 0,
-    "outlooks": 9,
+    "outlooks": 14,
     "outlooks_with_problems": 0,
-    "public_alerts": 21,
+    "public_alerts": 43,
     "public_alerts_with_problems": 0,
-    "records": 193,
+    "records": 235,
     "unmatched": 0,
     "vault_payouts": 3,
     "vaults": 2,

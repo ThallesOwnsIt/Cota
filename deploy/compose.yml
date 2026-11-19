@@ -20,6 +20,8 @@ x-env: &env
   CLUSTER: ${CLUSTER:-devnet}
   SECRETS: /run/secrets
   COTA_V3_ENSAIO: ${COTA_V3_ENSAIO:-0}
+  # v3 = the ledger of its own (after the cutover): every step in the containers must see it, not only the host.
+  COTA_LEDGER: ${COTA_LEDGER:-v2}
   UV_CACHE_DIR: /work/.cache/uv
   npm_config_cache: /work/.cache/npm
 

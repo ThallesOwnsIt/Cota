@@ -31,88 +31,88 @@
       "run": 1
     },
     "ANA-85642000": {
-      "score": 1.0,
-      "last_ts": 1794610800,
-      "last_value": 2840,
+      "score": 0.9927083333333333,
+      "last_ts": 1795042800,
+      "last_value": 1970,
       "run": 1
     },
     "ANA-85930001": {
-      "score": 0.9998860677083332,
-      "last_ts": 1794610800,
-      "last_value": 1270,
+      "score": 0.9999964396158854,
+      "last_ts": 1795042800,
+      "last_value": 720,
       "run": 1
     },
     "ANA-86510000": {
-      "score": 1.0,
-      "last_ts": 1794610800,
-      "last_value": 1680,
+      "score": 0.9854166666666666,
+      "last_ts": 1795042800,
+      "last_value": 1730,
       "run": 1
     },
     "ANA-86720000": {
       "score": 1.0,
-      "last_ts": 1794610800,
-      "last_value": 1100,
+      "last_ts": 1795042800,
+      "last_value": 1040,
       "run": 1
     },
     "ANA-86879300": {
       "score": 1.0,
-      "last_ts": 1794610800,
+      "last_ts": 1795042800,
       "last_value": 12790,
       "run": 1
     },
     "ANA-86881000": {
-      "score": 1.0,
-      "last_ts": 1794610800,
-      "last_value": 3842,
+      "score": 0.9927083333333333,
+      "last_ts": 1795042800,
+      "last_value": 2755,
       "run": 1
     },
     "ANA-86950000": {
-      "score": 1.0,
-      "last_ts": 1794610800,
-      "last_value": 3180,
+      "score": 0.9854166666666666,
+      "last_ts": 1795042800,
+      "last_value": 2710,
       "run": 1
     },
     "ANA-87170000": {
-      "score": 1.0,
-      "last_ts": 1794610800,
-      "last_value": 2600,
-      "run": 2
+      "score": 0.9990885416666666,
+      "last_ts": 1795042800,
+      "last_value": 2460,
+      "run": 1
     },
     "ANA-87270000": {
-      "score": 1.0,
-      "last_ts": 1794610800,
-      "last_value": 1400,
+      "score": 0.9917968749999999,
+      "last_ts": 1795042800,
+      "last_value": 1130,
       "run": 1
     },
     "ANA-87380000": {
       "score": 1.0,
-      "last_ts": 1794610800,
-      "last_value": 2670,
-      "run": 1
+      "last_ts": 1795042800,
+      "last_value": 2200,
+      "run": 3
     },
     "ANA-87382000": {
       "score": 1.0,
-      "last_ts": 1794610800,
-      "last_value": 1860,
+      "last_ts": 1795042800,
+      "last_value": 1430,
       "run": 2
     },
     "ANA-87399000": {
       "score": 1.0,
-      "last_ts": 1794610800,
-      "last_value": 2070,
-      "run": 2
+      "last_ts": 1795042800,
+      "last_value": 1820,
+      "run": 3
     },
     "ANA-87450004": {
-      "score": 0.8360677083333332,
-      "last_ts": 1794610800,
-      "last_value": 1130,
-      "run": 1
+      "score": 0.9948771158854166,
+      "last_ts": 1795042800,
+      "last_value": 910,
+      "run": 3
     },
     "ANA-87450020": {
       "score": 1.0,
-      "last_ts": 1794610800,
-      "last_value": 720,
-      "run": 1
+      "last_ts": 1795042800,
+      "last_value": 510,
+      "run": 3
     },
     "B807": {
       "score": 1.0,
@@ -122,38 +122,38 @@
     },
     "GLOFAS-CAI": {
       "score": 1.0,
-      "last_ts": 1794528000,
-      "last_value": 148620,
+      "last_ts": 1794960000,
+      "last_value": 97630,
       "run": 1
     },
     "GLOFAS-GRAVATAI": {
       "score": 1.0,
-      "last_ts": 1794528000,
-      "last_value": 16910,
+      "last_ts": 1794960000,
+      "last_value": 13930,
       "run": 1
     },
     "GLOFAS-GUAIBA": {
       "score": 1.0,
-      "last_ts": 1794528000,
-      "last_value": 2810900,
+      "last_ts": 1794960000,
+      "last_value": 1335600,
       "run": 1
     },
     "GLOFAS-JACUI": {
       "score": 1.0,
-      "last_ts": 1794528000,
-      "last_value": 2321740,
+      "last_ts": 1794960000,
+      "last_value": 1070520,
       "run": 1
     },
     "GLOFAS-SINOS": {
       "score": 1.0,
-      "last_ts": 1794528000,
-      "last_value": 83140,
+      "last_ts": 1794960000,
+      "last_value": 58570,
       "run": 1
     },
     "GLOFAS-TAQUARI": {
       "score": 1.0,
-      "last_ts": 1794528000,
-      "last_value": 1003620,
+      "last_ts": 1794960000,
+      "last_value": 313770,
       "run": 1
     }
   }
