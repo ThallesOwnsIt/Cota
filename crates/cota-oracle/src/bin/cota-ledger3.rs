@@ -4,7 +4,7 @@
 //! - `collect` (aggregator): publishes the checkpoint a majority signed and appends every body a majority signed.
 //! - `verify` (anyone): replays the ledger and checks every entry and checkpoint.
 //!
-//! During the rehearsal the ledger is `data/ledger-v3-ensaio`, written next to v2 without touching it.
+//! The ledger is `data/ledger-v3` (since the cutover of 19/11/2026; the rehearsal was `data/ledger-v3-ensaio`).
 
 use std::path::PathBuf;
 
@@ -16,7 +16,7 @@ use cota_oracle::{keys, ledger3};
 #[command(about = "Cota's own ledger (v3): sign, collect, verify")]
 struct Args {
     /// The ledger's folder.
-    #[arg(long, global = true, default_value = "data/ledger-v3-ensaio")]
+    #[arg(long, global = true, default_value = "data/ledger-v3")]
     ledger: PathBuf,
     /// The v2 ledger (its records.jsonl precedes Genesis in the accumulator).
     #[arg(long, global = true, default_value = "data/ledger")]
