@@ -137,6 +137,8 @@ def main() -> None:
             f'stream = "{g["region"]}"',
             f'kind = "{k}"',
             f"ana_name = {toml_str(g['name'] or '')}",
+            f"river = {toml_str(title(g['river'] or ''))}",
+            f"municipality = {toml_str(title(g['municipality'] or ''))}",
             "",
         ]
     OUT.write_text("\n".join(out))

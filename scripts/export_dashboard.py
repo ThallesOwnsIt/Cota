@@ -944,10 +944,113 @@ def export_v3(out: Path, ledger3: Path) -> None:
         "vaults": [],
     }
     (out / "bundle.json").write_text(json.dumps(bundle, separators=(",", ":"), ensure_ascii=False))
+    export_regions(out, ledger3, entries, provenance)
     print(
         f"v3 ({ledger3}): {len(days)} lotes, {len(issues_list)} previsões, {len(alerts)} avisos oficiais, "
         f"{len(outlooks)} perspectivas de chuva, {len(cps)} pontos de controle → {out}"
     )
+
+
+REGION_HOURS = 72  # the hourly series each region page draws (its batches have all of them)
+STATE_ORDER = (("flood", "inundacao"), ("alert", "alerta"), ("attention", "atencao"))
+
+
+def export_regions(out: Path, ledger3: Path, entries: list[dict], provenance) -> None:
+    """`regions/<stream>.json` for every stream but the Guaíba (Etapa 5.5): what its page draws, small enough to load
+    on a phone. Its stations (config/stations-rs.toml), its batches with their entries (the readings files stay in the
+    ledger; the site's build copies them), the last 72 hours of every gauge, the places with official levels
+    (config/locations-rs.toml) and their situation, and the rain outlooks of its rules."""
+    catalog = tomllib.loads((ROOT / "config/stations-rs.toml").read_text())["station"]
+    places = tomllib.loads((ROOT / "config/locations-rs.toml").read_text())["location"] if (ROOT / "config/locations-rs.toml").exists() else []
+    rules = {e["body"]["region"]: e for e in entries if e["kind"] == "rule_set" and e["body"].get("rule") == "outlook"}
+    streams = sorted({s["stream"] for s in catalog} - {"guaiba"})
+    (out / "regions").mkdir(parents=True, exist_ok=True)
+    for stream in streams:
+        stations = [s for s in catalog if s["stream"] == stream]
+        batch_entries = [e for e in entries if e["kind"] == "batch" and e["body"]["stream"] == stream]
+        batches, series_points, latest_quality = [], {}, {}
+        for e in batch_entries:
+            b = e["body"]
+            name = f"{stream}-{b['batch_id']:05d}.json"
+            f = json.loads((ledger3 / "batches" / name).read_text())
+            for r in f["readings"]:
+                series_points.setdefault(r["station_id"], {})[r["ts_utc"]] = r["value_milli"]
+            latest_quality = {q["station_id"]: q for q in (f.get("quality") or {}).get("stations", [])}
+            batches.append(
+                {
+                    "day": f["day"],
+                    "batch_id": b["batch_id"],
+                    "leaf_count": b["leaf_count"],
+                    "merkle_root": b["merkle_root"],
+                    "file": f"ledger-v3/batches/{name}",
+                    "stations_with_readings": len({r["station_id"] for r in f["readings"]}),
+                    **provenance(e),
+                }
+            )
+        end = max((b_["body"]["t_end"] for b_ in batch_entries), default=0)
+        start = end - REGION_HOURS * 3600
+        hours = list(range(start, end, 3600))
+        series = {sid: [pts.get(t) for t in hours] for sid, pts in series_points.items()}
+
+        def now_of(sid: str) -> dict | None:
+            pts = series_points.get(sid, {})
+            if not pts:
+                return None
+            ts = max(pts)
+            before = pts.get(ts - 86400)
+            return {"ts_utc": ts, "value_milli": pts[ts], "change_24h_milli": None if before is None else pts[ts] - before}
+
+        place_rows = []
+        for pl in (x for x in places if x.get("region") == stream):
+            levels = {k[:-2]: round(pl[k] * 1000) for k in ("attention_m", "alert_m", "flood_m", "record_m") if k in pl}
+            now = now_of(pl["gauge"])
+            state = None
+            if pl.get("confirmed") and now and levels:
+                state = next((n for k, n in STATE_ORDER if k in levels and now["value_milli"] >= levels[k]), "normal")
+            place_rows.append(
+                {
+                    **{k: pl[k] for k in ("id", "name", "river", "gauge")},
+                    "confirmed": bool(pl.get("confirmed")),
+                    "levels_milli": levels,
+                    **{k: pl[k] for k in ("source", "source_url", "published", "checked", "note") if k in pl},
+                    "now": now,
+                    "state": state,
+                }
+            )
+        outlooks = []
+        for e in (x for x in entries if x["kind"] == "outlook" and rules.get(x["body"]["region"], {}).get("body", {}).get("stream") == stream):
+            o = e["body"]
+            outlooks.append(
+                {
+                    "day": day_of(o["issued_at"] - 1),
+                    "region": o["region"],
+                    **provenance(e),
+                    **{k: o[k] for k in ("issued_at", "window_end", "models", "rain_mean_milli", "rain_min_milli", "rain_max_milli", "content_sha256")},
+                    "threshold_milli": e["outcome"]["threshold_milli"],
+                    "triggered": e["outcome"]["triggered"],
+                }
+            )
+        outlooks.sort(key=lambda o: o["day"], reverse=True)
+        region = {
+            "region": stream,
+            "generated_at": datetime.now(timezone.utc).isoformat(timespec="seconds"),
+            "stations": [
+                {
+                    **{k: s.get(k) for k in ("id", "name", "ana_name", "kind", "river", "municipality", "source", "lat", "lon")},
+                    "now": now_of(s["id"]),
+                    "quality": (lambda q: q and {k: q[k] for k in ("score", "present", "expected", "flags") if k in q})(latest_quality.get(s["id"])),
+                }
+                for s in stations
+            ],
+            "places": place_rows,
+            "batches": batches,
+            "series": {"start": start, "step": 3600, "stations": series},
+            "outlooks": outlooks[:30],
+            "rules": [{"region": r, "threshold_milli": e["body"]["threshold_milli"], **provenance(e)} for r, e in rules.items() if e["body"]["stream"] == stream],
+        }
+        path = out / "regions" / f"{stream}.json"
+        path.write_text(json.dumps(region, separators=(",", ":"), ensure_ascii=False))
+        print(f"região {stream}: {len(stations)} estações, {len(batches)} lote(s), {len(place_rows)} cidade(s) com cota, {len(outlooks)} perspectiva(s) → {path} ({path.stat().st_size // 1024} KiB)")
 
 
 if __name__ == "__main__":

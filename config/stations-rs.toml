@@ -33,6 +33,8 @@ datum_id = "ANA-85029000-regua"
 stream = "guaiba"
 kind = "rio"
 ana_name = "PCH ERNESTINA MONTANTE"
+river = "Rio Jacuí"
+municipality = "Marau"
 
 [[station]]
 id = "ANA-85040000"
@@ -45,6 +47,8 @@ datum_id = "ANA-85040000-regua"
 stream = "guaiba"
 kind = "rio"
 ana_name = "PCH ERNESTINA ARROIO TRÊS PASSOS"
+river = "Arroio Três Passos"
+municipality = "Nicolau Vergueiro"
 
 [[station]]
 id = "ANA-85050001"
@@ -57,6 +61,8 @@ datum_id = "ANA-85050001-regua"
 stream = "guaiba"
 kind = "reservatorio"
 ana_name = "PCH ERNESTINA BARRAMENTO"
+river = "Rio Jacuí"
+municipality = "Tio Hugo"
 
 [[station]]
 id = "ANA-85050100"
@@ -69,6 +75,8 @@ datum_id = "ANA-85050100-regua"
 stream = "guaiba"
 kind = "jusante"
 ana_name = "PCH ERNESTINA JUSANTE 2"
+river = "Rio Jacuí"
+municipality = "Tio Hugo"
 
 [[station]]
 id = "ANA-85050200"
@@ -81,6 +89,8 @@ datum_id = "ANA-85050200-regua"
 stream = "guaiba"
 kind = "reservatorio"
 ana_name = "PCH TIO HUGO BARRAMENTO"
+river = "Rio Jacuí"
+municipality = "Tio Hugo"
 
 [[station]]
 id = "ANA-85050300"
@@ -93,6 +103,8 @@ datum_id = "ANA-85050300-regua"
 stream = "guaiba"
 kind = "jusante"
 ana_name = "PCH TIO HUGO JUSANTE"
+river = "Rio Jacuí"
+municipality = "Tio Hugo"
 
 [[station]]
 id = "ANA-85050350"
@@ -105,6 +117,8 @@ datum_id = "ANA-85050350-regua"
 stream = "guaiba"
 kind = "rio"
 ana_name = "PCH SANTO ANTÔNIO DO JACUÍ MONTANTE"
+river = "Rio Jacuí"
+municipality = "Victor Graeff"
 
 [[station]]
 id = "ANA-85051000"
@@ -117,6 +131,8 @@ datum_id = "ANA-85051000-regua"
 stream = "guaiba"
 kind = "reservatorio"
 ana_name = "PCH SANTO ANTONIO DO JACUÍ BARRAMENTO"
+river = "Rio Jacuí"
+municipality = "Mormaço"
 
 [[station]]
 id = "ANA-85074000"
@@ -129,6 +145,8 @@ datum_id = "ANA-85074000-regua"
 stream = "guaiba"
 kind = "reservatorio"
 ana_name = "PCH COTOVELO DO JACUÍ BARRAMENTO"
+river = "Rio Jacuí"
+municipality = "Victor Graeff"
 
 [[station]]
 id = "ANA-85076000"
@@ -141,6 +159,8 @@ datum_id = "ANA-85076000-regua"
 stream = "guaiba"
 kind = "jusante"
 ana_name = "PCH COTOVELO DO JACUÍ JUSANTE"
+river = "Rio Jacuí"
+municipality = "Victor Graeff"
 
 [[station]]
 id = "ANA-85080001"
@@ -153,6 +173,8 @@ datum_id = "ANA-85080001-regua"
 stream = "guaiba"
 kind = "rio"
 ana_name = "UHE PASSO REAL MONTANTE 2"
+river = "Rio Jacuí"
+municipality = "Espumoso"
 
 [[station]]
 id = "ANA-85110000"
@@ -165,6 +187,8 @@ datum_id = "ANA-85110000-regua"
 stream = "guaiba"
 kind = "jusante"
 ana_name = "CGH COLORADO JUSANTE"
+river = "Rio Colorado"
+municipality = "Tapera"
 
 [[station]]
 id = "ANA-85130000"
@@ -177,6 +201,8 @@ datum_id = "ANA-85130000-regua"
 stream = "guaiba"
 kind = "reservatorio"
 ana_name = "CGH RP 1 BARRAMENTO"
+river = "Arroio Butiá"
+municipality = "Soledade"
 
 [[station]]
 id = "ANA-85130400"
@@ -189,6 +215,8 @@ datum_id = "ANA-85130400-regua"
 stream = "guaiba"
 kind = "jusante"
 ana_name = "CGH RP 1 JUSANTE"
+river = "Arroio Butiá"
+municipality = "Soledade"
 
 [[station]]
 id = "ANA-85140000"
@@ -201,6 +229,8 @@ datum_id = "ANA-85140000-regua"
 stream = "guaiba"
 kind = "rio"
 ana_name = "UHE PASSO REAL MONTANTE 1"
+river = "Rio Jacuí"
+municipality = "Alto Alegre"
 
 [[station]]
 id = "ANA-85159900"
@@ -213,6 +243,8 @@ datum_id = "ANA-85159900-regua"
 stream = "guaiba"
 kind = "rio"
 ana_name = "IBIRUBÁ"
+river = "Arroio Pulador"
+municipality = "Ibirubá"
 
 [[station]]
 id = "ANA-85170100"
@@ -225,6 +257,8 @@ datum_id = "ANA-85170100-regua"
 stream = "guaiba"
 kind = "reservatorio"
 ana_name = "CGH MIRIM BARRAMENTO"
+river = "Rio Jacuí-mirim"
+municipality = "Carazinho"
 
 [[station]]
 id = "ANA-85170150"
@@ -237,6 +271,8 @@ datum_id = "ANA-85170150-regua"
 stream = "guaiba"
 kind = "jusante"
 ana_name = "CGH MIRIM JUSANTE"
+river = "Rio Jacuí-mirim"
+municipality = "Carazinho"
 
 [[station]]
 id = "ANA-85180000"
@@ -249,6 +285,8 @@ datum_id = "ANA-85180000-regua"
 stream = "guaiba"
 kind = "rio"
 ana_name = "UHE PASSO REAL RIO JACUÍ-MIRIM 2"
+river = "Rio Jacuí-mirim"
+municipality = "Ibirubá"
 
 [[station]]
 id = "ANA-85240000"
@@ -261,6 +299,8 @@ datum_id = "ANA-85240000-regua"
 stream = "guaiba"
 kind = "rio"
 ana_name = "UHE PASSO REAL RIO INGAÍ 2"
+river = "Rio Ingaí"
+municipality = "Boa Vista do Incra"
 
 [[station]]
 id = "ANA-85260001"
@@ -273,6 +313,8 @@ datum_id = "ANA-85260001-regua"
 stream = "guaiba"
 kind = "reservatorio"
 ana_name = "UHE PASSO REAL BARRAMENTO"
+river = "Rio Jacuí"
+municipality = "Salto do Jacuí"
 
 [[station]]
 id = "ANA-85290000"
@@ -285,6 +327,8 @@ datum_id = "ANA-85290000-regua"
 stream = "guaiba"
 kind = "rio"
 ana_name = "UHE JACUÍ ARROIO LAJEADO PELADO"
+river = "Arroio Lajeado Pelado"
+municipality = "Salto do Jacuí"
 
 [[station]]
 id = "ANA-85300000"
@@ -297,6 +341,8 @@ datum_id = "ANA-85300000-regua"
 stream = "guaiba"
 kind = "reservatorio"
 ana_name = "UHE JACUÍ BARRAMENTO"
+river = "Rio Jacuí"
+municipality = "Salto do Jacuí"
 
 [[station]]
 id = "ANA-85306000"
@@ -309,6 +355,8 @@ datum_id = "ANA-85306000-regua"
 stream = "guaiba"
 kind = "rio"
 ana_name = "PCH ERNESTO JORGE DREHER PONTE BR158"
+river = "Rio Ivaí"
+municipality = "Tupanciretã"
 
 [[station]]
 id = "ANA-85309000"
@@ -321,6 +369,8 @@ datum_id = "ANA-85309000-regua"
 stream = "guaiba"
 kind = "rio"
 ana_name = "PCH ERNESTO JORGE DREHER PONTE RINCÃO DO IVAI"
+river = "Rio Ivaí"
+municipality = "Júlio de Castilhos"
 
 [[station]]
 id = "ANA-85310000"
@@ -333,6 +383,8 @@ datum_id = "ANA-85310000-regua"
 stream = "guaiba"
 kind = "rio"
 ana_name = "PCH ERNESTO JORGE DREHER MONTANTE 1"
+river = "Rio Ivaí"
+municipality = "Salto do Jacuí"
 
 [[station]]
 id = "ANA-85311000"
@@ -345,6 +397,8 @@ datum_id = "ANA-85311000-regua"
 stream = "guaiba"
 kind = "reservatorio"
 ana_name = "PCH ERNESTO JORGE DREHER  BARRAMENTO"
+river = "Rio Ivaí"
+municipality = "Salto do Jacuí"
 
 [[station]]
 id = "ANA-85349000"
@@ -357,6 +411,8 @@ datum_id = "ANA-85349000-regua"
 stream = "guaiba"
 kind = "reservatorio"
 ana_name = "PCH ENGENHEIRO HENRIQUE KOTZIAN BARRAMENTO"
+river = "Rio Ivaí"
+municipality = "Júlio de Castilhos"
 
 [[station]]
 id = "ANA-85350000"
@@ -369,6 +425,8 @@ datum_id = "ANA-85350000-regua"
 stream = "guaiba"
 kind = "jusante"
 ana_name = "PCH ENGENHEIRO HENRIQUE KOTZIAN JUSANTE"
+river = "Rio Ivaí"
+municipality = "Júlio de Castilhos"
 
 [[station]]
 id = "ANA-85365000"
@@ -381,6 +439,8 @@ datum_id = "ANA-85365000-regua"
 stream = "guaiba"
 kind = "reservatorio"
 ana_name = "UHE ITAÚBA BARRAMENTO"
+river = "Rio Jacuí"
+municipality = "Pinhal Grande"
 
 [[station]]
 id = "ANA-85365500"
@@ -393,6 +453,8 @@ datum_id = "ANA-85365500-regua"
 stream = "guaiba"
 kind = "rio"
 ana_name = "UHE ITAÚBA ARROIO POVINHO"
+river = "Arroio Povinho"
+municipality = "Nicolau Vergueiro"
 
 [[station]]
 id = "ANA-85380500"
@@ -405,6 +467,8 @@ datum_id = "ANA-85380500-regua"
 stream = "guaiba"
 kind = "rio"
 ana_name = "UHE DONA FRANCISCA RIO JACUIZINHO"
+river = "Rio Jacuizinho"
+municipality = "Arroio do Tigre"
 
 [[station]]
 id = "ANA-85382000"
@@ -417,6 +481,8 @@ datum_id = "ANA-85382000-regua"
 stream = "guaiba"
 kind = "rio"
 ana_name = "UHE DONA FRANCISCA ARROIO CARIJINHO"
+river = "Arroio Carijinho"
+municipality = "Sobradinho"
 
 [[station]]
 id = "ANA-85395100"
@@ -429,6 +495,8 @@ datum_id = "ANA-85395100-regua"
 stream = "guaiba"
 kind = "reservatorio"
 ana_name = "UHE DONA FRANCISCA BARRAMENTO"
+river = "Rio Jacuí"
+municipality = "Nova Palma"
 
 [[station]]
 id = "ANA-85395300"
@@ -441,6 +509,8 @@ datum_id = "ANA-85395300-regua"
 stream = "guaiba"
 kind = "jusante"
 ana_name = "UHE DONA FRANCISCA JUSANTE"
+river = "Rio Jacuí"
+municipality = "Nova Palma"
 
 [[station]]
 id = "ANA-85400000"
@@ -453,6 +523,8 @@ datum_id = "ANA-85400000-regua"
 stream = "guaiba"
 kind = "rio"
 ana_name = "DONA FRANCISCA"
+river = "Rio Jacuí"
+municipality = "Dona Francisca"
 
 [[station]]
 id = "ANA-85400020"
@@ -465,6 +537,8 @@ datum_id = "ANA-85400020-regua"
 stream = "guaiba"
 kind = "rio"
 ana_name = "DONA FRANCISCA"
+river = "Rio Jacuí"
+municipality = "Dona Francisca"
 
 [[station]]
 id = "ANA-85418000"
@@ -477,6 +551,8 @@ datum_id = "ANA-85418000-regua"
 stream = "guaiba"
 kind = "rio"
 ana_name = "NOVA PALMA"
+river = "Rio Soturno"
+municipality = "Nova Palma"
 
 [[station]]
 id = "ANA-85436000"
@@ -489,6 +565,8 @@ datum_id = "ANA-85436000-regua"
 stream = "guaiba"
 kind = "rio"
 ana_name = "SANTA MARIA - ARROIO CADENA"
+river = "Arroio Cadena"
+municipality = "Santa Maria"
 
 [[station]]
 id = "ANA-85438001"
@@ -501,6 +579,8 @@ datum_id = "ANA-85438001-regua"
 stream = "guaiba"
 kind = "rio"
 ana_name = "RESTINGA SECA"
+river = "Rio Vacacaí-mirim"
+municipality = "Restinga Seca"
 
 [[station]]
 id = "ANA-85470200"
@@ -513,6 +593,8 @@ datum_id = "ANA-85470200-regua"
 stream = "guaiba"
 kind = "rio"
 ana_name = "SÃO GABRIEL"
+river = "Rio Vacacaí"
+municipality = "São Gabriel"
 
 [[station]]
 id = "ANA-85500010"
@@ -525,6 +607,8 @@ datum_id = "ANA-85500010-regua"
 stream = "guaiba"
 kind = "rio"
 ana_name = "CGH COLORADO ARROIO BONITO"
+river = "Arroio Bonito"
+municipality = "Lagoa dos Três Cantos"
 
 [[station]]
 id = "ANA-85500100"
@@ -537,6 +621,8 @@ datum_id = "ANA-85500100-regua"
 stream = "guaiba"
 kind = "rio"
 ana_name = "CGH COLORADO MONTANTE"
+river = "Rio Colorado"
+municipality = "Lagoa dos Três Cantos"
 
 [[station]]
 id = "ANA-85500990"
@@ -549,6 +635,8 @@ datum_id = "ANA-85500990-regua"
 stream = "guaiba"
 kind = "reservatorio"
 ana_name = "CGH COLORADO BARRAMENTO"
+river = "Rio Colorado"
+municipality = "Tapera"
 
 [[station]]
 id = "ANA-85600003"
@@ -561,6 +649,8 @@ datum_id = "ANA-85600003-regua"
 stream = "guaiba"
 kind = "rio"
 ana_name = "FORMIGUEIRO/RESTINGA SECA"
+river = "Rio Vacacaí"
+municipality = "Formigueiro"
 
 [[station]]
 id = "ANA-85643990"
@@ -573,6 +663,8 @@ datum_id = "ANA-85643990-regua"
 stream = "guaiba"
 kind = "rio"
 ana_name = "CACHOEIRA DO SUL"
+river = "Rio Jacuí"
+municipality = "Cachoeira do Sul"
 
 [[station]]
 id = "ANA-85653000"
@@ -585,6 +677,8 @@ datum_id = "ANA-85653000-regua"
 stream = "guaiba"
 kind = "rio"
 ana_name = "CERRO BRANCO/CANDELÁRIA"
+river = "Rio Botucaraí"
+municipality = "Candelária"
 
 [[station]]
 id = "ANA-85659960"
@@ -597,6 +691,8 @@ datum_id = "ANA-85659960-regua"
 stream = "guaiba"
 kind = "rio"
 ana_name = "ENCRUZINHADA DO SUL"
+river = "Arroio Canhão"
+municipality = "Encruzilhada do Sul"
 
 [[station]]
 id = "ANA-85729000"
@@ -609,6 +705,8 @@ datum_id = "ANA-85729000-regua"
 stream = "guaiba"
 kind = "rio"
 ana_name = "LAGOÃO"
+river = "Rio Pardo"
+municipality = "Gramado Xavier"
 
 [[station]]
 id = "ANA-85739807"
@@ -621,6 +719,8 @@ datum_id = "ANA-85739807-regua"
 stream = "guaiba"
 kind = "rio"
 ana_name = "CANDELÁRIA"
+river = "Rio Pardo"
+municipality = "Candelária"
 
 [[station]]
 id = "ANA-85810000"
@@ -633,6 +733,8 @@ datum_id = "ANA-85810000-regua"
 stream = "guaiba"
 kind = "rio"
 ana_name = "SINIMBU"
+river = "Rio Pardinho"
+municipality = "Sinimbú"
 
 [[station]]
 id = "ANA-85820000"
@@ -645,6 +747,8 @@ datum_id = "ANA-85820000-regua"
 stream = "guaiba"
 kind = "rio"
 ana_name = "SANTA CRUZ DO SUL"
+river = "Rio Pardinho"
+municipality = "Santa Cruz do Sul"
 
 [[station]]
 id = "ANA-85889010"
@@ -657,6 +761,8 @@ datum_id = "ANA-85889010-regua"
 stream = "guaiba"
 kind = "rio"
 ana_name = "RIO PARDO"
+river = "Rio Pardo"
+municipality = "Rio Pardo"
 
 [[station]]
 id = "ANA-85899800"
@@ -669,6 +775,8 @@ datum_id = "ANA-85899800-regua"
 stream = "guaiba"
 kind = "rio"
 ana_name = "RIO PARDO - RIO JACUÍ"
+river = "Rio Jacuí"
+municipality = "Rio Pardo"
 
 [[station]]
 id = "ANA-85900000"
@@ -681,6 +789,8 @@ datum_id = "ANA-85900000-regua"
 stream = "guaiba"
 kind = "rio"
 ana_name = "RIO PARDO"
+river = "Rio Jacuí"
+municipality = "Rio Pardo"
 
 [[station]]
 id = "ANA-86060010"
@@ -693,6 +803,8 @@ datum_id = "ANA-86060010-regua"
 stream = "guaiba"
 kind = "reservatorio"
 ana_name = "CGH CAMBARÁ BARRAMENTO"
+river = "Arroio Arcada"
+municipality = "Cambará do Sul"
 
 [[station]]
 id = "ANA-86095100"
@@ -705,6 +817,8 @@ datum_id = "ANA-86095100-regua"
 stream = "guaiba"
 kind = "rio"
 ana_name = "BOM JESUS/JAQUIRANA"
+river = "Rio das Antas"
+municipality = "Jaquirana"
 
 [[station]]
 id = "ANA-86099000"
@@ -717,6 +831,8 @@ datum_id = "ANA-86099000-regua"
 stream = "guaiba"
 kind = "rio"
 ana_name = "PCH PEZZI MONTANTE"
+river = "Rio das Antas"
+municipality = "Bom Jesus"
 
 [[station]]
 id = "ANA-86100600"
@@ -729,6 +845,8 @@ datum_id = "ANA-86100600-regua"
 stream = "guaiba"
 kind = "rio"
 ana_name = "PCH PEZZI ARROIO PINHEIRO ALTO"
+river = "Arroio Pinheiro Alto"
+municipality = "Bom Jesus"
 
 [[station]]
 id = "ANA-86100800"
@@ -741,6 +859,8 @@ datum_id = "ANA-86100800-regua"
 stream = "guaiba"
 kind = "reservatorio"
 ana_name = "PCH PEZZI BARRAMENTO"
+river = "Rio das Antas"
+municipality = "Bom Jesus"
 
 [[station]]
 id = "ANA-86101000"
@@ -753,6 +873,8 @@ datum_id = "ANA-86101000-regua"
 stream = "guaiba"
 kind = "rio"
 ana_name = "PCH PASSO DO MEIO MONTANTE"
+river = "Rio das Antas"
+municipality = "Jaquirana"
 
 [[station]]
 id = "ANA-86102000"
@@ -765,6 +887,8 @@ datum_id = "ANA-86102000-regua"
 stream = "guaiba"
 kind = "rio"
 ana_name = "PCH PASSO DO MEIO MONTANTE TAINHAS"
+river = "Rio Tainhas"
+municipality = "São Francisco de Paula"
 
 [[station]]
 id = "ANA-86109000"
@@ -777,6 +901,8 @@ datum_id = "ANA-86109000-regua"
 stream = "guaiba"
 kind = "reservatorio"
 ana_name = "PCH PASSO DO MEIO BARRAMENTO"
+river = "Rio das Antas"
+municipality = "São Francisco de Paula"
 
 [[station]]
 id = "ANA-86110000"
@@ -789,6 +915,8 @@ datum_id = "ANA-86110000-regua"
 stream = "guaiba"
 kind = "jusante"
 ana_name = "PCH PASSO DO MEIO JUSANTE"
+river = "Rio das Antas"
+municipality = "São Francisco de Paula"
 
 [[station]]
 id = "ANA-86117000"
@@ -801,6 +929,8 @@ datum_id = "ANA-86117000-regua"
 stream = "guaiba"
 kind = "rio"
 ana_name = "PCH SERRA DOS CAVALINHOS I ARROIO DO GOVERNADOR"
+river = "Arroio do Governador"
+municipality = "Vila Maria"
 
 [[station]]
 id = "ANA-86118000"
@@ -813,6 +943,8 @@ datum_id = "ANA-86118000-regua"
 stream = "guaiba"
 kind = "reservatorio"
 ana_name = "PCH SERRA DOS CAVALINHOS I BARRAMENTO"
+river = "Rio das Antas"
+municipality = "Monte Alegre dos Campos"
 
 [[station]]
 id = "ANA-86120050"
@@ -825,6 +957,8 @@ datum_id = "ANA-86120050-regua"
 stream = "guaiba"
 kind = "rio"
 ana_name = "SÃO FRANCISCO DE PAULA-CAMBARÁ DO SUL"
+river = "Rio Tainhas"
+municipality = "Cambará do Sul"
 
 [[station]]
 id = "ANA-86125000"
@@ -837,6 +971,8 @@ datum_id = "ANA-86125000-regua"
 stream = "guaiba"
 kind = "jusante"
 ana_name = "CGH TRABUCO JUSANTE"
+river = "Arroio Trabuco"
+municipality = "Campestre da Serra"
 
 [[station]]
 id = "ANA-86125050"
@@ -849,6 +985,8 @@ datum_id = "ANA-86125050-regua"
 stream = "guaiba"
 kind = "rio"
 ana_name = "PCH MORRO GRANDE MONTANTE"
+river = "Rio Ituim"
+municipality = "Muitos Capões"
 
 [[station]]
 id = "ANA-86125100"
@@ -861,6 +999,8 @@ datum_id = "ANA-86125100-regua"
 stream = "guaiba"
 kind = "reservatorio"
 ana_name = "PCH MORRO GRANDE BARRAMENTO"
+river = "Rio Ituim"
+municipality = "Muitos Capões"
 
 [[station]]
 id = "ANA-86125120"
@@ -873,6 +1013,8 @@ datum_id = "ANA-86125120-regua"
 stream = "guaiba"
 kind = "jusante"
 ana_name = "PCH MORRO GRANDE JUSANTE 1"
+river = "Rio Ituim"
+municipality = "Muitos Capões"
 
 [[station]]
 id = "ANA-86125130"
@@ -885,6 +1027,8 @@ datum_id = "ANA-86125130-regua"
 stream = "guaiba"
 kind = "jusante"
 ana_name = "PCH MORRO GRANDE JUSANTE 2"
+river = "Rio Ituim"
+municipality = "Muitos Capões"
 
 [[station]]
 id = "ANA-86125160"
@@ -897,6 +1041,8 @@ datum_id = "ANA-86125160-regua"
 stream = "guaiba"
 kind = "reservatorio"
 ana_name = "PCH SALTINHO BARRAMENTO"
+river = "Rio Ituim"
+municipality = "Muitos Capões"
 
 [[station]]
 id = "ANA-86125165"
@@ -909,6 +1055,8 @@ datum_id = "ANA-86125165-regua"
 stream = "guaiba"
 kind = "rio"
 ana_name = "PCH SALTINHO ALÇA"
+river = "Rio Ituim"
+municipality = "Muitos Capões"
 
 [[station]]
 id = "ANA-86125200"
@@ -921,6 +1069,8 @@ datum_id = "ANA-86125200-regua"
 stream = "guaiba"
 kind = "jusante"
 ana_name = "PCH SALTINHO JUSANTE"
+river = "Rio Ituim"
+municipality = "Muitos Capões"
 
 [[station]]
 id = "ANA-86125500"
@@ -933,6 +1083,8 @@ datum_id = "ANA-86125500-regua"
 stream = "guaiba"
 kind = "reservatorio"
 ana_name = "PCH JARARACA BARRAMENTO"
+river = "Rio Prata"
+municipality = "Caxias do Sul"
 
 [[station]]
 id = "ANA-86160000"
@@ -945,6 +1097,8 @@ datum_id = "ANA-86160000-regua"
 stream = "guaiba"
 kind = "rio"
 ana_name = "PASSO TAINHAS"
+river = "Rio Tainhas"
+municipality = "Jaquirana"
 
 [[station]]
 id = "ANA-86162000"
@@ -957,6 +1111,8 @@ datum_id = "ANA-86162000-regua"
 stream = "guaiba"
 kind = "reservatorio"
 ana_name = "PCH SERRA DOS CAVALINHOS II BARRAMENTO"
+river = "Rio das Antas"
+municipality = "Monte Alegre dos Campos"
 
 [[station]]
 id = "ANA-86163000"
@@ -969,6 +1125,8 @@ datum_id = "ANA-86163000-regua"
 stream = "guaiba"
 kind = "jusante"
 ana_name = "PCH SERRA DOS CAVALINHOS II JUSANTE"
+river = "Rio das Antas"
+municipality = "Monte Alegre dos Campos"
 
 [[station]]
 id = "ANA-86194900"
@@ -981,6 +1139,8 @@ datum_id = "ANA-86194900-regua"
 stream = "guaiba"
 kind = "rio"
 ana_name = "PCH CAZUZA FERREIRA MONTANTE"
+river = "Lajeado Grande"
+municipality = "São Francisco de Paula"
 
 [[station]]
 id = "ANA-86195000"
@@ -993,6 +1153,8 @@ datum_id = "ANA-86195000-regua"
 stream = "guaiba"
 kind = "reservatorio"
 ana_name = "PCH CAZUZA FERREIRA BARRAMENTO"
+river = "Lajeado Grande"
+municipality = "São Francisco de Paula"
 
 [[station]]
 id = "ANA-86195100"
@@ -1005,6 +1167,8 @@ datum_id = "ANA-86195100-regua"
 stream = "guaiba"
 kind = "rio"
 ana_name = "PCH CAZUZA FERREIRA ALÇA"
+river = "Lajeado Grande"
+municipality = "São Francisco de Paula"
 
 [[station]]
 id = "ANA-86200500"
@@ -1017,6 +1181,8 @@ datum_id = "ANA-86200500-regua"
 stream = "guaiba"
 kind = "jusante"
 ana_name = "PCH CAZUZA FERREIRA JUSANTE"
+river = "Lajeado Grande"
+municipality = "São Francisco de Paula"
 
 [[station]]
 id = "ANA-86200900"
@@ -1029,6 +1195,8 @@ datum_id = "ANA-86200900-regua"
 stream = "guaiba"
 kind = "reservatorio"
 ana_name = "PCH CRIÚVA BARRAMENTO"
+river = "Lajeado Grande"
+municipality = "Caxias do Sul"
 
 [[station]]
 id = "ANA-86210900"
@@ -1041,6 +1209,8 @@ datum_id = "ANA-86210900-regua"
 stream = "guaiba"
 kind = "reservatorio"
 ana_name = "PCH PALANQUINHO BARRAMENTO"
+river = "Lajeado Grande"
+municipality = "Caxias do Sul"
 
 [[station]]
 id = "ANA-86220600"
@@ -1053,6 +1223,8 @@ datum_id = "ANA-86220600-regua"
 stream = "guaiba"
 kind = "jusante"
 ana_name = "PCH PALANQUINHO JUSANTE"
+river = "Rio das Antas"
+municipality = "Campestre da Serra"
 
 [[station]]
 id = "ANA-86280500"
@@ -1065,6 +1237,8 @@ datum_id = "ANA-86280500-regua"
 stream = "guaiba"
 kind = "reservatorio"
 ana_name = "PCH RIO SÃO MARCOS BARRAMENTO"
+river = "Arroio São Marcos"
+municipality = "São Marcos"
 
 [[station]]
 id = "ANA-86297965"
@@ -1077,6 +1251,8 @@ datum_id = "ANA-86297965-regua"
 stream = "guaiba"
 kind = "jusante"
 ana_name = "PCH RIO SÃO MARCOS JUSANTE"
+river = "Arroio São Marcos"
+municipality = "São Marcos"
 
 [[station]]
 id = "ANA-86297995"
@@ -1089,6 +1265,8 @@ datum_id = "ANA-86297995-regua"
 stream = "guaiba"
 kind = "rio"
 ana_name = "FLORES DA CUNHA-ANTÔNIO PRADO"
+river = "Rio das Antas"
+municipality = "Flores da Cunha"
 
 [[station]]
 id = "ANA-86298000"
@@ -1101,6 +1279,8 @@ datum_id = "ANA-86298000-regua"
 stream = "guaiba"
 kind = "rio"
 ana_name = "UHE CASTRO ALVES RS-122"
+river = "Rio das Antas"
+municipality = "Antônio Prado"
 
 [[station]]
 id = "ANA-86305000"
@@ -1113,6 +1293,8 @@ datum_id = "ANA-86305000-regua"
 stream = "guaiba"
 kind = "reservatorio"
 ana_name = "UHE CASTRO ALVES BARRAMENTO"
+river = "Rio das Antas"
+municipality = "Nova Roma do Sul"
 
 [[station]]
 id = "ANA-86306000"
@@ -1125,6 +1307,8 @@ datum_id = "ANA-86306000-regua"
 stream = "guaiba"
 kind = "rio"
 ana_name = "UHE CASTRO ALVES ALÇA"
+river = "Rio das Antas"
+municipality = "Nova Roma do Sul"
 
 [[station]]
 id = "ANA-86321000"
@@ -1137,6 +1321,8 @@ datum_id = "ANA-86321000-regua"
 stream = "guaiba"
 kind = "rio"
 ana_name = "UHE CASTRO ALVES TEGA"
+river = "Rio Tegas"
+municipality = "Nova Pádua"
 
 [[station]]
 id = "ANA-86329001"
@@ -1149,6 +1335,8 @@ datum_id = "ANA-86329001-regua"
 stream = "guaiba"
 kind = "rio"
 ana_name = "NOVA ROMA/FARROUPILHA"
+river = "Rio das Antas"
+municipality = "Nova Roma do Sul"
 
 [[station]]
 id = "ANA-86342000"
@@ -1161,6 +1349,8 @@ datum_id = "ANA-86342000-regua"
 stream = "guaiba"
 kind = "rio"
 ana_name = "MUITOS CAPÕES/LAGOA VERMELHA"
+river = "Rio Santa Rita"
+municipality = "Muitos Capões"
 
 [[station]]
 id = "ANA-86350000"
@@ -1173,6 +1363,8 @@ datum_id = "ANA-86350000-regua"
 stream = "guaiba"
 kind = "rio"
 ana_name = "PCH CHIMARRÃO RIO SANTA RITA"
+river = "Rio Santa Rita"
+municipality = "Muitos Capões"
 
 [[station]]
 id = "ANA-86390900"
@@ -1185,6 +1377,8 @@ datum_id = "ANA-86390900-regua"
 stream = "guaiba"
 kind = "rio"
 ana_name = "PCH JARDIM MONTANTE"
+river = "Rio Turvo"
+municipality = "André da Rocha"
 
 [[station]]
 id = "ANA-86402000"
@@ -1197,6 +1391,8 @@ datum_id = "ANA-86402000-regua"
 stream = "guaiba"
 kind = "reservatorio"
 ana_name = "PCH JARDIM BARRAMENTO"
+river = "Rio Turvo"
+municipality = "André da Rocha"
 
 [[station]]
 id = "ANA-86403000"
@@ -1209,6 +1405,8 @@ datum_id = "ANA-86403000-regua"
 stream = "guaiba"
 kind = "jusante"
 ana_name = "PCH JARDIM JUSANTE"
+river = "Rio Turvo"
+municipality = "André da Rocha"
 
 [[station]]
 id = "ANA-86404100"
@@ -1221,6 +1419,8 @@ datum_id = "ANA-86404100-regua"
 stream = "guaiba"
 kind = "jusante"
 ana_name = "PCH CHIMARRÃO JUSANTE"
+river = "Rio Turvo"
+municipality = "Muitos Capões"
 
 [[station]]
 id = "ANA-86404200"
@@ -1233,6 +1433,8 @@ datum_id = "ANA-86404200-regua"
 stream = "guaiba"
 kind = "reservatorio"
 ana_name = "PCH CHIMARRÃO BARRAMENTO"
+river = "Rio Turvo"
+municipality = "Muitos Capões"
 
 [[station]]
 id = "ANA-86405000"
@@ -1245,6 +1447,8 @@ datum_id = "ANA-86405000-regua"
 stream = "guaiba"
 kind = "reservatorio"
 ana_name = "PCH SANTA CAROLINA BARRAMENTO"
+river = "Rio Turvo"
+municipality = "André da Rocha"
 
 [[station]]
 id = "ANA-86406000"
@@ -1257,6 +1461,8 @@ datum_id = "ANA-86406000-regua"
 stream = "guaiba"
 kind = "jusante"
 ana_name = "PCH SANTA CAROLINA JUSANTE"
+river = "Rio Turvo"
+municipality = "André da Rocha"
 
 [[station]]
 id = "ANA-86410001"
@@ -1269,6 +1475,8 @@ datum_id = "ANA-86410001-regua"
 stream = "guaiba"
 kind = "rio"
 ana_name = "PROTÁSIO ALVES/IPÊ"
+river = "Rio Turvo"
+municipality = "Protásio Alves"
 
 [[station]]
 id = "ANA-86410050"
@@ -1281,6 +1489,8 @@ datum_id = "ANA-86410050-regua"
 stream = "guaiba"
 kind = "rio"
 ana_name = "PCH DA ILHA BALSA DO TURVO"
+river = "Rio Turvo"
+municipality = "Antônio Prado"
 
 [[station]]
 id = "ANA-86410800"
@@ -1293,6 +1503,8 @@ datum_id = "ANA-86410800-regua"
 stream = "guaiba"
 kind = "rio"
 ana_name = "PCH DA ILHA AFLUENTE"
+river = "Arroio Primavera"
+municipality = "Protásio Alves"
 
 [[station]]
 id = "ANA-86430500"
@@ -1305,6 +1517,8 @@ datum_id = "ANA-86430500-regua"
 stream = "guaiba"
 kind = "rio"
 ana_name = "PCH JARARACA PRATINHA"
+river = "Rio Prata"
+municipality = "Protásio Alves"
 
 [[station]]
 id = "ANA-86430900"
@@ -1317,6 +1531,8 @@ datum_id = "ANA-86430900-regua"
 stream = "guaiba"
 kind = "reservatorio"
 ana_name = "PCH DA ILHA BARRAMENTO"
+river = "Rio Prata"
+municipality = "Veranópolis"
 
 [[station]]
 id = "ANA-86447000"
@@ -1329,6 +1545,8 @@ datum_id = "ANA-86447000-regua"
 stream = "guaiba"
 kind = "rio"
 ana_name = "UHE MONTE CLARO BALSA DO PRATA"
+river = "Rio Prata"
+municipality = "Nova Roma do Sul"
 
 [[station]]
 id = "ANA-86448000"
@@ -1341,6 +1559,8 @@ datum_id = "ANA-86448000-regua"
 stream = "guaiba"
 kind = "reservatorio"
 ana_name = "UHE MONTE CLARO BARRAMENTO"
+river = "Rio das Antas"
+municipality = "Veranópolis"
 
 [[station]]
 id = "ANA-86450000"
@@ -1353,6 +1573,8 @@ datum_id = "ANA-86450000-regua"
 stream = "guaiba"
 kind = "jusante"
 ana_name = "UHE MONTE CLARO JUSANTE 1 (ALÇA)"
+river = "Rio das Antas"
+municipality = "Bento Gonçalves"
 
 [[station]]
 id = "ANA-86450500"
@@ -1365,6 +1587,8 @@ datum_id = "ANA-86450500-regua"
 stream = "guaiba"
 kind = "jusante"
 ana_name = "UHE MONTE CLARO JUSANTE 2"
+river = "Rio das Antas"
+municipality = "Veranópolis"
 
 [[station]]
 id = "ANA-86451000"
@@ -1377,6 +1601,8 @@ datum_id = "ANA-86451000-regua"
 stream = "guaiba"
 kind = "rio"
 ana_name = "UHE 14 DE JULHO MONTANTE"
+river = "Rio das Antas"
+municipality = "Veranópolis"
 
 [[station]]
 id = "ANA-86470800"
@@ -1389,6 +1615,8 @@ datum_id = "ANA-86470800-regua"
 stream = "guaiba"
 kind = "reservatorio"
 ana_name = "UHE 14 DE JULHO BARRAMENTO"
+river = "Rio das Antas"
+municipality = "Cotiporã"
 
 [[station]]
 id = "ANA-86470900"
@@ -1401,6 +1629,8 @@ datum_id = "ANA-86470900-regua"
 stream = "guaiba"
 kind = "rio"
 ana_name = "UHE 14 DE JULHO ALÇA"
+river = "Rio das Antas"
+municipality = "Cotiporã"
 
 [[station]]
 id = "ANA-86471000"
@@ -1413,6 +1643,8 @@ datum_id = "ANA-86471000-regua"
 stream = "guaiba"
 kind = "jusante"
 ana_name = "UHE 14 DE JULHO JUSANTE"
+river = "Rio das Antas"
+municipality = "Cotiporã"
 
 [[station]]
 id = "ANA-86472000"
@@ -1425,6 +1657,8 @@ datum_id = "ANA-86472000-regua"
 stream = "guaiba"
 kind = "rio"
 ana_name = "LINHA JOSÉ JÚLIO"
+river = "Rio das Antas"
+municipality = "Santa Tereza"
 
 [[station]]
 id = "ANA-86472600"
@@ -1437,6 +1671,8 @@ datum_id = "ANA-86472600-regua"
 stream = "guaiba"
 kind = "rio"
 ana_name = "SANTA TEREZA"
+river = "Rio Taquari"
+municipality = "Santa Tereza"
 
 [[station]]
 id = "ANA-86479000"
@@ -1449,6 +1685,8 @@ datum_id = "ANA-86479000-regua"
 stream = "guaiba"
 kind = "rio"
 ana_name = "PCH CAÇADOR PONTE SÃO DOMINGOS"
+river = "Rio São Domingos"
+municipality = "São Domingos do Sul"
 
 [[station]]
 id = "ANA-86488000"
@@ -1461,6 +1699,8 @@ datum_id = "ANA-86488000-regua"
 stream = "guaiba"
 kind = "rio"
 ana_name = "PCH CAÇADOR MONTANTE"
+river = "Rio Carreiro"
+municipality = "Serafina Corrêa"
 
 [[station]]
 id = "ANA-86489000"
@@ -1473,6 +1713,8 @@ datum_id = "ANA-86489000-regua"
 stream = "guaiba"
 kind = "reservatorio"
 ana_name = "PCH CAÇADOR BARRAMENTO"
+river = "Rio Carreiro"
+municipality = "Serafina Corrêa"
 
 [[station]]
 id = "ANA-86493000"
@@ -1485,6 +1727,8 @@ datum_id = "ANA-86493000-regua"
 stream = "guaiba"
 kind = "reservatorio"
 ana_name = "PCH BOA FÉ BARRAMENTO"
+river = "Rio Carreiro"
+municipality = "Nova Bassano"
 
 [[station]]
 id = "ANA-86495500"
@@ -1497,6 +1741,8 @@ datum_id = "ANA-86495500-regua"
 stream = "guaiba"
 kind = "reservatorio"
 ana_name = "PCH SÃO PAULO BARRAMENTO"
+river = "Rio Carreiro"
+municipality = "Guaporé"
 
 [[station]]
 id = "ANA-86497400"
@@ -1509,6 +1755,8 @@ datum_id = "ANA-86497400-regua"
 stream = "guaiba"
 kind = "reservatorio"
 ana_name = "PCH AUTÓDROMO BARRAMENTO"
+river = "Rio Carreiro"
+municipality = "Guaporé"
 
 [[station]]
 id = "ANA-86500000"
@@ -1521,6 +1769,8 @@ datum_id = "ANA-86500000-regua"
 stream = "guaiba"
 kind = "rio"
 ana_name = "PASSO CARREIRO"
+river = "Rio Carreiro"
+municipality = "Guaporé"
 
 [[station]]
 id = "ANA-86504400"
@@ -1533,6 +1783,8 @@ datum_id = "ANA-86504400-regua"
 stream = "guaiba"
 kind = "reservatorio"
 ana_name = "CGH SÃO DOMINGOS DO PRATA BARRAMENTO"
+river = "Arroio Não Sabia"
+municipality = "Vista Alegre do Prata"
 
 [[station]]
 id = "ANA-86504500"
@@ -1545,6 +1797,8 @@ datum_id = "ANA-86504500-regua"
 stream = "guaiba"
 kind = "jusante"
 ana_name = "CGH SÃO DOMINGOS DO PRATA JUSANTE"
+river = "Arroio Não Sabia"
+municipality = "Vista Alegre do Prata"
 
 [[station]]
 id = "ANA-86504900"
@@ -1557,6 +1811,8 @@ datum_id = "ANA-86504900-regua"
 stream = "guaiba"
 kind = "jusante"
 ana_name = "PCH AUTÓDROMO JUSANTE"
+river = "Rio Carreiro"
+municipality = "Vista Alegre do Prata"
 
 [[station]]
 id = "ANA-86505400"
@@ -1569,6 +1825,8 @@ datum_id = "ANA-86505400-regua"
 stream = "guaiba"
 kind = "reservatorio"
 ana_name = "PCH LINHA EMILIA BARRAMENTO"
+river = "Rio Carreiro"
+municipality = "Dois Lajeados"
 
 [[station]]
 id = "ANA-86505500"
@@ -1581,6 +1839,8 @@ datum_id = "ANA-86505500-regua"
 stream = "guaiba"
 kind = "jusante"
 ana_name = "PCH LINHA EMILIA JUSANTE"
+river = "Rio Carreiro"
+municipality = "Dois Lajeados"
 
 [[station]]
 id = "ANA-86506000"
@@ -1593,6 +1853,8 @@ datum_id = "ANA-86506000-regua"
 stream = "guaiba"
 kind = "reservatorio"
 ana_name = "PCH COTIPORÃ BARRAMENTO"
+river = "Rio Carreiro"
+municipality = "Cotiporã"
 
 [[station]]
 id = "ANA-86507000"
@@ -1605,6 +1867,8 @@ datum_id = "ANA-86507000-regua"
 stream = "guaiba"
 kind = "jusante"
 ana_name = "PCH COTIPORÃ JUSANTE"
+river = "Rio Carreiro"
+municipality = "Cotiporã"
 
 [[station]]
 id = "ANA-86507220"
@@ -1617,6 +1881,8 @@ datum_id = "ANA-86507220-regua"
 stream = "guaiba"
 kind = "rio"
 ana_name = "COTIPORÃO/DOIS LAJEADOS"
+river = "Rio Carreiro"
+municipality = "Cotiporã"
 
 [[station]]
 id = "ANA-86520000"
@@ -1629,6 +1895,8 @@ datum_id = "ANA-86520000-regua"
 stream = "guaiba"
 kind = "reservatorio"
 ana_name = "PCH CAPIGUI BARRAMENTO DE REGULARIZAÇÃO"
+river = "Rio Capigui"
+municipality = "Marau"
 
 [[station]]
 id = "ANA-86520100"
@@ -1641,6 +1909,8 @@ datum_id = "ANA-86520100-regua"
 stream = "guaiba"
 kind = "jusante"
 ana_name = "PCH CAPIGUI JUSANTE"
+river = "Rio Capigui"
+municipality = "Marau"
 
 [[station]]
 id = "ANA-86529500"
@@ -1653,6 +1923,8 @@ datum_id = "ANA-86529500-regua"
 stream = "guaiba"
 kind = "rio"
 ana_name = "MARAU"
+river = "Arroio Marau"
+municipality = "Marau"
 
 [[station]]
 id = "ANA-86542000"
@@ -1665,6 +1937,8 @@ datum_id = "ANA-86542000-regua"
 stream = "guaiba"
 kind = "rio"
 ana_name = "UNIÃO DA SERRA"
+river = "Rio Guaporé"
+municipality = "União da Serra"
 
 [[station]]
 id = "ANA-86560000"
@@ -1677,6 +1951,8 @@ datum_id = "ANA-86560000-regua"
 stream = "guaiba"
 kind = "rio"
 ana_name = "LINHA COLOMBO"
+river = "Rio Guaporé"
+municipality = "Guaporé"
 
 [[station]]
 id = "ANA-86560020"
@@ -1689,6 +1965,8 @@ datum_id = "ANA-86560020-regua"
 stream = "guaiba"
 kind = "rio"
 ana_name = "GUAPORÉ - ANTA GORDA"
+river = "Rio Guaporé"
+municipality = "Anta Gorda"
 
 [[station]]
 id = "ANA-86581000"
@@ -1701,6 +1979,8 @@ datum_id = "ANA-86581000-regua"
 stream = "guaiba"
 kind = "rio"
 ana_name = "MUÇUM/ENCANTADO"
+river = "Rio Guaporé"
+municipality = "Muçum"
 
 [[station]]
 id = "ANA-86640900"
@@ -1713,6 +1993,8 @@ datum_id = "ANA-86640900-regua"
 stream = "guaiba"
 kind = "rio"
 ana_name = "PUTINGA"
+river = "Arroio Putinga"
+municipality = "Putinga"
 
 [[station]]
 id = "ANA-86700005"
@@ -1725,6 +2007,8 @@ datum_id = "ANA-86700005-regua"
 stream = "guaiba"
 kind = "rio"
 ana_name = "ENCANTADO"
+river = "Arroio Jacaré"
+municipality = "Encantado"
 
 [[station]]
 id = "ANA-86733330"
@@ -1737,6 +2021,8 @@ datum_id = "ANA-86733330-regua"
 stream = "guaiba"
 kind = "rio"
 ana_name = "ENCANTADO/ROCA SALES"
+river = "Rio Taquari"
+municipality = "Encantado"
 
 [[station]]
 id = "ANA-86739850"
@@ -1749,6 +2035,8 @@ datum_id = "ANA-86739850-regua"
 stream = "guaiba"
 kind = "rio"
 ana_name = "IMIGRANTE"
+river = "Arroio da Seca"
+municipality = "Imigrante"
 
 [[station]]
 id = "ANA-86743700"
@@ -1761,6 +2049,8 @@ datum_id = "ANA-86743700-regua"
 stream = "guaiba"
 kind = "rio"
 ana_name = "PCH RASTRO DE AUTO MONTANTE"
+river = "Rio Forqueta"
+municipality = "São José do Herval"
 
 [[station]]
 id = "ANA-86743800"
@@ -1773,6 +2063,8 @@ datum_id = "ANA-86743800-regua"
 stream = "guaiba"
 kind = "reservatorio"
 ana_name = "PCH RASTRO DE AUTO BARRAMENTO"
+river = "Rio Forqueta"
+municipality = "São José do Herval"
 
 [[station]]
 id = "ANA-86743900"
@@ -1785,6 +2077,8 @@ datum_id = "ANA-86743900-regua"
 stream = "guaiba"
 kind = "reservatorio"
 ana_name = "PCH SALTO FORQUETA BARRAMENTO"
+river = "Rio Forqueta"
+municipality = "Putinga"
 
 [[station]]
 id = "ANA-86743950"
@@ -1797,6 +2091,8 @@ datum_id = "ANA-86743950-regua"
 stream = "guaiba"
 kind = "rio"
 ana_name = "PCH SALTO FORQUETA ALÇA"
+river = "Rio Forqueta"
+municipality = "Putinga"
 
 [[station]]
 id = "ANA-86744110"
@@ -1809,6 +2105,8 @@ datum_id = "ANA-86744110-regua"
 stream = "guaiba"
 kind = "jusante"
 ana_name = "PCH SALTO FORQUETA JUSANTE"
+river = "Rio Forqueta"
+municipality = "Putinga"
 
 [[station]]
 id = "ANA-86744650"
@@ -1821,6 +2119,8 @@ datum_id = "ANA-86744650-regua"
 stream = "guaiba"
 kind = "jusante"
 ana_name = "PCH VALE DO LEITE JUSANTE"
+river = "Rio Forqueta"
+municipality = "Pouso Novo"
 
 [[station]]
 id = "ANA-86744900"
@@ -1833,6 +2133,8 @@ datum_id = "ANA-86744900-regua"
 stream = "guaiba"
 kind = "rio"
 ana_name = "TRAVESSEIRO/POUSO NOVO"
+river = "Rio Forqueta"
+municipality = "Travesseiro"
 
 [[station]]
 id = "ANA-86746680"
@@ -1845,6 +2147,8 @@ datum_id = "ANA-86746680-regua"
 stream = "guaiba"
 kind = "rio"
 ana_name = "CANUDOS DO VALE"
+river = "Arroio Forquetinha"
+municipality = "Canudos do Vale"
 
 [[station]]
 id = "ANA-86780000"
@@ -1857,6 +2161,8 @@ datum_id = "ANA-86780000-regua"
 stream = "guaiba"
 kind = "rio"
 ana_name = "BARRA DO FÃO"
+river = "Rio Forqueta"
+municipality = "Travesseiro"
 
 [[station]]
 id = "ANA-86855000"
@@ -1869,6 +2175,8 @@ datum_id = "ANA-86855000-regua"
 stream = "guaiba"
 kind = "rio"
 ana_name = "TEUTÔNIA"
+river = "Arroio Boa Vista"
+municipality = "Teutônia"
 
 [[station]]
 id = "ANA-86878700"
@@ -1881,6 +2189,8 @@ datum_id = "ANA-86878700-regua"
 stream = "guaiba"
 kind = "rio"
 ana_name = "ARROIO DO MEIO/LAJEADO"
+river = "Rio Forqueta"
+municipality = "Arroio do Meio"
 
 [[station]]
 id = "ANA-86888400"
@@ -1893,6 +2203,8 @@ datum_id = "ANA-86888400-regua"
 stream = "guaiba"
 kind = "rio"
 ana_name = "SANTA CRUZ DO SUL-VENÂNCIO AIRES"
+river = "Arroio Castelhano"
+municipality = "Venâncio Aires"
 
 [[station]]
 id = "ANA-86895000"
@@ -1905,6 +2217,8 @@ datum_id = "ANA-86895000-regua"
 stream = "guaiba"
 kind = "rio"
 ana_name = "PORTO MARIANTE"
+river = "Rio Taquari"
+municipality = "Venâncio Aires"
 
 [[station]]
 id = "ANA-87010000"
@@ -1917,6 +2231,8 @@ datum_id = "ANA-87010000-regua"
 stream = "guaiba"
 kind = "rio"
 ana_name = "TRIUNFO"
+river = "Rio Jacuí"
+municipality = "Triunfo"
 
 [[station]]
 id = "ANA-87036800"
@@ -1929,6 +2245,8 @@ datum_id = "ANA-87036800-regua"
 stream = "guaiba"
 kind = "rio"
 ana_name = "CHARQUEADAS"
+river = "Rio Jacuí"
+municipality = "Charqueadas"
 
 [[station]]
 id = "ANA-87068000"
@@ -1941,6 +2259,8 @@ datum_id = "ANA-87068000-regua"
 stream = "guaiba"
 kind = "rio"
 ana_name = "UHE BUGRES DIVISA MONTANTE 2"
+river = "Arroio do Junco"
+municipality = "São Francisco de Paula"
 
 [[station]]
 id = "ANA-87070000"
@@ -1953,6 +2273,8 @@ datum_id = "ANA-87070000-regua"
 stream = "guaiba"
 kind = "reservatorio"
 ana_name = "UHE BUGRES BARRAMENTO DIVISA"
+river = "Arroio da Divisa"
+municipality = "São Francisco de Paula"
 
 [[station]]
 id = "ANA-87072000"
@@ -1965,6 +2287,8 @@ datum_id = "ANA-87072000-regua"
 stream = "guaiba"
 kind = "rio"
 ana_name = "UHE BUGRES BLANG MONTANTE 1"
+river = "Rio Santa Cruz"
+municipality = "São Francisco de Paula"
 
 [[station]]
 id = "ANA-87075000"
@@ -1977,6 +2301,8 @@ datum_id = "ANA-87075000-regua"
 stream = "guaiba"
 kind = "reservatorio"
 ana_name = "UHE BUGRES BARRAMENTO BLANG"
+river = "Rio Caí"
+municipality = "São Francisco de Paula"
 
 [[station]]
 id = "ANA-87100000"
@@ -1989,6 +2315,8 @@ datum_id = "ANA-87100000-regua"
 stream = "guaiba"
 kind = "reservatorio"
 ana_name = "UHE BUGRES BARRAMENTO SALTO"
+river = "Rio Caí"
+municipality = "São Francisco de Paula"
 
 [[station]]
 id = "ANA-87107000"
@@ -2001,6 +2329,8 @@ datum_id = "ANA-87107000-regua"
 stream = "guaiba"
 kind = "rio"
 ana_name = "CGH TOCA MONTANTE"
+river = "Rio Santa Cruz"
+municipality = "São Francisco de Paula"
 
 [[station]]
 id = "ANA-87110000"
@@ -2013,6 +2343,8 @@ datum_id = "ANA-87110000-regua"
 stream = "guaiba"
 kind = "reservatorio"
 ana_name = "CGH TOCA BARRAMENTO"
+river = "Rio Santa Cruz"
+municipality = "São Francisco de Paula"
 
 [[station]]
 id = "ANA-87120000"
@@ -2025,6 +2357,8 @@ datum_id = "ANA-87120000-regua"
 stream = "guaiba"
 kind = "reservatorio"
 ana_name = "PCH PASSO DO INFERNO BARRAMENTO"
+river = "Rio Caí"
+municipality = "São Francisco de Paula"
 
 [[station]]
 id = "ANA-87150000"
@@ -2037,6 +2371,8 @@ datum_id = "ANA-87150000-regua"
 stream = "guaiba"
 kind = "rio"
 ana_name = "LINHA GONZAGA"
+river = "Rio Caí"
+municipality = "Caxias do Sul"
 
 [[station]]
 id = "ANA-87153000"
@@ -2049,6 +2385,8 @@ datum_id = "ANA-87153000-regua"
 stream = "guaiba"
 kind = "jusante"
 ana_name = "CGH SANTO ANJO JUSANTE"
+river = "Arroio Piai"
+municipality = "Caxias do Sul"
 
 [[station]]
 id = "ANA-87159600"
@@ -2061,6 +2399,8 @@ datum_id = "ANA-87159600-regua"
 stream = "guaiba"
 kind = "rio"
 ana_name = "NOVA PETRÓPOLIS-CAXIAS DO SUL"
+river = "Rio Caí"
+municipality = "Caxias do Sul"
 
 [[station]]
 id = "ANA-87160000"
@@ -2073,6 +2413,8 @@ datum_id = "ANA-87160000-regua"
 stream = "guaiba"
 kind = "rio"
 ana_name = "NOVA PALMIRA"
+river = "Rio Caí"
+municipality = "Caxias do Sul"
 
 [[station]]
 id = "ANA-87163000"
@@ -2085,6 +2427,8 @@ datum_id = "ANA-87163000-regua"
 stream = "guaiba"
 kind = "rio"
 ana_name = "VALE REAL"
+river = "Rio Caí"
+municipality = "Vale Real"
 
 [[station]]
 id = "ANA-87165001"
@@ -2097,6 +2441,8 @@ datum_id = "ANA-87165001-regua"
 stream = "guaiba"
 kind = "rio"
 ana_name = "FELIZ"
+river = "Rio Caí"
+municipality = "Feliz"
 
 [[station]]
 id = "ANA-87168000"
@@ -2109,6 +2455,8 @@ datum_id = "ANA-87168000-regua"
 stream = "guaiba"
 kind = "rio"
 ana_name = "SÃO VENDELINO"
+river = "Arroio Forromeco"
+municipality = "São Vendelino"
 
 [[station]]
 id = "ANA-87168510"
@@ -2121,6 +2469,8 @@ datum_id = "ANA-87168510-regua"
 stream = "guaiba"
 kind = "rio"
 ana_name = "BOM PRINCÍPIO"
+river = "Arroio Forromeco"
+municipality = "Bom Princípio"
 
 [[station]]
 id = "ANA-87168590"
@@ -2133,6 +2483,8 @@ datum_id = "ANA-87168590-regua"
 stream = "guaiba"
 kind = "rio"
 ana_name = "BOM PRINCÍPIO"
+river = "Rio Caí"
+municipality = "Bom Princípio"
 
 [[station]]
 id = "ANA-87189000"
@@ -2145,6 +2497,8 @@ datum_id = "ANA-87189000-regua"
 stream = "guaiba"
 kind = "rio"
 ana_name = "PICADA CAFÉ"
+river = "Rio Cadeia"
+municipality = "Picada Café"
 
 [[station]]
 id = "ANA-87200000"
@@ -2157,6 +2511,8 @@ datum_id = "ANA-87200000-regua"
 stream = "guaiba"
 kind = "reservatorio"
 ana_name = "PCH HERVAL BARRAMENTO"
+river = "Rio Cadeia"
+municipality = "Santa Maria do Herval"
 
 [[station]]
 id = "ANA-87202000"
@@ -2169,6 +2525,8 @@ datum_id = "ANA-87202000-regua"
 stream = "guaiba"
 kind = "rio"
 ana_name = "PICADA CAFÉ"
+river = "Rio Cadeia"
+municipality = "Picada Café"
 
 [[station]]
 id = "ANA-87219850"
@@ -2181,6 +2539,8 @@ datum_id = "ANA-87219850-regua"
 stream = "guaiba"
 kind = "rio"
 ana_name = "DOIS IRMÃOS"
+river = "Arroio Feitoria"
+municipality = "Dois Irmãos"
 
 [[station]]
 id = "ANA-87219950"
@@ -2193,6 +2553,8 @@ datum_id = "ANA-87219950-regua"
 stream = "guaiba"
 kind = "jusante"
 ana_name = "CGH PICADA 48 JUSANTE"
+river = "Arroio Feitoria"
+municipality = "Ivoti"
 
 [[station]]
 id = "ANA-87230000"
@@ -2205,6 +2567,8 @@ datum_id = "ANA-87230000-regua"
 stream = "guaiba"
 kind = "rio"
 ana_name = "COSTA DO RIO CADEIA - MONTANTE"
+river = "Rio Cadeia"
+municipality = "São Sebastião do Caí"
 
 [[station]]
 id = "ANA-87242000"
@@ -2217,6 +2581,8 @@ datum_id = "ANA-87242000-regua"
 stream = "guaiba"
 kind = "rio"
 ana_name = "TERMINAL CATSUL GUAÍBA"
+river = "Lago Guaíba"
+municipality = "Guaíba"
 
 [[station]]
 id = "ANA-87242025"
@@ -2229,6 +2595,8 @@ datum_id = "ANA-87242025-regua"
 stream = "guaiba"
 kind = "rio"
 ana_name = "VIAMÃO - RESERVA ESTADUAL"
+river = "Rio Guaíba"
+municipality = "Viamão"
 
 [[station]]
 id = "ANA-87271100"
@@ -2241,6 +2609,8 @@ datum_id = "ANA-87271100-regua"
 stream = "guaiba"
 kind = "rio"
 ana_name = "MONTENEGRO"
+river = "Rio Caí"
+municipality = "Montenegro"
 
 [[station]]
 id = "ANA-87290010"
@@ -2253,6 +2623,8 @@ datum_id = "ANA-87290010-regua"
 stream = "guaiba"
 kind = "rio"
 ana_name = "MONTENEGRO/NOVA SANTA RITA"
+river = "Rio Caí"
+municipality = "Montenegro"
 
 [[station]]
 id = "ANA-87300000"
@@ -2265,6 +2637,8 @@ datum_id = "ANA-87300000-regua"
 stream = "guaiba"
 kind = "rio"
 ana_name = "PASSO DO CAÍ"
+river = "Rio Caí"
+municipality = "Triunfo"
 
 [[station]]
 id = "ANA-87318000"
@@ -2277,6 +2651,8 @@ datum_id = "ANA-87318000-regua"
 stream = "guaiba"
 kind = "rio"
 ana_name = "ARROIO CARAÁ"
+river = "Arroio Caraá"
+municipality = "Caraá"
 
 [[station]]
 id = "ANA-87318700"
@@ -2289,6 +2665,8 @@ datum_id = "ANA-87318700-regua"
 stream = "guaiba"
 kind = "rio"
 ana_name = "CARAÁ"
+river = "Rio dos Sinos"
+municipality = "Caraá"
 
 [[station]]
 id = "ANA-87337010"
@@ -2301,6 +2679,8 @@ datum_id = "ANA-87337010-regua"
 stream = "guaiba"
 kind = "rio"
 ana_name = "ROLANTE - RIO MASCARADA"
+river = "Rio Rolante"
+municipality = "Rolante"
 
 [[station]]
 id = "ANA-87350000"
@@ -2313,6 +2693,8 @@ datum_id = "ANA-87350000-regua"
 stream = "guaiba"
 kind = "rio"
 ana_name = "ALTO ROLANTE"
+river = "Rio Rolante"
+municipality = "Rolante"
 
 [[station]]
 id = "ANA-87351000"
@@ -2325,6 +2707,8 @@ datum_id = "ANA-87351000-regua"
 stream = "guaiba"
 kind = "rio"
 ana_name = "ROLANTE - CENTRO"
+river = "Rio Rolante"
+municipality = "Rolante"
 
 [[station]]
 id = "ANA-87361000"
@@ -2337,6 +2721,8 @@ datum_id = "ANA-87361000-regua"
 stream = "guaiba"
 kind = "reservatorio"
 ana_name = "UHE CANASTRA BARRAMENTO"
+river = "Rio Paranhana"
+municipality = "Canela"
 
 [[station]]
 id = "ANA-87361100"
@@ -2349,6 +2735,8 @@ datum_id = "ANA-87361100-regua"
 stream = "guaiba"
 kind = "jusante"
 ana_name = "UHE CANASTRA JUSANTE 2"
+river = "Rio Paranhana"
+municipality = "Canela"
 
 [[station]]
 id = "ANA-87366500"
@@ -2361,6 +2749,8 @@ datum_id = "ANA-87366500-regua"
 stream = "guaiba"
 kind = "rio"
 ana_name = "TRÊS COROAS"
+river = "Rio Paranhana"
+municipality = "Três Coroas"
 
 [[station]]
 id = "ANA-87375500"
@@ -2373,6 +2763,8 @@ datum_id = "ANA-87375500-regua"
 stream = "guaiba"
 kind = "rio"
 ana_name = "IGREJINHA"
+river = "Rio Paranhana"
+municipality = "Igrejinha"
 
 [[station]]
 id = "ANA-87376000"
@@ -2385,6 +2777,8 @@ datum_id = "ANA-87376000-regua"
 stream = "guaiba"
 kind = "rio"
 ana_name = "FOZ DO PARANHANA"
+river = "Rio dos Sinos"
+municipality = "Taquara"
 
 [[station]]
 id = "ANA-87377400"
@@ -2397,6 +2791,8 @@ datum_id = "ANA-87377400-regua"
 stream = "guaiba"
 kind = "rio"
 ana_name = "NOVA HARTZ"
+river = "Arroio Grande"
+municipality = "Nova Hartz"
 
 [[station]]
 id = "ANA-87377500"
@@ -2409,6 +2805,8 @@ datum_id = "ANA-87377500-regua"
 stream = "guaiba"
 kind = "rio"
 ana_name = "ARARICÁ/SAPIRANGA/TAQUARA"
+river = "Rio dos Sinos"
+municipality = "Araricá"
 
 [[station]]
 id = "ANA-87382009"
@@ -2421,6 +2819,8 @@ datum_id = "ANA-87382009-regua"
 stream = "guaiba"
 kind = "rio"
 ana_name = "SÃO LEOPOLDO"
+river = "Rio dos Sinos"
+municipality = "São Leopoldo"
 
 [[station]]
 id = "ANA-87385010"
@@ -2433,6 +2833,8 @@ datum_id = "ANA-87385010-regua"
 stream = "guaiba"
 kind = "rio"
 ana_name = "ESTEIO"
+river = "Rio dos Sinos"
+municipality = "Esteio"
 
 [[station]]
 id = "ANA-87385041"
@@ -2445,6 +2847,8 @@ datum_id = "ANA-87385041-regua"
 stream = "guaiba"
 kind = "rio"
 ana_name = "NOVA SANTA RITA/CANOAS"
+river = "Rio dos Sinos"
+municipality = "Canoas"
 
 [[station]]
 id = "ANA-87398750"
@@ -2457,6 +2861,8 @@ datum_id = "ANA-87398750-regua"
 stream = "guaiba"
 kind = "rio"
 ana_name = "4 IRMÃOS CANAL GRAVATAÍ"
+river = "Rio Gravataí"
+municipality = "Glorinha"
 
 [[station]]
 id = "ANA-87398885"
@@ -2469,6 +2875,8 @@ datum_id = "ANA-87398885-regua"
 stream = "guaiba"
 kind = "rio"
 ana_name = "CORSAN GRAVATAÍ"
+river = "Rio Gravataí"
+municipality = "Gravataí"
 
 [[station]]
 id = "ANA-87399050"
@@ -2481,6 +2889,8 @@ datum_id = "ANA-87399050-regua"
 stream = "guaiba"
 kind = "rio"
 ana_name = "GRAVATAÍ"
+river = "Rio Gravataí"
+municipality = "Gravataí"
 
 [[station]]
 id = "ANA-87401750"
@@ -2493,6 +2903,8 @@ datum_id = "ANA-87401750-regua"
 stream = "guaiba"
 kind = "rio"
 ana_name = "CORSAN ALVORADA"
+river = "Rio Gravataí"
+municipality = "Alvorada"
 
 [[station]]
 id = "ANA-87406000"
@@ -2505,6 +2917,8 @@ datum_id = "ANA-87406000-regua"
 stream = "guaiba"
 kind = "rio"
 ana_name = "ALBATROZ"
+river = "Rio Gravataí"
+municipality = "Canoas"
 
 [[station]]
 id = "ANA-87450030"
@@ -2517,6 +2931,8 @@ datum_id = "ANA-87450030-regua"
 stream = "guaiba"
 kind = "rio"
 ana_name = "ELDORADO DO SUL"
+river = "Rio Guaíba"
+municipality = "Eldorado do Sul"
 
 [[station]]
 id = "ANA-87451000"
@@ -2529,6 +2945,8 @@ datum_id = "ANA-87451000-regua"
 stream = "guaiba"
 kind = "rio"
 ana_name = "PORTO ALEGRE - CRISTAL"
+river = "Rio Guaíba"
+municipality = "Porto Alegre"
 
 [[station]]
 id = "ANA-87460125"
@@ -2541,6 +2959,8 @@ datum_id = "ANA-87460125-regua"
 stream = "guaiba"
 kind = "rio"
 ana_name = "PORTO ALEGRE - IPANEMA"
+river = "Rio Guaíba"
+municipality = "Porto Alegre"
 
 [[station]]
 id = "ANA-87479500"
@@ -2553,6 +2973,8 @@ datum_id = "ANA-87479500-regua"
 stream = "guaiba"
 kind = "rio"
 ana_name = "SERTÃO SANTANA"
+river = "Arroio do Ribeiro"
+municipality = "Sertão Santana"
 
 [[station]]
 id = "ANA-87480000"
@@ -2565,6 +2987,8 @@ datum_id = "ANA-87480000-regua"
 stream = "guaiba"
 kind = "rio"
 ana_name = "BARRA DO RIBEIRO - LAGO GUAÍBA"
+river = "Rio Guaíba"
+municipality = "Barra do Ribeiro"
 
 [[station]]
 id = "ANA-87500060"
@@ -2577,6 +3001,8 @@ datum_id = "ANA-87500060-regua"
 stream = "guaiba"
 kind = "rio"
 ana_name = "VIAMÃO - ITAPUÃ"
+river = "Rio Guaíba"
+municipality = "Viamão"
 
 [[station]]
 id = "ANA-87510047"
@@ -2589,6 +3015,8 @@ datum_id = "ANA-87510047-regua"
 stream = "guaiba"
 kind = "reservatorio"
 ana_name = "CGH MORRINHOS BARRAMENTO"
+river = "Arroio dos Cachorros"
+municipality = "Barão do Triunfo"
 
 [[station]]
 id = "ANA-87510049"
@@ -2601,6 +3029,8 @@ datum_id = "ANA-87510049-regua"
 stream = "guaiba"
 kind = "jusante"
 ana_name = "CGH MORRINHOS JUSANTE"
+river = "Arroio dos Cachorros"
+municipality = "Barão do Triunfo"
 
 [[station]]
 id = "ANA-70120000"
@@ -2613,6 +3043,8 @@ datum_id = "ANA-70120000-regua"
 stream = "uruguai"
 kind = "rio"
 ana_name = "UHE BARRA GRANDE FAXINAL PRETO"
+river = "Rio Pelotas"
+municipality = "São José dos Ausentes"
 
 [[station]]
 id = "ANA-70150000"
@@ -2625,6 +3057,8 @@ datum_id = "ANA-70150000-regua"
 stream = "uruguai"
 kind = "rio"
 ana_name = "UHE BARRA GRANDE PASSO DO HONORATO"
+river = "Rio Pelotas"
+municipality = "Bom Jesus"
 
 [[station]]
 id = "ANA-70710000"
@@ -2637,6 +3071,8 @@ datum_id = "ANA-70710000-regua"
 stream = "uruguai"
 kind = "rio"
 ana_name = "UHE BARRA GRANDE SANTANA"
+river = "Rio Santana"
+municipality = "Vacaria"
 
 [[station]]
 id = "ANA-70719700"
@@ -2649,6 +3085,8 @@ datum_id = "ANA-70719700-regua"
 stream = "uruguai"
 kind = "reservatorio"
 ana_name = "CGH DESPRAIADO BARRAMENTO"
+river = "Rio Socorro"
+municipality = "Vacaria"
 
 [[station]]
 id = "ANA-70719750"
@@ -2661,6 +3099,8 @@ datum_id = "ANA-70719750-regua"
 stream = "uruguai"
 kind = "jusante"
 ana_name = "CGH DESPRAIADO JUSANTE"
+river = "Rio Socorro"
+municipality = "Vacaria"
 
 [[station]]
 id = "ANA-70719760"
@@ -2673,6 +3113,8 @@ datum_id = "ANA-70719760-regua"
 stream = "uruguai"
 kind = "reservatorio"
 ana_name = "CGH TRÊS MARIAS BARRAMENTO"
+river = "Rio Socorro"
+municipality = "Vacaria"
 
 [[station]]
 id = "ANA-70719860"
@@ -2685,6 +3127,8 @@ datum_id = "ANA-70719860-regua"
 stream = "uruguai"
 kind = "jusante"
 ana_name = "CGH TRÊS MARIAS JUSANTE"
+river = "Rio Socorro"
+municipality = "Vacaria"
 
 [[station]]
 id = "ANA-70719960"
@@ -2697,6 +3141,8 @@ datum_id = "ANA-70719960-regua"
 stream = "uruguai"
 kind = "reservatorio"
 ana_name = "CGH PASSO DO BURACO BARRAMENTO"
+river = "Rio Socorro"
+municipality = "Vacaria"
 
 [[station]]
 id = "ANA-70719990"
@@ -2709,6 +3155,8 @@ datum_id = "ANA-70719990-regua"
 stream = "uruguai"
 kind = "jusante"
 ana_name = "CGH PASSO DO BURACO JUSANTE"
+river = "Rio Socorro"
+municipality = "Vacaria"
 
 [[station]]
 id = "ANA-70720000"
@@ -2721,6 +3169,8 @@ datum_id = "ANA-70720000-regua"
 stream = "uruguai"
 kind = "rio"
 ana_name = "UHE BARRA GRANDE SOCORRO"
+river = "Rio Socorro"
+municipality = "Vacaria"
 
 [[station]]
 id = "ANA-70740000"
@@ -2733,6 +3183,8 @@ datum_id = "ANA-70740000-regua"
 stream = "uruguai"
 kind = "jusante"
 ana_name = "CGH BRUNA JUSANTE"
+river = "Rio do Frade"
+municipality = "Esmeralda"
 
 [[station]]
 id = "ANA-70840080"
@@ -2745,6 +3197,8 @@ datum_id = "ANA-70840080-regua"
 stream = "uruguai"
 kind = "reservatorio"
 ana_name = "UHE BARRA GRANDE BARRAMENTO"
+river = "Rio Pelotas"
+municipality = "Pinhal da Serra"
 
 [[station]]
 id = "ANA-70841500"
@@ -2757,6 +3211,8 @@ datum_id = "ANA-70841500-regua"
 stream = "uruguai"
 kind = "rio"
 ana_name = "PCH MOINHO MONTANTE"
+river = "Rio Bernardo José"
+municipality = "Esmeralda"
 
 [[station]]
 id = "ANA-70842000"
@@ -2769,6 +3225,8 @@ datum_id = "ANA-70842000-regua"
 stream = "uruguai"
 kind = "rio"
 ana_name = "PCH ESMERALDA MONTANTE 2"
+river = "Rio Bernardo José"
+municipality = "Esmeralda"
 
 [[station]]
 id = "ANA-70843000"
@@ -2781,6 +3239,8 @@ datum_id = "ANA-70843000-regua"
 stream = "uruguai"
 kind = "rio"
 ana_name = "PCH SÃO BERNARDO MONTANTE"
+river = "Rio Bernardo José"
+municipality = "Pinhal da Serra"
 
 [[station]]
 id = "ANA-70843500"
@@ -2793,6 +3253,8 @@ datum_id = "ANA-70843500-regua"
 stream = "uruguai"
 kind = "rio"
 ana_name = "PCH ESMERALDA ARROIO SÃO JOAQUIM"
+river = "Arroio São Joaquim"
+municipality = "Lagoa Vermelha"
 
 [[station]]
 id = "ANA-70844200"
@@ -2805,6 +3267,8 @@ datum_id = "ANA-70844200-regua"
 stream = "uruguai"
 kind = "rio"
 ana_name = "PCH ESMERALDA MONTANTE 1"
+river = "Rio Bernardo José"
+municipality = "Barracão"
 
 [[station]]
 id = "ANA-70844300"
@@ -2817,6 +3281,8 @@ datum_id = "ANA-70844300-regua"
 stream = "uruguai"
 kind = "reservatorio"
 ana_name = "PCH ESMERALDA BARRAMENTO"
+river = "Rio Bernardo José"
+municipality = "Barracão"
 
 [[station]]
 id = "ANA-70844500"
@@ -2829,6 +3295,8 @@ datum_id = "ANA-70844500-regua"
 stream = "uruguai"
 kind = "reservatorio"
 ana_name = "PCH MOINHO BARRAMENTO"
+river = "Rio Bernardo José"
+municipality = "Pinhal da Serra"
 
 [[station]]
 id = "ANA-70845000"
@@ -2841,6 +3309,8 @@ datum_id = "ANA-70845000-regua"
 stream = "uruguai"
 kind = "reservatorio"
 ana_name = "PCH SÃO BERNARDO BARRAMENTO"
+river = "Rio Bernardo José"
+municipality = "Barracão"
 
 [[station]]
 id = "ANA-72080000"
@@ -2853,6 +3323,8 @@ datum_id = "ANA-72080000-regua"
 stream = "uruguai"
 kind = "rio"
 ana_name = "PCH OURO MONTANTE"
+river = "Rio Marmeleiro"
+municipality = "Barracão"
 
 [[station]]
 id = "ANA-72090000"
@@ -2865,6 +3337,8 @@ datum_id = "ANA-72090000-regua"
 stream = "uruguai"
 kind = "reservatorio"
 ana_name = "PCH OURO BARRAMENTO"
+river = "Rio Marmeleiro"
+municipality = "Barracão"
 
 [[station]]
 id = "ANA-72428000"
@@ -2877,6 +3351,8 @@ datum_id = "ANA-72428000-regua"
 stream = "uruguai"
 kind = "rio"
 ana_name = "UHE MACHADINHO RIO FORQUILHA"
+river = "Rio Forquilha ou Inhanduva"
+municipality = "Sananduva"
 
 [[station]]
 id = "ANA-72451000"
@@ -2889,6 +3365,8 @@ datum_id = "ANA-72451000-regua"
 stream = "uruguai"
 kind = "reservatorio"
 ana_name = "PCH FORQUILHA IV BARRAMENTO"
+river = "Rio Forquilha ou Inhanduva"
+municipality = "Maximiliano de Almeida"
 
 [[station]]
 id = "ANA-72460000"
@@ -2901,6 +3379,8 @@ datum_id = "ANA-72460000-regua"
 stream = "uruguai"
 kind = "rio"
 ana_name = "CACIQUE DOBLE"
+river = "Rio Carazinho"
+municipality = "Cacique Doble"
 
 [[station]]
 id = "ANA-72480001"
@@ -2913,6 +3393,8 @@ datum_id = "ANA-72480001-regua"
 stream = "uruguai"
 kind = "reservatorio"
 ana_name = "PCH FORQUILHA BARRAMENTO"
+river = "Rio Forquilha ou Inhanduva"
+municipality = "Maximiliano de Almeida"
 
 [[station]]
 id = "ANA-72480100"
@@ -2925,6 +3407,8 @@ datum_id = "ANA-72480100-regua"
 stream = "uruguai"
 kind = "jusante"
 ana_name = "PCH FORQUILHA JUSANTE"
+river = "Rio Forquilha ou Inhanduva"
+municipality = "Maximiliano de Almeida"
 
 [[station]]
 id = "ANA-72519000"
@@ -2937,6 +3421,8 @@ datum_id = "ANA-72519000-regua"
 stream = "uruguai"
 kind = "reservatorio"
 ana_name = "CGH LIGEIRO BARRAMENTO"
+river = "Rio Apue ou Ligeiro"
+municipality = "Santa Cecília do Sul"
 
 [[station]]
 id = "ANA-72519100"
@@ -2949,6 +3435,8 @@ datum_id = "ANA-72519100-regua"
 stream = "uruguai"
 kind = "jusante"
 ana_name = "CGH LIGEIRO JUSANTE"
+river = "Rio Apue ou Ligeiro"
+municipality = "Santa Cecília do Sul"
 
 [[station]]
 id = "ANA-72580500"
@@ -2961,6 +3449,8 @@ datum_id = "ANA-72580500-regua"
 stream = "uruguai"
 kind = "rio"
 ana_name = "GETÚLIO VARGAS"
+river = "Rio Abaunã"
+municipality = "Getúlio Vargas"
 
 [[station]]
 id = "ANA-72870900"
@@ -2973,6 +3463,8 @@ datum_id = "ANA-72870900-regua"
 stream = "uruguai"
 kind = "rio"
 ana_name = "UHE ITÁ RIO APUAÊ"
+river = "Rio Apuaê-mirim"
+municipality = "Marcelino Ramos"
 
 [[station]]
 id = "ANA-73200500"
@@ -2985,6 +3477,8 @@ datum_id = "ANA-73200500-regua"
 stream = "uruguai"
 kind = "rio"
 ana_name = "UHE FOZ DO CHAPECÓ RIO PALOMA"
+river = "Rio Palomas"
+municipality = "Barra do Rio Azul"
 
 [[station]]
 id = "ANA-73205750"
@@ -2997,6 +3491,8 @@ datum_id = "ANA-73205750-regua"
 stream = "uruguai"
 kind = "rio"
 ana_name = "BARRA DO RIO AZUL-RIO PALOMA"
+river = "Rio Palomas"
+municipality = "Barra do Rio Azul"
 
 [[station]]
 id = "ANA-73205800"
@@ -3009,6 +3505,8 @@ datum_id = "ANA-73205800-regua"
 stream = "uruguai"
 kind = "rio"
 ana_name = "BARRA DO RIO AZUL - RIO AZUL"
+river = "Rio Azul"
+municipality = "Barra do Rio Azul"
 
 [[station]]
 id = "ANA-73220000"
@@ -3021,6 +3519,8 @@ datum_id = "ANA-73220000-regua"
 stream = "uruguai"
 kind = "rio"
 ana_name = "UHE FOZ DO CHAPECÓ RIO DOURADINHO"
+river = "Rio Douradinho"
+municipality = "Itatiba do Sul"
 
 [[station]]
 id = "ANA-73371000"
@@ -3033,6 +3533,8 @@ datum_id = "ANA-73371000-regua"
 stream = "uruguai"
 kind = "rio"
 ana_name = "PASSO FUNDO"
+river = "Rio Passo Fundo"
+municipality = "Passo Fundo"
 
 [[station]]
 id = "ANA-73389000"
@@ -3045,6 +3547,8 @@ datum_id = "ANA-73389000-regua"
 stream = "uruguai"
 kind = "rio"
 ana_name = "UHE PASSO FUNDO RIO INHUPAÇÁ"
+river = "Rio Inhupaca"
+municipality = "Sertão"
 
 [[station]]
 id = "ANA-73420080"
@@ -3057,6 +3561,8 @@ datum_id = "ANA-73420080-regua"
 stream = "uruguai"
 kind = "reservatorio"
 ana_name = "UHE PASSO FUNDO BARRAMENTO"
+river = "Rio Passo Fundo"
+municipality = "Entre Rios do Sul"
 
 [[station]]
 id = "ANA-73436000"
@@ -3069,6 +3575,8 @@ datum_id = "ANA-73436000-regua"
 stream = "uruguai"
 kind = "reservatorio"
 ana_name = "PCH ALBANO MACHADO BARRAMENTO"
+river = "Rio Lajeado do Lobo"
+municipality = "Trindade do Sul"
 
 [[station]]
 id = "ANA-73437000"
@@ -3081,6 +3589,8 @@ datum_id = "ANA-73437000-regua"
 stream = "uruguai"
 kind = "jusante"
 ana_name = "PCH ALBANO MACHADO JUSANTE"
+river = "Rio Lajeado do Lobo"
+municipality = "Trindade do Sul"
 
 [[station]]
 id = "ANA-73440000"
@@ -3093,6 +3603,8 @@ datum_id = "ANA-73440000-regua"
 stream = "uruguai"
 kind = "rio"
 ana_name = "UHE MONJOLINHO NONOAI"
+river = "Rio Passo Fundo"
+municipality = "Nonoai"
 
 [[station]]
 id = "ANA-73444700"
@@ -3105,6 +3617,8 @@ datum_id = "ANA-73444700-regua"
 stream = "uruguai"
 kind = "rio"
 ana_name = "BARÃO DE COTEGIPE"
+river = "Lajeado Grande"
+municipality = "Barão de Cotegipe"
 
 [[station]]
 id = "ANA-73444750"
@@ -3117,6 +3631,8 @@ datum_id = "ANA-73444750-regua"
 stream = "uruguai"
 kind = "rio"
 ana_name = "PAULO BENTO"
+river = "Rio Cravo"
+municipality = "Paulo Bento"
 
 [[station]]
 id = "ANA-73445000"
@@ -3129,6 +3645,8 @@ datum_id = "ANA-73445000-regua"
 stream = "uruguai"
 kind = "rio"
 ana_name = "UHE MONJOLINHO CRUZALTENSE"
+river = "Rio Erechim"
+municipality = "Cruzaltense"
 
 [[station]]
 id = "ANA-73448000"
@@ -3141,6 +3659,8 @@ datum_id = "ANA-73448000-regua"
 stream = "uruguai"
 kind = "rio"
 ana_name = "UHE MONJOLINHO RIO ERECHIM"
+river = "Rio Erechim"
+municipality = "São Valentim"
 
 [[station]]
 id = "ANA-73490000"
@@ -3153,6 +3673,8 @@ datum_id = "ANA-73490000-regua"
 stream = "uruguai"
 kind = "reservatorio"
 ana_name = "UHE MONJOLINHO BARRAMENTO"
+river = "Rio Passo Fundo"
+municipality = "Nonoai"
 
 [[station]]
 id = "ANA-73520000"
@@ -3165,6 +3687,8 @@ datum_id = "ANA-73520000-regua"
 stream = "uruguai"
 kind = "reservatorio"
 ana_name = "PCH RIO DOS ÍNDIOS BARRAMENTO"
+river = "Rio dos Índios"
+municipality = "Nonoai"
 
 [[station]]
 id = "ANA-73528000"
@@ -3177,6 +3701,8 @@ datum_id = "ANA-73528000-regua"
 stream = "uruguai"
 kind = "jusante"
 ana_name = "PCH RIO DOS ÍNDIOS JUSANTE"
+river = "Rio dos Índios"
+municipality = "Nonoai"
 
 [[station]]
 id = "ANA-74040080"
@@ -3189,6 +3715,8 @@ datum_id = "ANA-74040080-regua"
 stream = "uruguai"
 kind = "reservatorio"
 ana_name = "UHE FOZ DO CHAPECÓ BARRAMENTO"
+river = "Rio Uruguai"
+municipality = "Alpestre"
 
 [[station]]
 id = "ANA-74087500"
@@ -3201,6 +3729,8 @@ datum_id = "ANA-74087500-regua"
 stream = "uruguai"
 kind = "rio"
 ana_name = "IRAÍ - RIO URUGUAI"
+river = "Rio Uruguai"
+municipality = "Iraí"
 
 [[station]]
 id = "ANA-74100000"
@@ -3213,6 +3743,8 @@ datum_id = "ANA-74100000-regua"
 stream = "uruguai"
 kind = "rio"
 ana_name = "IRAÍ"
+river = "Rio Uruguai"
+municipality = "Iraí"
 
 [[station]]
 id = "ANA-74100300"
@@ -3225,6 +3757,8 @@ datum_id = "ANA-74100300-regua"
 stream = "uruguai"
 kind = "rio"
 ana_name = "IRAÍ - RIO DO MEL"
+river = "Rio do Mel"
+municipality = "Iraí"
 
 [[station]]
 id = "ANA-74120700"
@@ -3237,6 +3771,8 @@ datum_id = "ANA-74120700-regua"
 stream = "uruguai"
 kind = "rio"
 ana_name = "CGH MATA COBRA MONTANTE 2"
+river = "Rio da Várzea"
+municipality = "Carazinho"
 
 [[station]]
 id = "ANA-74120750"
@@ -3249,6 +3785,8 @@ datum_id = "ANA-74120750-regua"
 stream = "uruguai"
 kind = "rio"
 ana_name = "CGH MATA COBRA MONTANTE 1"
+river = "Rio da Várzea"
+municipality = "Carazinho"
 
 [[station]]
 id = "ANA-74120900"
@@ -3261,6 +3799,8 @@ datum_id = "ANA-74120900-regua"
 stream = "uruguai"
 kind = "reservatorio"
 ana_name = "CGH MATA COBRA BARRAMENTO"
+river = "Rio da Várzea"
+municipality = "Almirante Tamandaré do Sul"
 
 [[station]]
 id = "ANA-74130000"
@@ -3273,6 +3813,8 @@ datum_id = "ANA-74130000-regua"
 stream = "uruguai"
 kind = "jusante"
 ana_name = "CGH MATA COBRA JUSANTE"
+river = "Rio da Várzea"
+municipality = "Almirante Tamandaré do Sul"
 
 [[station]]
 id = "ANA-74186000"
@@ -3285,6 +3827,8 @@ datum_id = "ANA-74186000-regua"
 stream = "uruguai"
 kind = "rio"
 ana_name = "BARRA FUNDA/NOVO BARREIRO"
+river = "Rio da Várzea"
+municipality = "Barra Funda"
 
 [[station]]
 id = "ANA-74189000"
@@ -3297,6 +3841,8 @@ datum_id = "ANA-74189000-regua"
 stream = "uruguai"
 kind = "rio"
 ana_name = "SARANDI"
+river = "Arroio Caturete"
+municipality = "Sarandi"
 
 [[station]]
 id = "ANA-74240000"
@@ -3309,6 +3855,8 @@ datum_id = "ANA-74240000-regua"
 stream = "uruguai"
 kind = "rio"
 ana_name = "RODEIO BONITO"
+river = "Rio da Várzea"
+municipality = "Rodeio Bonito"
 
 [[station]]
 id = "ANA-74339000"
@@ -3321,6 +3869,8 @@ datum_id = "ANA-74339000-regua"
 stream = "uruguai"
 kind = "rio"
 ana_name = "PCH GUARITA JOÃO AMADO MONTANTE"
+river = "Rio Guarita"
+municipality = "Palmeira das Missões"
 
 [[station]]
 id = "ANA-74340000"
@@ -3333,6 +3883,8 @@ datum_id = "ANA-74340000-regua"
 stream = "uruguai"
 kind = "reservatorio"
 ana_name = "PCH GUARITA BARRAMENTO JOÃO AMADO"
+river = "Rio Guarita"
+municipality = "Palmeira das Missões"
 
 [[station]]
 id = "ANA-74350000"
@@ -3345,6 +3897,8 @@ datum_id = "ANA-74350000-regua"
 stream = "uruguai"
 kind = "reservatorio"
 ana_name = "PCH GUARITA BARRAMENTO"
+river = "Rio Guarita"
+municipality = "Redentora"
 
 [[station]]
 id = "ANA-74350100"
@@ -3357,6 +3911,8 @@ datum_id = "ANA-74350100-regua"
 stream = "uruguai"
 kind = "jusante"
 ana_name = "PCH GUARITA JUSANTE"
+river = "Rio Guarita"
+municipality = "Redentora"
 
 [[station]]
 id = "ANA-74351000"
@@ -3369,6 +3925,8 @@ datum_id = "ANA-74351000-regua"
 stream = "uruguai"
 kind = "jusante"
 ana_name = "PCH FERRADURA JUSANTE"
+river = "Rio Guarita"
+municipality = "Erval Seco"
 
 [[station]]
 id = "ANA-74352000"
@@ -3381,6 +3939,8 @@ datum_id = "ANA-74352000-regua"
 stream = "uruguai"
 kind = "reservatorio"
 ana_name = "CGH DAS CABRAS BARRAMENTO"
+river = "Rio Guarita"
+municipality = "Erval Seco"
 
 [[station]]
 id = "ANA-74352200"
@@ -3393,6 +3953,8 @@ datum_id = "ANA-74352200-regua"
 stream = "uruguai"
 kind = "jusante"
 ana_name = "CGH DAS CABRAS JUSANTE"
+river = "Rio Guarita"
+municipality = "Erval Seco"
 
 [[station]]
 id = "ANA-74355000"
@@ -3405,6 +3967,8 @@ datum_id = "ANA-74355000-regua"
 stream = "uruguai"
 kind = "reservatorio"
 ana_name = "PCH TAMBAÚ BARRAMENTO"
+river = "Rio Guarita"
+municipality = "Erval Seco"
 
 [[station]]
 id = "ANA-74356000"
@@ -3417,6 +3981,8 @@ datum_id = "ANA-74356000-regua"
 stream = "uruguai"
 kind = "jusante"
 ana_name = "PCH TAMBAÚ JUSANTE"
+river = "Rio Guarita"
+municipality = "Erval Seco"
 
 [[station]]
 id = "ANA-74359000"
@@ -3429,6 +3995,8 @@ datum_id = "ANA-74359000-regua"
 stream = "uruguai"
 kind = "reservatorio"
 ana_name = "CGH CARLOS BEVILÁCQUA BARRAMENTO"
+river = "Arroio Fortaleza"
+municipality = "Seberi"
 
 [[station]]
 id = "ANA-74359600"
@@ -3441,6 +4009,8 @@ datum_id = "ANA-74359600-regua"
 stream = "uruguai"
 kind = "jusante"
 ana_name = "CGH FREDERICO JOÃO CERUTTI JUSANTE"
+river = "Arroio Fortaleza"
+municipality = "Seberi"
 
 [[station]]
 id = "ANA-74462000"
@@ -3453,6 +4023,8 @@ datum_id = "ANA-74462000-regua"
 stream = "uruguai"
 kind = "rio"
 ana_name = "PCH CARLOS GONZATTO PONTE TURVO"
+river = "Rio Turvo"
+municipality = "Santo Augusto"
 
 [[station]]
 id = "ANA-74462500"
@@ -3465,6 +4037,8 @@ datum_id = "ANA-74462500-regua"
 stream = "uruguai"
 kind = "rio"
 ana_name = "CORONEL BICACO"
+river = "Lajeado Paiol"
+municipality = "Coronel Bicaco"
 
 [[station]]
 id = "ANA-74463000"
@@ -3477,6 +4051,8 @@ datum_id = "ANA-74463000-regua"
 stream = "uruguai"
 kind = "rio"
 ana_name = "PCH CARLOS GONZATTO VILA TURVO"
+river = "Rio Turvo"
+municipality = "Campo Novo"
 
 [[station]]
 id = "ANA-74464500"
@@ -3489,6 +4065,8 @@ datum_id = "ANA-74464500-regua"
 stream = "uruguai"
 kind = "reservatorio"
 ana_name = "PCH CARLOS GONZATTO BARRAMENTO"
+river = "Rio Turvo"
+municipality = "Campo Novo"
 
 [[station]]
 id = "ANA-74465000"
@@ -3501,6 +4079,8 @@ datum_id = "ANA-74465000-regua"
 stream = "uruguai"
 kind = "jusante"
 ana_name = "PCH CARLOS GONZATTO JUSANTE"
+river = "Rio Turvo"
+municipality = "Campo Novo"
 
 [[station]]
 id = "ANA-74466000"
@@ -3513,6 +4093,8 @@ datum_id = "ANA-74466000-regua"
 stream = "uruguai"
 kind = "reservatorio"
 ana_name = "PCH MARCO BALDO BARRAMENTO"
+river = "Rio Turvo"
+municipality = "Braga"
 
 [[station]]
 id = "ANA-74467000"
@@ -3525,6 +4107,8 @@ datum_id = "ANA-74467000-regua"
 stream = "uruguai"
 kind = "jusante"
 ana_name = "PCH MARCO BALDO JUSANTE"
+river = "Rio Turvo"
+municipality = "Braga"
 
 [[station]]
 id = "ANA-74468000"
@@ -3537,6 +4121,8 @@ datum_id = "ANA-74468000-regua"
 stream = "uruguai"
 kind = "reservatorio"
 ana_name = "PCH TOCA DO TIGRE BARRAMENTO"
+river = "Rio Turvo"
+municipality = "Braga"
 
 [[station]]
 id = "ANA-74468500"
@@ -3549,6 +4135,8 @@ datum_id = "ANA-74468500-regua"
 stream = "uruguai"
 kind = "jusante"
 ana_name = "PCH TOCA DO TIGRE JUSANTE"
+river = "Rio Turvo"
+municipality = "Bom Progresso"
 
 [[station]]
 id = "ANA-74500000"
@@ -3561,6 +4149,8 @@ datum_id = "ANA-74500000-regua"
 stream = "uruguai"
 kind = "rio"
 ana_name = "ALTO URUGUAI"
+river = "Rio Uruguai"
+municipality = "Tiradentes do Sul"
 
 [[station]]
 id = "ANA-74505400"
@@ -3573,6 +4163,8 @@ datum_id = "ANA-74505400-regua"
 stream = "uruguai"
 kind = "jusante"
 ana_name = "CGH CRISSIUMAL JUSANTE"
+river = "Lajeado Grande"
+municipality = "Crissiumal"
 
 [[station]]
 id = "ANA-74549990"
@@ -3585,6 +4177,8 @@ datum_id = "ANA-74549990-regua"
 stream = "uruguai"
 kind = "reservatorio"
 ana_name = "CGH BURICÁ BARRAMENTO"
+river = "Rio Buricá"
+municipality = "Inhacorá"
 
 [[station]]
 id = "ANA-74550000"
@@ -3597,6 +4191,8 @@ datum_id = "ANA-74550000-regua"
 stream = "uruguai"
 kind = "jusante"
 ana_name = "CGH BURICÁ JUSANTE"
+river = "Rio Buricá"
+municipality = "Inhacorá"
 
 [[station]]
 id = "ANA-74620500"
@@ -3609,6 +4205,8 @@ datum_id = "ANA-74620500-regua"
 stream = "uruguai"
 kind = "rio"
 ana_name = "TUCUNDUVA/HORIZONTINA"
+river = "Lajeado dos Pratos"
+municipality = "Horizontina"
 
 [[station]]
 id = "ANA-74670000"
@@ -3621,6 +4219,8 @@ datum_id = "ANA-74670000-regua"
 stream = "uruguai"
 kind = "reservatorio"
 ana_name = "CGH BELA UNIÃO BARRAMENTO"
+river = "Rio Santa Rosa"
+municipality = "Santa Rosa"
 
 [[station]]
 id = "ANA-74675000"
@@ -3633,6 +4233,8 @@ datum_id = "ANA-74675000-regua"
 stream = "uruguai"
 kind = "jusante"
 ana_name = "CGH BELA UNIÃO JUSANTE"
+river = "Rio Santa Rosa"
+municipality = "Santa Rosa"
 
 [[station]]
 id = "ANA-74690001"
@@ -3645,6 +4247,8 @@ datum_id = "ANA-74690001-regua"
 stream = "uruguai"
 kind = "reservatorio"
 ana_name = "CGH SANTA ROSA BARRAMENTO"
+river = "Rio Santa Rosa"
+municipality = "Três de Maio"
 
 [[station]]
 id = "ANA-74690100"
@@ -3657,6 +4261,8 @@ datum_id = "ANA-74690100-regua"
 stream = "uruguai"
 kind = "jusante"
 ana_name = "CGH SANTA ROSA JUSANTE 3"
+river = "Rio Santa Rosa"
+municipality = "Três de Maio"
 
 [[station]]
 id = "ANA-74694000"
@@ -3669,6 +4275,8 @@ datum_id = "ANA-74694000-regua"
 stream = "uruguai"
 kind = "reservatorio"
 ana_name = "CGH SANTO ANTÔNIO BARRAMENTO"
+river = "Rio Santa Rosa"
+municipality = "Santa Rosa"
 
 [[station]]
 id = "ANA-74695000"
@@ -3681,6 +4289,8 @@ datum_id = "ANA-74695000-regua"
 stream = "uruguai"
 kind = "jusante"
 ana_name = "CGH SANTO ANTÔNIO JUSANTE"
+river = "Rio Santa Rosa"
+municipality = "Santa Rosa"
 
 [[station]]
 id = "ANA-74699002"
@@ -3693,6 +4303,8 @@ datum_id = "ANA-74699002-regua"
 stream = "uruguai"
 kind = "rio"
 ana_name = "TUPARENDI/TUCUNDUVA"
+river = "Rio Santa Rosa"
+municipality = "Tuparendi"
 
 [[station]]
 id = "ANA-74720000"
@@ -3705,6 +4317,8 @@ datum_id = "ANA-74720000-regua"
 stream = "uruguai"
 kind = "rio"
 ana_name = "PORTO MAUÁ"
+river = "Rio Uruguai"
+municipality = "Porto Mauá"
 
 [[station]]
 id = "ANA-74746000"
@@ -3717,6 +4331,8 @@ datum_id = "ANA-74746000-regua"
 stream = "uruguai"
 kind = "rio"
 ana_name = "SANTA ROSA - PESSEGUEIRINHO"
+river = "Lajeado Pessegueirinho"
+municipality = "Santa Rosa"
 
 [[station]]
 id = "ANA-74746700"
@@ -3729,6 +4345,8 @@ datum_id = "ANA-74746700-regua"
 stream = "uruguai"
 kind = "rio"
 ana_name = "SANTA ROSA - PESSEGUEIRO"
+river = "Lajeado Pessegueiro"
+municipality = "Santa Rosa"
 
 [[station]]
 id = "ANA-74800000"
@@ -3741,6 +4359,8 @@ datum_id = "ANA-74800000-regua"
 stream = "uruguai"
 kind = "rio"
 ana_name = "PORTO LUCENA"
+river = "Rio Uruguai"
+municipality = "Porto Lucena"
 
 [[station]]
 id = "ANA-74860003"
@@ -3753,6 +4373,8 @@ datum_id = "ANA-74860003-regua"
 stream = "uruguai"
 kind = "rio"
 ana_name = "GUARANI DAS MISSÕES"
+river = "Rio Comandaí"
+municipality = "Guarani das Missões"
 
 [[station]]
 id = "ANA-74899050"
@@ -3765,6 +4387,8 @@ datum_id = "ANA-74899050-regua"
 stream = "uruguai"
 kind = "rio"
 ana_name = "CAMPINA DAS MISSÕES"
+river = "Arroio Pessegueiro"
+municipality = "Campina das Missões"
 
 [[station]]
 id = "ANA-74910010"
@@ -3777,6 +4401,8 @@ datum_id = "ANA-74910010-regua"
 stream = "uruguai"
 kind = "rio"
 ana_name = "PORTO LUCENA/PORTO XAVIER"
+river = "Rio Comandaí"
+municipality = "Porto Xavier"
 
 [[station]]
 id = "ANA-75020200"
@@ -3789,6 +4415,8 @@ datum_id = "ANA-75020200-regua"
 stream = "uruguai"
 kind = "rio"
 ana_name = "PANAMBI"
+river = "Rio Fiuzá"
+municipality = "Panambi"
 
 [[station]]
 id = "ANA-75050000"
@@ -3801,6 +4429,8 @@ datum_id = "ANA-75050000-regua"
 stream = "uruguai"
 kind = "rio"
 ana_name = "PCH JOSÉ BARASUOL MONTANTE"
+river = "Rio Ijuí"
+municipality = "Ajuricaba"
 
 [[station]]
 id = "ANA-75060000"
@@ -3813,6 +4443,8 @@ datum_id = "ANA-75060000-regua"
 stream = "uruguai"
 kind = "reservatorio"
 ana_name = "CGH CAXAMBÚ BARRAMENTO"
+river = "Rio Caxambu"
+municipality = "Panambi"
 
 [[station]]
 id = "ANA-75120000"
@@ -3825,6 +4457,8 @@ datum_id = "ANA-75120000-regua"
 stream = "uruguai"
 kind = "reservatorio"
 ana_name = "PCH PASSO DE AJURICABA BARRAMENTO"
+river = "Rio Ijuí"
+municipality = "Ijuí"
 
 [[station]]
 id = "ANA-75155010"
@@ -3837,6 +4471,8 @@ datum_id = "ANA-75155010-regua"
 stream = "uruguai"
 kind = "rio"
 ana_name = "PCH PASSO DO AJURICABA MONTANTE"
+river = "Rio Ijuí"
+municipality = "Bozano"
 
 [[station]]
 id = "ANA-75178000"
@@ -3849,6 +4485,8 @@ datum_id = "ANA-75178000-regua"
 stream = "uruguai"
 kind = "reservatorio"
 ana_name = "PCH JOSÉ BARASUOL BARRAMENTO"
+river = "Rio Ijuí"
+municipality = "Ijuí"
 
 [[station]]
 id = "ANA-75180000"
@@ -3861,6 +4499,8 @@ datum_id = "ANA-75180000-regua"
 stream = "uruguai"
 kind = "reservatorio"
 ana_name = "PCH RS-155 BARRAMENTO"
+river = "Rio Ijuí"
+municipality = "Ijuí"
 
 [[station]]
 id = "ANA-75181000"
@@ -3873,6 +4513,8 @@ datum_id = "ANA-75181000-regua"
 stream = "uruguai"
 kind = "jusante"
 ana_name = "PCH RS-155 JUSANTE"
+river = "Rio Ijuí"
+municipality = "Ijuí"
 
 [[station]]
 id = "ANA-75185200"
@@ -3885,6 +4527,8 @@ datum_id = "ANA-75185200-regua"
 stream = "uruguai"
 kind = "reservatorio"
 ana_name = "PCH SEDE II BARRAMENTO"
+river = "Rio Potiribu"
+municipality = "Ijuí"
 
 [[station]]
 id = "ANA-75186660"
@@ -3897,6 +4541,8 @@ datum_id = "ANA-75186660-regua"
 stream = "uruguai"
 kind = "reservatorio"
 ana_name = "PCH LINHA ONZE OESTE BARRAMENTO"
+river = "Rio Ijuí"
+municipality = "Coronel Barros"
 
 [[station]]
 id = "ANA-75186900"
@@ -3909,6 +4555,8 @@ datum_id = "ANA-75186900-regua"
 stream = "uruguai"
 kind = "jusante"
 ana_name = "PCH LINHA ONZE OESTE JUSANTE"
+river = "Rio Ijuí"
+municipality = "Coronel Barros"
 
 [[station]]
 id = "ANA-75186960"
@@ -3921,6 +4569,8 @@ datum_id = "ANA-75186960-regua"
 stream = "uruguai"
 kind = "jusante"
 ana_name = "CGH ESQUINA GAÚCHA JUSANTE"
+river = "Rio Ijuí"
+municipality = "Entre-ijuis"
 
 [[station]]
 id = "ANA-75187000"
@@ -3933,6 +4583,8 @@ datum_id = "ANA-75187000-regua"
 stream = "uruguai"
 kind = "rio"
 ana_name = "PCH JOSÉ BARASUOL RIO POTIRIBU"
+river = "Rio Potiribu"
+municipality = "Ijuí"
 
 [[station]]
 id = "ANA-75199000"
@@ -3945,6 +4597,8 @@ datum_id = "ANA-75199000-regua"
 stream = "uruguai"
 kind = "reservatorio"
 ana_name = "CGH AUGUSTO PESTANA BARRAMENTO"
+river = "Rio Conceição"
+municipality = "Augusto Pestana"
 
 [[station]]
 id = "ANA-75199050"
@@ -3957,6 +4611,8 @@ datum_id = "ANA-75199050-regua"
 stream = "uruguai"
 kind = "jusante"
 ana_name = "CGH AUGUSTO PESTANA JUSANTE"
+river = "Rio Conceição"
+municipality = "Augusto Pestana"
 
 [[station]]
 id = "ANA-75230000"
@@ -3969,6 +4625,8 @@ datum_id = "ANA-75230000-regua"
 stream = "uruguai"
 kind = "rio"
 ana_name = "SANTO ANGELO"
+river = "Rio Ijuí"
+municipality = "Entre-ijuis"
 
 [[station]]
 id = "ANA-75269900"
@@ -3981,6 +4639,8 @@ datum_id = "ANA-75269900-regua"
 stream = "uruguai"
 kind = "reservatorio"
 ana_name = "CGH IGREJINHA BARRAMENTO"
+river = "Rio Ijuizinho"
+municipality = "Boa Vista do Cadeado"
 
 [[station]]
 id = "ANA-75270000"
@@ -3993,6 +4653,8 @@ datum_id = "ANA-75270000-regua"
 stream = "uruguai"
 kind = "rio"
 ana_name = "PCH IJUIZINHO PONTE QUEIMADA"
+river = "Rio Ijuizinho"
+municipality = "Jóia"
 
 [[station]]
 id = "ANA-75280100"
@@ -4005,6 +4667,8 @@ datum_id = "ANA-75280100-regua"
 stream = "uruguai"
 kind = "jusante"
 ana_name = "CGH IGREJINHA JUSANTE"
+river = "Rio Ijuizinho"
+municipality = "Boa Vista do Cadeado"
 
 [[station]]
 id = "ANA-75287000"
@@ -4017,6 +4681,8 @@ datum_id = "ANA-75287000-regua"
 stream = "uruguai"
 kind = "rio"
 ana_name = "PCH IJUIZINHO MONTANTE"
+river = "Rio Ijuizinho"
+municipality = "Eugênio de Castro"
 
 [[station]]
 id = "ANA-75288000"
@@ -4029,6 +4695,8 @@ datum_id = "ANA-75288000-regua"
 stream = "uruguai"
 kind = "reservatorio"
 ana_name = "PCH IJUIZINHO BARRAMENTO"
+river = "Rio Ijuizinho"
+municipality = "Entre-ijuis"
 
 [[station]]
 id = "ANA-75290000"
@@ -4041,6 +4709,8 @@ datum_id = "ANA-75290000-regua"
 stream = "uruguai"
 kind = "rio"
 ana_name = "PCH IJUIZINHO CERMISSÕES MONTANTE"
+river = "Rio Ijuizinho"
+municipality = "Entre-ijuis"
 
 [[station]]
 id = "ANA-75291000"
@@ -4053,6 +4723,8 @@ datum_id = "ANA-75291000-regua"
 stream = "uruguai"
 kind = "reservatorio"
 ana_name = "PCH IJUIZINHO CERMISSÕES BARRAMENTO"
+river = "Rio Ijuizinho"
+municipality = "Entre-ijuis"
 
 [[station]]
 id = "ANA-75305000"
@@ -4065,6 +4737,8 @@ datum_id = "ANA-75305000-regua"
 stream = "uruguai"
 kind = "rio"
 ana_name = "UHE SÃO JOSÉ MONTANTE"
+river = "Rio Ijuí"
+municipality = "Cerro Largo"
 
 [[station]]
 id = "ANA-75307000"
@@ -4077,6 +4751,8 @@ datum_id = "ANA-75307000-regua"
 stream = "uruguai"
 kind = "rio"
 ana_name = "UHE SÃO JOSÉ ARROIO URUQUA"
+river = "Arroio Uruqua"
+municipality = "Caibaté"
 
 [[station]]
 id = "ANA-75318000"
@@ -4089,6 +4765,8 @@ datum_id = "ANA-75318000-regua"
 stream = "uruguai"
 kind = "rio"
 ana_name = "UHE SÃO JOSÉ RIACHO FUNDO"
+river = "Riacho Fundo"
+municipality = "Rolador"
 
 [[station]]
 id = "ANA-75325000"
@@ -4101,6 +4779,8 @@ datum_id = "ANA-75325000-regua"
 stream = "uruguai"
 kind = "reservatorio"
 ana_name = "UHE SÃO JOSÉ BARRAMENTO"
+river = "Rio Ijuí"
+municipality = "Salvador das Missões"
 
 [[station]]
 id = "ANA-75326000"
@@ -4113,6 +4793,8 @@ datum_id = "ANA-75326000-regua"
 stream = "uruguai"
 kind = "jusante"
 ana_name = "UHE SÃO JOSÉ JUSANTE"
+river = "Rio Ijuí"
+municipality = "Salvador das Missões"
 
 [[station]]
 id = "ANA-75331000"
@@ -4125,6 +4807,8 @@ datum_id = "ANA-75331000-regua"
 stream = "uruguai"
 kind = "rio"
 ana_name = "UHE PASSO SÃO JOÃO JAMES"
+river = "Arroio Rolador"
+municipality = "Rolador"
 
 [[station]]
 id = "ANA-75342000"
@@ -4137,6 +4821,8 @@ datum_id = "ANA-75342000-regua"
 stream = "uruguai"
 kind = "reservatorio"
 ana_name = "UHE PASSO SÃO JOÃO BARRAMENTO"
+river = "Rio Ijuí"
+municipality = "Roque Gonzales"
 
 [[station]]
 id = "ANA-75343000"
@@ -4149,6 +4835,8 @@ datum_id = "ANA-75343000-regua"
 stream = "uruguai"
 kind = "rio"
 ana_name = "UHE PASSO SÃO JOÃO SÍTIO VALDIR COIMBRA"
+river = "Lajeado das Pedras"
+municipality = "Quinze de Novembro"
 
 [[station]]
 id = "ANA-75344000"
@@ -4161,6 +4849,8 @@ datum_id = "ANA-75344000-regua"
 stream = "uruguai"
 kind = "jusante"
 ana_name = "UHE PASSO SÃO JOÃO JUSANTE"
+river = "Rio Ijuí"
+municipality = "Roque Gonzales"
 
 [[station]]
 id = "ANA-75450200"
@@ -4173,6 +4863,8 @@ datum_id = "ANA-75450200-regua"
 stream = "uruguai"
 kind = "rio"
 ana_name = "BOSSOROCA"
+river = "Rio Piratini"
+municipality = "Bossoroca"
 
 [[station]]
 id = "ANA-75550000"
@@ -4185,6 +4877,8 @@ datum_id = "ANA-75550000-regua"
 stream = "uruguai"
 kind = "rio"
 ana_name = "GARRUCHOS"
+river = "Rio Uruguai"
+municipality = "Garruchos"
 
 [[station]]
 id = "ANA-75650010"
@@ -4197,6 +4891,8 @@ datum_id = "ANA-75650010-regua"
 stream = "uruguai"
 kind = "rio"
 ana_name = "PROP. RURAL ITACURUBI (CPRM)"
+river = "Rio Icamaquã"
+municipality = "Itacurubi"
 
 [[station]]
 id = "ANA-75706000"
@@ -4209,6 +4905,8 @@ datum_id = "ANA-75706000-regua"
 stream = "uruguai"
 kind = "rio"
 ana_name = "SANTO ANTÔNIO DAS MISSÕES/SÃO BORJA"
+river = "Rio Icamaquã"
+municipality = "Santo Antônio das Missões"
 
 [[station]]
 id = "ANA-75779900"
@@ -4221,6 +4919,8 @@ datum_id = "ANA-75779900-regua"
 stream = "uruguai"
 kind = "rio"
 ana_name = "SÃO BORJA"
+river = "Rio Uruguai"
+municipality = "São Borja"
 
 [[station]]
 id = "ANA-75780000"
@@ -4233,6 +4933,8 @@ datum_id = "ANA-75780000-regua"
 stream = "uruguai"
 kind = "rio"
 ana_name = "PASSO SÃO BORJA"
+river = "Rio Uruguai"
+municipality = "São Borja"
 
 [[station]]
 id = "ANA-75881800"
@@ -4245,6 +4947,8 @@ datum_id = "ANA-75881800-regua"
 stream = "uruguai"
 kind = "reservatorio"
 ana_name = "PCH RINCÃO BARRAMENTO"
+river = "Rio Ijuizinho"
+municipality = "Entre-ijuis"
 
 [[station]]
 id = "ANA-75881900"
@@ -4257,6 +4961,8 @@ datum_id = "ANA-75881900-regua"
 stream = "uruguai"
 kind = "jusante"
 ana_name = "PCH RINCÃO JUSANTE"
+river = "Rio Ijuizinho"
+municipality = "Entre-ijuis"
 
 [[station]]
 id = "ANA-75900000"
@@ -4269,6 +4975,8 @@ datum_id = "ANA-75900000-regua"
 stream = "uruguai"
 kind = "rio"
 ana_name = "ITAQUI"
+river = "Rio Uruguai"
+municipality = "Itaqui"
 
 [[station]]
 id = "ANA-76069500"
@@ -4281,6 +4989,8 @@ datum_id = "ANA-76069500-regua"
 stream = "uruguai"
 kind = "rio"
 ana_name = "PCH QUEBRA DENTES MONTANTE 1"
+river = "Rio Toropi"
+municipality = "Quevedos"
 
 [[station]]
 id = "ANA-76070500"
@@ -4293,6 +5003,8 @@ datum_id = "ANA-76070500-regua"
 stream = "uruguai"
 kind = "jusante"
 ana_name = "PCH QUEBRA DENTES JUSANTE"
+river = "Rio Toropi"
+municipality = "Quevedos"
 
 [[station]]
 id = "ANA-76084000"
@@ -4305,6 +5017,8 @@ datum_id = "ANA-76084000-regua"
 stream = "uruguai"
 kind = "reservatorio"
 ana_name = "PCH CACHOEIRA CINCO VEADOS BARRAMENTO"
+river = "Rio Toropi"
+municipality = "Quevedos"
 
 [[station]]
 id = "ANA-76084040"
@@ -4317,6 +5031,8 @@ datum_id = "ANA-76084040-regua"
 stream = "uruguai"
 kind = "jusante"
 ana_name = "PCH CACHOEIRA CINCO VEADOS JUSANTE"
+river = "Rio Toropi"
+municipality = "Quevedos"
 
 [[station]]
 id = "ANA-76086500"
@@ -4329,6 +5045,8 @@ datum_id = "ANA-76086500-regua"
 stream = "uruguai"
 kind = "jusante"
 ana_name = "PCH RINCÃO SÃO MIGUEL JUSANTE"
+river = "Rio Toropi"
+municipality = "Quevedos"
 
 [[station]]
 id = "ANA-76090000"
@@ -4341,6 +5059,8 @@ datum_id = "ANA-76090000-regua"
 stream = "uruguai"
 kind = "rio"
 ana_name = "TOROPI/SÃO PEDRO DO SUL"
+river = "Rio Toropi"
+municipality = "Toropi"
 
 [[station]]
 id = "ANA-76112000"
@@ -4353,6 +5073,8 @@ datum_id = "ANA-76112000-regua"
 stream = "uruguai"
 kind = "rio"
 ana_name = "PCH SALTO DO GUASSUPI ARROIO SOCAVÃO"
+river = "Arroio Socavão"
+municipality = "Quevedos"
 
 [[station]]
 id = "ANA-76115400"
@@ -4365,6 +5087,8 @@ datum_id = "ANA-76115400-regua"
 stream = "uruguai"
 kind = "rio"
 ana_name = "PCH SALTO DO GUASSUPI MONTANTE"
+river = "Arroio Guassupi"
+municipality = "Quevedos"
 
 [[station]]
 id = "ANA-76115800"
@@ -4377,6 +5101,8 @@ datum_id = "ANA-76115800-regua"
 stream = "uruguai"
 kind = "rio"
 ana_name = "PCH SALTO DO GUASSUPI RIO TOROPI MIRIM"
+river = "Rio Toropi-mirim"
+municipality = "Quevedos"
 
 [[station]]
 id = "ANA-76118000"
@@ -4389,6 +5115,8 @@ datum_id = "ANA-76118000-regua"
 stream = "uruguai"
 kind = "rio"
 ana_name = "MATA"
+river = "Arroio Sertão da Mata"
+municipality = "Mata"
 
 [[station]]
 id = "ANA-76250501"
@@ -4401,6 +5129,8 @@ datum_id = "ANA-76250501-regua"
 stream = "uruguai"
 kind = "rio"
 ana_name = "DOM PEDRITO"
+river = "Rio Santa Maria"
+municipality = "Dom Pedrito"
 
 [[station]]
 id = "ANA-76251000"
@@ -4413,6 +5143,8 @@ datum_id = "ANA-76251000-regua"
 stream = "uruguai"
 kind = "rio"
 ana_name = "DOM PEDRITO"
+river = "Rio Santa Maria"
+municipality = "Dom Pedrito"
 
 [[station]]
 id = "ANA-76290000"
@@ -4425,6 +5157,8 @@ datum_id = "ANA-76290000-regua"
 stream = "uruguai"
 kind = "rio"
 ana_name = "PASSO DOS FARRAPOS"
+river = "Rio Ibicuí da Armada"
+municipality = "Rosário do Sul"
 
 [[station]]
 id = "ANA-76300000"
@@ -4437,6 +5171,8 @@ datum_id = "ANA-76300000-regua"
 stream = "uruguai"
 kind = "rio"
 ana_name = "PONTE IBICUI DA ARMADA"
+river = "Rio Ibicuí da Armada"
+municipality = "Rosário do Sul"
 
 [[station]]
 id = "ANA-76310000"
@@ -4449,6 +5185,8 @@ datum_id = "ANA-76310000-regua"
 stream = "uruguai"
 kind = "rio"
 ana_name = "ROSÁRIO DO SUL"
+river = "Rio Santa Maria"
+municipality = "Rosário do Sul"
 
 [[station]]
 id = "ANA-76395010"
@@ -4461,6 +5199,8 @@ datum_id = "ANA-76395010-regua"
 stream = "uruguai"
 kind = "rio"
 ana_name = "SÃO PEDRO DO SUL/SANTA MARIA"
+river = "Rio Ibicuí-mirim"
+municipality = "Santa Maria"
 
 [[station]]
 id = "ANA-76430900"
@@ -4473,6 +5213,8 @@ datum_id = "ANA-76430900-regua"
 stream = "uruguai"
 kind = "reservatorio"
 ana_name = "PCH FURNAS DO SEGREDO BARRAMENTO"
+river = "Rio Jaguari"
+municipality = "Jaguari"
 
 [[station]]
 id = "ANA-76431000"
@@ -4485,6 +5227,8 @@ datum_id = "ANA-76431000-regua"
 stream = "uruguai"
 kind = "jusante"
 ana_name = "PCH FURNAS DO SEGREDO JUSANTE"
+river = "Rio Jaguari"
+municipality = "Jaguari"
 
 [[station]]
 id = "ANA-76440010"
@@ -4497,6 +5241,8 @@ datum_id = "ANA-76440010-regua"
 stream = "uruguai"
 kind = "rio"
 ana_name = "JAGUARI"
+river = "Rio Jaguari"
+municipality = "Jaguari"
 
 [[station]]
 id = "ANA-76519000"
@@ -4509,6 +5255,8 @@ datum_id = "ANA-76519000-regua"
 stream = "uruguai"
 kind = "rio"
 ana_name = "SÃO FRANCISCO DE ASSIS"
+river = "Arroio Inhancunda"
+municipality = "São Francisco de Assis"
 
 [[station]]
 id = "ANA-76560000"
@@ -4521,6 +5269,8 @@ datum_id = "ANA-76560000-regua"
 stream = "uruguai"
 kind = "rio"
 ana_name = "MANOEL VIANA"
+river = "Rio Ibicuí"
+municipality = "Manoel Viana"
 
 [[station]]
 id = "ANA-76560003"
@@ -4533,6 +5283,8 @@ datum_id = "ANA-76560003-regua"
 stream = "uruguai"
 kind = "rio"
 ana_name = "MANOEL VIANA"
+river = "Rio Ibicuí"
+municipality = "Manoel Viana"
 
 [[station]]
 id = "ANA-76700000"
@@ -4545,6 +5297,8 @@ datum_id = "ANA-76700000-regua"
 stream = "uruguai"
 kind = "rio"
 ana_name = "PASSO DOS BRITOS"
+river = "Rio Ibirapuitã"
+municipality = "Alegrete"
 
 [[station]]
 id = "ANA-76742000"
@@ -4557,6 +5311,8 @@ datum_id = "ANA-76742000-regua"
 stream = "uruguai"
 kind = "rio"
 ana_name = "PASSO DO OSÓRIO"
+river = "Arroio Caverá"
+municipality = "Alegrete"
 
 [[station]]
 id = "ANA-76748978"
@@ -4569,6 +5325,8 @@ datum_id = "ANA-76748978-regua"
 stream = "uruguai"
 kind = "rio"
 ana_name = "ALEGRETE"
+river = "Rio Ibirapuitã"
+municipality = "Alegrete"
 
 [[station]]
 id = "ANA-76750000"
@@ -4581,6 +5339,8 @@ datum_id = "ANA-76750000-regua"
 stream = "uruguai"
 kind = "rio"
 ana_name = "ALEGRETE"
+river = "Rio Ibirapuitã"
+municipality = "Alegrete"
 
 [[station]]
 id = "ANA-76800000"
@@ -4593,6 +5353,8 @@ datum_id = "ANA-76800000-regua"
 stream = "uruguai"
 kind = "rio"
 ana_name = "PASSO MARIANO PINTO"
+river = "Rio Ibicuí"
+municipality = "Itaqui"
 
 [[station]]
 id = "ANA-77150000"
@@ -4605,6 +5367,8 @@ datum_id = "ANA-77150000-regua"
 stream = "uruguai"
 kind = "rio"
 ana_name = "URUGUAIANA"
+river = "Rio Uruguai"
+municipality = "Uruguaiana"
 
 [[station]]
 id = "ANA-77499010"
@@ -4617,6 +5381,8 @@ datum_id = "ANA-77499010-regua"
 stream = "uruguai"
 kind = "rio"
 ana_name = "QUARAÍ"
+river = "Rio Quaraí"
+municipality = "Quaraí"
 
 [[station]]
 id = "ANA-77500000"
@@ -4629,6 +5395,8 @@ datum_id = "ANA-77500000-regua"
 stream = "uruguai"
 kind = "rio"
 ana_name = "QUARAÍ"
+river = "Rio Quaraí"
+municipality = "Quaraí"
 
 [[station]]
 id = "ANA-79099870"
@@ -4641,6 +5409,8 @@ datum_id = "ANA-79099870-regua"
 stream = "uruguai"
 kind = "rio"
 ana_name = "BAGÉ"
+river = "Arroio Bagé"
+municipality = "Bagé"
 
 [[station]]
 id = "ANA-79400000"
@@ -4653,6 +5423,8 @@ datum_id = "ANA-79400000-regua"
 stream = "uruguai"
 kind = "rio"
 ana_name = "ESTÂNCIA DO ESPANTOSO"
+river = "Rio Negro"
+municipality = "Bagé"
 
 [[station]]
 id = "ANA-84991100"
@@ -4665,6 +5437,8 @@ datum_id = "ANA-84991100-regua"
 stream = "litoranea"
 kind = "rio"
 ana_name = "MORRINHOS DO SUL"
+river = "Rio dos Negros"
+municipality = "Morrinhos do Sul"
 
 [[station]]
 id = "ANA-84991510"
@@ -4677,6 +5451,8 @@ datum_id = "ANA-84991510-regua"
 stream = "litoranea"
 kind = "rio"
 ana_name = "TORRES"
+river = "Rio Mampituba"
+municipality = "Torres"
 
 [[station]]
 id = "ANA-87308300"
@@ -4689,6 +5465,8 @@ datum_id = "ANA-87308300-regua"
 stream = "litoranea"
 kind = "rio"
 ana_name = "TRÊS FORQUILHAS-RIO PEDRAS BRANCAS"
+river = "Rio Pedras Brancas"
+municipality = "Três Forquilhas"
 
 [[station]]
 id = "ANA-87309020"
@@ -4701,6 +5479,8 @@ datum_id = "ANA-87309020-regua"
 stream = "litoranea"
 kind = "rio"
 ana_name = "TRÊS FORQUILHAS - RIO TRÊS FORQUILHAS"
+river = "Rio Três Forquilhas"
+municipality = "Três Forquilhas"
 
 [[station]]
 id = "ANA-87317021"
@@ -4713,6 +5493,8 @@ datum_id = "ANA-87317021-regua"
 stream = "litoranea"
 kind = "rio"
 ana_name = "MAQUINÉ - RIO MAQUINÉ"
+river = "Rio Maquiné"
+municipality = "Maquiné"
 
 [[station]]
 id = "ANA-87317030"
@@ -4725,6 +5507,8 @@ datum_id = "ANA-87317030-regua"
 stream = "litoranea"
 kind = "rio"
 ana_name = "MAQUINÉ"
+river = "Rio Maquiné"
+municipality = "Maquiné"
 
 [[station]]
 id = "ANA-87317036"
@@ -4737,6 +5521,8 @@ datum_id = "ANA-87317036-regua"
 stream = "litoranea"
 kind = "rio"
 ana_name = "MAQUINÉ - RIO ÁGUA PARADA"
+river = "Arroio Água Parada"
+municipality = "Maquiné"
 
 [[station]]
 id = "ANA-87333000"
@@ -4749,6 +5535,8 @@ datum_id = "ANA-87333000-regua"
 stream = "litoranea"
 kind = "rio"
 ana_name = "STIL LAGOA DOS BARROS"
+river = "Lagoa dos Barros"
+municipality = "Santo Antônio da Patrulha"
 
 [[station]]
 id = "ANA-87420600"
@@ -4761,6 +5549,8 @@ datum_id = "ANA-87420600-regua"
 stream = "litoranea"
 kind = "rio"
 ana_name = "MOSTARDAS"
+river = "Lagoa dos Patos"
+municipality = "Mostardas"
 
 [[station]]
 id = "ANA-87510018"
@@ -4773,6 +5563,8 @@ datum_id = "ANA-87510018-regua"
 stream = "litoranea"
 kind = "rio"
 ana_name = "PALMARES DO SUL"
+river = "Rio Palmares"
+municipality = "Palmares do Sul"
 
 [[station]]
 id = "ANA-87525000"
@@ -4785,6 +5577,8 @@ datum_id = "ANA-87525000-regua"
 stream = "litoranea"
 kind = "rio"
 ana_name = "CERRO GRANDE DO SUL"
+river = "Arroio Velhaço"
+municipality = "Cerro Grande do Sul"
 
 [[station]]
 id = "ANA-87539990"
@@ -4797,6 +5591,8 @@ datum_id = "ANA-87539990-regua"
 stream = "litoranea"
 kind = "rio"
 ana_name = "ARAMBARÉ"
+river = "Lagoa dos Patos"
+municipality = "Arambaré"
 
 [[station]]
 id = "ANA-87580001"
@@ -4809,6 +5605,8 @@ datum_id = "ANA-87580001-regua"
 stream = "litoranea"
 kind = "rio"
 ana_name = "LAVRAS DO SUL"
+river = "Arroio das Lavras"
+municipality = "Lavras do Sul"
 
 [[station]]
 id = "ANA-87660010"
@@ -4821,6 +5619,8 @@ datum_id = "ANA-87660010-regua"
 stream = "litoranea"
 kind = "rio"
 ana_name = "SANTANA DA BOA VISTA"
+river = "Rio Camaquã"
+municipality = "Santana da Boa Vista"
 
 [[station]]
 id = "ANA-87785000"
@@ -4833,6 +5633,8 @@ datum_id = "ANA-87785000-regua"
 stream = "litoranea"
 kind = "rio"
 ana_name = "CGH ABRANJO I MONTANTE"
+river = "Arroio Abranjo"
+municipality = "Encruzilhada do Sul"
 
 [[station]]
 id = "ANA-87790000"
@@ -4845,6 +5647,8 @@ datum_id = "ANA-87790000-regua"
 stream = "litoranea"
 kind = "reservatorio"
 ana_name = "CGH ABRANJO I BARRAMENTO"
+river = "Arroio Abranjo"
+municipality = "Encruzilhada do Sul"
 
 [[station]]
 id = "ANA-87795000"
@@ -4857,6 +5661,8 @@ datum_id = "ANA-87795000-regua"
 stream = "litoranea"
 kind = "jusante"
 ana_name = "CGH ABRANJO I JUSANTE"
+river = "Arroio Abranjo"
+municipality = "Encruzilhada do Sul"
 
 [[station]]
 id = "ANA-87849000"
@@ -4869,6 +5675,8 @@ datum_id = "ANA-87849000-regua"
 stream = "litoranea"
 kind = "rio"
 ana_name = "AMARAL FERRADOR"
+river = "Arroio dos Ladrões"
+municipality = "Amaral Ferrador"
 
 [[station]]
 id = "ANA-87864950"
@@ -4881,6 +5689,8 @@ datum_id = "ANA-87864950-regua"
 stream = "litoranea"
 kind = "rio"
 ana_name = "DOM FELICIANO"
+river = "Arroio Sutil"
+municipality = "Dom Feliciano"
 
 [[station]]
 id = "ANA-87905000"
@@ -4893,6 +5703,8 @@ datum_id = "ANA-87905000-regua"
 stream = "litoranea"
 kind = "rio"
 ana_name = "PASSO DO MENDONÇA"
+river = "Rio Camaquã"
+municipality = "Cristal"
 
 [[station]]
 id = "ANA-87905010"
@@ -4905,6 +5717,8 @@ datum_id = "ANA-87905010-regua"
 stream = "litoranea"
 kind = "rio"
 ana_name = "CRISTAL"
+river = "Rio Camaquã"
+municipality = "Cristal"
 
 [[station]]
 id = "ANA-87920500"
@@ -4917,6 +5731,8 @@ datum_id = "ANA-87920500-regua"
 stream = "litoranea"
 kind = "rio"
 ana_name = "PASSO DO CANDOMBE"
+river = "Arroio São Lourenço"
+municipality = "São Lourenço do Sul"
 
 [[station]]
 id = "ANA-87920600"
@@ -4929,6 +5745,8 @@ datum_id = "ANA-87920600-regua"
 stream = "litoranea"
 kind = "rio"
 ana_name = "SÃO LOURENÇO DO SUL - ARROIO SÃO LOURENÇO"
+river = "Arroio São Lourenço"
+municipality = "São Lourenço do Sul"
 
 [[station]]
 id = "ANA-87920990"
@@ -4941,6 +5759,8 @@ datum_id = "ANA-87920990-regua"
 stream = "litoranea"
 kind = "rio"
 ana_name = "SÃO LOURENÇO DO SUL - LAGOA DOS PATOS"
+river = "Lagoa dos Patos"
+municipality = "São Lourenço do Sul"
 
 [[station]]
 id = "ANA-87929995"
@@ -4953,6 +5773,8 @@ datum_id = "ANA-87929995-regua"
 stream = "litoranea"
 kind = "rio"
 ana_name = "TURUÇU"
+river = "Arroio Grande - Ex.turucu"
+municipality = "São Lourenço do Sul"
 
 [[station]]
 id = "ANA-87953000"
@@ -4965,6 +5787,8 @@ datum_id = "ANA-87953000-regua"
 stream = "litoranea"
 kind = "rio"
 ana_name = "PELOTAS - COLÔNIA Z3"
+river = "Lagoa dos Patos"
+municipality = "Pelotas"
 
 [[station]]
 id = "ANA-87979800"
@@ -4977,6 +5801,8 @@ datum_id = "ANA-87979800-regua"
 stream = "litoranea"
 kind = "rio"
 ana_name = "RIO GRANDE"
+river = "Lagoa dos Patos"
+municipality = "Rio Grande"
 
 [[station]]
 id = "ANA-88045010"
@@ -4989,6 +5815,8 @@ datum_id = "ANA-88045010-regua"
 stream = "litoranea"
 kind = "rio"
 ana_name = "SANTA VITÓRIA DO PALMAR - LAGOA MIRIM"
+river = "Lagoa Mirim"
+municipality = "Santa Vitória do Palmar"
 
 [[station]]
 id = "ANA-88260000"
@@ -5001,6 +5829,8 @@ datum_id = "ANA-88260000-regua"
 stream = "litoranea"
 kind = "rio"
 ana_name = "PASSO DAS PEDRAS"
+river = "Rio Jaguarão"
+municipality = "Jaguarão"
 
 [[station]]
 id = "ANA-88300040"
@@ -5013,6 +5843,8 @@ datum_id = "ANA-88300040-regua"
 stream = "litoranea"
 kind = "rio"
 ana_name = "JAGUARÃO"
+river = "Rio Jaguarão"
+municipality = "Jaguarão"
 
 [[station]]
 id = "ANA-88370010"
@@ -5025,6 +5857,8 @@ datum_id = "ANA-88370010-regua"
 stream = "litoranea"
 kind = "rio"
 ana_name = "ARROIO GRANDE"
+river = "Arroio Grande"
+municipality = "Arroio Grande"
 
 [[station]]
 id = "ANA-88406000"
@@ -5037,6 +5871,8 @@ datum_id = "ANA-88406000-regua"
 stream = "litoranea"
 kind = "rio"
 ana_name = "ARROIO GRANDE-SANTA ISABEL DO SUL"
+river = "Canal de São Gonçalo"
+municipality = "Arroio Grande"
 
 [[station]]
 id = "ANA-88549001"
@@ -5049,6 +5885,8 @@ datum_id = "ANA-88549001-regua"
 stream = "litoranea"
 kind = "rio"
 ana_name = "PIRATINI/CERRITO"
+river = "Rio Piratini"
+municipality = "Cerrito"
 
 [[station]]
 id = "ANA-88579700"
@@ -5061,6 +5899,8 @@ datum_id = "ANA-88579700-regua"
 stream = "litoranea"
 kind = "rio"
 ana_name = "PIRATINI-HERVAL"
+river = "Arroio Basílio"
+municipality = "Piratini"
 
 [[station]]
 id = "ANA-88640950"
@@ -5073,6 +5913,8 @@ datum_id = "ANA-88640950-regua"
 stream = "litoranea"
 kind = "rio"
 ana_name = "PONTE RIO PIRATINI"
+river = "Rio Piratini"
+municipality = "Cerrito"
 
 [[station]]
 id = "ANA-88640951"
@@ -5085,3 +5927,5 @@ datum_id = "ANA-88640951-regua"
 stream = "litoranea"
 kind = "rio"
 ana_name = "CERRITO/PEDRO OSÓRIO"
+river = "Rio Piratini"
+municipality = "Cerrito"
