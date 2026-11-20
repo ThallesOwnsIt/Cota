@@ -944,114 +944,154 @@ def export_v3(out: Path, ledger3: Path) -> None:
         "vaults": [],
     }
     (out / "bundle.json").write_text(json.dumps(bundle, separators=(",", ":"), ensure_ascii=False))
-    export_regions(out, ledger3, entries, provenance)
+    export_api(out, ledger3, led, entries, provenance)
     print(
         f"v3 ({ledger3}): {len(days)} lotes, {len(issues_list)} previsões, {len(alerts)} avisos oficiais, "
         f"{len(outlooks)} perspectivas de chuva, {len(cps)} pontos de controle → {out}"
     )
 
 
-REGION_HOURS = 72  # the hourly series each region page draws (its batches have all of them)
+API_VERSION = 1
 STATE_ORDER = (("flood", "inundacao"), ("alert", "alerta"), ("attention", "atencao"))
+QUALITY_KEYS = ("score", "present", "expected")
 
 
-def export_regions(out: Path, ledger3: Path, entries: list[dict], provenance) -> None:
-    """`regions/<stream>.json` for every stream but the Guaíba (Etapa 5.5): what its page draws, small enough to load
-    on a phone. Its stations (config/stations-rs.toml), its batches with their entries (the readings files stay in the
-    ledger; the site's build copies them), the last 72 hours of every gauge, the places with official levels
-    (config/locations-rs.toml) and their situation, and the rain outlooks of its rules."""
-    catalog = tomllib.loads((ROOT / "config/stations-rs.toml").read_text())["station"]
-    places = tomllib.loads((ROOT / "config/locations-rs.toml").read_text())["location"] if (ROOT / "config/locations-rs.toml").exists() else []
+def export_api(out: Path, ledger3: Path, led: dict, entries: list[dict], provenance) -> None:
+    """The data API (Etapa 5.5): plain JSON files any page reads the same way, built only from the ledger and the
+    config, so new regions, states or countries need no change to a page. Contract: docs/data-api.md (cota-site).
+
+      api/index.json                         the regions (config/regions.toml) with counts and their latest day
+      api/regions/<id>.json                  one region: stations with their latest level, places with official
+                                             levels and their situation, rules, outlooks, the index of its days
+      api/regions/<id>/days/<YYYY-MM-DD>.json  one day: the hourly level of every station and its batch's entry;
+                                             written once, never changed after its batch is covered by a checkpoint
+
+    Sizes grow with stations (a region file) or with days (one small file each), never with both in one file."""
+    api = out / "api"
+    regions_cfg = tomllib.loads((ROOT / "config/regions.toml").read_text())["region"]
+    cfg = tomllib.loads((ROOT / "config/ledger-v3.toml").read_text())
+    main_stream = cfg["main_stream"]
+    catalog = []
+    for c in [cfg["catalog"], *cfg.get("regional_catalogs", [])]:
+        catalog += tomllib.loads((ROOT / c).read_text())["station"]
+    places = []
+    for f in ("config/locations.toml", "config/locations-rs.toml"):
+        if (ROOT / f).exists():
+            places += tomllib.loads((ROOT / f).read_text())["location"]
     rules = {e["body"]["region"]: e for e in entries if e["kind"] == "rule_set" and e["body"].get("rule") == "outlook"}
-    streams = sorted({s["stream"] for s in catalog} - {"guaiba"})
-    (out / "regions").mkdir(parents=True, exist_ok=True)
-    for stream in streams:
-        stations = [s for s in catalog if s["stream"] == stream]
-        batch_entries = [e for e in entries if e["kind"] == "batch" and e["body"]["stream"] == stream]
-        batches, series_points, latest_quality = [], {}, {}
+    index = []
+    for reg in regions_cfg:
+        rid = reg["id"]
+        stations = [s for s in catalog if s.get("stream", main_stream) == rid]
+        batch_entries = [e for e in entries if e["kind"] == "batch" and e["body"]["stream"] == rid]
+        days_dir = api / "regions" / rid / "days"
+        days_dir.mkdir(parents=True, exist_ok=True)
+        days, last2 = [], {}
         for e in batch_entries:
             b = e["body"]
-            name = f"{stream}-{b['batch_id']:05d}.json"
+            name = f"{rid}-{b['batch_id']:05d}.json"
             f = json.loads((ledger3 / "batches" / name).read_text())
+            hours = list(range(b["t_start"], b["t_end"], 3600))
+            pts: dict[str, dict[int, int]] = {}
             for r in f["readings"]:
-                series_points.setdefault(r["station_id"], {})[r["ts_utc"]] = r["value_milli"]
-            latest_quality = {q["station_id"]: q for q in (f.get("quality") or {}).get("stations", [])}
-            batches.append(
-                {
-                    "day": f["day"],
-                    "batch_id": b["batch_id"],
-                    "leaf_count": b["leaf_count"],
-                    "merkle_root": b["merkle_root"],
-                    "file": f"ledger-v3/batches/{name}",
-                    "stations_with_readings": len({r["station_id"] for r in f["readings"]}),
-                    **provenance(e),
-                }
-            )
-        end = max((b_["body"]["t_end"] for b_ in batch_entries), default=0)
-        start = end - REGION_HOURS * 3600
-        hours = list(range(start, end, 3600))
-        series = {sid: [pts.get(t) for t in hours] for sid, pts in series_points.items()}
+                pts.setdefault(r["station_id"], {})[r["ts_utc"]] = r["value_milli"]
+            quality = {q["station_id"]: {k: q[k] for k in QUALITY_KEYS if k in q} | {"flags": len(q.get("flags") or [])} for q in (f.get("quality") or {}).get("stations", [])}
+            day = {
+                "version": API_VERSION,
+                "region": rid,
+                "day": f["day"],
+                "batch": {"batch_id": b["batch_id"], "leaf_count": b["leaf_count"], "merkle_root": b["merkle_root"], "readings": f"data/ledger-v3/batches/{name}", **provenance(e)},
+                "start": b["t_start"],
+                "step": 3600,
+                "stations": {sid: [v.get(t) for t in hours] for sid, v in sorted(pts.items())},
+                "quality": quality,
+            }
+            write_if_changed(days_dir / f"{f['day']}.json", day)
+            days.append({"day": f["day"], "batch_id": b["batch_id"], "stations_with_readings": len(pts), "checkpoint": e["checkpoint"], "url": f"api/regions/{rid}/days/{f['day']}.json"})
+            for sid, v in pts.items():
+                last2.setdefault(sid, {}).update(v)
+            if len(days) > 2:  # the latest level and its change in 24 h need only the last two days
+                cutoff = b["t_start"] - 86400
+                last2 = {sid: {t: x for t, x in v.items() if t >= cutoff} for sid, v in last2.items()}
 
         def now_of(sid: str) -> dict | None:
-            pts = series_points.get(sid, {})
-            if not pts:
+            v = last2.get(sid)
+            if not v:
                 return None
-            ts = max(pts)
-            before = pts.get(ts - 86400)
-            return {"ts_utc": ts, "value_milli": pts[ts], "change_24h_milli": None if before is None else pts[ts] - before}
+            ts = max(v)
+            before = v.get(ts - 86400)
+            return {"ts_utc": ts, "value_milli": v[ts], "change_24h_milli": None if before is None else v[ts] - before}
 
         place_rows = []
-        for pl in (x for x in places if x.get("region") == stream):
+        for pl in (x for x in places if x.get("region", main_stream) == rid):
             levels = {k[:-2]: round(pl[k] * 1000) for k in ("attention_m", "alert_m", "flood_m", "record_m") if k in pl}
             now = now_of(pl["gauge"])
             state = None
             if pl.get("confirmed") and now and levels:
                 state = next((n for k, n in STATE_ORDER if k in levels and now["value_milli"] >= levels[k]), "normal")
             place_rows.append(
-                {
-                    **{k: pl[k] for k in ("id", "name", "river", "gauge")},
-                    "confirmed": bool(pl.get("confirmed")),
-                    "levels_milli": levels,
-                    **{k: pl[k] for k in ("source", "source_url", "published", "checked", "note") if k in pl},
-                    "now": now,
-                    "state": state,
-                }
+                {**{k: pl[k] for k in ("id", "name", "river", "gauge")}, "confirmed": bool(pl.get("confirmed")), "levels_milli": levels,
+                 **{k: pl[k] for k in ("source", "source_url", "published", "checked", "note") if k in pl}, "now": now, "state": state}
             )
         outlooks = []
-        for e in (x for x in entries if x["kind"] == "outlook" and rules.get(x["body"]["region"], {}).get("body", {}).get("stream") == stream):
+        for e in (x for x in entries if x["kind"] == "outlook" and rules.get(x["body"]["region"], {}).get("body", {}).get("stream") == rid):
             o = e["body"]
             outlooks.append(
-                {
-                    "day": day_of(o["issued_at"] - 1),
-                    "region": o["region"],
-                    **provenance(e),
-                    **{k: o[k] for k in ("issued_at", "window_end", "models", "rain_mean_milli", "rain_min_milli", "rain_max_milli", "content_sha256")},
-                    "threshold_milli": e["outcome"]["threshold_milli"],
-                    "triggered": e["outcome"]["triggered"],
-                }
+                {"day": day_of(o["issued_at"] - 1), "rule": o["region"], **provenance(e),
+                 **{k: o[k] for k in ("issued_at", "window_end", "models", "rain_mean_milli", "rain_min_milli", "rain_max_milli", "content_sha256")},
+                 "threshold_milli": e["outcome"]["threshold_milli"], "triggered": e["outcome"]["triggered"]}
             )
-        outlooks.sort(key=lambda o: o["day"], reverse=True)
-        region = {
-            "region": stream,
+        outlooks.sort(key=lambda o: (o["day"], o["rule"]), reverse=True)
+        summary = {
+            "version": API_VERSION,
+            "region": {k: reg[k] for k in ("id", "name", "description", "country", "uf", "basin", "places")},
             "generated_at": datetime.now(timezone.utc).isoformat(timespec="seconds"),
             "stations": [
-                {
-                    **{k: s.get(k) for k in ("id", "name", "ana_name", "kind", "river", "municipality", "source", "lat", "lon")},
-                    "now": now_of(s["id"]),
-                    "quality": (lambda q: q and {k: q[k] for k in ("score", "present", "expected", "flags") if k in q})(latest_quality.get(s["id"])),
-                }
+                {**{k: s.get(k) for k in ("id", "name", "ana_name", "kind", "river", "municipality", "source", "variable", "lat", "lon")}, "now": now_of(s["id"])}
                 for s in stations
             ],
             "places": place_rows,
-            "batches": batches,
-            "series": {"start": start, "step": 3600, "stations": series},
-            "outlooks": outlooks[:30],
-            "rules": [{"region": r, "threshold_milli": e["body"]["threshold_milli"], **provenance(e)} for r, e in rules.items() if e["body"]["stream"] == stream],
+            "rules": [{"rule": r, "threshold_milli": e["body"]["threshold_milli"], "window_secs": e["body"]["window_secs"], **provenance(e)} for r, e in sorted(rules.items()) if e["body"]["stream"] == rid],
+            "outlooks": outlooks[:60],
+            "days": days,
         }
-        path = out / "regions" / f"{stream}.json"
-        path.write_text(json.dumps(region, separators=(",", ":"), ensure_ascii=False))
-        print(f"região {stream}: {len(stations)} estações, {len(batches)} lote(s), {len(place_rows)} cidade(s) com cota, {len(outlooks)} perspectiva(s) → {path} ({path.stat().st_size // 1024} KiB)")
+        write_if_changed(api / "regions" / f"{rid}.json", summary)
+        latest = days[-1]["day"] if days else None
+        index.append(
+            {**{k: reg[k] for k in ("id", "name", "description", "country", "uf", "basin")}, "stations": len(stations),
+             "places_with_levels": sum(1 for p_ in place_rows if p_["confirmed"]), "first_day": days[0]["day"] if days else None, "latest_day": latest,
+             "situation": sorted({p_["state"] for p_ in place_rows if p_["state"]} - {"normal"}), "url": f"api/regions/{rid}.json"}
+        )
+        size = (api / "regions" / f"{rid}.json").stat().st_size // 1024
+        print(f"api: {rid} {len(stations)} estações, {len(days)} dia(s), {len(place_rows)} cidade(s) com cota, {len(outlooks)} perspectiva(s), resumo {size} KiB")
+    write_if_changed(
+        api / "index.json",
+        {"version": API_VERSION, "generated_at": datetime.now(timezone.utc).isoformat(timespec="seconds"),
+         "ledger": {"size": led["size"], "root": led["root"], "genesis_index": led["genesis_index"], "clock": led["clock"],
+                    "last_checkpoint": max((c["size"] for c in led["checkpoints"]), default=None) if led.get("checkpoints") and isinstance(led["checkpoints"][0], dict) else None},
+         # Where the ledger's own files (a batch's full readings, contents, checkpoints) are, by their repository
+         # path: written once, so any copy serves. A page picks one; none of them has to be trusted (each file checks
+         # against the ledger).
+         "mirrors": [
+             {"name": "github", "base": "https://raw.githubusercontent.com/ThallesOwnsIt/Cota/main/"},
+             {"name": "jsdelivr", "base": "https://cdn.jsdelivr.net/gh/ThallesOwnsIt/Cota@main/"},
+             {"name": "arweave", "gateway": "https://arweave.net/", "map": "data/ledger/archive.json"},
+         ],
+         "regions": index},
+    )
 
+
+def write_if_changed(path: Path, value: dict) -> None:
+    """Writes the file only when its content (besides `generated_at`) changed: unchanged days stay unchanged in git."""
+    text = json.dumps(value, separators=(",", ":"), ensure_ascii=False)
+    if path.exists():
+        try:
+            old = json.loads(path.read_text())
+            if {k: v for k, v in old.items() if k != "generated_at"} == {k: v for k, v in value.items() if k != "generated_at"}:
+                return
+        except ValueError:
+            pass
+    path.write_text(text)
 
 if __name__ == "__main__":
     main()

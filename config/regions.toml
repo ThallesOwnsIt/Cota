@@ -1,0 +1,34 @@
+# The regions Cota records, one per ledger stream (config/ledger-v3.toml `streams`). Everything a page needs to
+# list and describe them comes from here, never from the site's code: adding a region (another basin, another state)
+# is a new entry here and a new stream, nothing else. The data API (dashboard/data/api, scripts/export_dashboard.py)
+# publishes them in api/index.json.
+#
+# `country` and `uf` group regions (country → state → region); `basin` is ANA's national hydrographic region;
+# `places` are the towns a visitor looks for, in the order a page may show them.
+
+[[region]]
+id = "guaiba"
+name = { pt = "Guaíba", en = "Guaíba" }
+description = { pt = "Bacia do Guaíba: Jacuí, Taquari-Antas, Caí, Sinos e Gravataí", en = "Guaíba basin: Jacuí, Taquari-Antas, Caí, Sinos and Gravataí" }
+country = "BR"
+uf = ["RS"]
+basin = "Atlântico Sudeste"
+places = ["Porto Alegre", "Eldorado do Sul", "Canoas", "São Leopoldo", "Lajeado", "Estrela", "Muçum", "Montenegro"]
+
+[[region]]
+id = "uruguai"
+name = { pt = "Rio Uruguai", en = "Uruguay river" }
+description = { pt = "Oeste e norte do RS: rio Uruguai, Ibicuí, Ijuí, Quaraí e afluentes", en = "West and north of RS: the Uruguay, Ibicuí, Ijuí, Quaraí and their tributaries" }
+country = "BR"
+uf = ["RS"]
+basin = "Uruguai"
+places = ["Uruguaiana", "Itaqui", "São Borja", "Alegrete", "Rosário do Sul", "Manoel Viana", "Iraí"]
+
+[[region]]
+id = "litoranea"
+name = { pt = "Litoral", en = "Coast" }
+description = { pt = "Lagoa dos Patos, Lagoa Mirim, Camaquã e litoral norte", en = "Patos and Mirim lagoons, the Camaquã and the north coast" }
+country = "BR"
+uf = ["RS"]
+basin = "Atlântico Sudeste"
+places = ["Pelotas", "Rio Grande", "São Lourenço do Sul", "Arambaré", "Jaguarão", "Torres", "Maquiné"]
