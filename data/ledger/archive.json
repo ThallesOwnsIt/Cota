@@ -413,9 +413,9 @@
    "bytes": 1536
   },
   "data/ledger/timestamps/index.json": {
-   "sha256": "443652b06abcb70a4ca6f583ee99442ce533f9267eeaa65a5b21b463b57688e6",
-   "id": "aOxj37Q1DQwuUJqUb0xo3SB8gYT2uuwG0hqd4WLBQRc",
-   "bytes": 931
+   "sha256": "a266097370af80bb83b17d2e1a785b095933c898f6379f31558f44bbd690042b",
+   "id": "fQ9bajRPMEN3GZTem_Mo_viURsQowMKZC8tMgWnpHOs",
+   "bytes": 985
   },
   "data/ledger/vaults/ao-vivo.json": {
    "sha256": "a4dfa4a9757bce2133115d431d1df7f2ea466c6004176e1869365b4eaf116c62",
@@ -1811,6 +1811,16 @@
    "sha256": "2cb229671cb4a237f55b848c453fba46852b627368d15e4a835b2ad9459da0b6",
    "id": "BatLp0X5obShHfsyWeUh6wPJ51SzpExS4xrx0rF5uJw",
    "bytes": 51620
+  },
+  "data/ledger/timestamps/000235.txt": {
+   "sha256": "07b31c30500f67051631bc5846cc47053edcdce32d493f90608f3f9943c94c2a",
+   "id": "bbeqQpgkMXOdorf9zciGkDVuVjuby4PtjOyVFtZaGyE",
+   "bytes": 234
+  },
+  "data/ledger/timestamps/000235.txt.ots": {
+   "sha256": "4af313fad8da2584306594b89422957c80b4fcc2083f482dad4b9efe560ad156",
+   "id": "GpsORrr3Xo1rXfJ-eWEAtRhNoOWWbIyEjxtaaEUkneY",
+   "bytes": 705
   }
  },
  "records": [
@@ -2032,6 +2042,6 @@
    "bytes": 699
   }
  ],
- "bytes": 3154603,
+ "bytes": 3156527,
  "signer": "7kw7om2uMrnSaJBZXriH6TAVpQrsN7Eoq7dtsqgb6Lww"
 }
