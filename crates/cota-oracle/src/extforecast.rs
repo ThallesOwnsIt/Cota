@@ -190,6 +190,8 @@ mod tests {
             lat: -30.075,
             lon: -51.325,
             datum_id: None,
+            stream: None,
+            kind: None,
         }
     }
 

@@ -1,0 +1,93 @@
+# Places of the rest of Rio Grande do Sul (Etapa 5) with official levels, in the format of config/locations.toml;
+# `region` is the ledger stream whose batches carry the gauge (config/stations-rs.toml). Checked by
+# scripts/check_locations.py, like locations.toml.
+#
+# Uruguai: the levels of the SGB's flood warning system for the Uruguay river (SAH/SACE Uruguai), whose reference gauges
+# are the ANA stations themselves. Published in 2022; shown with that date until the SGB confirms the current table
+# (request in Cota-Pedidos, e-mail 3). São Borja is left without levels: the SGB paper's station code (75760000) is
+# not in ANA's inventory and a 2024 report gives 9 m for flood against the paper's 10 m (decided 19/11/2026).
+
+[[location]]
+id = "itaqui"
+name = "Itaqui"
+river = "Uruguai"
+region = "uruguai"
+gauge = "ANA-75900000"
+attention_m = 6.30
+alert_m = 7.30
+flood_m = 8.30
+confirmed = true
+source = "SGB, cotas do SACE Uruguai válidas em agosto de 2022 (vazões associadas, Uruguaiana)"
+source_url = "https://rigeo.sgb.gov.br/bitstream/doc/24430/2/vazoes_sace_uruguai_uruguaiana_apresentacao.pdf"
+published = "2022"
+checked = "2026-11-19"
+
+[[location]]
+id = "uruguaiana"
+name = "Uruguaiana"
+river = "Uruguai"
+region = "uruguai"
+gauge = "ANA-77150000"
+attention_m = 6.50
+alert_m = 7.50
+flood_m = 8.50
+confirmed = true
+source = "SGB, cotas do SACE Uruguai válidas em agosto de 2022 (vazões associadas, Uruguaiana)"
+source_url = "https://rigeo.sgb.gov.br/bitstream/doc/24430/2/vazoes_sace_uruguai_uruguaiana_apresentacao.pdf"
+published = "2022"
+checked = "2026-11-19"
+
+[[location]]
+id = "alegrete"
+name = "Alegrete"
+river = "Ibirapuitã"
+region = "uruguai"
+gauge = "ANA-76750000"
+attention_m = 7.50
+alert_m = 8.50
+flood_m = 9.70
+confirmed = true
+source = "SGB, cotas do SAH na bacia do Ibicuí válidas em janeiro de 2022 (Quadro 1)"
+source_url = "https://rigeo.sgb.gov.br/bitstream/doc/22947/1/cotas_sace_uruguai_ibicui.pdf"
+published = "2022"
+checked = "2026-11-19"
+
+[[location]]
+id = "rosario-do-sul"
+name = "Rosário do Sul"
+river = "Santa Maria"
+region = "uruguai"
+gauge = "ANA-76310000"
+attention_m = 4.50
+alert_m = 5.50
+flood_m = 6.50
+confirmed = true
+source = "SGB, cotas do SAH na bacia do Ibicuí válidas em janeiro de 2022 (Quadro 1)"
+source_url = "https://rigeo.sgb.gov.br/bitstream/doc/22947/1/cotas_sace_uruguai_ibicui.pdf"
+published = "2022"
+checked = "2026-11-19"
+
+[[location]]
+id = "manoel-viana"
+name = "Manoel Viana"
+river = "Ibicuí"
+region = "uruguai"
+gauge = "ANA-76560000"
+attention_m = 7.60
+alert_m = 8.60
+flood_m = 9.60
+confirmed = true
+source = "SGB, cotas do SAH na bacia do Ibicuí válidas em janeiro de 2022 (Quadro 1)"
+source_url = "https://rigeo.sgb.gov.br/bitstream/doc/22947/1/cotas_sace_uruguai_ibicui.pdf"
+published = "2022"
+checked = "2026-11-19"
+
+[[location]]
+id = "sao-borja"
+name = "São Borja"
+river = "Uruguai"
+region = "uruguai"
+gauge = "ANA-75780000"
+confirmed = false
+note = "cotas do SGB sem confirmar: o código da estação na publicação (75760000) não existe na ANA, e a cota de inundação diverge (9 m ou 10 m)"
+checked = "2026-11-19"

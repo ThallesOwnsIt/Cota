@@ -84,6 +84,8 @@ fn three_days_with_silent_and_tampering_nodes() {
         lat: -30.05,
         lon: -51.17,
         datum_id: None,
+        stream: None,
+        kind: None,
     };
     send(&mut svm, &payer, &ledger, &[chain::register_station_instruction(payer.pubkey(), &a801)]);
     let catalog = vec![("A801".to_string(), Source::Inmet)];

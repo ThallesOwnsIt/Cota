@@ -35,6 +35,9 @@ enum Cmd {
         /// Sub-basin rules (one outlook per region); a missing folder means the basin-wide rule only.
         #[arg(long, default_value = "ml/models/outlook-rules")]
         rules_dir: PathBuf,
+        /// More rule folders (Etapa 5: the rest of RS, `ml/models/outlook-rules-rs`), for the v3 ledger.
+        #[arg(long)]
+        more_rules: Vec<PathBuf>,
         #[arg(long)]
         out: PathBuf,
         /// Reads the daily totals (`outlook::Totals`) from a file instead of the API (tests; basin-wide rule only).
@@ -57,14 +60,19 @@ enum Cmd {
 
 fn main() -> Result<()> {
     match Args::parse().cmd {
-        Cmd::Observe { key, day, rule, rules_dir, out, input } => observe(&key, day, &rule, &rules_dir, &out, input.as_deref()),
+        Cmd::Observe { key, day, rule, rules_dir, more_rules, out, input } => observe(&key, day, &rule, &rules_dir, &more_rules, &out, input.as_deref()),
         Cmd::Anchor { rpc, cluster, payer, nodes_dir, ledger } => anchor(&rpc, &cluster, &payer, &nodes_dir, &ledger),
     }
 }
 
-fn observe(key: &Path, day: NaiveDate, rule: &Path, rules_dir: &Path, out: &Path, input: Option<&Path>) -> Result<()> {
+fn observe(key: &Path, day: NaiveDate, rule: &Path, rules_dir: &Path, more_rules: &[PathBuf], out: &Path, input: Option<&Path>) -> Result<()> {
     let key = keys::load_signing_key(key)?;
-    let rules = if input.is_some() { vec![outlook::load_rule(rule)?] } else { outlook::load_rules(rule, rules_dir)? };
+    let mut rules = if input.is_some() { vec![outlook::load_rule(rule)?] } else { outlook::load_rules(rule, rules_dir)? };
+    if input.is_none() {
+        for dir in more_rules {
+            rules.extend(outlook::load_dir(dir)?);
+        }
+    }
     let http = cota_ingest::http_client()?;
     let mut failed = 0;
     for rule in &rules {

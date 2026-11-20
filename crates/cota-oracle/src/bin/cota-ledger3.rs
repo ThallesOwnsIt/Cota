@@ -4,7 +4,7 @@
 //! - `collect` (aggregator): publishes the checkpoint a majority signed and appends every body a majority signed.
 //! - `verify` (anyone): replays the ledger and checks every entry and checkpoint.
 //!
-//! During the rehearsal the ledger is `data/ledger-v3-ensaio`, written next to v2 without touching it.
+//! The ledger is `data/ledger-v3` (since the cutover of 19/11/2026; the rehearsal was `data/ledger-v3-ensaio`).
 
 use std::path::PathBuf;
 
@@ -16,7 +16,7 @@ use cota_oracle::{keys, ledger3};
 #[command(about = "Cota's own ledger (v3): sign, collect, verify")]
 struct Args {
     /// The ledger's folder.
-    #[arg(long, global = true, default_value = "data/ledger-v3-ensaio")]
+    #[arg(long, global = true, default_value = "data/ledger-v3")]
     ledger: PathBuf,
     /// The v2 ledger (its records.jsonl precedes Genesis in the accumulator).
     #[arg(long, global = true, default_value = "data/ledger")]
@@ -61,6 +61,9 @@ enum Cmd {
         /// Minutes after 00:00 UTC before yesterday counts as closed.
         #[arg(long, default_value_t = 60)]
         settle_min: i64,
+        /// The stream (region); default: the main one.
+        #[arg(long)]
+        stream: Option<String>,
     },
     /// Writes the ledger, every entry decoded, as JSON for the dashboard (scripts/export_dashboard.py).
     Export {
@@ -69,6 +72,11 @@ enum Cmd {
     },
     /// Prints the day whose flow forecast the nodes should make now (nothing if none).
     ForecastDay {
+        #[arg(long, default_value = "config/ledger-v3.toml")]
+        config: PathBuf,
+    },
+    /// The streams (regions) of the config, one per line, the main one first.
+    Streams {
         #[arg(long, default_value = "config/ledger-v3.toml")]
         config: PathBuf,
     },
@@ -88,11 +96,12 @@ fn main() -> Result<()> {
         }
         Cmd::Collect { nodes_dir, config, limits } => {
             let mut book = ledger3::Book::open(&args.ledger, &args.v2_ledger)?;
-            let quality = ledger3::load_config(&config).and_then(|cfg| ledger3::QualityInput::load(&cfg, &limits));
+            let cfg = ledger3::load_config(&config)?;
+            let quality = ledger3::QualityInput::load(&cfg, &limits);
             if let Err(e) = &quality {
                 eprintln!("aviso: sem a avaliação de qualidade das estações ({e:#})");
             }
-            let report = ledger3::collect(&mut book, &nodes_dir, chrono::Utc::now().timestamp(), quality.as_ref().ok())?;
+            let report = ledger3::collect(&mut book, &cfg, &nodes_dir, chrono::Utc::now().timestamp(), quality.as_ref().ok())?;
             if report.backfilled > 0 {
                 eprintln!("livro v3: {} conteúdo(s) que faltavam foram completados", report.backfilled);
             }
@@ -118,10 +127,11 @@ fn main() -> Result<()> {
                 ledger3::iso(book.ledger.clock()),
             );
         }
-        Cmd::NextDay { config, settle_min } => {
+        Cmd::NextDay { config, settle_min, stream } => {
             let cfg = ledger3::load_config(&config)?;
             let book = ledger3::Book::open(&args.ledger, &args.v2_ledger)?;
-            if let Some((day, id, prev)) = ledger3::next_day(&cfg, &book, chrono::Utc::now().timestamp(), settle_min * 60) {
+            let stream = stream.unwrap_or_else(|| cfg.main_stream.clone());
+            if let Some((day, id, prev)) = ledger3::next_day(&book, &stream, chrono::Utc::now().timestamp(), settle_min * 60) {
                 println!("{day} {id} {}", hex::encode(prev));
             }
         }
@@ -133,6 +143,13 @@ fn main() -> Result<()> {
             }
             std::fs::write(&out, serde_json::to_string(&v)?)?;
             eprintln!("livro v3: {} entrada(s) exportada(s) → {}", book.entries.len(), out.display());
+        }
+        Cmd::Streams { config } => {
+            let cfg = ledger3::load_config(&config)?;
+            println!("{}", cfg.main_stream);
+            for s in cfg.streams.iter().filter(|s| **s != cfg.main_stream) {
+                println!("{s}");
+            }
         }
         Cmd::ForecastDay { config } => {
             let cfg = ledger3::load_config(&config)?;

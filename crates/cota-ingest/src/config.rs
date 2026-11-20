@@ -17,6 +17,13 @@ pub struct StationConfig {
     /// Vertical reference, river level only.
     #[serde(default)]
     pub datum_id: Option<String>,
+    /// The ledger stream (region) whose daily batch carries the station; none: the main stream.
+    #[serde(default)]
+    pub stream: Option<String>,
+    /// River gauges: `rio`, `jusante` (right below a dam) or `reservatorio` (the dam's lake). Informative: the
+    /// station's name in the ledger says it in words; the page shows it.
+    #[serde(default)]
+    pub kind: Option<String>,
 }
 
 #[derive(Debug, Deserialize)]

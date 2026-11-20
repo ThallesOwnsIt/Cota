@@ -33,6 +33,9 @@ use crate::{attest::SignedAlert, extforecast::SignedForecast, node::SignedBatch,
 #[derive(Debug, Clone, Deserialize)]
 pub struct Config {
     pub catalog: PathBuf,
+    /// More catalogs whose stations name their stream (Etapa 5: the rest of RS).
+    #[serde(default)]
+    pub regional_catalogs: Vec<PathBuf>,
     pub streams: Vec<String>,
     pub main_stream: String,
     pub genesis: GenesisConfig,
@@ -56,6 +59,10 @@ pub struct RulesConfig {
     pub flow_alert_manifest: PathBuf,
     pub outlook_main: PathBuf,
     pub outlook_dir: PathBuf,
+    /// Early-warning rules of other regions (Etapa 5), signed after the opening; each one's stream is that of its
+    /// GloFAS target station in the catalogs.
+    #[serde(default)]
+    pub regional_outlook_dirs: Vec<PathBuf>,
 }
 
 #[derive(Debug, Clone, Deserialize)]
@@ -63,6 +70,75 @@ pub struct SourceConfig {
     pub id: String,
     pub stream: String,
     pub horizon_days: u16,
+}
+
+impl Config {
+    /// Every station of every catalog; an id in two catalogs is an error.
+    pub fn stations(&self) -> Result<Vec<cota_ingest::config::StationConfig>> {
+        let mut all = cota_ingest::config::load(&self.catalog)?;
+        for c in &self.regional_catalogs {
+            all.extend(cota_ingest::config::load(c)?);
+        }
+        let mut seen = BTreeSet::new();
+        for s in &all {
+            ensure!(seen.insert(s.id.as_str()), "estação {} em mais de um catálogo", s.id);
+            if let Some(stream) = &s.stream {
+                ensure!(self.streams.contains(stream), "estação {}: região {stream} não existe no livro", s.id);
+            }
+        }
+        Ok(all)
+    }
+
+    /// The stream that carries a station.
+    pub fn stream_of<'a>(&'a self, st: &'a cota_ingest::config::StationConfig) -> &'a str {
+        st.stream.as_deref().unwrap_or(&self.main_stream)
+    }
+
+    /// The regional early-warning rules, each with the stream of its target station.
+    pub fn regional_outlook_rules(&self) -> Result<Vec<(outlook::Rule, String)>> {
+        let stations = self.stations()?;
+        let mut out = Vec::new();
+        for dir in &self.rules.regional_outlook_dirs {
+            for r in outlook::load_dir(dir)? {
+                let target = r.spec.target.as_ref().with_context(|| format!("regra {}: sem estação alvo", r.spec.region))?;
+                let st = stations
+                    .iter()
+                    .find(|s| s.id == target.station_id)
+                    .with_context(|| format!("regra {}: a estação alvo {} não está nos catálogos", r.spec.region, target.station_id))?;
+                let stream = self.stream_of(st).to_string();
+                out.push((r, stream));
+            }
+        }
+        Ok(out)
+    }
+
+    /// The stream of every early-warning region: the opening's rules on the main stream, the regional ones on theirs.
+    pub fn outlook_streams(&self) -> Result<BTreeMap<String, String>> {
+        let mut map: BTreeMap<String, String> = outlook::load_rules(&self.rules.outlook_main, &self.rules.outlook_dir)?
+            .into_iter()
+            .map(|r| (r.spec.region, self.main_stream.clone()))
+            .collect();
+        for (r, stream) in self.regional_outlook_rules()? {
+            map.insert(r.spec.region, stream);
+        }
+        Ok(map)
+    }
+
+    /// The stations whose readings go in `stream`'s batches.
+    pub fn stream_stations(&self, stream: &str) -> Result<Vec<cota_ingest::config::StationConfig>> {
+        ensure!(self.streams.iter().any(|s| s == stream), "região {stream} não existe no livro");
+        Ok(self.stations()?.into_iter().filter(|st| self.stream_of(st) == stream).collect())
+    }
+
+    /// Where a node keeps its batch files of `stream`: the main stream's in the node's folder (as in v2), the others in
+    /// a subfolder named after the stream.
+    pub fn stream_dir(&self, node_dir: &Path, stream: &str) -> PathBuf {
+        if stream == self.main_stream {
+            node_dir.to_path_buf()
+        } else {
+            node_dir.join(stream)
+        }
+    }
 }
 
 pub fn load_config(path: &Path) -> Result<Config> {
@@ -326,7 +402,7 @@ pub fn check_trust(cfg: &Config, book: &Book, rpc_url: Option<&str>) -> Result<(
     let (trusted, source) = match rpc_url.and_then(chain_members) {
         Some(m) => (m, "o comitê da v2 na cadeia"),
         None => {
-            eprintln!("aviso: não consegui ler o comitê da v2 na cadeia; confiro com config/ledger-v3.toml");
+            eprintln!("aviso: não consegui ler o comitê da v2 na cadeia; confiro com o arquivo de configuração do livro");
             (configured, "config/ledger-v3.toml")
         }
     };
@@ -397,11 +473,31 @@ pub fn opening_bodies(cfg: &Config, book: &Book) -> Result<Vec<Body>> {
     Ok(bodies)
 }
 
-/// The catalog's stations that the ledger does not have yet, or has with other data.
-pub fn station_bodies(cfg: &Config, book: &Book) -> Result<Vec<Body>> {
-    let mut out = Vec::new();
-    for st in cota_ingest::config::load(&cfg.catalog)? {
-        let s = cota_ledger::Station {
+/// The regional early-warning rules (Etapa 5), as RuleSet entries on their streams. Those the ledger already has are
+/// dropped by `sign_round` (same signing message); a changed rule for an existing region is refused by the ledger.
+pub fn rule_bodies(cfg: &Config) -> Result<Vec<Body>> {
+    Ok(cfg
+        .regional_outlook_rules()?
+        .into_iter()
+        .map(|(r, stream)| {
+            Body::RuleSet(RuleSet::Outlook {
+                region: r.spec.region.clone(),
+                stream,
+                threshold_milli: r.threshold_milli(),
+                window_secs: r.window_secs(),
+                min_models: r.spec.min_models,
+                spec_sha256: r.sha256,
+            })
+        })
+        .collect())
+}
+
+/// Every catalog station as the ledger registers it.
+pub fn catalog_stations(cfg: &Config) -> Result<Vec<cota_ledger::Station>> {
+    Ok(cfg
+        .stations()?
+        .iter()
+        .map(|st| cota_ledger::Station {
             station_id: st.id.clone(),
             name: st.name.clone(),
             source: st.source as u8,
@@ -409,13 +505,14 @@ pub fn station_bodies(cfg: &Config, book: &Book) -> Result<Vec<Body>> {
             lat_e6: (st.lat * 1e6).round() as i32,
             lon_e6: (st.lon * 1e6).round() as i32,
             datum_id: st.datum_id.clone(),
-            stream: cfg.main_stream.clone(),
-        };
-        if book.stations.get(&st.id) != Some(&s) {
-            out.push(Body::Station(s));
-        }
-    }
-    Ok(out)
+            stream: cfg.stream_of(st).to_string(),
+        })
+        .collect())
+}
+
+/// The catalog's stations that the ledger does not have yet, or has with other data.
+pub fn station_bodies(cfg: &Config, book: &Book) -> Result<Vec<Body>> {
+    Ok(catalog_stations(cfg)?.into_iter().filter(|s| book.stations.get(&s.station_id) != Some(s)).map(Body::Station).collect())
 }
 
 fn read_json_files<T: serde::de::DeserializeOwned>(dir: &Path) -> Vec<T> {
@@ -430,18 +527,27 @@ fn node_batches(node_dir: &Path) -> BTreeMap<NaiveDate, SignedBatch> {
     read_json_files::<SignedBatch>(node_dir).into_iter().map(|b| (b.day, b)).collect()
 }
 
-/// What this node observed for the main stream: the batch of the next day it has (gaps allowed), and the outlooks
-/// and third-party forecasts of that day and of the day the ledger last closed.
+/// What this node observed: for each stream, the batch of the next day it has (gaps allowed); and the outlooks and
+/// third-party forecasts of the main stream's new day and of the day it last closed.
 pub fn day_bodies(cfg: &Config, book: &Book, node_dir: &Path) -> Result<Vec<Body>> {
-    let Some(s) = book.ledger.stream(&cfg.main_stream) else { return Ok(Vec::new()) };
-    let mut out = Vec::new();
-    let mut days: Vec<i64> = vec![];
-    if s.next_batch_id > 1 {
-        days.push(s.last_t_end);
+    if book.ledger.stream(&cfg.main_stream).is_none() {
+        return Ok(Vec::new());
     }
-    if let Some((day, b)) = node_batches(node_dir).into_iter().find(|(d, _)| start_of_day(*d) >= s.last_t_end) {
+    let mut out = Vec::new();
+    // Per stream, the instants an outlook or third-party forecast may be issued at: the end of the day it last closed
+    // and of the day whose batch this node brings now (the ledger checks it against the rule's or source's stream).
+    let mut days: BTreeMap<String, Vec<i64>> = BTreeMap::new();
+    for stream in &cfg.streams {
+        let Some(s) = book.ledger.stream(stream) else { continue };
+        let d = days.entry(stream.clone()).or_default();
+        if s.next_batch_id > 1 {
+            d.push(s.last_t_end);
+        }
+        let Some((day, b)) = node_batches(&cfg.stream_dir(node_dir, stream)).into_iter().find(|(d, _)| start_of_day(*d) >= s.last_t_end) else {
+            continue;
+        };
         out.push(Body::Batch(cota_ledger::Batch {
-            stream: cfg.main_stream.clone(),
+            stream: stream.clone(),
             batch_id: s.next_batch_id,
             t_start: b.header.t_start,
             t_end: b.header.t_end,
@@ -450,11 +556,14 @@ pub fn day_bodies(cfg: &Config, book: &Book, node_dir: &Path) -> Result<Vec<Body
             station_set_hash: b.header.station_set_hash,
             prev_batch_root: s.last_batch_root,
         }));
-        days.push(end_of_day(day));
+        d.push(end_of_day(day));
     }
-    // Outlooks issued at the end of those days (issued_at = 00:00 of the next day).
+    let in_days = |stream: &str, at: i64| days.get(stream).is_some_and(|d| d.contains(&at));
+    // Outlooks issued at the end of those days (issued_at = 00:00 of the next day), on their rule's stream.
+    let streams = cfg.outlook_streams()?;
     for o in read_json_files::<SignedOutlook>(&node_dir.join("outlook")) {
-        if days.contains(&o.header.issued_at) {
+        let Some(stream) = streams.get(&o.header.region) else { continue };
+        if in_days(stream, o.header.issued_at) {
             let h = o.header;
             out.push(Body::Outlook(cota_ledger::Outlook {
                 region: h.region,
@@ -471,7 +580,7 @@ pub fn day_bodies(cfg: &Config, book: &Book, node_dir: &Path) -> Result<Vec<Body
     for f in read_json_files::<SignedForecast>(&node_dir.join("extforecast")) {
         let issued_at = end_of_day(f.header.day);
         let Some(src) = cfg.sources.iter().find(|s| s.id == f.header.source) else { continue };
-        if days.contains(&issued_at) {
+        if in_days(&src.stream, issued_at) {
             out.push(Body::ExternalForecast(cota_ledger::ExternalForecast {
                 source: src.id.clone(),
                 stream: src.stream.clone(),
@@ -495,11 +604,11 @@ pub fn forecast_day(cfg: &Config, book: &Book) -> Option<NaiveDate> {
     DateTime::from_timestamp(s.last_t_end - 1, 0).map(|d| d.date_naive())
 }
 
-/// The next day the main stream waits for, once it has closed and `settle_secs` have passed (the sources publish a
-/// day's last hours late): the day, the batch number it will get and the root it chains to. `None` before Genesis or
-/// when that day is still open.
-pub fn next_day(cfg: &Config, book: &Book, now: i64, settle_secs: i64) -> Option<(NaiveDate, u64, Hash)> {
-    let s = book.ledger.stream(&cfg.main_stream)?;
+/// The next day a stream waits for, once it has closed and `settle_secs` have passed (the sources publish a day's
+/// last hours late): the day, the batch number it will get and the root it chains to. `None` before Genesis, for a
+/// stream the ledger does not have, or when that day is still open.
+pub fn next_day(book: &Book, stream: &str, now: i64, settle_secs: i64) -> Option<(NaiveDate, u64, Hash)> {
+    let s = book.ledger.stream(stream)?;
     let day = DateTime::from_timestamp(s.last_t_end, 0)?.date_naive();
     (end_of_day(day) + settle_secs <= now).then_some((day, s.next_batch_id, s.last_batch_root))
 }
@@ -601,6 +710,7 @@ pub fn sign_round(key: &SigningKey, cfg: &Config, book: &Book, node_dir: &Path) 
         bodies.extend(station_bodies(cfg, &empty)?);
     } else {
         bodies.extend(station_bodies(cfg, book)?);
+        bodies.extend(rule_bodies(cfg)?);
         bodies.extend(day_bodies(cfg, book, node_dir)?);
         bodies.extend(forecast_bodies(cfg, book, node_dir)?);
         bodies.extend(alert_bodies(book, node_dir));
@@ -716,7 +826,7 @@ fn order(body: &Body) -> (u8, String, u64) {
 
 /// The aggregator's round: publishes the checkpoint a majority signed for the current state, then appends every body
 /// a majority signed, in `order`, through the rules.
-pub fn collect(book: &mut Book, nodes_dir: &Path, now: i64, quality: Option<&QualityInput>) -> Result<Report> {
+pub fn collect(book: &mut Book, cfg: &Config, nodes_dir: &Path, now: i64, quality: Option<&QualityInput>) -> Result<Report> {
     let mut report = Report::default();
     let (bodies, checkpoints) = read_node_files(nodes_dir);
 
@@ -805,7 +915,7 @@ pub fn collect(book: &mut Book, nodes_dir: &Path, now: i64, quality: Option<&Qua
         match book.ledger.apply(&entry) {
             Ok(applied) => {
                 if let Body::Batch(b) = &entry.body {
-                    write_batch_readings(book, nodes_dir, b, quality)?;
+                    write_batch_readings(book, cfg, nodes_dir, b, quality)?;
                 }
                 write_content(book, nodes_dir, &entry, applied.index)?;
                 book.append(entry, &applied)?;
@@ -937,26 +1047,32 @@ fn write_content(book: &Book, nodes_dir: &Path, entry: &Entry, index: u64) -> Re
 /// What the station quality check needs: its limits and the catalog (id, source).
 pub struct QualityInput {
     pub limits: cota_quality::Limits,
-    pub catalog: Vec<(String, cota_core::Source)>,
+    /// Each stream's stations: a batch is assessed only against its own (another region's stations are not missing
+    /// from it).
+    pub catalog: BTreeMap<String, Vec<(String, cota_core::Source)>>,
 }
 
 impl QualityInput {
     pub fn load(cfg: &Config, limits: &Path) -> Result<Self> {
-        Ok(Self {
-            limits: cota_quality::Limits::load(limits)?,
-            catalog: cota_ingest::config::load(&cfg.catalog)?.into_iter().map(|s| (s.id, s.source)).collect(),
-        })
+        let mut catalog: BTreeMap<String, Vec<(String, cota_core::Source)>> = BTreeMap::new();
+        for s in cfg.stations()? {
+            catalog.entry(cfg.stream_of(&s).to_string()).or_default().push((s.id, s.source));
+        }
+        Ok(Self { limits: cota_quality::Limits::load(limits)?, catalog })
     }
 }
 
 /// `batches/<stream>-<id>.json`: the readings of a batch, from a node whose batch has the same Merkle root, and the
 /// quality of each station (`cota-quality`, as v2's aggregator does): stuck or jumping readings, gaps, and the nodes
 /// that saw different readings. Quality is derived data, not signed; its state carries over in `quality-state.json`.
-fn write_batch_readings(book: &Book, nodes_dir: &Path, b: &cota_ledger::Batch, quality: Option<&QualityInput>) -> Result<()> {
+fn write_batch_readings(book: &Book, cfg: &Config, nodes_dir: &Path, b: &cota_ledger::Batch, quality: Option<&QualityInput>) -> Result<()> {
     let Ok(rd) = std::fs::read_dir(nodes_dir) else { return Ok(()) };
-    let mut nodes: Vec<PathBuf> = rd.filter_map(|e| e.ok().map(|e| e.path())).collect();
+    let mut nodes: Vec<PathBuf> = rd.filter_map(|e| e.ok().map(|e| e.path())).filter(|p| p.is_dir()).collect();
     nodes.sort();
-    let day_batches: Vec<SignedBatch> = nodes.iter().filter_map(|n| node_batches(n).into_values().find(|s| s.header.t_start == b.t_start)).collect();
+    // Each node's batch of this stream and day (the stream's own folder: another stream's batch of the same day must
+    // not count in the agreement between nodes).
+    let day_batches: Vec<SignedBatch> =
+        nodes.iter().filter_map(|n| node_batches(&cfg.stream_dir(n, &b.stream)).into_values().find(|s| s.header.t_start == b.t_start)).collect();
     let Some(found) = day_batches.iter().find(|s| s.header.merkle_root == b.merkle_root) else { return Ok(()) };
     let quality_json = match quality {
         None => Value::Null,
@@ -968,7 +1084,8 @@ fn write_batch_readings(book: &Book, nodes_dir: &Path, b: &cota_ledger::Batch, q
             let state_path = book.dir.join("quality-state.json");
             let mut state: cota_quality::State =
                 std::fs::read_to_string(&state_path).ok().and_then(|t| serde_json::from_str(&t).ok()).unwrap_or_default();
-            let stations = cota_quality::assess(&mut state, &q.limits, &q.catalog, b.t_start, b.t_end, &found.readings, &agreement);
+            let catalog = q.catalog.get(&b.stream).map(Vec::as_slice).unwrap_or_default();
+            let stations = cota_quality::assess(&mut state, &q.limits, catalog, b.t_start, b.t_end, &found.readings, &agreement);
             std::fs::write(&state_path, serde_json::to_string_pretty(&state)? + "\n")?;
             let dissents: Vec<Value> = agreement
                 .dissents
