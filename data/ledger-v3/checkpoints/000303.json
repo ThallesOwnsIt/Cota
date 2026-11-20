@@ -1,0 +1,22 @@
+{
+  "size": 303,
+  "root": "90b8b87214732f0c4a8394503d0d82e570cef9a6037b042007db294da1bc5fb5",
+  "prev": "b0615fc8c60ae50d11df34e6d4fe3dd17fc7078777adc2d1f56aab317afd7aa9",
+  "epoch": 0,
+  "signed_at": 1795132800,
+  "checkpoint": "04000000636f74612f0100000000000090b8b87214732f0c4a8394503d0d82e570cef9a6037b042007db294da1bc5fb5b0615fc8c60ae50d11df34e6d4fe3dd17fc7078777adc2d1f56aab317afd7aa900000000808dff6a00000000",
+  "signatures": [
+    {
+      "member": 0,
+      "signature": "8290c38b66856e828a463d9d9c6d2b8602e932f6f4a2ae09e7d1de3fd262eb2741a4ef930ca34bf957553d81b3b3abaae643f476e2c7f25cc819282b40b28400"
+    },
+    {
+      "member": 1,
+      "signature": "3b5c7abcaa1e480fe871bb214ce55bd1c9df0fc535d9fe04c0f7ee810fbeb4e2532a5a6af29845bac8c2a90575c52632d6a28bdf59f9619b83af89ec25fe3c07"
+    },
+    {
+      "member": 2,
+      "signature": "c6fc94efa5726764cf928d8561a9e286b9a3b5d6af6e3c78273f7514f6a84c338acd76bd8b4626172b5e0b0f96bd74f843b4062fe6cc6df195ad3704b6146005"
+    }
+  ]
+}
