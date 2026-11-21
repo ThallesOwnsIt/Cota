@@ -2241,6 +2241,21 @@
    "sha256": "ef62ca45c74258363c715521a07321692b7eeb9b709922d0c6ac44d8c9c307f1",
    "id": "yHUTZjOY3ohmQRaAh01smukDa3WNMZ6qdm_631pZ8IA",
    "bytes": 49602
+  },
+  "data/ledger-v3/checkpoints/000753.json": {
+   "sha256": "d65ebc9e8d50a344abee3f7cde00f0a0cc7be90c80be78758050d1b000c67439",
+   "id": "IfGa6lzrjMc20iKJtI0Z-Q1U8lHm4ISY3njyzoirf3g",
+   "bytes": 483
+  },
+  "data/ledger-v3/checkpoints/000753.json.ots": {
+   "sha256": "d0c71f466bfd4296447d154d3b1d0acb160f99211afe32e1f1d2193ce117543d",
+   "id": "YSipTtf5ijdPfw7NStYb4JXMWSJ9oBmpexcgF_xvPEk",
+   "bytes": 742
+  },
+  "data/ledger-v3/public_alerts/6cdfc1fae4787d290621ae0ba6a1847c45996fcd754a2f0d300040ad525ef56d.json": {
+   "sha256": "763068c876308edfb3428aae8041f6e44678f51f8410369cb6371852794d1035",
+   "id": "87i3I8UBRs-Jpo1w29XmZMhA_kc63M9_790738eVrCU",
+   "bytes": 49652
   }
  },
  "records": [
@@ -2462,7 +2477,7 @@
    "bytes": 699
   }
  ],
- "bytes": 4389133,
+ "bytes": 4440441,
  "signer": "7kw7om2uMrnSaJBZXriH6TAVpQrsN7Eoq7dtsqgb6Lww",
  "chunks": {
   "data/ledger-v3/entries.jsonl": [
@@ -2521,6 +2536,13 @@
     "sha256": "6d98edf9c055a3296f1ee39e8bfd1ef534a0ce176b6a69932133d25233a0f2ee",
     "id": "IlOSfRWxLI2F2bSv-dI25X0gW63pWg3riTTYXSF5jdw",
     "bytes": 428
+   },
+   {
+    "from": 518,
+    "to": 518,
+    "sha256": "7655e7e6f17f4bc5f701f487a3d8eb3af2be1871ae4a215bf3ccd6c956d0dc00",
+    "id": "lLIFeeNeVFBd4UQcdIOZQLV3wMQhF4BTdJYrV3i7bDY",
+    "bytes": 431
    }
   ]
  }
