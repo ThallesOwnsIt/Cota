@@ -1,0 +1,22 @@
+{
+  "size": 752,
+  "root": "ef61e09ce3e1c0d1b2d9f9a7e2f8ffd79efc58ea37c1f0ac3c1c29d35c99ace3",
+  "prev": "27ddfac4cc139be2d1d9cb72d39214fddb7e776e560e005d007132f56df89447",
+  "epoch": 0,
+  "signed_at": 1795219200,
+  "checkpoint": "04000000636f7461f002000000000000ef61e09ce3e1c0d1b2d9f9a7e2f8ffd79efc58ea37c1f0ac3c1c29d35c99ace327ddfac4cc139be2d1d9cb72d39214fddb7e776e560e005d007132f56df894470000000000df006b00000000",
+  "signatures": [
+    {
+      "member": 0,
+      "signature": "e2ea469c5630dd69f5cffbddfa275dfb227ab04cc4648be8fcdb8a4d913281bbf177d5c4aa0937e83cacd993b9fa7b9f701bbedd5e4976426efa4ad3bec70200"
+    },
+    {
+      "member": 1,
+      "signature": "bd13c12ce75568bb29298afd3dac0410c534f8b048431fdaa1b1cb4645c64fa4f58d328626ffeb709d5a6b0f7459f33f54f92b6dec82d2fdbae878f5cbe55608"
+    },
+    {
+      "member": 2,
+      "signature": "9c580942f77e1a37f59b23b5d31a5948ac7bd71aec4fb823f0fb72ef5aa13100b6b55c82c61bb7d777948a5a3c54ad5e72c5f23d6597ca79bfe5bbca3c687e0d"
+    }
+  ]
+}
