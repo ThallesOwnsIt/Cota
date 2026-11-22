@@ -1,0 +1,117 @@
+{
+  "based_on_batch_id": 4,
+  "based_on_root": "15962c0fa062be2c9a5869d6627af98a497496d4d486f2d73f1688d6b16405fd",
+  "features": [
+    {
+      "name": "q0",
+      "value_milli": 1144510
+    },
+    {
+      "name": "lq0",
+      "value_milli": 7043
+    },
+    {
+      "name": "dlq1",
+      "value_milli": 78
+    },
+    {
+      "name": "dlq2",
+      "value_milli": -101
+    },
+    {
+      "name": "up_jacui_rel",
+      "value_milli": -148
+    },
+    {
+      "name": "up_taquari_rel",
+      "value_milli": -696
+    },
+    {
+      "name": "up_cai_rel",
+      "value_milli": -2243
+    },
+    {
+      "name": "up_sinos_rel",
+      "value_milli": -2590
+    },
+    {
+      "name": "up_gravatai_rel",
+      "value_milli": -3283
+    },
+    {
+      "name": "up_jacui_d1",
+      "value_milli": 152
+    },
+    {
+      "name": "up_taquari_d1",
+      "value_milli": 723
+    },
+    {
+      "name": "up_cai_d1",
+      "value_milli": 423
+    },
+    {
+      "name": "up_sinos_d1",
+      "value_milli": 535
+    },
+    {
+      "name": "up_gravatai_d1",
+      "value_milli": 820
+    },
+    {
+      "name": "rain0",
+      "value_milli": null
+    },
+    {
+      "name": "rain1",
+      "value_milli": null
+    },
+    {
+      "name": "rain3",
+      "value_milli": null
+    },
+    {
+      "name": "rain5",
+      "value_milli": null
+    },
+    {
+      "name": "rainmax0",
+      "value_milli": null
+    },
+    {
+      "name": "doy_sin",
+      "value_milli": -638
+    },
+    {
+      "name": "doy_cos",
+      "value_milli": 770
+    }
+  ],
+  "features_root": "d5830d3ff1c9345308370035fef776208822596b22383d24340ed67424a7fae8",
+  "forecasts": [
+    {
+      "horizon_hours": 24,
+      "p10": 1463080,
+      "p50": 1694851,
+      "p90": 2042379,
+      "target_day": "2026-11-22",
+      "target_ts": 1795305600
+    },
+    {
+      "horizon_hours": 48,
+      "p10": 1871125,
+      "p50": 2497105,
+      "p90": 3530867,
+      "target_day": "2026-11-23",
+      "target_ts": 1795392000
+    }
+  ],
+  "indexes": [
+    766,
+    767
+  ],
+  "issue_day": "2026-11-21",
+  "issued_at": 1795305600,
+  "model_sha256": "4e16a4b4e3a3bf3b5ac94317a15064fe12d029d5cc6557410182a7b3b42a792e",
+  "station_id": "GLOFAS-GUAIBA"
+}
