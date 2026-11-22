@@ -1,0 +1,7 @@
+{
+  "content": "{\"issued_at\":1795305600,\"models\":{\"ecmwf_ifs025\":{\"canela\":[75,0,71,10,0],\"feliz\":[6,0,98,16,0],\"montenegro\":[33,0,53,7,0],\"nova-petropolis\":[42,0,98,37,0],\"sao-francisco-de-paula\":[99,0,72,36,0]},\"gfs_global\":{\"canela\":[131,1,97,36,2],\"feliz\":[101,2,107,14,0],\"montenegro\":[89,2,47,6,0],\"nova-petropolis\":[119,1,133,19,1],\"sao-francisco-de-paula\":[169,2,71,38,0]},\"icon_global\":{\"canela\":[23,0,249,64,0],\"feliz\":[15,0,129,24,0],\"montenegro\":[24,0,8,0,1],\"nova-petropolis\":[17,0,214,22,0],\"sao-francisco-de-paula\":[30,0,186,33,0]}},\"region\":\"cai\",\"rule_sha256\":\"f6d5b344a183c5be024d357b7acdff4fc9608accd9b83fb42d08c8350ab44fa7\",\"run\":\"2026-11-21T00:00Z\",\"unit\":\"0.1 mm/dia\",\"window\":[\"2026-11-22\",\"2026-11-26\"]}",
+  "content_sha256": "5aab12f8758f20e4f4637a61cf8c2811e123d3deb4c178dc8d2b8e687af231eb",
+  "index": 758,
+  "issued_at": 1795305600,
+  "region": "cai"
+}
