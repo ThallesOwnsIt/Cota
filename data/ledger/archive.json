@@ -2558,9 +2558,9 @@
    "bytes": 481
   },
   "data/ledger-v3/checkpoints/000803.json.ots": {
-   "sha256": "ba2020222484663672583cf2e2e835f65b28dbcb5649790125e761b029764c03",
-   "id": "yiVE_mJOBR41-gtF2-Z8Ycu7B_PyCYVWm3rNODlRpjQ",
-   "bytes": 737
+   "sha256": "c1a821e28b0ec099bcc740f5fa3a564664361f76fbc00f6fb03e34131a0a4b47",
+   "id": "G2BfFVtrvjeyfrtmzltpkyT5885PYcbqldoFFNIGVP4",
+   "bytes": 2381
   },
   "data/ledger-v3/forecasts/2026-11-23.json": {
    "sha256": "2379138f8f6c4cfb03b03ab4b26ed4de4d095c9cba089744ad99bec6fb3183f7",
@@ -2797,7 +2797,7 @@
    "bytes": 699
   }
  ],
- "bytes": 4850290,
+ "bytes": 4852671,
  "signer": "7kw7om2uMrnSaJBZXriH6TAVpQrsN7Eoq7dtsqgb6Lww",
  "chunks": {
   "data/ledger-v3/entries.jsonl": [
