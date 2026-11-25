@@ -2,26 +2,26 @@
   "stations": {
     "ANA-70120000": {
       "score": 1.0,
-      "last_ts": 1795474800,
-      "last_value": 3170,
+      "last_ts": 1795561200,
+      "last_value": 4280,
       "run": 1
     },
     "ANA-70150000": {
       "score": 1.0,
-      "last_ts": 1795474800,
-      "last_value": 3660,
+      "last_ts": 1795561200,
+      "last_value": 5290,
       "run": 1
     },
     "ANA-70710000": {
       "score": 1.0,
-      "last_ts": 1795474800,
-      "last_value": 890,
-      "run": 1
+      "last_ts": 1795561200,
+      "last_value": 1090,
+      "run": 2
     },
     "ANA-70719700": {
       "score": 1.0,
-      "last_ts": 1795474800,
-      "last_value": 878060,
+      "last_ts": 1795561200,
+      "last_value": 878330,
       "run": 1
     },
     "ANA-70719750": {
@@ -31,34 +31,34 @@
       "run": 0
     },
     "ANA-70719760": {
-      "score": 0.889453125,
-      "last_ts": 1795467600,
-      "last_value": 3250,
+      "score": 0.7801432291666666,
+      "last_ts": 1795525200,
+      "last_value": 3230,
       "run": 1
     },
     "ANA-70719860": {
-      "score": 0.659765625,
-      "last_ts": 1795424400,
-      "last_value": 2520,
+      "score": 0.4986328125,
+      "last_ts": 1795489200,
+      "last_value": 2510,
       "run": 1
     },
     "ANA-70719960": {
-      "score": 0.8988281249999999,
-      "last_ts": 1795464000,
-      "last_value": 2270,
-      "run": 2
+      "score": 0.8348307291666666,
+      "last_ts": 1795536000,
+      "last_value": 2260,
+      "run": 1
     },
     "ANA-70719990": {
       "score": 1.0,
-      "last_ts": 1795474800,
-      "last_value": 3430,
-      "run": 3
+      "last_ts": 1795561200,
+      "last_value": 3970,
+      "run": 2
     },
     "ANA-70720000": {
       "score": 1.0,
-      "last_ts": 1795474800,
-      "last_value": 1830,
-      "run": 1
+      "last_ts": 1795561200,
+      "last_value": 2100,
+      "run": 2
     },
     "ANA-70740000": {
       "score": 0.2,
@@ -67,249 +67,249 @@
       "run": 0
     },
     "ANA-70840080": {
-      "score": 0.9854166666666666,
-      "last_ts": 1795474800,
-      "last_value": 645060,
+      "score": 0.9927083333333333,
+      "last_ts": 1795561200,
+      "last_value": 644990,
       "run": 1
     },
     "ANA-70841500": {
-      "score": 0.9954427083333331,
-      "last_ts": 1795474800,
-      "last_value": 2240,
+      "score": 0.9977213541666665,
+      "last_ts": 1795561200,
+      "last_value": 5040,
       "run": 1
     },
     "ANA-70842000": {
-      "score": 0.9854166666666666,
-      "last_ts": 1795474800,
+      "score": 0.9781249999999999,
+      "last_ts": 1795561200,
       "last_value": 11280,
-      "run": 7
+      "run": 14
     },
     "ANA-70843000": {
       "score": 1.0,
-      "last_ts": 1795474800,
-      "last_value": 6770,
+      "last_ts": 1795561200,
+      "last_value": 7480,
       "run": 1
     },
     "ANA-70843500": {
-      "score": 0.9854166666666666,
-      "last_ts": 1795474800,
-      "last_value": 1840,
+      "score": 0.9781249999999999,
+      "last_ts": 1795561200,
+      "last_value": 2410,
       "run": 1
     },
     "ANA-70844200": {
-      "score": 0.9854166666666666,
-      "last_ts": 1795474800,
-      "last_value": 1200,
-      "run": 2
+      "score": 0.9927083333333333,
+      "last_ts": 1795561200,
+      "last_value": 1750,
+      "run": 1
     },
     "ANA-70844300": {
-      "score": 0.9726562499999999,
-      "last_ts": 1795471200,
-      "last_value": 661170,
+      "score": 0.9717447916666666,
+      "last_ts": 1795557600,
+      "last_value": 661710,
       "run": 1
     },
     "ANA-70844500": {
-      "score": 0.9726562499999999,
-      "last_ts": 1795471200,
-      "last_value": 577210,
+      "score": 0.9717447916666666,
+      "last_ts": 1795557600,
+      "last_value": 577920,
       "run": 1
     },
     "ANA-70845000": {
       "score": 1.0,
-      "last_ts": 1795474800,
-      "last_value": 530270,
+      "last_ts": 1795561200,
+      "last_value": 530950,
       "run": 2
     },
     "ANA-72080000": {
       "score": 1.0,
-      "last_ts": 1795474800,
-      "last_value": 1220,
-      "run": 2
+      "last_ts": 1795561200,
+      "last_value": 3020,
+      "run": 1
     },
     "ANA-72090000": {
-      "score": 0.9845052083333332,
-      "last_ts": 1795474800,
-      "last_value": 590090,
+      "score": 0.9776692708333332,
+      "last_ts": 1795561200,
+      "last_value": 590840,
       "run": 1
     },
     "ANA-72428000": {
       "score": 1.0,
-      "last_ts": 1795474800,
-      "last_value": 3020,
-      "run": 3
+      "last_ts": 1795561200,
+      "last_value": 4980,
+      "run": 1
     },
     "ANA-72451000": {
       "score": 1.0,
-      "last_ts": 1795474800,
-      "last_value": 499360,
-      "run": 2
+      "last_ts": 1795561200,
+      "last_value": 499720,
+      "run": 3
     },
     "ANA-72460000": {
       "score": 1.0,
-      "last_ts": 1795474800,
-      "last_value": 612220,
-      "run": 3
+      "last_ts": 1795561200,
+      "last_value": 612820,
+      "run": 1
     },
     "ANA-72480001": {
       "score": 1.0,
-      "last_ts": 1795474800,
-      "last_value": 533910,
+      "last_ts": 1795561200,
+      "last_value": 534370,
       "run": 1
     },
     "ANA-72480100": {
       "score": 1.0,
-      "last_ts": 1795474800,
-      "last_value": 1990,
-      "run": 2
+      "last_ts": 1795561200,
+      "last_value": 2140,
+      "run": 1
     },
     "ANA-72519000": {
-      "score": 0.9354166666666667,
-      "last_ts": 1795460400,
-      "last_value": 3590,
-      "run": 5
+      "score": 0.953125,
+      "last_ts": 1795561200,
+      "last_value": 3890,
+      "run": 1
     },
     "ANA-72519100": {
-      "score": 0.9675781249999997,
-      "last_ts": 1795471200,
-      "last_value": 1120,
-      "run": 2
+      "score": 0.9379557291666665,
+      "last_ts": 1795554000,
+      "last_value": 2690,
+      "run": 1
     },
     "ANA-72580500": {
       "score": 1.0,
-      "last_ts": 1795474800,
-      "last_value": 630540,
+      "last_ts": 1795561200,
+      "last_value": 631090,
       "run": 1
     },
     "ANA-72870900": {
       "score": 1.0,
-      "last_ts": 1795474800,
-      "last_value": 2650,
+      "last_ts": 1795561200,
+      "last_value": 3840,
       "run": 1
     },
     "ANA-73200500": {
       "score": 1.0,
-      "last_ts": 1795474800,
-      "last_value": 2820,
+      "last_ts": 1795561200,
+      "last_value": 3730,
       "run": 1
     },
     "ANA-73205750": {
       "score": 1.0,
-      "last_ts": 1795474800,
-      "last_value": 420750,
+      "last_ts": 1795561200,
+      "last_value": 421280,
       "run": 2
     },
     "ANA-73205800": {
       "score": 1.0,
-      "last_ts": 1795474800,
-      "last_value": 421090,
+      "last_ts": 1795561200,
+      "last_value": 421570,
       "run": 3
     },
     "ANA-73220000": {
       "score": 1.0,
-      "last_ts": 1795474800,
-      "last_value": 1990,
+      "last_ts": 1795561200,
+      "last_value": 3220,
       "run": 1
     },
     "ANA-73371000": {
-      "score": 0.9989583333333332,
-      "last_ts": 1795474800,
-      "last_value": 646940,
-      "run": 3
+      "score": 0.9994791666666665,
+      "last_ts": 1795561200,
+      "last_value": 647890,
+      "run": 1
     },
     "ANA-73389000": {
       "score": 1.0,
-      "last_ts": 1795474800,
-      "last_value": 3670,
-      "run": 2
+      "last_ts": 1795561200,
+      "last_value": 3790,
+      "run": 1
     },
     "ANA-73420080": {
-      "score": 0.9835937499999999,
-      "last_ts": 1795474800,
-      "last_value": 594830,
-      "run": 1
+      "score": 0.9917968749999999,
+      "last_ts": 1795561200,
+      "last_value": 594950,
+      "run": 5
     },
     "ANA-73436000": {
       "score": 1.0,
-      "last_ts": 1795474800,
-      "last_value": 555513,
-      "run": 3
+      "last_ts": 1795561200,
+      "last_value": 555663,
+      "run": 1
     },
     "ANA-73437000": {
       "score": 1.0,
-      "last_ts": 1795474800,
-      "last_value": 1108,
+      "last_ts": 1795561200,
+      "last_value": 1576,
       "run": 1
     },
     "ANA-73440000": {
-      "score": 0.9990885416666666,
-      "last_ts": 1795474800,
+      "score": 0.9995442708333333,
+      "last_ts": 1795561200,
       "last_value": 0,
       "run": 1
     },
     "ANA-73444700": {
-      "score": 0.9990885416666666,
-      "last_ts": 1795474800,
-      "last_value": 660930,
-      "run": 2
+      "score": 0.9995442708333333,
+      "last_ts": 1795561200,
+      "last_value": 661210,
+      "run": 1
     },
     "ANA-73444750": {
       "score": 1.0,
-      "last_ts": 1795474800,
-      "last_value": 552970,
+      "last_ts": 1795561200,
+      "last_value": 554040,
       "run": 1
     },
     "ANA-73445000": {
-      "score": 0.9845052083333332,
-      "last_ts": 1795474800,
-      "last_value": 2210,
-      "run": 7
+      "score": 0.9776692708333332,
+      "last_ts": 1795561200,
+      "last_value": 2280,
+      "run": 1
     },
     "ANA-73448000": {
-      "score": 0.9790364583333332,
-      "last_ts": 1795474800,
-      "last_value": 2660,
+      "score": 0.9895182291666665,
+      "last_ts": 1795561200,
+      "last_value": 3480,
       "run": 1
     },
     "ANA-73490000": {
-      "score": 0.9726562499999999,
-      "last_ts": 1795471200,
-      "last_value": 328740,
+      "score": 0.9717447916666666,
+      "last_ts": 1795557600,
+      "last_value": 328910,
       "run": 1
     },
     "ANA-73520000": {
-      "score": 0.9061197916666666,
-      "last_ts": 1795474800,
+      "score": 0.9030598958333332,
+      "last_ts": 1795561200,
       "last_value": 40,
-      "run": 144
+      "run": 168
     },
     "ANA-73528000": {
-      "score": 0.9927083333333333,
-      "last_ts": 1795474800,
-      "last_value": 650,
+      "score": 0.9963541666666665,
+      "last_ts": 1795561200,
+      "last_value": 870,
       "run": 1
     },
     "ANA-74040080": {
-      "score": 0.9981770833333332,
-      "last_ts": 1795474800,
-      "last_value": 264290,
-      "run": 1
+      "score": 0.9990885416666666,
+      "last_ts": 1795561200,
+      "last_value": 264360,
+      "run": 2
     },
     "ANA-74087500": {
       "score": 1.0,
-      "last_ts": 1795474800,
-      "last_value": 208000,
-      "run": 2
+      "last_ts": 1795561200,
+      "last_value": 208570,
+      "run": 1
     },
     "ANA-74100000": {
-      "score": 0.9988168025362317,
-      "last_ts": 1795474800,
-      "last_value": 6030,
+      "score": 0.9994084012681157,
+      "last_ts": 1795561200,
+      "last_value": 6150,
       "run": 1
     },
     "ANA-74100300": {
       "score": 1.0,
-      "last_ts": 1795474800,
-      "last_value": 206080,
+      "last_ts": 1795561200,
+      "last_value": 206830,
       "run": 1
     },
     "ANA-74120700": {
@@ -338,170 +338,170 @@
     },
     "ANA-74186000": {
       "score": 1.0,
-      "last_ts": 1795474800,
-      "last_value": 353520,
+      "last_ts": 1795561200,
+      "last_value": 355400,
       "run": 1
     },
     "ANA-74189000": {
       "score": 1.0,
-      "last_ts": 1795474800,
-      "last_value": 452360,
+      "last_ts": 1795561200,
+      "last_value": 452960,
       "run": 1
     },
     "ANA-74240000": {
       "score": 1.0,
-      "last_ts": 1795474800,
-      "last_value": 262470,
+      "last_ts": 1795561200,
+      "last_value": 262760,
       "run": 1
     },
     "ANA-74339000": {
-      "score": 0.4864583333333333,
-      "last_ts": 1795399200,
-      "last_value": 3320,
-      "run": 3
+      "score": 0.7432291666666666,
+      "last_ts": 1795561200,
+      "last_value": 3450,
+      "run": 1
     },
     "ANA-74340000": {
       "score": 1.0,
-      "last_ts": 1795474800,
-      "last_value": 479500,
-      "run": 1
+      "last_ts": 1795561200,
+      "last_value": 479560,
+      "run": 2
     },
     "ANA-74350000": {
       "score": 1.0,
-      "last_ts": 1795474800,
-      "last_value": 410680,
-      "run": 2
+      "last_ts": 1795561200,
+      "last_value": 410780,
+      "run": 3
     },
     "ANA-74350100": {
       "score": 1.0,
-      "last_ts": 1795474800,
-      "last_value": 1120,
+      "last_ts": 1795561200,
+      "last_value": 1230,
       "run": 1
     },
     "ANA-74351000": {
-      "score": 0.4796875,
-      "last_ts": 1795474800,
-      "last_value": 1240,
+      "score": 0.7398437499999999,
+      "last_ts": 1795561200,
+      "last_value": 1530,
       "run": 1
     },
     "ANA-74352000": {
-      "score": 0.9808593749999999,
-      "last_ts": 1795474800,
+      "score": 0.9904296874999999,
+      "last_ts": 1795561200,
       "last_value": 4290,
-      "run": 4
+      "run": 5
     },
     "ANA-74352200": {
-      "score": 0.9598958333333333,
-      "last_ts": 1795474800,
-      "last_value": 2720,
+      "score": 0.5986979166666666,
+      "last_ts": 1795478400,
+      "last_value": 2700,
       "run": 1
     },
     "ANA-74355000": {
-      "score": 0.9854166666666666,
-      "last_ts": 1795474800,
-      "last_value": 2290,
+      "score": 0.9927083333333333,
+      "last_ts": 1795561200,
+      "last_value": 2610,
       "run": 1
     },
     "ANA-74356000": {
-      "score": 0.9854166666666666,
-      "last_ts": 1795474800,
-      "last_value": 2010,
+      "score": 0.9927083333333333,
+      "last_ts": 1795561200,
+      "last_value": 2810,
       "run": 1
     },
     "ANA-74359000": {
       "score": 1.0,
-      "last_ts": 1795474800,
-      "last_value": 465510,
+      "last_ts": 1795561200,
+      "last_value": 465550,
       "run": 1
     },
     "ANA-74359600": {
-      "score": 0.9835937499999998,
-      "last_ts": 1795474800,
-      "last_value": 570,
-      "run": 2
+      "score": 0.9917968749999999,
+      "last_ts": 1795561200,
+      "last_value": 720,
+      "run": 1
     },
     "ANA-74462000": {
-      "score": 0.9981770833333332,
-      "last_ts": 1795474800,
-      "last_value": 3510,
+      "score": 0.9990885416666666,
+      "last_ts": 1795561200,
+      "last_value": 4280,
       "run": 1
     },
     "ANA-74462500": {
       "score": 1.0,
-      "last_ts": 1795474800,
-      "last_value": 427470,
-      "run": 5
+      "last_ts": 1795561200,
+      "last_value": 427800,
+      "run": 1
     },
     "ANA-74463000": {
       "score": 1.0,
-      "last_ts": 1795474800,
-      "last_value": 2470,
-      "run": 3
+      "last_ts": 1795561200,
+      "last_value": 2860,
+      "run": 1
     },
     "ANA-74464500": {
-      "score": 0.9981770833333332,
-      "last_ts": 1795474800,
-      "last_value": 390150,
-      "run": 11
+      "score": 0.9990885416666666,
+      "last_ts": 1795561200,
+      "last_value": 390190,
+      "run": 1
     },
     "ANA-74465000": {
       "score": 1.0,
-      "last_ts": 1795474800,
-      "last_value": 2130,
+      "last_ts": 1795561200,
+      "last_value": 2410,
       "run": 1
     },
     "ANA-74466000": {
-      "score": 0.9825520833333332,
-      "last_ts": 1795474800,
-      "last_value": 351050,
+      "score": 0.9912760416666666,
+      "last_ts": 1795561200,
+      "last_value": 351110,
       "run": 1
     },
     "ANA-74467000": {
       "score": 1.0,
-      "last_ts": 1795474800,
-      "last_value": 1750,
-      "run": 3
+      "last_ts": 1795561200,
+      "last_value": 1950,
+      "run": 1
     },
     "ANA-74468000": {
       "score": 1.0,
-      "last_ts": 1795474800,
-      "last_value": 297300,
-      "run": 1
+      "last_ts": 1795561200,
+      "last_value": 297390,
+      "run": 2
     },
     "ANA-74468500": {
       "score": 1.0,
-      "last_ts": 1795474800,
-      "last_value": 2550,
+      "last_ts": 1795561200,
+      "last_value": 2910,
       "run": 1
     },
     "ANA-74500000": {
-      "score": 0.9761718749999999,
-      "last_ts": 1795474800,
-      "last_value": 7860,
+      "score": 0.8422526041666667,
+      "last_ts": 1795561200,
+      "last_value": 7524,
       "run": 1
     },
     "ANA-74505400": {
       "score": 1.0,
-      "last_ts": 1795474800,
-      "last_value": 2050,
+      "last_ts": 1795561200,
+      "last_value": 6320,
       "run": 1
     },
     "ANA-74549990": {
       "score": 1.0,
-      "last_ts": 1795474800,
-      "last_value": 274580,
+      "last_ts": 1795561200,
+      "last_value": 275068,
       "run": 1
     },
     "ANA-74550000": {
       "score": 1.0,
-      "last_ts": 1795474800,
-      "last_value": 864,
-      "run": 2
+      "last_ts": 1795561200,
+      "last_value": 1814,
+      "run": 1
     },
     "ANA-74620500": {
       "score": 1.0,
-      "last_ts": 1795474800,
-      "last_value": 195360,
+      "last_ts": 1795561200,
+      "last_value": 196190,
       "run": 1
     },
     "ANA-74670000": {
@@ -511,88 +511,88 @@
       "run": 0
     },
     "ANA-74675000": {
-      "score": 0.9854166666666666,
-      "last_ts": 1795474800,
-      "last_value": 2310,
+      "score": 0.9635416666666665,
+      "last_ts": 1795557600,
+      "last_value": 4490,
       "run": 1
     },
     "ANA-74690001": {
-      "score": 0.9963541666666665,
-      "last_ts": 1795474800,
-      "last_value": 183280,
-      "run": 3
+      "score": 0.9981770833333332,
+      "last_ts": 1795561200,
+      "last_value": 184170,
+      "run": 1
     },
     "ANA-74690100": {
       "score": 1.0,
-      "last_ts": 1795474800,
-      "last_value": 2380,
+      "last_ts": 1795561200,
+      "last_value": 4250,
       "run": 1
     },
     "ANA-74694000": {
       "score": 1.0,
-      "last_ts": 1795474800,
-      "last_value": 4180,
-      "run": 6
+      "last_ts": 1795561200,
+      "last_value": 4370,
+      "run": 1
     },
     "ANA-74695000": {
-      "score": 0.40937500000000004,
+      "score": 0.3046875,
       "last_ts": 1795305600,
       "last_value": 3320,
       "run": 1
     },
     "ANA-74699002": {
       "score": 1.0,
-      "last_ts": 1795474800,
-      "last_value": 131840,
+      "last_ts": 1795561200,
+      "last_value": 134230,
       "run": 1
     },
     "ANA-74720000": {
-      "score": 0.9981770833333332,
-      "last_ts": 1795474800,
-      "last_value": 6560,
+      "score": 0.9990885416666666,
+      "last_ts": 1795561200,
+      "last_value": 6950,
       "run": 1
     },
     "ANA-74746000": {
       "score": 1.0,
-      "last_ts": 1795474800,
-      "last_value": 236890,
-      "run": 22
+      "last_ts": 1795561200,
+      "last_value": 236970,
+      "run": 1
     },
     "ANA-74746700": {
       "score": 1.0,
-      "last_ts": 1795474800,
-      "last_value": 212960,
-      "run": 4
+      "last_ts": 1795561200,
+      "last_value": 213770,
+      "run": 1
     },
     "ANA-74800000": {
       "score": 1.0,
-      "last_ts": 1795474800,
-      "last_value": 3560,
+      "last_ts": 1795561200,
+      "last_value": 4500,
       "run": 1
     },
     "ANA-74860003": {
       "score": 1.0,
-      "last_ts": 1795474800,
-      "last_value": 218010,
-      "run": 3
+      "last_ts": 1795561200,
+      "last_value": 219490,
+      "run": 1
     },
     "ANA-74899050": {
       "score": 1.0,
-      "last_ts": 1795474800,
-      "last_value": 145970,
-      "run": 3
+      "last_ts": 1795561200,
+      "last_value": 146740,
+      "run": 1
     },
     "ANA-74910010": {
       "score": 1.0,
-      "last_ts": 1795474800,
-      "last_value": 87070,
+      "last_ts": 1795561200,
+      "last_value": 88970,
       "run": 1
     },
     "ANA-75020200": {
-      "score": 0.9854166666666666,
-      "last_ts": 1795474800,
-      "last_value": 391640,
-      "run": 1
+      "score": 0.9927083333333333,
+      "last_ts": 1795561200,
+      "last_value": 393260,
+      "run": 2
     },
     "ANA-75050000": {
       "score": 0.2,
@@ -602,27 +602,27 @@
     },
     "ANA-75060000": {
       "score": 1.0,
-      "last_ts": 1795474800,
-      "last_value": 6520,
-      "run": 2
+      "last_ts": 1795561200,
+      "last_value": 7050,
+      "run": 1
     },
     "ANA-75120000": {
-      "score": 0.94140625,
-      "last_ts": 1795467600,
-      "last_value": 3260,
+      "score": 0.939453125,
+      "last_ts": 1795554000,
+      "last_value": 3850,
       "run": 1
     },
     "ANA-75155010": {
-      "score": 0.9854166666666666,
-      "last_ts": 1795474800,
-      "last_value": 2800,
+      "score": 0.9927083333333333,
+      "last_ts": 1795561200,
+      "last_value": 4720,
       "run": 1
     },
     "ANA-75178000": {
-      "score": 0.631640625,
-      "last_ts": 1795474800,
-      "last_value": 274180,
-      "run": 3
+      "score": 0.8158203124999999,
+      "last_ts": 1795561200,
+      "last_value": 274720,
+      "run": 1
     },
     "ANA-75180000": {
       "score": 0.2,
@@ -649,15 +649,15 @@
       "run": 0
     },
     "ANA-75186900": {
-      "score": 0.9981770833333332,
-      "last_ts": 1795474800,
-      "last_value": 540,
+      "score": 0.9990885416666666,
+      "last_ts": 1795561200,
+      "last_value": 2380,
       "run": 1
     },
     "ANA-75186960": {
-      "score": 0.7295572916666666,
-      "last_ts": 1795474800,
-      "last_value": 3740,
+      "score": 0.7772786458333332,
+      "last_ts": 1795557600,
+      "last_value": 5580,
       "run": 1
     },
     "ANA-75187000": {
@@ -667,58 +667,58 @@
       "run": 0
     },
     "ANA-75199000": {
-      "score": 0.9981770833333332,
-      "last_ts": 1795474800,
-      "last_value": 2010,
+      "score": 0.9990885416666666,
+      "last_ts": 1795561200,
+      "last_value": 3680,
       "run": 1
     },
     "ANA-75199050": {
-      "score": 0.9981770833333332,
-      "last_ts": 1795474800,
-      "last_value": 820,
+      "score": 0.9990885416666666,
+      "last_ts": 1795561200,
+      "last_value": 6620,
       "run": 1
     },
     "ANA-75230000": {
-      "score": 0.803515625,
-      "last_ts": 1795474800,
-      "last_value": 2740,
+      "score": 0.6538411458333333,
+      "last_ts": 1795507200,
+      "last_value": 2610,
       "run": 1
     },
     "ANA-75269900": {
-      "score": 0.9981770833333332,
-      "last_ts": 1795474800,
-      "last_value": 2200,
+      "score": 0.9990885416666666,
+      "last_ts": 1795561200,
+      "last_value": 1850,
       "run": 1
     },
     "ANA-75270000": {
       "score": 1.0,
-      "last_ts": 1795474800,
-      "last_value": 2230,
+      "last_ts": 1795561200,
+      "last_value": 680,
       "run": 1
     },
     "ANA-75280100": {
-      "score": 0.9981770833333332,
-      "last_ts": 1795474800,
-      "last_value": 2850,
+      "score": 0.9990885416666666,
+      "last_ts": 1795561200,
+      "last_value": 1820,
       "run": 1
     },
     "ANA-75287000": {
       "score": 1.0,
-      "last_ts": 1795474800,
-      "last_value": 2360,
+      "last_ts": 1795561200,
+      "last_value": 4540,
       "run": 1
     },
     "ANA-75288000": {
-      "score": 0.9671874999999999,
-      "last_ts": 1795474800,
-      "last_value": 235260,
-      "run": 2
+      "score": 0.9835937499999999,
+      "last_ts": 1795561200,
+      "last_value": 235960,
+      "run": 1
     },
     "ANA-75290000": {
       "score": 1.0,
-      "last_ts": 1795474800,
-      "last_value": 1840,
-      "run": 2
+      "last_ts": 1795561200,
+      "last_value": 3650,
+      "run": 1
     },
     "ANA-75291000": {
       "score": 0.2,
@@ -727,33 +727,33 @@
       "run": 0
     },
     "ANA-75305000": {
-      "score": 0.8851562499999999,
-      "last_ts": 1795474800,
-      "last_value": 5020,
+      "score": 0.9134114583333333,
+      "last_ts": 1795561200,
+      "last_value": 5770,
       "run": 1
     },
     "ANA-75307000": {
       "score": 1.0,
-      "last_ts": 1795474800,
-      "last_value": 1750,
+      "last_ts": 1795561200,
+      "last_value": 3240,
       "run": 1
     },
     "ANA-75318000": {
-      "score": 0.9938058035714283,
-      "last_ts": 1795474800,
-      "last_value": 610,
-      "run": 2
+      "score": 0.9969029017857142,
+      "last_ts": 1795561200,
+      "last_value": 1080,
+      "run": 1
     },
     "ANA-75325000": {
       "score": 1.0,
-      "last_ts": 1795474800,
-      "last_value": 154450,
-      "run": 2
+      "last_ts": 1795561200,
+      "last_value": 154550,
+      "run": 1
     },
     "ANA-75326000": {
-      "score": 1.0,
-      "last_ts": 1795474800,
-      "last_value": 2580,
+      "score": 0.9854166666666666,
+      "last_ts": 1795561200,
+      "last_value": 4550,
       "run": 1
     },
     "ANA-75331000": {
@@ -764,7 +764,7 @@
     },
     "ANA-75342000": {
       "score": 1.0,
-      "last_ts": 1795474800,
+      "last_ts": 1795561200,
       "last_value": 136740,
       "run": 1
     },
@@ -776,297 +776,297 @@
     },
     "ANA-75344000": {
       "score": 1.0,
-      "last_ts": 1795474800,
-      "last_value": 4464,
+      "last_ts": 1795561200,
+      "last_value": 6014,
       "run": 1
     },
     "ANA-75450200": {
       "score": 1.0,
-      "last_ts": 1795474800,
-      "last_value": 120210,
+      "last_ts": 1795561200,
+      "last_value": 123310,
       "run": 1
     },
     "ANA-75550000": {
-      "score": 0.9963541666666665,
-      "last_ts": 1795474800,
-      "last_value": 5459,
+      "score": 0.9981770833333332,
+      "last_ts": 1795561200,
+      "last_value": 7942,
       "run": 1
     },
     "ANA-75650010": {
-      "score": 0.6692708333333333,
-      "last_ts": 1795474800,
-      "last_value": 4610,
+      "score": 0.6596354166666666,
+      "last_ts": 1795561200,
+      "last_value": 4680,
       "run": 1
     },
     "ANA-75706000": {
-      "score": 0.9662760416666665,
-      "last_ts": 1795474800,
-      "last_value": 53890,
+      "score": 0.9831380208333331,
+      "last_ts": 1795561200,
+      "last_value": 54820,
       "run": 1
     },
     "ANA-75779900": {
       "score": 1.0,
-      "last_ts": 1795474800,
-      "last_value": 51280,
+      "last_ts": 1795561200,
+      "last_value": 52880,
       "run": 1
     },
     "ANA-75780000": {
-      "score": 0.9279947916666667,
-      "last_ts": 1795474800,
-      "last_value": 5640,
+      "score": 0.9639973958333333,
+      "last_ts": 1795561200,
+      "last_value": 7170,
       "run": 1
     },
     "ANA-75881800": {
       "score": 1.0,
-      "last_ts": 1795474800,
-      "last_value": 213670,
-      "run": 1
+      "last_ts": 1795561200,
+      "last_value": 214060,
+      "run": 2
     },
     "ANA-75881900": {
       "score": 1.0,
-      "last_ts": 1795474800,
-      "last_value": 203670,
-      "run": 2
+      "last_ts": 1795561200,
+      "last_value": 205270,
+      "run": 1
     },
     "ANA-75900000": {
-      "score": 0.21484375,
+      "score": 0.207421875,
       "last_ts": 1795255200,
       "last_value": 5280,
       "run": 1
     },
     "ANA-76069500": {
       "score": 1.0,
-      "last_ts": 1795474800,
-      "last_value": 1920,
+      "last_ts": 1795561200,
+      "last_value": 1980,
       "run": 1
     },
     "ANA-76070500": {
       "score": 1.0,
-      "last_ts": 1795474800,
-      "last_value": 1150,
+      "last_ts": 1795561200,
+      "last_value": 1100,
       "run": 2
     },
     "ANA-76084000": {
       "score": 1.0,
-      "last_ts": 1795474800,
-      "last_value": 199910,
-      "run": 3
+      "last_ts": 1795561200,
+      "last_value": 199870,
+      "run": 1
     },
     "ANA-76084040": {
-      "score": 0.26692708333333337,
+      "score": 0.2334635416666667,
       "last_ts": 1795158000,
       "last_value": 1120,
       "run": 1
     },
     "ANA-76086500": {
-      "score": 0.9790364583333332,
-      "last_ts": 1795474800,
-      "last_value": 2450,
-      "run": 1
+      "score": 0.9895182291666665,
+      "last_ts": 1795561200,
+      "last_value": 2170,
+      "run": 2
     },
     "ANA-76090000": {
-      "score": 0.9854166666666666,
-      "last_ts": 1795474800,
-      "last_value": 102320,
-      "run": 1
+      "score": 0.9927083333333333,
+      "last_ts": 1795561200,
+      "last_value": 102230,
+      "run": 2
     },
     "ANA-76112000": {
       "score": 1.0,
-      "last_ts": 1795474800,
-      "last_value": 850,
-      "run": 3
+      "last_ts": 1795561200,
+      "last_value": 830,
+      "run": 2
     },
     "ANA-76115400": {
       "score": 1.0,
-      "last_ts": 1795474800,
-      "last_value": 1340,
-      "run": 1
+      "last_ts": 1795561200,
+      "last_value": 1280,
+      "run": 3
     },
     "ANA-76115800": {
-      "score": 0.9945312499999999,
-      "last_ts": 1795474800,
-      "last_value": 850,
+      "score": 0.9972656249999999,
+      "last_ts": 1795561200,
+      "last_value": 790,
       "run": 1
     },
     "ANA-76118000": {
-      "score": 0.6629340277777777,
-      "last_ts": 1795474800,
+      "score": 0.8314670138888888,
+      "last_ts": 1795561200,
       "last_value": 98790,
       "run": 1
     },
     "ANA-76250501": {
       "score": 1.0,
-      "last_ts": 1795474800,
-      "last_value": 120420,
+      "last_ts": 1795561200,
+      "last_value": 120380,
       "run": 1
     },
     "ANA-76251000": {
       "score": 1.0,
-      "last_ts": 1795474800,
-      "last_value": 4130,
-      "run": 4
+      "last_ts": 1795561200,
+      "last_value": 4080,
+      "run": 2
     },
     "ANA-76290000": {
       "score": 1.0,
-      "last_ts": 1795474800,
-      "last_value": 1250,
-      "run": 2
+      "last_ts": 1795561200,
+      "last_value": 1220,
+      "run": 6
     },
     "ANA-76300000": {
       "score": 1.0,
-      "last_ts": 1795474800,
-      "last_value": 76,
+      "last_ts": 1795561200,
+      "last_value": 58,
       "run": 1
     },
     "ANA-76310000": {
-      "score": 0.9981770833333332,
-      "last_ts": 1795474800,
-      "last_value": -342,
+      "score": 0.9990885416666666,
+      "last_ts": 1795561200,
+      "last_value": -382,
       "run": 1
     },
     "ANA-76395010": {
-      "score": 0.9143229166666665,
-      "last_ts": 1795474800,
-      "last_value": 107770,
-      "run": 2
+      "score": 0.9425781249999998,
+      "last_ts": 1795561200,
+      "last_value": 107580,
+      "run": 1
     },
     "ANA-76430900": {
       "score": 1.0,
-      "last_ts": 1795474800,
-      "last_value": 200050,
+      "last_ts": 1795561200,
+      "last_value": 199630,
       "run": 1
     },
     "ANA-76431000": {
-      "score": 0.9835937499999999,
-      "last_ts": 1795474800,
-      "last_value": 1470,
+      "score": 0.9917968749999999,
+      "last_ts": 1795561200,
+      "last_value": 1350,
       "run": 1
     },
     "ANA-76440010": {
       "score": 1.0,
-      "last_ts": 1795474800,
-      "last_value": 91080,
+      "last_ts": 1795561200,
+      "last_value": 90870,
       "run": 1
     },
     "ANA-76519000": {
       "score": 1.0,
-      "last_ts": 1795474800,
-      "last_value": 92380,
+      "last_ts": 1795561200,
+      "last_value": 92370,
       "run": 2
     },
     "ANA-76560000": {
-      "score": 0.9963541666666665,
-      "last_ts": 1795474800,
-      "last_value": 4230,
-      "run": 2
+      "score": 0.9981770833333332,
+      "last_ts": 1795561200,
+      "last_value": 3930,
+      "run": 1
     },
     "ANA-76560003": {
-      "score": 0.9945312499999999,
-      "last_ts": 1795474800,
-      "last_value": 66010,
-      "run": 2
+      "score": 0.9972656249999999,
+      "last_ts": 1795561200,
+      "last_value": 65720,
+      "run": 1
     },
     "ANA-76700000": {
-      "score": 0.9990885416666666,
-      "last_ts": 1795474800,
-      "last_value": 970,
-      "run": 3
+      "score": 0.9995442708333333,
+      "last_ts": 1795561200,
+      "last_value": 950,
+      "run": 2
     },
     "ANA-76742000": {
       "score": 1.0,
-      "last_ts": 1795474800,
-      "last_value": 972,
+      "last_ts": 1795561200,
+      "last_value": 879,
       "run": 1
     },
     "ANA-76748978": {
       "score": 1.0,
-      "last_ts": 1795474800,
-      "last_value": 68950,
-      "run": 3
+      "last_ts": 1795561200,
+      "last_value": 68860,
+      "run": 1
     },
     "ANA-76750000": {
       "score": 1.0,
-      "last_ts": 1795474800,
-      "last_value": 1413,
+      "last_ts": 1795561200,
+      "last_value": 1309,
       "run": 1
     },
     "ANA-76800000": {
       "score": 1.0,
-      "last_ts": 1795474800,
-      "last_value": 3150,
-      "run": 8
+      "last_ts": 1795561200,
+      "last_value": 3100,
+      "run": 1
     },
     "ANA-77150000": {
-      "score": 0.9990885416666666,
-      "last_ts": 1795474800,
-      "last_value": 5656,
+      "score": 0.9995442708333333,
+      "last_ts": 1795561200,
+      "last_value": 5653,
       "run": 1
     },
     "ANA-77499010": {
       "score": 1.0,
-      "last_ts": 1795474800,
-      "last_value": 89270,
-      "run": 3
+      "last_ts": 1795561200,
+      "last_value": 89250,
+      "run": 1
     },
     "ANA-77500000": {
       "score": 1.0,
-      "last_ts": 1795474800,
-      "last_value": 630,
-      "run": 2
+      "last_ts": 1795561200,
+      "last_value": 610,
+      "run": 1
     },
     "ANA-79099870": {
       "score": 1.0,
-      "last_ts": 1795474800,
-      "last_value": 188680,
-      "run": 5
+      "last_ts": 1795561200,
+      "last_value": 188670,
+      "run": 1
     },
     "ANA-79400000": {
       "score": 1.0,
-      "last_ts": 1795474800,
+      "last_ts": 1795561200,
       "last_value": 830,
-      "run": 4
+      "run": 8
     },
     "ANA-84991100": {
       "score": 1.0,
-      "last_ts": 1795474800,
-      "last_value": 21770,
-      "run": 3
+      "last_ts": 1795561200,
+      "last_value": 22040,
+      "run": 1
     },
     "ANA-84991510": {
       "score": 1.0,
-      "last_ts": 1795474800,
-      "last_value": -190,
+      "last_ts": 1795561200,
+      "last_value": -70,
       "run": 1
     },
     "ANA-85029000": {
       "score": 1.0,
-      "last_ts": 1795474800,
-      "last_value": 3270,
-      "run": 2
+      "last_ts": 1795561200,
+      "last_value": 4830,
+      "run": 1
     },
     "ANA-85040000": {
       "score": 1.0,
-      "last_ts": 1795474800,
-      "last_value": 2550,
+      "last_ts": 1795561200,
+      "last_value": 4460,
       "run": 1
     },
     "ANA-85050001": {
       "score": 1.0,
-      "last_ts": 1795474800,
-      "last_value": 489890,
+      "last_ts": 1795561200,
+      "last_value": 490170,
       "run": 1
     },
     "ANA-85050100": {
       "score": 1.0,
-      "last_ts": 1795474800,
-      "last_value": 2770,
-      "run": 2
+      "last_ts": 1795561200,
+      "last_value": 3590,
+      "run": 1
     },
     "ANA-85050200": {
       "score": 1.0,
-      "last_ts": 1795474800,
-      "last_value": 1290,
-      "run": 5
+      "last_ts": 1795561200,
+      "last_value": 1590,
+      "run": 2
     },
     "ANA-85050300": {
       "score": 0.2,
@@ -1076,8 +1076,8 @@
     },
     "ANA-85050350": {
       "score": 1.0,
-      "last_ts": 1795474800,
-      "last_value": 4018,
+      "last_ts": 1795561200,
+      "last_value": 6261,
       "run": 1
     },
     "ANA-85051000": {
@@ -1088,21 +1088,21 @@
     },
     "ANA-85074000": {
       "score": 1.0,
-      "last_ts": 1795474800,
-      "last_value": 374795,
+      "last_ts": 1795561200,
+      "last_value": 375939,
       "run": 1
     },
     "ANA-85076000": {
       "score": 1.0,
-      "last_ts": 1795474800,
-      "last_value": 2931,
+      "last_ts": 1795561200,
+      "last_value": 7081,
       "run": 1
     },
     "ANA-85080001": {
       "score": 1.0,
-      "last_ts": 1795474800,
-      "last_value": 2030,
-      "run": 2
+      "last_ts": 1795561200,
+      "last_value": 4150,
+      "run": 1
     },
     "ANA-85110000": {
       "score": 0.2,
@@ -1112,8 +1112,8 @@
     },
     "ANA-85130000": {
       "score": 1.0,
-      "last_ts": 1795474800,
-      "last_value": 1668,
+      "last_ts": 1795561200,
+      "last_value": 2155,
       "run": 1
     },
     "ANA-85130400": {
@@ -1124,20 +1124,20 @@
     },
     "ANA-85140000": {
       "score": 1.0,
-      "last_ts": 1795474800,
-      "last_value": 4900,
-      "run": 3
+      "last_ts": 1795561200,
+      "last_value": 6910,
+      "run": 1
     },
     "ANA-85159900": {
       "score": 1.0,
-      "last_ts": 1795474800,
-      "last_value": 369520,
-      "run": 2
+      "last_ts": 1795561200,
+      "last_value": 369990,
+      "run": 1
     },
     "ANA-85170100": {
       "score": 1.0,
-      "last_ts": 1795474800,
-      "last_value": 460130,
+      "last_ts": 1795561200,
+      "last_value": 460620,
       "run": 1
     },
     "ANA-85170150": {
@@ -1148,103 +1148,103 @@
     },
     "ANA-85180000": {
       "score": 1.0,
-      "last_ts": 1795474800,
-      "last_value": 2080,
+      "last_ts": 1795561200,
+      "last_value": 3650,
       "run": 1
     },
     "ANA-85240000": {
       "score": 1.0,
-      "last_ts": 1795474800,
-      "last_value": 4400,
+      "last_ts": 1795561200,
+      "last_value": 4310,
       "run": 1
     },
     "ANA-85260001": {
       "score": 1.0,
-      "last_ts": 1795474800,
-      "last_value": 321280,
+      "last_ts": 1795561200,
+      "last_value": 321140,
       "run": 1
     },
     "ANA-85290000": {
       "score": 1.0,
-      "last_ts": 1795474800,
-      "last_value": 1270,
+      "last_ts": 1795561200,
+      "last_value": 1490,
       "run": 1
     },
     "ANA-85300000": {
       "score": 1.0,
-      "last_ts": 1795474800,
-      "last_value": 275660,
+      "last_ts": 1795561200,
+      "last_value": 275670,
       "run": 1
     },
     "ANA-85306000": {
       "score": 1.0,
-      "last_ts": 1795474800,
-      "last_value": 2158,
+      "last_ts": 1795561200,
+      "last_value": 1133,
       "run": 1
     },
     "ANA-85309000": {
       "score": 1.0,
-      "last_ts": 1795474800,
-      "last_value": 2021,
+      "last_ts": 1795561200,
+      "last_value": 1034,
       "run": 1
     },
     "ANA-85310000": {
       "score": 1.0,
-      "last_ts": 1795474800,
-      "last_value": 1460,
+      "last_ts": 1795561200,
+      "last_value": 1040,
       "run": 1
     },
     "ANA-85311000": {
       "score": 1.0,
-      "last_ts": 1795474800,
-      "last_value": 282670,
-      "run": 1
+      "last_ts": 1795561200,
+      "last_value": 282300,
+      "run": 2
     },
     "ANA-85349000": {
       "score": 1.0,
-      "last_ts": 1795474800,
-      "last_value": 222964,
+      "last_ts": 1795561200,
+      "last_value": 222426,
       "run": 1
     },
     "ANA-85350000": {
       "score": 1.0,
-      "last_ts": 1795474800,
-      "last_value": 2049,
+      "last_ts": 1795561200,
+      "last_value": 1286,
       "run": 1
     },
     "ANA-85365000": {
       "score": 1.0,
-      "last_ts": 1795474800,
-      "last_value": 179490,
-      "run": 3
+      "last_ts": 1795561200,
+      "last_value": 179400,
+      "run": 1
     },
     "ANA-85365500": {
       "score": 1.0,
-      "last_ts": 1795474800,
-      "last_value": 1730,
+      "last_ts": 1795561200,
+      "last_value": 5410,
       "run": 1
     },
     "ANA-85380500": {
       "score": 1.0,
-      "last_ts": 1795474800,
-      "last_value": 154430,
+      "last_ts": 1795561200,
+      "last_value": 154710,
       "run": 1
     },
     "ANA-85382000": {
       "score": 1.0,
-      "last_ts": 1795474800,
-      "last_value": 2020,
-      "run": 3
+      "last_ts": 1795561200,
+      "last_value": 2060,
+      "run": 1
     },
     "ANA-85395100": {
       "score": 0.9708333333333332,
-      "last_ts": 1795471200,
-      "last_value": 95560,
+      "last_ts": 1795557600,
+      "last_value": 95630,
       "run": 1
     },
     "ANA-85395300": {
       "score": 1.0,
-      "last_ts": 1795474800,
+      "last_ts": 1795561200,
       "last_value": 5670,
       "run": 1
     },
@@ -1256,44 +1256,44 @@
     },
     "ANA-85400020": {
       "score": 1.0,
-      "last_ts": 1795474800,
-      "last_value": 37500,
+      "last_ts": 1795561200,
+      "last_value": 37570,
       "run": 1
     },
     "ANA-85418000": {
       "score": 1.0,
-      "last_ts": 1795474800,
-      "last_value": 71250,
-      "run": 1
+      "last_ts": 1795561200,
+      "last_value": 71240,
+      "run": 5
     },
     "ANA-85436000": {
       "score": 1.0,
-      "last_ts": 1795474800,
-      "last_value": 68540,
-      "run": 1
+      "last_ts": 1795561200,
+      "last_value": 68560,
+      "run": 2
     },
     "ANA-85438001": {
       "score": 1.0,
-      "last_ts": 1795474800,
-      "last_value": 35620,
+      "last_ts": 1795561200,
+      "last_value": 35220,
       "run": 1
     },
     "ANA-85470200": {
-      "score": 0.9670289855072464,
-      "last_ts": 1795474800,
-      "last_value": 42520,
-      "run": 1
+      "score": 0.9520750988142292,
+      "last_ts": 1795561200,
+      "last_value": 81770,
+      "run": 2
     },
     "ANA-85500010": {
-      "score": 0.76875,
+      "score": 0.484375,
       "last_ts": 1795424400,
       "last_value": 540,
       "run": 1
     },
     "ANA-85500100": {
       "score": 1.0,
-      "last_ts": 1795474800,
-      "last_value": 4420,
+      "last_ts": 1795561200,
+      "last_value": 5910,
       "run": 1
     },
     "ANA-85500990": {
@@ -1304,267 +1304,267 @@
     },
     "ANA-85600003": {
       "score": 1.0,
-      "last_ts": 1795474800,
-      "last_value": 28410,
-      "run": 4
+      "last_ts": 1795561200,
+      "last_value": 28400,
+      "run": 3
     },
     "ANA-85642000": {
       "score": 1.0,
-      "last_ts": 1795474800,
-      "last_value": 4430,
-      "run": 5
+      "last_ts": 1795561200,
+      "last_value": 4670,
+      "run": 1
     },
     "ANA-85643990": {
       "score": 1.0,
-      "last_ts": 1795474800,
-      "last_value": 18250,
+      "last_ts": 1795561200,
+      "last_value": 18390,
       "run": 1
     },
     "ANA-85653000": {
       "score": 1.0,
-      "last_ts": 1795474800,
-      "last_value": 69320,
-      "run": 4
+      "last_ts": 1795561200,
+      "last_value": 69350,
+      "run": 3
     },
     "ANA-85659960": {
       "score": 1.0,
-      "last_ts": 1795474800,
+      "last_ts": 1795561200,
       "last_value": 180160,
-      "run": 4
+      "run": 3
     },
     "ANA-85729000": {
       "score": 1.0,
-      "last_ts": 1795474800,
-      "last_value": 280920,
+      "last_ts": 1795561200,
+      "last_value": 281390,
       "run": 1
     },
     "ANA-85739807": {
       "score": 1.0,
-      "last_ts": 1795474800,
-      "last_value": 37520,
+      "last_ts": 1795561200,
+      "last_value": 37580,
       "run": 2
     },
     "ANA-85810000": {
       "score": 1.0,
-      "last_ts": 1795474800,
-      "last_value": 56600,
-      "run": 3
+      "last_ts": 1795561200,
+      "last_value": 56620,
+      "run": 1
     },
     "ANA-85820000": {
-      "score": 0.9927083333333332,
-      "last_ts": 1795474800,
-      "last_value": 32600,
+      "score": 0.9963541666666664,
+      "last_ts": 1795561200,
+      "last_value": 32610,
       "run": 2
     },
     "ANA-85889010": {
       "score": 1.0,
-      "last_ts": 1795474800,
-      "last_value": 7350,
+      "last_ts": 1795561200,
+      "last_value": 7500,
       "run": 1
     },
     "ANA-85899800": {
       "score": 1.0,
-      "last_ts": 1795474800,
-      "last_value": 6580,
-      "run": 1
+      "last_ts": 1795561200,
+      "last_value": 6570,
+      "run": 2
     },
     "ANA-85900000": {
-      "score": 0.259375,
-      "last_ts": 1795428000,
-      "last_value": 4400,
+      "score": 0.26927083333333335,
+      "last_ts": 1795514400,
+      "last_value": 4880,
       "run": 1
     },
     "ANA-85930001": {
       "score": 1.0,
-      "last_ts": 1795474800,
-      "last_value": 990,
-      "run": 1
+      "last_ts": 1795561200,
+      "last_value": 1020,
+      "run": 2
     },
     "ANA-86060010": {
       "score": 1.0,
-      "last_ts": 1795474800,
-      "last_value": 15240,
-      "run": 3
+      "last_ts": 1795561200,
+      "last_value": 15600,
+      "run": 1
     },
     "ANA-86095100": {
-      "score": 0.9744791666666666,
-      "last_ts": 1795474800,
-      "last_value": 601110,
+      "score": 0.9872395833333332,
+      "last_ts": 1795561200,
+      "last_value": 602990,
       "run": 1
     },
     "ANA-86099000": {
-      "score": 0.9671875,
-      "last_ts": 1795474800,
-      "last_value": 1080,
-      "run": 4
+      "score": 0.9690104166666668,
+      "last_ts": 1795561200,
+      "last_value": 2640,
+      "run": 1
     },
     "ANA-86100600": {
       "score": 1.0,
-      "last_ts": 1795474800,
-      "last_value": 420,
+      "last_ts": 1795561200,
+      "last_value": 1550,
       "run": 1
     },
     "ANA-86100800": {
       "score": 1.0,
-      "last_ts": 1795474800,
-      "last_value": 574100,
+      "last_ts": 1795561200,
+      "last_value": 575160,
       "run": 1
     },
     "ANA-86101000": {
       "score": 1.0,
-      "last_ts": 1795474800,
+      "last_ts": 1795561200,
       "last_value": 2120,
       "run": 1
     },
     "ANA-86102000": {
       "score": 1.0,
-      "last_ts": 1795474800,
-      "last_value": 1390,
+      "last_ts": 1795561200,
+      "last_value": 3660,
       "run": 1
     },
     "ANA-86109000": {
       "score": 1.0,
-      "last_ts": 1795474800,
-      "last_value": 532530,
+      "last_ts": 1795561200,
+      "last_value": 534160,
       "run": 1
     },
     "ANA-86110000": {
-      "score": 0.9244791666666664,
-      "last_ts": 1795474800,
+      "score": 0.9122395833333332,
+      "last_ts": 1795561200,
       "last_value": 1360,
-      "run": 96
+      "run": 120
     },
     "ANA-86117000": {
       "score": 1.0,
-      "last_ts": 1795474800,
-      "last_value": 960,
+      "last_ts": 1795561200,
+      "last_value": 510,
       "run": 1
     },
     "ANA-86118000": {
       "score": 1.0,
-      "last_ts": 1795474800,
-      "last_value": 477870,
+      "last_ts": 1795561200,
+      "last_value": 478840,
       "run": 1
     },
     "ANA-86120050": {
       "score": 1.0,
-      "last_ts": 1795474800,
-      "last_value": 859560,
-      "run": 2
+      "last_ts": 1795561200,
+      "last_value": 859720,
+      "run": 1
     },
     "ANA-86125000": {
-      "score": 0.3677083333333333,
-      "last_ts": 1795474800,
+      "score": 0.5817708333333333,
+      "last_ts": 1795561200,
       "last_value": 161340,
-      "run": 2
+      "run": 3
     },
     "ANA-86125050": {
       "score": 1.0,
-      "last_ts": 1795474800,
-      "last_value": 1040,
+      "last_ts": 1795561200,
+      "last_value": 1330,
       "run": 1
     },
     "ANA-86125100": {
       "score": 1.0,
-      "last_ts": 1795474800,
-      "last_value": 2830,
+      "last_ts": 1795561200,
+      "last_value": 3110,
       "run": 1
     },
     "ANA-86125120": {
-      "score": 0.9244791666666664,
-      "last_ts": 1795474800,
+      "score": 0.9122395833333332,
+      "last_ts": 1795561200,
       "last_value": 10070,
-      "run": 96
+      "run": 120
     },
     "ANA-86125130": {
       "score": 1.0,
-      "last_ts": 1795474800,
-      "last_value": 1400,
+      "last_ts": 1795561200,
+      "last_value": 1570,
       "run": 1
     },
     "ANA-86125160": {
       "score": 1.0,
-      "last_ts": 1795474800,
-      "last_value": 538268,
+      "last_ts": 1795561200,
+      "last_value": 538380,
       "run": 1
     },
     "ANA-86125165": {
       "score": 1.0,
-      "last_ts": 1795474800,
-      "last_value": 2290,
+      "last_ts": 1795561200,
+      "last_value": 2479,
       "run": 1
     },
     "ANA-86125200": {
       "score": 1.0,
-      "last_ts": 1795474800,
-      "last_value": 2290,
+      "last_ts": 1795561200,
+      "last_value": 2434,
       "run": 1
     },
     "ANA-86125500": {
       "score": 1.0,
-      "last_ts": 1795474800,
-      "last_value": 248850,
+      "last_ts": 1795561200,
+      "last_value": 249280,
       "run": 1
     },
     "ANA-86160000": {
       "score": 1.0,
-      "last_ts": 1795474800,
-      "last_value": 1200,
+      "last_ts": 1795561200,
+      "last_value": 3220,
       "run": 1
     },
     "ANA-86162000": {
       "score": 1.0,
-      "last_ts": 1795474800,
-      "last_value": 450270,
+      "last_ts": 1795561200,
+      "last_value": 451050,
       "run": 1
     },
     "ANA-86163000": {
-      "score": 0.9244791666666664,
-      "last_ts": 1795474800,
+      "score": 0.9122395833333332,
+      "last_ts": 1795561200,
       "last_value": 1280,
-      "run": 96
+      "run": 120
     },
     "ANA-86194900": {
-      "score": 0.9635416666666664,
-      "last_ts": 1795474800,
-      "last_value": 1990,
+      "score": 0.9817708333333331,
+      "last_ts": 1795561200,
+      "last_value": 3590,
       "run": 1
     },
     "ANA-86195000": {
       "score": 1.0,
-      "last_ts": 1795474800,
-      "last_value": 777850,
+      "last_ts": 1795561200,
+      "last_value": 778580,
       "run": 1
     },
     "ANA-86195100": {
       "score": 1.0,
-      "last_ts": 1795474800,
-      "last_value": 2320,
-      "run": 4
+      "last_ts": 1795561200,
+      "last_value": 4330,
+      "run": 1
     },
     "ANA-86200500": {
       "score": 1.0,
-      "last_ts": 1795474800,
-      "last_value": 1850,
+      "last_ts": 1795561200,
+      "last_value": 2820,
       "run": 1
     },
     "ANA-86200900": {
       "score": 1.0,
-      "last_ts": 1795474800,
-      "last_value": 665270,
+      "last_ts": 1795561200,
+      "last_value": 666050,
       "run": 1
     },
     "ANA-86210900": {
       "score": 1.0,
-      "last_ts": 1795474800,
-      "last_value": 520240,
-      "run": 3
+      "last_ts": 1795561200,
+      "last_value": 521100,
+      "run": 1
     },
     "ANA-86220600": {
-      "score": 0.9994791666666664,
-      "last_ts": 1795474800,
-      "last_value": 1820,
-      "run": 11
+      "score": 0.9997395833333332,
+      "last_ts": 1795561200,
+      "last_value": 2210,
+      "run": 1
     },
     "ANA-86280500": {
       "score": 0.2,
@@ -1580,224 +1580,224 @@
     },
     "ANA-86297995": {
       "score": 1.0,
-      "last_ts": 1795474800,
-      "last_value": 251160,
+      "last_ts": 1795561200,
+      "last_value": 253300,
       "run": 1
     },
     "ANA-86298000": {
       "score": 1.0,
-      "last_ts": 1795474800,
-      "last_value": 1710,
+      "last_ts": 1795561200,
+      "last_value": 4020,
       "run": 1
     },
     "ANA-86305000": {
-      "score": 0.3130208333333333,
+      "score": 0.25651041666666663,
       "last_ts": 1795226400,
       "last_value": 241580,
       "run": 1
     },
     "ANA-86306000": {
       "score": 0.9708333333333332,
-      "last_ts": 1795471200,
+      "last_ts": 1795557600,
       "last_value": -3320,
       "run": 23
     },
     "ANA-86321000": {
-      "score": 0.8958333333333333,
-      "last_ts": 1795471200,
+      "score": 0.6833333333333333,
+      "last_ts": 1795503600,
       "last_value": -1220,
-      "run": 23
+      "run": 8
     },
     "ANA-86329001": {
       "score": 1.0,
-      "last_ts": 1795474800,
-      "last_value": 158980,
+      "last_ts": 1795561200,
+      "last_value": 162120,
       "run": 1
     },
     "ANA-86342000": {
-      "score": 0.45260416666666664,
-      "last_ts": 1795474800,
-      "last_value": 743770,
+      "score": 0.7263020833333332,
+      "last_ts": 1795561200,
+      "last_value": 746280,
       "run": 1
     },
     "ANA-86350000": {
       "score": 1.0,
-      "last_ts": 1795474800,
-      "last_value": 4220,
-      "run": 1
+      "last_ts": 1795561200,
+      "last_value": 5370,
+      "run": 2
     },
     "ANA-86390900": {
       "score": 1.0,
-      "last_ts": 1795474800,
-      "last_value": 1520,
-      "run": 2
+      "last_ts": 1795561200,
+      "last_value": 2060,
+      "run": 1
     },
     "ANA-86402000": {
       "score": 1.0,
-      "last_ts": 1795474800,
-      "last_value": 3480,
+      "last_ts": 1795561200,
+      "last_value": 3640,
       "run": 1
     },
     "ANA-86403000": {
       "score": 1.0,
-      "last_ts": 1795474800,
-      "last_value": 9120,
-      "run": 1
+      "last_ts": 1795561200,
+      "last_value": 10090,
+      "run": 3
     },
     "ANA-86404100": {
       "score": 1.0,
-      "last_ts": 1795474800,
-      "last_value": 1690,
+      "last_ts": 1795561200,
+      "last_value": 2070,
       "run": 1
     },
     "ANA-86404200": {
       "score": 1.0,
-      "last_ts": 1795474800,
-      "last_value": 513690,
+      "last_ts": 1795561200,
+      "last_value": 513960,
       "run": 1
     },
     "ANA-86405000": {
       "score": 1.0,
-      "last_ts": 1795474800,
-      "last_value": 2550,
+      "last_ts": 1795561200,
+      "last_value": 2780,
       "run": 1
     },
     "ANA-86406000": {
       "score": 1.0,
-      "last_ts": 1795474800,
-      "last_value": 1600,
+      "last_ts": 1795561200,
+      "last_value": 1890,
       "run": 1
     },
     "ANA-86410001": {
       "score": 1.0,
-      "last_ts": 1795474800,
-      "last_value": 356920,
+      "last_ts": 1795561200,
+      "last_value": 357530,
       "run": 1
     },
     "ANA-86410050": {
       "score": 1.0,
-      "last_ts": 1795474800,
-      "last_value": 2210,
+      "last_ts": 1795561200,
+      "last_value": 3080,
       "run": 1
     },
     "ANA-86410800": {
       "score": 1.0,
-      "last_ts": 1795474800,
-      "last_value": 450,
-      "run": 7
+      "last_ts": 1795561200,
+      "last_value": 770,
+      "run": 1
     },
     "ANA-86430500": {
       "score": 1.0,
-      "last_ts": 1795474800,
-      "last_value": 760,
+      "last_ts": 1795561200,
+      "last_value": 1620,
       "run": 1
     },
     "ANA-86430900": {
       "score": 1.0,
-      "last_ts": 1795474800,
-      "last_value": 291570,
+      "last_ts": 1795561200,
+      "last_value": 291890,
       "run": 1
     },
     "ANA-86447000": {
       "score": 1.0,
-      "last_ts": 1795474800,
-      "last_value": 3140,
+      "last_ts": 1795561200,
+      "last_value": 3910,
       "run": 1
     },
     "ANA-86448000": {
-      "score": 0.3130208333333333,
+      "score": 0.25651041666666663,
       "last_ts": 1795226400,
       "last_value": 149530,
       "run": 1
     },
     "ANA-86450000": {
       "score": 1.0,
-      "last_ts": 1795474800,
-      "last_value": 4780,
+      "last_ts": 1795561200,
+      "last_value": 7820,
       "run": 1
     },
     "ANA-86450500": {
-      "score": 0.8286458333333333,
-      "last_ts": 1795474800,
-      "last_value": 109090,
+      "score": 0.9143229166666668,
+      "last_ts": 1795561200,
+      "last_value": 110550,
       "run": 1
     },
     "ANA-86451000": {
       "score": 0.9708333333333332,
-      "last_ts": 1795471200,
+      "last_ts": 1795557600,
       "last_value": 271260,
       "run": 23
     },
     "ANA-86470800": {
-      "score": 0.3130208333333333,
+      "score": 0.25651041666666663,
       "last_ts": 1795226400,
       "last_value": 241580,
       "run": 1
     },
     "ANA-86470900": {
       "score": 1.0,
-      "last_ts": 1795474800,
-      "last_value": 4640,
+      "last_ts": 1795561200,
+      "last_value": 5630,
       "run": 1
     },
     "ANA-86471000": {
       "score": 1.0,
-      "last_ts": 1795474800,
+      "last_ts": 1795561200,
       "last_value": 2040,
-      "run": 8
+      "run": 32
     },
     "ANA-86472000": {
       "score": 1.0,
-      "last_ts": 1795474800,
-      "last_value": 6810,
+      "last_ts": 1795561200,
+      "last_value": 7790,
       "run": 1
     },
     "ANA-86472600": {
-      "score": 0.9927083333333332,
-      "last_ts": 1795474800,
-      "last_value": 5300,
+      "score": 0.9963541666666664,
+      "last_ts": 1795561200,
+      "last_value": 6140,
       "run": 1
     },
     "ANA-86479000": {
       "score": 1.0,
-      "last_ts": 1795474800,
-      "last_value": 1230,
+      "last_ts": 1795561200,
+      "last_value": 5580,
       "run": 1
     },
     "ANA-86488000": {
-      "score": 0.8286458333333332,
-      "last_ts": 1795474800,
-      "last_value": 1100,
-      "run": 4
+      "score": 0.7684895833333332,
+      "last_ts": 1795561200,
+      "last_value": 1020,
+      "run": 1
     },
     "ANA-86489000": {
       "score": 1.0,
-      "last_ts": 1795474800,
-      "last_value": 426300,
+      "last_ts": 1795561200,
+      "last_value": 427270,
       "run": 1
     },
     "ANA-86493000": {
       "score": 1.0,
-      "last_ts": 1795474800,
-      "last_value": 371170,
+      "last_ts": 1795561200,
+      "last_value": 372030,
       "run": 1
     },
     "ANA-86495500": {
       "score": 1.0,
-      "last_ts": 1795474800,
-      "last_value": 329700,
-      "run": 3
+      "last_ts": 1795561200,
+      "last_value": 330470,
+      "run": 1
     },
     "ANA-86497400": {
       "score": 1.0,
-      "last_ts": 1795474800,
-      "last_value": 280380,
+      "last_ts": 1795561200,
+      "last_value": 281180,
       "run": 1
     },
     "ANA-86500000": {
-      "score": 0.8177083333333333,
-      "last_ts": 1795474800,
-      "last_value": 2493,
+      "score": 0.9088541666666664,
+      "last_ts": 1795561200,
+      "last_value": 3937,
       "run": 1
     },
     "ANA-86504400": {
@@ -1807,861 +1807,861 @@
       "run": 0
     },
     "ANA-86504500": {
-      "score": 0.9244791666666664,
-      "last_ts": 1795474800,
+      "score": 0.9122395833333332,
+      "last_ts": 1795561200,
       "last_value": 10750,
-      "run": 96
+      "run": 120
     },
     "ANA-86504900": {
       "score": 1.0,
-      "last_ts": 1795474800,
-      "last_value": 4200,
+      "last_ts": 1795561200,
+      "last_value": 5660,
       "run": 1
     },
     "ANA-86505400": {
       "score": 1.0,
-      "last_ts": 1795474800,
-      "last_value": 180220,
-      "run": 2
+      "last_ts": 1795561200,
+      "last_value": 181030,
+      "run": 1
     },
     "ANA-86505500": {
-      "score": 0.9244791666666664,
-      "last_ts": 1795474800,
+      "score": 0.9122395833333332,
+      "last_ts": 1795561200,
       "last_value": 1150,
-      "run": 96
+      "run": 120
     },
     "ANA-86506000": {
       "score": 1.0,
-      "last_ts": 1795474800,
+      "last_ts": 1795561200,
       "last_value": 0,
       "run": 1
     },
     "ANA-86507000": {
       "score": 1.0,
-      "last_ts": 1795474800,
-      "last_value": 990,
+      "last_ts": 1795561200,
+      "last_value": 660,
       "run": 1
     },
     "ANA-86507220": {
       "score": 1.0,
-      "last_ts": 1795474800,
-      "last_value": 96590,
+      "last_ts": 1795561200,
+      "last_value": 98100,
       "run": 1
     },
     "ANA-86510000": {
-      "score": 0.9990885416666666,
-      "last_ts": 1795474800,
-      "last_value": 4820,
+      "score": 0.9995442708333332,
+      "last_ts": 1795561200,
+      "last_value": 6160,
       "run": 1
     },
     "ANA-86520000": {
       "score": 1.0,
-      "last_ts": 1795474800,
-      "last_value": 630800,
-      "run": 2
+      "last_ts": 1795561200,
+      "last_value": 631080,
+      "run": 1
     },
     "ANA-86520100": {
       "score": 1.0,
-      "last_ts": 1795474800,
-      "last_value": 580,
-      "run": 3
+      "last_ts": 1795561200,
+      "last_value": 1110,
+      "run": 2
     },
     "ANA-86529500": {
       "score": 1.0,
-      "last_ts": 1795474800,
-      "last_value": 503170,
+      "last_ts": 1795561200,
+      "last_value": 504850,
       "run": 1
     },
     "ANA-86542000": {
       "score": 1.0,
-      "last_ts": 1795474800,
-      "last_value": 331250,
+      "last_ts": 1795561200,
+      "last_value": 334110,
       "run": 1
     },
     "ANA-86560000": {
       "score": 1.0,
-      "last_ts": 1795474800,
-      "last_value": 1790,
+      "last_ts": 1795561200,
+      "last_value": 4160,
       "run": 1
     },
     "ANA-86560020": {
-      "score": 0.9854166666666666,
-      "last_ts": 1795474800,
-      "last_value": 199540,
+      "score": 0.9635416666666664,
+      "last_ts": 1795561200,
+      "last_value": 201580,
       "run": 1
     },
     "ANA-86581000": {
-      "score": 0.9989583333333332,
-      "last_ts": 1795474800,
-      "last_value": 37840,
+      "score": 0.9994791666666664,
+      "last_ts": 1795561200,
+      "last_value": 39530,
       "run": 1
     },
     "ANA-86640900": {
       "score": 1.0,
-      "last_ts": 1795474800,
-      "last_value": 441670,
-      "run": 5
+      "last_ts": 1795561200,
+      "last_value": 442090,
+      "run": 1
     },
     "ANA-86700005": {
       "score": 1.0,
-      "last_ts": 1795474800,
-      "last_value": 51650,
-      "run": 2
+      "last_ts": 1795561200,
+      "last_value": 52320,
+      "run": 1
     },
     "ANA-86720000": {
-      "score": 0.9990885416666666,
-      "last_ts": 1795474800,
-      "last_value": 3150,
+      "score": 0.9995442708333332,
+      "last_ts": 1795561200,
+      "last_value": 4440,
       "run": 1
     },
     "ANA-86733330": {
       "score": 1.0,
-      "last_ts": 1795474800,
-      "last_value": 29010,
-      "run": 2
+      "last_ts": 1795561200,
+      "last_value": 30080,
+      "run": 1
     },
     "ANA-86739850": {
       "score": 1.0,
-      "last_ts": 1795474800,
-      "last_value": 76110,
-      "run": 3
+      "last_ts": 1795561200,
+      "last_value": 76370,
+      "run": 1
     },
     "ANA-86743700": {
-      "score": 1.0,
-      "last_ts": 1795474800,
-      "last_value": 880,
-      "run": 9
+      "score": 0.9416666666666668,
+      "last_ts": 1795557600,
+      "last_value": 570,
+      "run": 1
     },
     "ANA-86743800": {
       "score": 1.0,
-      "last_ts": 1795474800,
-      "last_value": 250040,
-      "run": 6
+      "last_ts": 1795561200,
+      "last_value": 251270,
+      "run": 1
     },
     "ANA-86743900": {
       "score": 1.0,
-      "last_ts": 1795474800,
-      "last_value": 206430,
+      "last_ts": 1795561200,
+      "last_value": 207850,
       "run": 1
     },
     "ANA-86743950": {
       "score": 1.0,
-      "last_ts": 1795474800,
-      "last_value": 2260,
+      "last_ts": 1795561200,
+      "last_value": 4750,
       "run": 1
     },
     "ANA-86744110": {
       "score": 1.0,
-      "last_ts": 1795474800,
-      "last_value": 2280,
+      "last_ts": 1795561200,
+      "last_value": 4220,
       "run": 1
     },
     "ANA-86744650": {
       "score": 1.0,
-      "last_ts": 1795474800,
-      "last_value": 500,
-      "run": 6
+      "last_ts": 1795561200,
+      "last_value": 550,
+      "run": 1
     },
     "ANA-86744900": {
-      "score": 0.9817708333333331,
-      "last_ts": 1795474800,
-      "last_value": 70980,
+      "score": 0.9908854166666664,
+      "last_ts": 1795561200,
+      "last_value": 73510,
       "run": 1
     },
     "ANA-86746680": {
-      "score": 0.9854166666666666,
-      "last_ts": 1795474800,
-      "last_value": 106390,
-      "run": 3
+      "score": 0.9927083333333332,
+      "last_ts": 1795561200,
+      "last_value": 106540,
+      "run": 1
     },
     "ANA-86780000": {
       "score": 1.0,
-      "last_ts": 1795474800,
-      "last_value": 1651,
+      "last_ts": 1795561200,
+      "last_value": 3090,
       "run": 1
     },
     "ANA-86855000": {
-      "score": 0.9854166666666666,
-      "last_ts": 1795474800,
-      "last_value": 51210,
+      "score": 0.9927083333333332,
+      "last_ts": 1795561200,
+      "last_value": 52040,
       "run": 1
     },
     "ANA-86878700": {
       "score": 1.0,
-      "last_ts": 1795474800,
-      "last_value": 15370,
+      "last_ts": 1795561200,
+      "last_value": 15580,
       "run": 1
     },
     "ANA-86879300": {
-      "score": 0.4067708333333333,
-      "last_ts": 1795381200,
-      "last_value": 13790,
+      "score": 0.34296875,
+      "last_ts": 1795514400,
+      "last_value": 13460,
       "run": 1
     },
     "ANA-86881000": {
       "score": 1.0,
-      "last_ts": 1795474800,
-      "last_value": 6120,
+      "last_ts": 1795561200,
+      "last_value": 6178,
       "run": 1
     },
     "ANA-86888400": {
       "score": 1.0,
-      "last_ts": 1795474800,
-      "last_value": 49090,
-      "run": 4
+      "last_ts": 1795561200,
+      "last_value": 49140,
+      "run": 2
     },
     "ANA-86895000": {
-      "score": 0.9963541666666664,
-      "last_ts": 1795474800,
-      "last_value": 4800,
+      "score": 0.9981770833333332,
+      "last_ts": 1795561200,
+      "last_value": 4630,
       "run": 1
     },
     "ANA-86950000": {
-      "score": 0.9963541666666664,
-      "last_ts": 1795474800,
-      "last_value": 3260,
-      "run": 1
+      "score": 0.9981770833333332,
+      "last_ts": 1795561200,
+      "last_value": 3160,
+      "run": 2
     },
     "ANA-87010000": {
       "score": 1.0,
-      "last_ts": 1795474800,
-      "last_value": 1680,
-      "run": 1
+      "last_ts": 1795561200,
+      "last_value": 1610,
+      "run": 11
     },
     "ANA-87036800": {
-      "score": 0.9854166666666666,
-      "last_ts": 1795474800,
-      "last_value": 890,
-      "run": 1
+      "score": 0.9197916666666666,
+      "last_ts": 1795561200,
+      "last_value": 810,
+      "run": 2
     },
     "ANA-87068000": {
       "score": 1.0,
-      "last_ts": 1795474800,
-      "last_value": 230,
-      "run": 6
+      "last_ts": 1795561200,
+      "last_value": 1140,
+      "run": 1
     },
     "ANA-87070000": {
       "score": 1.0,
-      "last_ts": 1795474800,
-      "last_value": 835710,
+      "last_ts": 1795561200,
+      "last_value": 835800,
       "run": 1
     },
     "ANA-87072000": {
       "score": 1.0,
-      "last_ts": 1795474800,
-      "last_value": 400,
-      "run": 3
+      "last_ts": 1795561200,
+      "last_value": 740,
+      "run": 1
     },
     "ANA-87075000": {
       "score": 1.0,
-      "last_ts": 1795474800,
-      "last_value": 793270,
-      "run": 1
+      "last_ts": 1795561200,
+      "last_value": 793320,
+      "run": 4
     },
     "ANA-87100000": {
       "score": 1.0,
-      "last_ts": 1795474800,
-      "last_value": 756070,
+      "last_ts": 1795561200,
+      "last_value": 756100,
       "run": 2
     },
     "ANA-87107000": {
       "score": 1.0,
-      "last_ts": 1795474800,
-      "last_value": 1490,
+      "last_ts": 1795561200,
+      "last_value": 1870,
       "run": 1
     },
     "ANA-87110000": {
       "score": 1.0,
-      "last_ts": 1795474800,
+      "last_ts": 1795561200,
       "last_value": 675160,
       "run": 1
     },
     "ANA-87120000": {
       "score": 1.0,
-      "last_ts": 1795474800,
-      "last_value": 615680,
+      "last_ts": 1795561200,
+      "last_value": 616910,
       "run": 1
     },
     "ANA-87150000": {
       "score": 1.0,
-      "last_ts": 1795474800,
-      "last_value": 870,
-      "run": 3
+      "last_ts": 1795561200,
+      "last_value": 1020,
+      "run": 1
     },
     "ANA-87153000": {
       "score": 1.0,
-      "last_ts": 1795474800,
-      "last_value": 926,
+      "last_ts": 1795561200,
+      "last_value": 1676,
       "run": 1
     },
     "ANA-87159600": {
-      "score": 1.0,
-      "last_ts": 1795474800,
-      "last_value": 60390,
-      "run": 6
+      "score": 0.9979166666666666,
+      "last_ts": 1795561200,
+      "last_value": 60580,
+      "run": 1
     },
     "ANA-87160000": {
       "score": 1.0,
-      "last_ts": 1795474800,
-      "last_value": 1610,
-      "run": 2
+      "last_ts": 1795561200,
+      "last_value": 1840,
+      "run": 1
     },
     "ANA-87163000": {
       "score": 1.0,
-      "last_ts": 1795474800,
-      "last_value": 2730,
+      "last_ts": 1795561200,
+      "last_value": 3040,
       "run": 1
     },
     "ANA-87165001": {
-      "score": 0.9744791666666666,
-      "last_ts": 1795471200,
-      "last_value": 1440,
+      "score": 0.9872395833333332,
+      "last_ts": 1795561200,
+      "last_value": 1740,
       "run": 1
     },
     "ANA-87168000": {
       "score": 1.0,
-      "last_ts": 1795474800,
-      "last_value": 770,
-      "run": 2
+      "last_ts": 1795561200,
+      "last_value": 1070,
+      "run": 1
     },
     "ANA-87168510": {
       "score": 1.0,
-      "last_ts": 1795474800,
-      "last_value": 16090,
-      "run": 4
+      "last_ts": 1795561200,
+      "last_value": 16650,
+      "run": 1
     },
     "ANA-87168590": {
-      "score": 0.9963541666666664,
-      "last_ts": 1795474800,
-      "last_value": 3760,
-      "run": 2
+      "score": 0.9981770833333332,
+      "last_ts": 1795561200,
+      "last_value": 4310,
+      "run": 1
     },
     "ANA-87170000": {
       "score": 1.0,
-      "last_ts": 1795474800,
-      "last_value": 2830,
+      "last_ts": 1795561200,
+      "last_value": 3960,
       "run": 1
     },
     "ANA-87189000": {
       "score": 1.0,
-      "last_ts": 1795474800,
-      "last_value": 3560,
-      "run": 2
+      "last_ts": 1795561200,
+      "last_value": 3970,
+      "run": 1
     },
     "ANA-87200000": {
       "score": 1.0,
-      "last_ts": 1795474800,
-      "last_value": 373540,
-      "run": 6
+      "last_ts": 1795561200,
+      "last_value": 373660,
+      "run": 1
     },
     "ANA-87202000": {
       "score": 1.0,
-      "last_ts": 1795474800,
-      "last_value": 65570,
+      "last_ts": 1795561200,
+      "last_value": 66120,
       "run": 1
     },
     "ANA-87219850": {
       "score": 1.0,
-      "last_ts": 1795474800,
-      "last_value": 106530,
+      "last_ts": 1795561200,
+      "last_value": 105970,
       "run": 1
     },
     "ANA-87219950": {
-      "score": 0.9708333333333332,
-      "last_ts": 1795474800,
-      "last_value": 1680,
+      "score": 0.9854166666666666,
+      "last_ts": 1795561200,
+      "last_value": 2130,
       "run": 1
     },
     "ANA-87230000": {
       "score": 1.0,
-      "last_ts": 1795474800,
-      "last_value": 1660,
+      "last_ts": 1795561200,
+      "last_value": 3380,
       "run": 1
     },
     "ANA-87242000": {
       "score": 1.0,
-      "last_ts": 1795474800,
-      "last_value": 1000,
-      "run": 1
+      "last_ts": 1795561200,
+      "last_value": 860,
+      "run": 2
     },
     "ANA-87242025": {
       "score": 1.0,
-      "last_ts": 1795474800,
-      "last_value": 430,
+      "last_ts": 1795561200,
+      "last_value": 410,
       "run": 1
     },
     "ANA-87270000": {
-      "score": 0.9981770833333332,
-      "last_ts": 1795474800,
-      "last_value": 1320,
+      "score": 0.9990885416666666,
+      "last_ts": 1795561200,
+      "last_value": 1480,
       "run": 1
     },
     "ANA-87271100": {
       "score": 1.0,
-      "last_ts": 1795474800,
-      "last_value": 840,
+      "last_ts": 1795561200,
+      "last_value": 920,
       "run": 1
     },
     "ANA-87290010": {
       "score": 1.0,
-      "last_ts": 1795474800,
-      "last_value": 650,
-      "run": 2
+      "last_ts": 1795561200,
+      "last_value": 570,
+      "run": 1
     },
     "ANA-87300000": {
-      "score": 0.9963541666666664,
-      "last_ts": 1795474800,
-      "last_value": 1220,
+      "score": 0.9981770833333332,
+      "last_ts": 1795561200,
+      "last_value": 1120,
       "run": 1
     },
     "ANA-87308300": {
       "score": 1.0,
-      "last_ts": 1795474800,
-      "last_value": 64950,
+      "last_ts": 1795561200,
+      "last_value": 64940,
       "run": 1
     },
     "ANA-87309020": {
       "score": 1.0,
-      "last_ts": 1795474800,
-      "last_value": 16420,
-      "run": 2
+      "last_ts": 1795561200,
+      "last_value": 16990,
+      "run": 1
     },
     "ANA-87317021": {
-      "score": 0.9819010416666664,
-      "last_ts": 1795474800,
-      "last_value": 52940,
-      "run": 4
+      "score": 0.9909505208333332,
+      "last_ts": 1795561200,
+      "last_value": 53240,
+      "run": 1
     },
     "ANA-87317030": {
-      "score": 0.9817708333333331,
-      "last_ts": 1795474800,
-      "last_value": 1510,
+      "score": 0.9908854166666664,
+      "last_ts": 1795561200,
+      "last_value": 1680,
       "run": 1
     },
     "ANA-87317036": {
-      "score": 0.9854166666666666,
-      "last_ts": 1795474800,
-      "last_value": 1180,
+      "score": 0.9927083333333332,
+      "last_ts": 1795561200,
+      "last_value": 1080,
       "run": 1
     },
     "ANA-87318000": {
       "score": 1.0,
-      "last_ts": 1795474800,
-      "last_value": 1330,
+      "last_ts": 1795561200,
+      "last_value": 1430,
       "run": 2
     },
     "ANA-87318700": {
-      "score": 0.9744791666666666,
-      "last_ts": 1795474800,
-      "last_value": 70510,
+      "score": 0.9580729166666666,
+      "last_ts": 1795561200,
+      "last_value": 70590,
       "run": 1
     },
     "ANA-87333000": {
       "score": 1.0,
-      "last_ts": 1795474800,
+      "last_ts": 1795561200,
       "last_value": 11340,
-      "run": 1
+      "run": 3
     },
     "ANA-87337010": {
       "score": 1.0,
-      "last_ts": 1795474800,
-      "last_value": 84810,
-      "run": 6
+      "last_ts": 1795561200,
+      "last_value": 85160,
+      "run": 1
     },
     "ANA-87350000": {
-      "score": 0.9963541666666664,
-      "last_ts": 1795474800,
+      "score": 0.9981770833333332,
+      "last_ts": 1795561200,
       "last_value": 13120,
       "run": 13
     },
     "ANA-87351000": {
       "score": 1.0,
-      "last_ts": 1795474800,
-      "last_value": 31010,
-      "run": 4
+      "last_ts": 1795561200,
+      "last_value": 31200,
+      "run": 1
     },
     "ANA-87361000": {
-      "score": 0.9244791666666664,
-      "last_ts": 1795474800,
+      "score": 0.9122395833333332,
+      "last_ts": 1795561200,
       "last_value": 556050,
-      "run": 96
+      "run": 120
     },
     "ANA-87361100": {
       "score": 1.0,
-      "last_ts": 1795474800,
-      "last_value": 500,
+      "last_ts": 1795561200,
+      "last_value": 550,
       "run": 3
     },
     "ANA-87366500": {
       "score": 1.0,
-      "last_ts": 1795474800,
-      "last_value": 68860,
-      "run": 2
+      "last_ts": 1795561200,
+      "last_value": 69060,
+      "run": 1
     },
     "ANA-87375500": {
       "score": 1.0,
-      "last_ts": 1795474800,
-      "last_value": 27160,
+      "last_ts": 1795561200,
+      "last_value": 27520,
       "run": 1
     },
     "ANA-87376000": {
       "score": 1.0,
-      "last_ts": 1795474800,
-      "last_value": 890,
+      "last_ts": 1795561200,
+      "last_value": 1350,
       "run": 1
     },
     "ANA-87377400": {
-      "score": 0.9854166666666666,
-      "last_ts": 1795474800,
-      "last_value": 20610,
+      "score": 0.9927083333333332,
+      "last_ts": 1795561200,
+      "last_value": 20700,
       "run": 1
     },
     "ANA-87377500": {
-      "score": 0.9854166666666666,
-      "last_ts": 1795474800,
-      "last_value": 4980,
+      "score": 0.9927083333333332,
+      "last_ts": 1795561200,
+      "last_value": 5670,
       "run": 1
     },
     "ANA-87380000": {
-      "score": 0.9990885416666666,
-      "last_ts": 1795474800,
-      "last_value": 2340,
+      "score": 0.9995442708333332,
+      "last_ts": 1795561200,
+      "last_value": 2740,
       "run": 1
     },
     "ANA-87382000": {
       "score": 1.0,
-      "last_ts": 1795474800,
-      "last_value": 1600,
+      "last_ts": 1795561200,
+      "last_value": 1690,
       "run": 1
     },
     "ANA-87382009": {
       "score": 1.0,
-      "last_ts": 1795474800,
-      "last_value": 1010,
-      "run": 2
+      "last_ts": 1795561200,
+      "last_value": 1100,
+      "run": 1
     },
     "ANA-87385010": {
       "score": 1.0,
-      "last_ts": 1795474800,
-      "last_value": 1680,
-      "run": 1
+      "last_ts": 1795561200,
+      "last_value": 1640,
+      "run": 2
     },
     "ANA-87385041": {
       "score": 1.0,
-      "last_ts": 1795474800,
-      "last_value": 600,
-      "run": 1
+      "last_ts": 1795561200,
+      "last_value": 500,
+      "run": 3
     },
     "ANA-87398750": {
       "score": 1.0,
-      "last_ts": 1795474800,
-      "last_value": 670,
+      "last_ts": 1795561200,
+      "last_value": 720,
       "run": 2
     },
     "ANA-87398885": {
-      "score": 0.9963541666666664,
-      "last_ts": 1795474800,
-      "last_value": 1060,
-      "run": 6
+      "score": 0.9981770833333332,
+      "last_ts": 1795561200,
+      "last_value": 1080,
+      "run": 1
     },
     "ANA-87399000": {
       "score": 1.0,
-      "last_ts": 1795474800,
-      "last_value": 1700,
-      "run": 18
+      "last_ts": 1795561200,
+      "last_value": 1710,
+      "run": 1
     },
     "ANA-87399050": {
       "score": 1.0,
-      "last_ts": 1795474800,
-      "last_value": 1340,
+      "last_ts": 1795561200,
+      "last_value": 1500,
       "run": 1
     },
     "ANA-87401750": {
       "score": 1.0,
-      "last_ts": 1795474800,
-      "last_value": 1730,
-      "run": 8
+      "last_ts": 1795561200,
+      "last_value": 1800,
+      "run": 2
     },
     "ANA-87406000": {
       "score": 1.0,
-      "last_ts": 1795474800,
-      "last_value": 1336,
+      "last_ts": 1795561200,
+      "last_value": 1236,
       "run": 1
     },
     "ANA-87420600": {
       "score": 1.0,
-      "last_ts": 1795474800,
-      "last_value": 470,
+      "last_ts": 1795561200,
+      "last_value": 480,
       "run": 1
     },
     "ANA-87450004": {
       "score": 1.0,
-      "last_ts": 1795474800,
-      "last_value": 990,
-      "run": 2
+      "last_ts": 1795561200,
+      "last_value": 880,
+      "run": 6
     },
     "ANA-87450020": {
-      "score": 0.9963541666666664,
-      "last_ts": 1795474800,
-      "last_value": 580,
-      "run": 1
+      "score": 0.9981770833333332,
+      "last_ts": 1795561200,
+      "last_value": 470,
+      "run": 6
     },
     "ANA-87450030": {
       "score": 1.0,
-      "last_ts": 1795474800,
-      "last_value": 600,
+      "last_ts": 1795561200,
+      "last_value": 480,
       "run": 1
     },
     "ANA-87451000": {
       "score": 1.0,
-      "last_ts": 1795474800,
-      "last_value": 1470,
-      "run": 2
+      "last_ts": 1795561200,
+      "last_value": 1550,
+      "run": 1
     },
     "ANA-87460125": {
       "score": 1.0,
-      "last_ts": 1795474800,
-      "last_value": 820,
+      "last_ts": 1795561200,
+      "last_value": 790,
       "run": 1
     },
     "ANA-87479500": {
       "score": 1.0,
-      "last_ts": 1795474800,
+      "last_ts": 1795561200,
       "last_value": 63670,
-      "run": 5
+      "run": 7
     },
     "ANA-87480000": {
       "score": 1.0,
-      "last_ts": 1795474800,
-      "last_value": 590,
+      "last_ts": 1795561200,
+      "last_value": 510,
       "run": 1
     },
     "ANA-87500060": {
-      "score": 0.9854166666666666,
-      "last_ts": 1795474800,
-      "last_value": 430,
+      "score": 0.978125,
+      "last_ts": 1795561200,
+      "last_value": 390,
       "run": 1
     },
     "ANA-87510018": {
       "score": 1.0,
-      "last_ts": 1795474800,
-      "last_value": 450,
-      "run": 1
+      "last_ts": 1795561200,
+      "last_value": 390,
+      "run": 5
     },
     "ANA-87510047": {
-      "score": 0.978125,
-      "last_ts": 1795474800,
+      "score": 0.9890625,
+      "last_ts": 1795561200,
       "last_value": 2000,
       "run": 1
     },
     "ANA-87510049": {
-      "score": 0.6473958333333332,
+      "score": 0.42369791666666656,
       "last_ts": 1795471200,
       "last_value": 1810,
       "run": 1
     },
     "ANA-87525000": {
-      "score": 0.9927083333333332,
-      "last_ts": 1795474800,
-      "last_value": 76620,
-      "run": 1
+      "score": 0.9963541666666664,
+      "last_ts": 1795561200,
+      "last_value": 76630,
+      "run": 7
     },
     "ANA-87539990": {
       "score": 1.0,
-      "last_ts": 1795474800,
-      "last_value": 340,
+      "last_ts": 1795561200,
+      "last_value": 310,
       "run": 1
     },
     "ANA-87580001": {
       "score": 1.0,
-      "last_ts": 1795474800,
-      "last_value": 266620,
+      "last_ts": 1795561200,
+      "last_value": 266600,
       "run": 1
     },
     "ANA-87660010": {
-      "score": 0.9990885416666666,
-      "last_ts": 1795474800,
-      "last_value": 79110,
-      "run": 2
+      "score": 0.9995442708333332,
+      "last_ts": 1795561200,
+      "last_value": 79100,
+      "run": 3
     },
     "ANA-87785000": {
       "score": 1.0,
-      "last_ts": 1795474800,
-      "last_value": 1711,
-      "run": 1
+      "last_ts": 1795561200,
+      "last_value": 1705,
+      "run": 3
     },
     "ANA-87790000": {
       "score": 1.0,
-      "last_ts": 1795474800,
-      "last_value": 233285,
+      "last_ts": 1795561200,
+      "last_value": 232073,
       "run": 1
     },
     "ANA-87795000": {
       "score": 1.0,
-      "last_ts": 1795474800,
-      "last_value": 363,
+      "last_ts": 1795561200,
+      "last_value": 381,
       "run": 1
     },
     "ANA-87849000": {
       "score": 1.0,
-      "last_ts": 1795474800,
+      "last_ts": 1795561200,
       "last_value": 27520,
-      "run": 4
+      "run": 1
     },
     "ANA-87864950": {
-      "score": 0.9588541666666666,
-      "last_ts": 1795474800,
-      "last_value": 96010,
-      "run": 2
+      "score": 0.9794270833333332,
+      "last_ts": 1795561200,
+      "last_value": 96000,
+      "run": 1
     },
     "ANA-87905000": {
       "score": 1.0,
-      "last_ts": 1795474800,
-      "last_value": 559,
+      "last_ts": 1795561200,
+      "last_value": 617,
       "run": 1
     },
     "ANA-87905010": {
       "score": 1.0,
-      "last_ts": 1795474800,
-      "last_value": 15310,
+      "last_ts": 1795561200,
+      "last_value": 15320,
       "run": 1
     },
     "ANA-87920500": {
       "score": 1.0,
-      "last_ts": 1795474800,
-      "last_value": 1910,
-      "run": 2
+      "last_ts": 1795561200,
+      "last_value": 1920,
+      "run": 1
     },
     "ANA-87920600": {
       "score": 1.0,
-      "last_ts": 1795474800,
+      "last_ts": 1795561200,
       "last_value": 35420,
       "run": 3
     },
     "ANA-87920990": {
-      "score": 0.9854166666666666,
-      "last_ts": 1795474800,
-      "last_value": 380,
+      "score": 0.9927083333333332,
+      "last_ts": 1795561200,
+      "last_value": 390,
       "run": 1
     },
     "ANA-87929995": {
       "score": 1.0,
-      "last_ts": 1795474800,
-      "last_value": 14560,
-      "run": 1
+      "last_ts": 1795561200,
+      "last_value": 14530,
+      "run": 4
     },
     "ANA-87953000": {
       "score": 1.0,
-      "last_ts": 1795474800,
-      "last_value": 330,
-      "run": 3
+      "last_ts": 1795561200,
+      "last_value": 340,
+      "run": 1
     },
     "ANA-87979800": {
-      "score": 1.0,
-      "last_ts": 1795474800,
-      "last_value": 430,
-      "run": 2
+      "score": 0.9708333333333332,
+      "last_ts": 1795561200,
+      "last_value": 520,
+      "run": 1
     },
     "ANA-88045010": {
       "score": 1.0,
-      "last_ts": 1795474800,
-      "last_value": 1670,
+      "last_ts": 1795561200,
+      "last_value": 1640,
       "run": 1
     },
     "ANA-88260000": {
       "score": 1.0,
-      "last_ts": 1795474800,
-      "last_value": 1130,
-      "run": 12
+      "last_ts": 1795561200,
+      "last_value": 1110,
+      "run": 6
     },
     "ANA-88300040": {
       "score": 1.0,
-      "last_ts": 1795474800,
-      "last_value": 1950,
-      "run": 2
+      "last_ts": 1795561200,
+      "last_value": 1870,
+      "run": 1
     },
     "ANA-88370010": {
       "score": 1.0,
-      "last_ts": 1795474800,
-      "last_value": 14690,
-      "run": 2
+      "last_ts": 1795561200,
+      "last_value": 14660,
+      "run": 1
     },
     "ANA-88406000": {
       "score": 1.0,
-      "last_ts": 1795474800,
-      "last_value": 1760,
+      "last_ts": 1795561200,
+      "last_value": 1740,
       "run": 1
     },
     "ANA-88549001": {
-      "score": 0.9562499999999998,
-      "last_ts": 1795474800,
-      "last_value": 40210,
-      "run": 1
+      "score": 0.9635416666666664,
+      "last_ts": 1795561200,
+      "last_value": 40190,
+      "run": 2
     },
     "ANA-88579700": {
-      "score": 0.9799479166666666,
-      "last_ts": 1795474800,
-      "last_value": 37460,
+      "score": 0.975390625,
+      "last_ts": 1795561200,
+      "last_value": 37440,
       "run": 1
     },
     "ANA-88640950": {
-      "score": 0.9981770833333332,
-      "last_ts": 1795474800,
-      "last_value": 2060,
-      "run": 2
+      "score": 0.9990885416666666,
+      "last_ts": 1795561200,
+      "last_value": 2020,
+      "run": 1
     },
     "ANA-88640951": {
-      "score": 0.9986979166666664,
-      "last_ts": 1795474800,
-      "last_value": 12850,
-      "run": 1
+      "score": 0.9701822916666664,
+      "last_ts": 1795561200,
+      "last_value": 12820,
+      "run": 2
     },
     "GLOFAS-CAI": {
       "score": 1.0,
-      "last_ts": 1795392000,
-      "last_value": 187360,
+      "last_ts": 1795478400,
+      "last_value": 224420,
       "run": 1
     },
     "GLOFAS-GRAVATAI": {
       "score": 1.0,
-      "last_ts": 1795392000,
-      "last_value": 39550,
+      "last_ts": 1795478400,
+      "last_value": 23660,
       "run": 1
     },
     "GLOFAS-GUAIBA": {
       "score": 1.0,
-      "last_ts": 1795392000,
-      "last_value": 2012720,
+      "last_ts": 1795478400,
+      "last_value": 3371870,
       "run": 1
     },
     "GLOFAS-JACUI": {
       "score": 1.0,
-      "last_ts": 1795392000,
-      "last_value": 1856800,
+      "last_ts": 1795478400,
+      "last_value": 2929890,
       "run": 1
     },
     "GLOFAS-MANOEL-VIANA": {
       "score": 1.0,
-      "last_ts": 1795392000,
-      "last_value": 236140,
+      "last_ts": 1795478400,
+      "last_value": 191750,
       "run": 1
     },
     "GLOFAS-MAQUINE": {
       "score": 1.0,
-      "last_ts": 1795392000,
-      "last_value": 18770,
+      "last_ts": 1795478400,
+      "last_value": 47530,
       "run": 1
     },
     "GLOFAS-SINOS": {
       "score": 1.0,
-      "last_ts": 1795392000,
-      "last_value": 111460,
+      "last_ts": 1795478400,
+      "last_value": 133590,
       "run": 1
     },
     "GLOFAS-TAQUARI": {
       "score": 1.0,
-      "last_ts": 1795392000,
-      "last_value": 1217990,
+      "last_ts": 1795478400,
+      "last_value": 2248050,
       "run": 1
     }
   }
