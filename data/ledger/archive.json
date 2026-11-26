@@ -2701,6 +2701,56 @@
    "sha256": "d9ad062fee275b1bb7247a1266ba1cc22f78c56097d55c1d883456c8fe882443",
    "id": "z9i8rEPcCTbRNc1q0BGzbLzAymp82sXyo6w4jWauSwM",
    "bytes": 1772
+  },
+  "data/ledger-v3/batches/litoranea-00008.json": {
+   "sha256": "3aec82af96d697862fc48eff19208cc80720a34ce44084e86b1ecc9a3181df85",
+   "id": "_7VHYM6oSQd2Ai02pme_OJy7S3ljlbNrlL5XW4NSWKQ",
+   "bytes": 39086
+  },
+  "data/ledger-v3/external_forecasts/glofas/2026-11-25.json": {
+   "sha256": "23333e98e335a09ee75aa1ddbb5b62cca84e741086f0e5c5a4169ef68337c858",
+   "id": "l78cgRE6nKVeh-v18qjki2t2WaNXc1dCyXmcpDmLOBA",
+   "bytes": 4315
+  },
+  "data/ledger-v3/outlooks/cai-2026-11-25.json": {
+   "sha256": "30ee97d8dab0e2df1475653b57b2c87a140089f918f2d516c88bddd7d2364986",
+   "id": "_QIeAq-VYwa1UgggLs9QTssPCVNKywVZrYJNnZ89pTw",
+   "bytes": 471
+  },
+  "data/ledger-v3/outlooks/gravatai-2026-11-25.json": {
+   "sha256": "a350164bd760ca311c1a7e1d5e295bc1feb9f9214b980140a2952daea2056159",
+   "id": "lQ52rGcgh6OR3Yl3mrV2JbF87NYWWgB3wn5KccFz5cI",
+   "bytes": 421
+  },
+  "data/ledger-v3/outlooks/guaiba-2026-11-25.json": {
+   "sha256": "658da606715ad5e31b91249da534fcfe59324cf54ebe09588c09fdb0b722c33c",
+   "id": "WF0JAyqQ5aRgfnjPI_i3gj7ywB6tdekONzoEgwWYfqw",
+   "bytes": 457
+  },
+  "data/ledger-v3/outlooks/ibicui-2026-11-25.json": {
+   "sha256": "095a36dbf086c71d47f6f9fbd62ed28d972587daeef6dde64b21617caa01de16",
+   "id": "h6p5hnv6Z7NGZBBAmZwAhx4UeaFRsCIln36QzIg-3x0",
+   "bytes": 472
+  },
+  "data/ledger-v3/outlooks/jacui-2026-11-25.json": {
+   "sha256": "dbe7666d8bbee564940654b20788f75c47cc62690121480a54c9cdaac1ea2909",
+   "id": "hdtfYN-F8FVMOaymJeAHH1c06zCmKo6Hdwz4n9tgH0k",
+   "bytes": 516
+  },
+  "data/ledger-v3/outlooks/maquine-2026-11-25.json": {
+   "sha256": "6ad6b2421e9ddf8ce3623ff83127ab68defd3732ca8d70a94bdf67655eefd483",
+   "id": "L-tsaEYVTqbnxn1ncKgsnCsymRGc5ZR7hLaDURpE5Js",
+   "bytes": 375
+  },
+  "data/ledger-v3/outlooks/sinos-2026-11-25.json": {
+   "sha256": "40814921de690327fa5c872aa37b9640a1b139ec1d8e5454f51f00571b750e08",
+   "id": "zC5J6AxGpPSGiVwbXU7OoggRv0ZCfyVsFKx5kLYKV2U",
+   "bytes": 449
+  },
+  "data/ledger-v3/outlooks/taquari-2026-11-25.json": {
+   "sha256": "59c9df33bfc52cf5a0cd592758f7e39891264197a27a4d7017d6a66086f2b9af",
+   "id": "P5IkHavvgS3s_2asUzTRBQf1yjcweRv5VIQom8WUkEA",
+   "bytes": 543
   }
  },
  "records": [
@@ -2922,7 +2972,7 @@
    "bytes": 699
   }
  ],
- "bytes": 5034734,
+ "bytes": 5085829,
  "signer": "7kw7om2uMrnSaJBZXriH6TAVpQrsN7Eoq7dtsqgb6Lww",
  "chunks": {
   "data/ledger-v3/entries.jsonl": [
@@ -3093,6 +3143,13 @@
     "sha256": "63cca3f5513ba8d3df460716876ef9c28bb822ab815efd057c9076baa8be517e",
     "id": "4q6t645brQ-BoEsbI_EHWvIu4QKBHFJiZR7X5SKT9UE",
     "bytes": 433
+   },
+   {
+    "from": 588,
+    "to": 599,
+    "sha256": "69b634bd3fa88d618534b945a480d4d7576c5bce94c25376cf6b74db43f8d40f",
+    "id": "_ACVamAZUgBHtlig8xChBtbhmjYaCjO4jAvESbWXB8w",
+    "bytes": 3990
    }
   ]
  }
